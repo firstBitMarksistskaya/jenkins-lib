@@ -1,7 +1,7 @@
-def call(String command, boolean returnStatus = false) {
+def call(String script, boolean returnStatus = false) {
     if (isUnix()) {
-        sh script: "${command}", returnStatus: returnStatus, encoding: "UTF-8"
+        sh script: "${script}", returnStatus: returnStatus, encoding: "UTF-8"
     } else {
-        bat script: "chcp 65001 > nul \n${command}", returnStatus: returnStatus, encoding: "UTF-8"
+        bat script: "chcp 65001 > nul \n${script}", returnStatus: returnStatus, encoding: "UTF-8"
     }
 }
