@@ -1,0 +1,4889 @@
+{
+  "_class" : "hudson.LocalPluginManager",
+  "plugins" : [
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "workflow-step-api",
+          "version" : "2.14"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jackson2-api",
+          "version" : "2.9.8"
+        },
+        {
+          "optional" : false,
+          "shortName" : "structs",
+          "version" : "1.17"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Pipeline: Model API",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "2.121.1",
+      "shortName" : "pipeline-model-api",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Pipeline+Model+Definition+Plugin",
+      "version" : "1.3.8"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "junit",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "bouncycastle-api",
+          "version" : "2.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "MapDB API Plugin",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "1.565",
+      "shortName" : "mapdb-api",
+      "supportsDynamicLoad" : "YES",
+      "url" : "http://wiki.jenkins-ci.org/display/JENKINS/MapDB+API+Plugin",
+      "version" : "1.0.9.0"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "blueocean-core-js",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "blueocean-rest",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jenkins-design-language",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "variant",
+          "version" : "1.1"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Web for Blue Ocean",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.121.1",
+      "shortName" : "blueocean-web",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Blue+Ocean+Plugin",
+      "version" : "1.16.0"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "workflow-job",
+          "version" : "2.6"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-multibranch",
+          "version" : "2.8"
+        },
+        {
+          "optional" : false,
+          "shortName" : "scm-api",
+          "version" : "2.1.1"
+        },
+        {
+          "optional" : false,
+          "shortName" : "display-url-api",
+          "version" : "2.2.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "blueocean-rest",
+          "version" : "1.1.5"
+        },
+        {
+          "optional" : false,
+          "shortName" : "bouncycastle-api",
+          "version" : "2.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : true,
+      "longName" : "Display URL for Blue Ocean",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "2.7.1",
+      "shortName" : "blueocean-display-url",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/BlueOcean+Display+URL+Plugin",
+      "version" : "2.2.0"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "workflow-api",
+          "version" : "2.33"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-step-api",
+          "version" : "2.18"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-support",
+          "version" : "3.1"
+        },
+        {
+          "optional" : false,
+          "shortName" : "script-security",
+          "version" : "1.50"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Pipeline: Build Step",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.121.1",
+      "shortName" : "pipeline-build-step",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins.io/display/JENKINS/Pipeline+Build+Step+Plugin",
+      "version" : "2.9"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "workflow-api",
+          "version" : "2.34"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-cps",
+          "version" : "2.65"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-job",
+          "version" : "2.32"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-step-api",
+          "version" : "2.19"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-support",
+          "version" : "3.2"
+        },
+        {
+          "optional" : false,
+          "shortName" : "pipeline-input-step",
+          "version" : "2.8"
+        },
+        {
+          "optional" : false,
+          "shortName" : "pipeline-stage-step",
+          "version" : "2.3"
+        },
+        {
+          "optional" : false,
+          "shortName" : "scm-api",
+          "version" : "2.2.7"
+        },
+        {
+          "optional" : false,
+          "shortName" : "structs",
+          "version" : "1.17"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Pipeline Graph Analysis Plugin",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.138.4",
+      "shortName" : "pipeline-graph-analysis",
+      "supportsDynamicLoad" : "YES",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Pipeline+Graph+Analysis+Plugin",
+      "version" : "1.10"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "structs",
+          "version" : "1.17"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Pipeline: Step API",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.121.1",
+      "shortName" : "workflow-step-api",
+      "supportsDynamicLoad" : "YES",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Pipeline+Step+API+Plugin",
+      "version" : "2.19"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "bouncycastle API Plugin",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "2.60.3",
+      "shortName" : "bouncycastle-api",
+      "supportsDynamicLoad" : "YES",
+      "url" : "http://wiki.jenkins-ci.org/display/JENKINS/Bouncy+Castle+API+Plugin",
+      "version" : "2.17"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "apache-httpcomponents-client-4-api",
+          "version" : "4.5.3-2.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "credentials",
+          "version" : "2.1.13"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jsch",
+          "version" : "0.1.54.1"
+        },
+        {
+          "optional" : false,
+          "shortName" : "ssh-credentials",
+          "version" : "1.13"
+        },
+        {
+          "optional" : false,
+          "shortName" : "structs",
+          "version" : "1.9"
+        },
+        {
+          "optional" : false,
+          "shortName" : "bouncycastle-api",
+          "version" : "2.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Jenkins Git client plugin",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "1.625.3",
+      "shortName" : "git-client",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins.io/display/JENKINS/Git+Client+Plugin",
+      "version" : "2.7.7"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "workflow-api",
+          "version" : "2.30"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-step-api",
+          "version" : "2.16"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Timestamper",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "2.121.1",
+      "shortName" : "timestamper",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "http://wiki.jenkins-ci.org/display/JENKINS/Timestamper",
+      "version" : "1.9"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "workflow-step-api",
+          "version" : "2.17"
+        },
+        {
+          "optional" : false,
+          "shortName" : "apache-httpcomponents-client-4-api",
+          "version" : "4.5.5-3.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "cloudbees-folder",
+          "version" : "6.7"
+        },
+        {
+          "optional" : false,
+          "shortName" : "durable-task",
+          "version" : "1.28"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jackson2-api",
+          "version" : "2.9.8"
+        },
+        {
+          "optional" : false,
+          "shortName" : "variant",
+          "version" : "1.1"
+        },
+        {
+          "optional" : false,
+          "shortName" : "kubernetes-credentials",
+          "version" : "0.4.0"
+        },
+        {
+          "optional" : true,
+          "shortName" : "pipeline-model-extensions",
+          "version" : "1.3.7"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : true,
+      "longName" : "Kubernetes plugin",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.138.4",
+      "shortName" : "kubernetes",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Kubernetes+Plugin",
+      "version" : "1.15.4"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "credentials",
+          "version" : "2.1.18"
+        },
+        {
+          "optional" : false,
+          "shortName" : "ssh-credentials",
+          "version" : "1.14"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Jenkins SSH Slaves plugin",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "2.89.4",
+      "shortName" : "ssh-slaves",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/SSH+Slaves+plugin",
+      "version" : "1.29.4"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "workflow-api",
+          "version" : "2.33"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-step-api",
+          "version" : "2.18"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-support",
+          "version" : "3.1"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Pipeline: Input Step",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.121.1",
+      "shortName" : "pipeline-input-step",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Pipeline+Input+Step+Plugin",
+      "version" : "2.10"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "blueocean-dashboard",
+          "version" : "1.16.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Personalization for Blue Ocean",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.121.1",
+      "shortName" : "blueocean-personalization",
+      "supportsDynamicLoad" : "YES",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Blue+Ocean+Plugin",
+      "version" : "1.16.0"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "lockable-resources",
+          "version" : "2.3"
+        },
+        {
+          "optional" : false,
+          "shortName" : "pipeline-stage-view",
+          "version" : "2.10"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-api",
+          "version" : "2.29"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-basic-steps",
+          "version" : "2.11"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-cps-global-lib",
+          "version" : "2.11"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-cps",
+          "version" : "2.56"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-durable-task-step",
+          "version" : "2.22"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-job",
+          "version" : "2.25"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-multibranch",
+          "version" : "2.20"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-scm-step",
+          "version" : "2.6"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-step-api",
+          "version" : "2.16"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-support",
+          "version" : "2.20"
+        },
+        {
+          "optional" : false,
+          "shortName" : "cloudbees-folder",
+          "version" : "6.6"
+        },
+        {
+          "optional" : false,
+          "shortName" : "credentials",
+          "version" : "2.1.18"
+        },
+        {
+          "optional" : false,
+          "shortName" : "git-client",
+          "version" : "2.7.3"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jackson2-api",
+          "version" : "2.8.11.3"
+        },
+        {
+          "optional" : false,
+          "shortName" : "pipeline-build-step",
+          "version" : "2.7"
+        },
+        {
+          "optional" : false,
+          "shortName" : "pipeline-input-step",
+          "version" : "2.8"
+        },
+        {
+          "optional" : false,
+          "shortName" : "pipeline-milestone-step",
+          "version" : "1.3.1"
+        },
+        {
+          "optional" : false,
+          "shortName" : "pipeline-stage-step",
+          "version" : "2.3"
+        },
+        {
+          "optional" : false,
+          "shortName" : "scm-api",
+          "version" : "2.2.8"
+        },
+        {
+          "optional" : false,
+          "shortName" : "structs",
+          "version" : "1.15"
+        },
+        {
+          "optional" : false,
+          "shortName" : "pipeline-model-definition",
+          "version" : "1.3.2"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Pipeline",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "2.130",
+      "shortName" : "workflow-aggregator",
+      "supportsDynamicLoad" : "YES",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Pipeline+Plugin",
+      "version" : "2.6"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "junit",
+          "version" : "1.2"
+        },
+        {
+          "optional" : false,
+          "shortName" : "mailer",
+          "version" : "1.13"
+        },
+        {
+          "optional" : false,
+          "shortName" : "matrix-project",
+          "version" : "1.4"
+        },
+        {
+          "optional" : false,
+          "shortName" : "script-security",
+          "version" : "1.54"
+        },
+        {
+          "optional" : false,
+          "shortName" : "structs",
+          "version" : "1.17"
+        },
+        {
+          "optional" : false,
+          "shortName" : "token-macro",
+          "version" : "2.3"
+        },
+        {
+          "optional" : true,
+          "shortName" : "workflow-job",
+          "version" : "2.11"
+        },
+        {
+          "optional" : true,
+          "shortName" : "workflow-step-api",
+          "version" : "2.19"
+        },
+        {
+          "optional" : true,
+          "shortName" : "config-file-provider",
+          "version" : "2.15.6"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Email Extension Plugin",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.121.1",
+      "shortName" : "email-ext",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Email-ext+plugin",
+      "version" : "2.66"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "structs",
+          "version" : "1.7"
+        },
+        {
+          "optional" : false,
+          "shortName" : "bouncycastle-api",
+          "version" : "2.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : true,
+      "longName" : "Credentials Plugin",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "1.625.3",
+      "shortName" : "credentials",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins.io/display/JENKINS/Credentials+Plugin",
+      "version" : "2.1.18"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "bouncycastle-api",
+          "version" : "2.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "JavaScript GUI Lib: Handlebars bundle plugin",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "1.580.1",
+      "shortName" : "handlebars",
+      "supportsDynamicLoad" : "YES",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Handlebars.js",
+      "version" : "1.1.1"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "workflow-api",
+          "version" : "2.30"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-basic-steps",
+          "version" : "2.6"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-cps-global-lib",
+          "version" : "2.9"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-cps",
+          "version" : "2.61.1"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-durable-task-step",
+          "version" : "2.15"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-multibranch",
+          "version" : "2.16"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-scm-step",
+          "version" : "2.6"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-support",
+          "version" : "2.22"
+        },
+        {
+          "optional" : false,
+          "shortName" : "credentials-binding",
+          "version" : "1.13"
+        },
+        {
+          "optional" : false,
+          "shortName" : "credentials",
+          "version" : "2.1.16"
+        },
+        {
+          "optional" : false,
+          "shortName" : "docker-workflow",
+          "version" : "1.14"
+        },
+        {
+          "optional" : false,
+          "shortName" : "git-client",
+          "version" : "2.7.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "mailer",
+          "version" : "1.20"
+        },
+        {
+          "optional" : false,
+          "shortName" : "pipeline-input-step",
+          "version" : "2.8"
+        },
+        {
+          "optional" : false,
+          "shortName" : "pipeline-stage-step",
+          "version" : "2.3"
+        },
+        {
+          "optional" : false,
+          "shortName" : "scm-api",
+          "version" : "2.2.7"
+        },
+        {
+          "optional" : false,
+          "shortName" : "pipeline-model-api",
+          "version" : "1.3.8"
+        },
+        {
+          "optional" : false,
+          "shortName" : "pipeline-model-declarative-agent",
+          "version" : "1.1.1"
+        },
+        {
+          "optional" : false,
+          "shortName" : "pipeline-model-extensions",
+          "version" : "1.3.8"
+        },
+        {
+          "optional" : false,
+          "shortName" : "pipeline-stage-tags-metadata",
+          "version" : "1.3.8"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Pipeline: Declarative",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "2.121.1",
+      "shortName" : "pipeline-model-definition",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Pipeline+Model+Definition+Plugin",
+      "version" : "1.3.8"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "workflow-job",
+          "version" : "2.32"
+        },
+        {
+          "optional" : false,
+          "shortName" : "branch-api",
+          "version" : "2.0.11"
+        },
+        {
+          "optional" : false,
+          "shortName" : "git-client",
+          "version" : "2.5.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "git",
+          "version" : "3.6.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "favorite",
+          "version" : "2.3.1"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Autofavorite for Blue Ocean",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.121.1",
+      "shortName" : "blueocean-autofavorite",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Blue+Ocean+Autofavorite+Plugin",
+      "version" : "1.2.4"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "workflow-api",
+          "version" : "2.15"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-job",
+          "version" : "2.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-step-api",
+          "version" : "2.10"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-support",
+          "version" : "2.14"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jackson2-api",
+          "version" : "2.7.3"
+        },
+        {
+          "optional" : false,
+          "shortName" : "pipeline-graph-analysis",
+          "version" : "1.1"
+        },
+        {
+          "optional" : false,
+          "shortName" : "pipeline-input-step",
+          "version" : "2.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "pipeline-stage-step",
+          "version" : "2.2"
+        },
+        {
+          "optional" : false,
+          "shortName" : "bouncycastle-api",
+          "version" : "2.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Pipeline: REST API Plugin",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "1.642.3",
+      "shortName" : "pipeline-rest-api",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Pipeline+Stage+View+Plugin",
+      "version" : "2.11"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : true,
+      "longName" : "PAM Authentication plugin",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.138.4",
+      "shortName" : "pam-auth",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "http://wiki.jenkins-ci.org/display/JENKINS/PAM+Authentication+Plugin",
+      "version" : "1.5"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "workflow-api",
+          "version" : "2.34"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-step-api",
+          "version" : "2.19"
+        },
+        {
+          "optional" : false,
+          "shortName" : "script-security",
+          "version" : "1.56"
+        },
+        {
+          "optional" : false,
+          "shortName" : "structs",
+          "version" : "1.17"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "JUnit Plugin",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.138.4",
+      "shortName" : "junit",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "http://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin",
+      "version" : "1.28"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "junit",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "bouncycastle-api",
+          "version" : "2.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Resource Disposer Plugin",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "1.565",
+      "shortName" : "resource-disposer",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "http://wiki.jenkins-ci.org/display/JENKINS/Resource+Disposer+Plugin",
+      "version" : "0.12"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "workflow-api",
+          "version" : "2.27"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-cps",
+          "version" : "2.53"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-job",
+          "version" : "2.21"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-scm-step",
+          "version" : "2.4"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-step-api",
+          "version" : "2.13"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-support",
+          "version" : "2.17"
+        },
+        {
+          "optional" : false,
+          "shortName" : "branch-api",
+          "version" : "2.0.21"
+        },
+        {
+          "optional" : false,
+          "shortName" : "cloudbees-folder",
+          "version" : "6.1.2"
+        },
+        {
+          "optional" : false,
+          "shortName" : "scm-api",
+          "version" : "2.2.7"
+        },
+        {
+          "optional" : false,
+          "shortName" : "script-security",
+          "version" : "1.42"
+        },
+        {
+          "optional" : false,
+          "shortName" : "structs",
+          "version" : "1.17"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Pipeline: Multibranch",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "2.121.1",
+      "shortName" : "workflow-multibranch",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins.io/display/JENKINS/Pipeline+Multibranch+Plugin",
+      "version" : "2.21"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "workflow-cps",
+          "version" : "2.61.1"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-job",
+          "version" : "2.26"
+        },
+        {
+          "optional" : false,
+          "shortName" : "credentials-binding",
+          "version" : "1.13"
+        },
+        {
+          "optional" : false,
+          "shortName" : "credentials",
+          "version" : "2.1.16"
+        },
+        {
+          "optional" : false,
+          "shortName" : "pipeline-model-api",
+          "version" : "1.3.8"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Pipeline: Declarative Extension Points API",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "2.121.1",
+      "shortName" : "pipeline-model-extensions",
+      "supportsDynamicLoad" : "YES",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Pipeline+Model+Definition+Plugin",
+      "version" : "1.3.8"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "JDK Tool Plugin",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "2.112",
+      "shortName" : "jdk-tool",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins.io/display/JENKINS/JDK+Tool+Plugin",
+      "version" : "1.2"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "blueocean-commons",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "blueocean-dashboard",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "blueocean-pipeline-api-impl",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "blueocean-rest",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "pipeline-model-definition",
+          "version" : "1.3.2"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Blue Ocean Pipeline Editor",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.121.1",
+      "shortName" : "blueocean-pipeline-editor",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Blue+Ocean+Plugin",
+      "version" : "1.16.0"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "blueocean-rest",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-multibranch",
+          "version" : "2.20"
+        },
+        {
+          "optional" : false,
+          "shortName" : "branch-api",
+          "version" : "2.0.20"
+        },
+        {
+          "optional" : false,
+          "shortName" : "credentials",
+          "version" : "2.1.16"
+        },
+        {
+          "optional" : false,
+          "shortName" : "pubsub-light",
+          "version" : "1.12"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Pipeline SCM API for Blue Ocean",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.121.1",
+      "shortName" : "blueocean-pipeline-scm-api",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Blue+Ocean+Plugin",
+      "version" : "1.16.0"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "workflow-job",
+          "version" : "2.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "apache-httpcomponents-client-4-api",
+          "version" : "4.5.5-3.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "branch-api",
+          "version" : "2.0.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "credentials",
+          "version" : "2.1.14"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jackson2-api",
+          "version" : "2.8.11.2"
+        },
+        {
+          "optional" : false,
+          "shortName" : "junit",
+          "version" : "1.3"
+        },
+        {
+          "optional" : false,
+          "shortName" : "mailer",
+          "version" : "1.20"
+        },
+        {
+          "optional" : false,
+          "shortName" : "matrix-project",
+          "version" : "1.6"
+        },
+        {
+          "optional" : false,
+          "shortName" : "script-security",
+          "version" : "1.16"
+        },
+        {
+          "optional" : false,
+          "shortName" : "structs",
+          "version" : "1.7"
+        },
+        {
+          "optional" : true,
+          "shortName" : "workflow-step-api",
+          "version" : "2.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Jenkins JIRA plugin",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "2.60.3",
+      "shortName" : "jira",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/JIRA+Plugin",
+      "version" : "3.0.7"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "blueocean-pipeline-api-impl",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "apache-httpcomponents-client-4-api",
+          "version" : "4.5.5-3.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "cloudbees-bitbucket-branch-source",
+          "version" : "2.4.4"
+        },
+        {
+          "optional" : false,
+          "shortName" : "pubsub-light",
+          "version" : "1.12"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Bitbucket Pipeline for Blue Ocean",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.121.1",
+      "shortName" : "blueocean-bitbucket-pipeline",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Blue+Ocean+Plugin",
+      "version" : "1.16.0"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "credentials",
+          "version" : "2.1.8"
+        },
+        {
+          "optional" : false,
+          "shortName" : "display-url-api",
+          "version" : "2.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "git",
+          "version" : "3.4.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "github-api",
+          "version" : "1.90"
+        },
+        {
+          "optional" : false,
+          "shortName" : "plain-credentials",
+          "version" : "1.1"
+        },
+        {
+          "optional" : false,
+          "shortName" : "scm-api",
+          "version" : "2.2.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "structs",
+          "version" : "1.10"
+        },
+        {
+          "optional" : false,
+          "shortName" : "token-macro",
+          "version" : "1.11"
+        },
+        {
+          "optional" : false,
+          "shortName" : "bouncycastle-api",
+          "version" : "2.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "GitHub plugin",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "1.625.3",
+      "shortName" : "github",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "http://wiki.jenkins-ci.org/display/JENKINS/Github+Plugin",
+      "version" : "1.29.4"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "bouncycastle-api",
+          "version" : "2.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Handy Uri Templates 2.x API Plugin",
+      "minimumJavaVersion" : "1.7",
+      "pinned" : false,
+      "requiredCoreVersion" : "1.625.3",
+      "shortName" : "handy-uri-templates-2-api",
+      "supportsDynamicLoad" : "YES",
+      "url" : "https://wiki.jenkins.io/display/JENKINS/Handy+Uri+Templates+2+API+Plugin",
+      "version" : "2.1.7-1.0"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "blueocean-pipeline-api-impl",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "pubsub-light",
+          "version" : "1.12"
+        },
+        {
+          "optional" : false,
+          "shortName" : "sse-gateway",
+          "version" : "1.17"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Events API for Blue Ocean",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.121.1",
+      "shortName" : "blueocean-events",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Blue+Ocean+Plugin",
+      "version" : "1.16.0"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "blueocean-commons",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "mailer",
+          "version" : "1.20"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "JWT for Blue Ocean",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.121.1",
+      "shortName" : "blueocean-jwt",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Blue+Ocean+Plugin",
+      "version" : "1.16.0"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "blueocean-bitbucket-pipeline",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "blueocean-commons",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "blueocean-config",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "blueocean-core-js",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "blueocean-dashboard",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "blueocean-events",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "blueocean-git-pipeline",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "blueocean-github-pipeline",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "blueocean-i18n",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "blueocean-jira",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "blueocean-jwt",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "blueocean-personalization",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "blueocean-pipeline-api-impl",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "blueocean-pipeline-editor",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "blueocean-rest-impl",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "blueocean-rest",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "blueocean-web",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jenkins-design-language",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "blueocean-autofavorite",
+          "version" : "1.2.3"
+        },
+        {
+          "optional" : false,
+          "shortName" : "blueocean-display-url",
+          "version" : "2.2.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "pipeline-build-step",
+          "version" : "2.7"
+        },
+        {
+          "optional" : false,
+          "shortName" : "pipeline-milestone-step",
+          "version" : "1.3.1"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Blue Ocean",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.121.1",
+      "shortName" : "blueocean",
+      "supportsDynamicLoad" : "YES",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Blue+Ocean+Plugin",
+      "version" : "1.16.0"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "blueocean-web",
+          "version" : "1.16.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Dashboard for Blue Ocean",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.121.1",
+      "shortName" : "blueocean-dashboard",
+      "supportsDynamicLoad" : "YES",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Blue+Ocean+Plugin",
+      "version" : "1.16.0"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "workflow-step-api",
+          "version" : "2.16"
+        },
+        {
+          "optional" : false,
+          "shortName" : "bouncycastle-api",
+          "version" : "2.16.3"
+        },
+        {
+          "optional" : false,
+          "shortName" : "credentials",
+          "version" : "2.1.17"
+        },
+        {
+          "optional" : false,
+          "shortName" : "ssh-credentials",
+          "version" : "1.14"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "SSH Agent Plugin",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "2.60.3",
+      "shortName" : "ssh-agent",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "http://wiki.jenkins-ci.org/display/JENKINS/SSH+Agent+Plugin",
+      "version" : "1.17"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "apache-httpcomponents-client-4-api",
+          "version" : "4.5.5-3.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "credentials",
+          "version" : "2.1.7"
+        },
+        {
+          "optional" : false,
+          "shortName" : "plain-credentials",
+          "version" : "1.3"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Kubernetes Credentials Plugin",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "2.60.3",
+      "shortName" : "kubernetes-credentials",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://plugins.jenkins.io/kubernetes-credentials",
+      "version" : "0.4.0"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "script-security",
+          "version" : "1.36"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Command Agent Launcher Plugin",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "2.86",
+      "shortName" : "command-launcher",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins.io/display/JENKINS/Command+Agent+Launcher+Plugin",
+      "version" : "1.3"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "bouncycastle-api",
+          "version" : "2.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "JavaScript GUI Lib: jQuery bundles (jQuery and jQuery UI) plugin",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "1.580.1",
+      "shortName" : "jquery-detached",
+      "supportsDynamicLoad" : "YES",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/jQuery+Detached+Plugin",
+      "version" : "1.2.1"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "credentials",
+          "version" : "2.1.4"
+        },
+        {
+          "optional" : false,
+          "shortName" : "ssh-credentials",
+          "version" : "1.12"
+        },
+        {
+          "optional" : false,
+          "shortName" : "structs",
+          "version" : "1.7"
+        },
+        {
+          "optional" : false,
+          "shortName" : "token-macro",
+          "version" : "2.0"
+        },
+        {
+          "optional" : true,
+          "shortName" : "cloudbees-folder",
+          "version" : "5.12"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Config File Provider Plugin",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "2.60.3",
+      "shortName" : "config-file-provider",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Config+File+Provider+Plugin",
+      "version" : "3.6"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Structs Plugin",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "2.60.3",
+      "shortName" : "structs",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Structs+plugin",
+      "version" : "1.19"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "blueocean-rest",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "apache-httpcomponents-client-4-api",
+          "version" : "4.5.5-3.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jackson2-api",
+          "version" : "2.9.8"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jira",
+          "version" : "3.0.5"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "JIRA Integration for Blue Ocean",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.121.1",
+      "shortName" : "blueocean-jira",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Blue+Ocean+Plugin",
+      "version" : "1.16.0"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "structs",
+          "version" : "1.9"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "SCM API Plugin",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.60.3",
+      "shortName" : "scm-api",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins.io/display/JENKINS/SCM+API+Plugin",
+      "version" : "2.4.1"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "workflow-api",
+          "version" : "2.30"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Pipeline: Stage Tags Metadata",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "2.121.1",
+      "shortName" : "pipeline-stage-tags-metadata",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Pipeline+Model+Definition+Plugin",
+      "version" : "1.3.8"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Script Security Plugin",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.60.3",
+      "shortName" : "script-security",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins.io/display/JENKINS/Script+Security+Plugin",
+      "version" : "1.58"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "authentication-tokens",
+          "version" : "1.3"
+        },
+        {
+          "optional" : false,
+          "shortName" : "credentials-binding",
+          "version" : "1.18"
+        },
+        {
+          "optional" : false,
+          "shortName" : "credentials",
+          "version" : "2.1.18"
+        },
+        {
+          "optional" : true,
+          "shortName" : "pipeline-model-extensions",
+          "version" : "1.3.8"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Docker Commons Plugin",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.150.1",
+      "shortName" : "docker-commons",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins.io/display/JENKINS/Docker+Commons+Plugin",
+      "version" : "1.15"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "pipeline-rest-api",
+          "version" : "2.11"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-job",
+          "version" : "2.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "handlebars",
+          "version" : "1.1"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jquery-detached",
+          "version" : "1.2.1"
+        },
+        {
+          "optional" : false,
+          "shortName" : "momentjs",
+          "version" : "1.1"
+        },
+        {
+          "optional" : false,
+          "shortName" : "bouncycastle-api",
+          "version" : "2.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Pipeline: Stage View Plugin",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "1.642.3",
+      "shortName" : "pipeline-stage-view",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Pipeline+Stage+View+Plugin",
+      "version" : "2.11"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "blueocean-pipeline-api-impl",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "blueocean-pipeline-scm-api",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "git",
+          "version" : "3.8.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Git Pipeline for Blue Ocean",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.121.1",
+      "shortName" : "blueocean-git-pipeline",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Blue+Ocean+Plugin",
+      "version" : "1.16.0"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "jackson2-api",
+          "version" : "2.9.8"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Common API for Blue Ocean",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.121.1",
+      "shortName" : "blueocean-commons",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Blue+Ocean+Plugin",
+      "version" : "1.16.0"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "workflow-api",
+          "version" : "2.11"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-step-api",
+          "version" : "2.9"
+        },
+        {
+          "optional" : false,
+          "shortName" : "bouncycastle-api",
+          "version" : "2.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Pipeline: Milestone Step",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "1.642.3",
+      "shortName" : "pipeline-milestone-step",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Pipeline+Milestone+Step+Plugin",
+      "version" : "1.3.1"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "workflow-api",
+          "version" : "2.32"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-step-api",
+          "version" : "2.19"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-support",
+          "version" : "3.2"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Pipeline: Job",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.121.1",
+      "shortName" : "workflow-job",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins.io/display/JENKINS/Pipeline+Job+Plugin",
+      "version" : "2.32"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "workflow-step-api",
+          "version" : "1.14.2"
+        },
+        {
+          "optional" : false,
+          "shortName" : "matrix-project",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "bouncycastle-api",
+          "version" : "2.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "HTML Publisher plugin",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "1.609.3",
+      "shortName" : "htmlpublisher",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "http://wiki.jenkins-ci.org/display/JENKINS/HTML+Publisher+Plugin",
+      "version" : "1.18"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "junit",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "bouncycastle-api",
+          "version" : "2.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "OWASP Markup Formatter Plugin",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "1.565.3",
+      "shortName" : "antisamy-markup-formatter",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "http://wiki.jenkins-ci.org/display/JENKINS/OWASP+Markup+Formatter+Plugin",
+      "version" : "1.5"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "display-url-api",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "bouncycastle-api",
+          "version" : "2.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Jenkins Mailer Plugin",
+      "minimumJavaVersion" : "1.7",
+      "pinned" : false,
+      "requiredCoreVersion" : "1.642.3",
+      "shortName" : "mailer",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins.io/display/JENKINS/Mailer",
+      "version" : "1.23"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "git-client",
+          "version" : "1.11.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "bouncycastle-api",
+          "version" : "2.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Jenkins GIT server Plugin",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "1.580.1",
+      "shortName" : "git-server",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "http://wiki.jenkins-ci.org/display/JENKINS/Git+Server+Plugin",
+      "version" : "1.7"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "workflow-step-api",
+          "version" : "2.9"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Pipeline: SCM Step",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "2.60",
+      "shortName" : "workflow-scm-step",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Pipeline+SCM+Step+Plugin",
+      "version" : "2.7"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "blueocean-commons",
+          "version" : "1.16.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "REST API for Blue Ocean",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.121.1",
+      "shortName" : "blueocean-rest",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Blue+Ocean+Plugin",
+      "version" : "1.16.0"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "workflow-cps-global-lib",
+          "version" : "2.5"
+        },
+        {
+          "optional" : false,
+          "shortName" : "git",
+          "version" : "3.0.2"
+        },
+        {
+          "optional" : false,
+          "shortName" : "bouncycastle-api",
+          "version" : "2.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Pipeline: GitHub Groovy Libraries",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "1.642.3",
+      "shortName" : "pipeline-github-lib",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Pipeline+GitHub+Library+Plugin",
+      "version" : "1.0"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Jenkins Apache HttpComponents Client 4.x API Plugin",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "2.60.3",
+      "shortName" : "apache-httpcomponents-client-4-api",
+      "supportsDynamicLoad" : "YES",
+      "url" : "https://wiki.jenkins.io/display/JENKINS/Apache+HttpComponents+Client+4.x+API+Plugin",
+      "version" : "4.5.5-3.0"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "ssh-credentials",
+          "version" : "1.14"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Jenkins JSch dependency plugin",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.60.3",
+      "shortName" : "jsch",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins.io/display/JENKINS/JSch+plugin",
+      "version" : "0.1.55"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Display URL API",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.89.4",
+      "shortName" : "display-url-api",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Display+URL+API+Plugin",
+      "version" : "2.3.1"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "workflow-api",
+          "version" : "2.8"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-basic-steps",
+          "version" : "2.3"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-cps",
+          "version" : "2.25"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-durable-task-step",
+          "version" : "2.8"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-step-api",
+          "version" : "2.9"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-support",
+          "version" : "2.12"
+        },
+        {
+          "optional" : false,
+          "shortName" : "docker-commons",
+          "version" : "1.14"
+        },
+        {
+          "optional" : false,
+          "shortName" : "script-security",
+          "version" : "1.25"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Docker Pipeline",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.60.3",
+      "shortName" : "docker-workflow",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins.io/display/JENKINS/Docker+Pipeline+Plugin",
+      "version" : "1.18"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "workflow-api",
+          "version" : "2.15"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-step-api",
+          "version" : "2.11"
+        },
+        {
+          "optional" : false,
+          "shortName" : "scm-api",
+          "version" : "2.0.7"
+        },
+        {
+          "optional" : false,
+          "shortName" : "structs",
+          "version" : "1.6"
+        },
+        {
+          "optional" : false,
+          "shortName" : "bouncycastle-api",
+          "version" : "2.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Pipeline: Stage Step",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "1.642.3",
+      "shortName" : "pipeline-stage-step",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Pipeline+Stage+Step+Plugin",
+      "version" : "2.3"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "github",
+          "version" : "1.29.3"
+        },
+        {
+          "optional" : false,
+          "shortName" : "credentials",
+          "version" : "2.1.18"
+        },
+        {
+          "optional" : false,
+          "shortName" : "display-url-api",
+          "version" : "2.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "git",
+          "version" : "3.9.3"
+        },
+        {
+          "optional" : false,
+          "shortName" : "github-api",
+          "version" : "1.95"
+        },
+        {
+          "optional" : false,
+          "shortName" : "scm-api",
+          "version" : "2.3.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "structs",
+          "version" : "1.17"
+        },
+        {
+          "optional" : true,
+          "shortName" : "workflow-step-api",
+          "version" : "2.19"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "GitHub Branch Source Plugin",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.121.3",
+      "shortName" : "github-branch-source",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/GitHub+Branch+Source+Plugin",
+      "version" : "2.5.2"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "bouncycastle-api",
+          "version" : "2.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "External Monitor Job Type Plugin",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "1.609.3",
+      "shortName" : "external-monitor-job",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Monitoring+external+jobs",
+      "version" : "1.7"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "cloudbees-folder",
+          "version" : "6.8"
+        },
+        {
+          "optional" : false,
+          "shortName" : "scm-api",
+          "version" : "2.4.1"
+        },
+        {
+          "optional" : false,
+          "shortName" : "structs",
+          "version" : "1.10"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : true,
+      "longName" : "Branch API Plugin",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "2.138",
+      "shortName" : "branch-api",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins.io/display/JENKINS/Branch+API+Plugin",
+      "version" : "2.4.0"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "blueocean-jwt",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "blueocean-rest",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "blueocean-web",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-cps",
+          "version" : "2.58"
+        },
+        {
+          "optional" : false,
+          "shortName" : "cloudbees-folder",
+          "version" : "6.3"
+        },
+        {
+          "optional" : false,
+          "shortName" : "credentials",
+          "version" : "2.1.16"
+        },
+        {
+          "optional" : false,
+          "shortName" : "display-url-api",
+          "version" : "2.3.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "junit",
+          "version" : "1.23"
+        },
+        {
+          "optional" : false,
+          "shortName" : "mailer",
+          "version" : "1.20"
+        },
+        {
+          "optional" : false,
+          "shortName" : "favorite",
+          "version" : "2.3.1"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "REST Implementation for Blue Ocean",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.121.1",
+      "shortName" : "blueocean-rest-impl",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Blue+Ocean+Plugin",
+      "version" : "1.16.0"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "jenkins-design-language",
+          "version" : "1.16.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Blue Ocean Core JS",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.121.1",
+      "shortName" : "blueocean-core-js",
+      "supportsDynamicLoad" : "YES",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Blue+Ocean+Core+JS",
+      "version" : "1.16.0"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "blueocean-rest",
+          "version" : "1.16.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "i18n for Blue Ocean",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.121.1",
+      "shortName" : "blueocean-i18n",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Blue+Ocean+Plugin",
+      "version" : "1.16.0"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "credentials",
+          "version" : "2.1.10"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jsch",
+          "version" : "0.1.54.1"
+        },
+        {
+          "optional" : false,
+          "shortName" : "matrix-project",
+          "version" : "1.2"
+        },
+        {
+          "optional" : false,
+          "shortName" : "scm-api",
+          "version" : "2.2.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "ssh-credentials",
+          "version" : "1.12"
+        },
+        {
+          "optional" : false,
+          "shortName" : "structs",
+          "version" : "1.9"
+        },
+        {
+          "optional" : false,
+          "shortName" : "bouncycastle-api",
+          "version" : "2.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Jenkins Mercurial plugin",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "2.7.3",
+      "shortName" : "mercurial",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins.io/display/JENKINS/Mercurial+Plugin",
+      "version" : "2.6"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "blueocean-commons",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "blueocean-jwt",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "blueocean-rest",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "blueocean-web",
+          "version" : "1.16.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Config API for Blue Ocean",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.121.1",
+      "shortName" : "blueocean-config",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Blue+Ocean+Plugin",
+      "version" : "1.16.0"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "bouncycastle-api",
+          "version" : "2.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Variant Plugin",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "1.580.1",
+      "shortName" : "variant",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Variant+Plugin",
+      "version" : "1.2"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "workflow-api",
+          "version" : "2.34"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-step-api",
+          "version" : "2.18"
+        },
+        {
+          "optional" : false,
+          "shortName" : "apache-httpcomponents-client-4-api",
+          "version" : "4.5.5-3.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "mailer",
+          "version" : "1.18"
+        },
+        {
+          "optional" : false,
+          "shortName" : "structs",
+          "version" : "1.17"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Pipeline: Basic Steps",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.138.4",
+      "shortName" : "workflow-basic-steps",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Pipeline+Basic+Steps+Plugin",
+      "version" : "2.16"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Jenkins Design Language",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.121.1",
+      "shortName" : "jenkins-design-language",
+      "supportsDynamicLoad" : "YES",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Jenkins+Design+Language",
+      "version" : "1.16.0"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "workflow-api",
+          "version" : "2.33"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-step-api",
+          "version" : "2.18"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-support",
+          "version" : "3.1"
+        },
+        {
+          "optional" : false,
+          "shortName" : "durable-task",
+          "version" : "1.29"
+        },
+        {
+          "optional" : false,
+          "shortName" : "scm-api",
+          "version" : "2.2.6"
+        },
+        {
+          "optional" : false,
+          "shortName" : "script-security",
+          "version" : "1.50"
+        },
+        {
+          "optional" : false,
+          "shortName" : "structs",
+          "version" : "1.17"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Pipeline: Nodes and Processes",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.150.1",
+      "shortName" : "workflow-durable-task-step",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins.io/display/JENKINS/Pipeline+Nodes+and+Processes+Plugin",
+      "version" : "2.30"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "workflow-step-api",
+          "version" : "2.16"
+        },
+        {
+          "optional" : false,
+          "shortName" : "scm-api",
+          "version" : "2.2.6"
+        },
+        {
+          "optional" : false,
+          "shortName" : "structs",
+          "version" : "1.17"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Pipeline: API",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.138.4",
+      "shortName" : "workflow-api",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins.io/display/JENKINS/Pipeline+API+Plugin",
+      "version" : "2.34"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "workflow-step-api",
+          "version" : "2.14"
+        },
+        {
+          "optional" : false,
+          "shortName" : "structs",
+          "version" : "1.14"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Token Macro Plugin",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.121.3",
+      "shortName" : "token-macro",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Token+Macro+Plugin",
+      "version" : "2.7"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : true,
+          "shortName" : "credentials",
+          "version" : "2.1.11"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Folders Plugin",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "2.130",
+      "shortName" : "cloudbees-folder",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins.io/display/JENKINS/CloudBees+Folders+Plugin",
+      "version" : "6.8"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "blueocean-pipeline-api-impl",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "apache-httpcomponents-client-4-api",
+          "version" : "4.5.5-3.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "github-api",
+          "version" : "1.90"
+        },
+        {
+          "optional" : false,
+          "shortName" : "github-branch-source",
+          "version" : "2.3.2"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jackson2-api",
+          "version" : "2.9.8"
+        },
+        {
+          "optional" : false,
+          "shortName" : "pubsub-light",
+          "version" : "1.12"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "GitHub Pipeline for Blue Ocean",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.121.1",
+      "shortName" : "blueocean-github-pipeline",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Blue+Ocean+Plugin",
+      "version" : "1.16.0"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "bouncycastle-api",
+          "version" : "2.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Durable Task Plugin",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "2.7.3",
+      "shortName" : "durable-task",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins.io/display/JENKINS/Durable+Task+Plugin",
+      "version" : "1.29"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "jackson2-api",
+          "version" : "2.9.7.1"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "GitHub API Plugin",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "2.60.3",
+      "shortName" : "github-api",
+      "supportsDynamicLoad" : "YES",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/GitHub+API+Plugin",
+      "version" : "1.95"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "bouncycastle-api",
+          "version" : "2.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "JavaScript GUI Lib: ACE Editor bundle plugin",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "1.580.1",
+      "shortName" : "ace-editor",
+      "supportsDynamicLoad" : "YES",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/ACE+Editor+Plugin",
+      "version" : "1.1"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "workflow-api",
+          "version" : "2.30"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-scm-step",
+          "version" : "2.4"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-step-api",
+          "version" : "2.19"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-support",
+          "version" : "3.3"
+        },
+        {
+          "optional" : false,
+          "shortName" : "scm-api",
+          "version" : "2.2.6"
+        },
+        {
+          "optional" : false,
+          "shortName" : "script-security",
+          "version" : "1.58"
+        },
+        {
+          "optional" : false,
+          "shortName" : "structs",
+          "version" : "1.17"
+        },
+        {
+          "optional" : false,
+          "shortName" : "ace-editor",
+          "version" : "1.0.1"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jquery-detached",
+          "version" : "1.2.1"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Pipeline: Groovy",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.121.1",
+      "shortName" : "workflow-cps",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins.io/display/JENKINS/Pipeline+Groovy+Plugin",
+      "version" : "2.68"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : true,
+          "shortName" : "cloudbees-folder",
+          "version" : "6.1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Matrix Authorization Strategy Plugin",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.138.3",
+      "shortName" : "matrix-auth",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Matrix+Authorization+Strategy+Plugin",
+      "version" : "2.4.2"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "workflow-scm-step",
+          "version" : "2.6"
+        },
+        {
+          "optional" : false,
+          "shortName" : "credentials",
+          "version" : "2.1.16"
+        },
+        {
+          "optional" : false,
+          "shortName" : "mapdb-api",
+          "version" : "1.0.1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "scm-api",
+          "version" : "2.2.6"
+        },
+        {
+          "optional" : false,
+          "shortName" : "ssh-credentials",
+          "version" : "1.12"
+        },
+        {
+          "optional" : false,
+          "shortName" : "structs",
+          "version" : "1.9"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Jenkins Subversion Plug-in",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "2.73.3",
+      "shortName" : "subversion",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins.io/display/JENKINS/Subversion+Plugin",
+      "version" : "2.12.1"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "workflow-cps",
+          "version" : "2.57"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-scm-step",
+          "version" : "2.4"
+        },
+        {
+          "optional" : false,
+          "shortName" : "cloudbees-folder",
+          "version" : "6.1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "credentials",
+          "version" : "2.1.14"
+        },
+        {
+          "optional" : false,
+          "shortName" : "git-client",
+          "version" : "2.6.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "git-server",
+          "version" : "1.7"
+        },
+        {
+          "optional" : false,
+          "shortName" : "scm-api",
+          "version" : "2.2.7"
+        },
+        {
+          "optional" : false,
+          "shortName" : "script-security",
+          "version" : "1.46"
+        },
+        {
+          "optional" : false,
+          "shortName" : "structs",
+          "version" : "1.15"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Pipeline: Shared Groovy Libraries",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "2.107.3",
+      "shortName" : "workflow-cps-global-lib",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins.io/display/JENKINS/Pipeline+Shared+Groovy+Libraries+Plugin",
+      "version" : "2.13"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "workflow-api",
+          "version" : "2.30"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-step-api",
+          "version" : "2.19"
+        },
+        {
+          "optional" : false,
+          "shortName" : "scm-api",
+          "version" : "2.2.6"
+        },
+        {
+          "optional" : false,
+          "shortName" : "script-security",
+          "version" : "1.39"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Pipeline: Supporting APIs",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.121.1",
+      "shortName" : "workflow-support",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins.io/display/JENKINS/Pipeline+Supporting+APIs+Plugin",
+      "version" : "3.3"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "bouncycastle-api",
+          "version" : "2.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Jenkins Pub-Sub \"light\" Bus",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "2.0",
+      "shortName" : "pubsub-light",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/PubSub+Light+Plugin",
+      "version" : "1.12"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "workflow-step-api",
+          "version" : "1.14"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-support",
+          "version" : "1.14"
+        },
+        {
+          "optional" : false,
+          "shortName" : "mailer",
+          "version" : "1.5"
+        },
+        {
+          "optional" : false,
+          "shortName" : "matrix-project",
+          "version" : "1.4"
+        },
+        {
+          "optional" : false,
+          "shortName" : "script-security",
+          "version" : "1.26"
+        },
+        {
+          "optional" : false,
+          "shortName" : "bouncycastle-api",
+          "version" : "2.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Lockable Resources plugin",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "1.609.1",
+      "shortName" : "lockable-resources",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Lockable+Resources+Plugin",
+      "version" : "2.5"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "blueocean-pipeline-scm-api",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "blueocean-rest-impl",
+          "version" : "1.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-api",
+          "version" : "2.32"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-cps",
+          "version" : "2.58"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-durable-task-step",
+          "version" : "2.26"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-job",
+          "version" : "2.29"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-multibranch",
+          "version" : "2.20"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-step-api",
+          "version" : "2.19"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-support",
+          "version" : "3.2"
+        },
+        {
+          "optional" : false,
+          "shortName" : "branch-api",
+          "version" : "2.0.20"
+        },
+        {
+          "optional" : false,
+          "shortName" : "credentials",
+          "version" : "2.1.16"
+        },
+        {
+          "optional" : false,
+          "shortName" : "git",
+          "version" : "3.8.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "github-branch-source",
+          "version" : "2.3.2"
+        },
+        {
+          "optional" : false,
+          "shortName" : "htmlpublisher",
+          "version" : "1.14"
+        },
+        {
+          "optional" : false,
+          "shortName" : "pipeline-build-step",
+          "version" : "2.7"
+        },
+        {
+          "optional" : false,
+          "shortName" : "pipeline-graph-analysis",
+          "version" : "1.7"
+        },
+        {
+          "optional" : false,
+          "shortName" : "pipeline-input-step",
+          "version" : "2.8"
+        },
+        {
+          "optional" : false,
+          "shortName" : "pipeline-stage-step",
+          "version" : "2.3"
+        },
+        {
+          "optional" : false,
+          "shortName" : "plain-credentials",
+          "version" : "1.4"
+        },
+        {
+          "optional" : false,
+          "shortName" : "scm-api",
+          "version" : "2.2.8"
+        },
+        {
+          "optional" : false,
+          "shortName" : "pipeline-model-definition",
+          "version" : "1.3.2"
+        },
+        {
+          "optional" : false,
+          "shortName" : "pipeline-stage-tags-metadata",
+          "version" : "1.3.2"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Pipeline implementation for Blue Ocean",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.121.1",
+      "shortName" : "blueocean-pipeline-api-impl",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Blue+Ocean+Plugin",
+      "version" : "1.16.0"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "mailer",
+          "version" : "1.18"
+        },
+        {
+          "optional" : false,
+          "shortName" : "matrix-project",
+          "version" : "1.7.1"
+        },
+        {
+          "optional" : false,
+          "shortName" : "token-macro",
+          "version" : "2.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "bouncycastle-api",
+          "version" : "2.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Favorite",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "1.625.3",
+      "shortName" : "favorite",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins.io/display/JENKINS/Favorite+Plugin",
+      "version" : "2.3.2"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "bouncycastle-api",
+          "version" : "2.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "JavaScript GUI Lib: Moment.js bundle plugin",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "1.580.1",
+      "shortName" : "momentjs",
+      "supportsDynamicLoad" : "YES",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Moment.js",
+      "version" : "1.1.1"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "apache-httpcomponents-client-4-api",
+          "version" : "4.5.3-2.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "authentication-tokens",
+          "version" : "1.3"
+        },
+        {
+          "optional" : false,
+          "shortName" : "display-url-api",
+          "version" : "2.3.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "git",
+          "version" : "3.6.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "handy-uri-templates-2-api",
+          "version" : "2.1.6-1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jackson2-api",
+          "version" : "2.9.8"
+        },
+        {
+          "optional" : false,
+          "shortName" : "mercurial",
+          "version" : "2.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "scm-api",
+          "version" : "2.2.7"
+        },
+        {
+          "optional" : false,
+          "shortName" : "structs",
+          "version" : "1.10"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Bitbucket Branch Source Plugin",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.60.3",
+      "shortName" : "cloudbees-bitbucket-branch-source",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins.io/display/JENKINS/Bitbucket+Branch+Source+Plugin",
+      "version" : "2.4.4"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "workflow-api",
+          "version" : "2.31"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-step-api",
+          "version" : "2.19"
+        },
+        {
+          "optional" : false,
+          "shortName" : "scm-api",
+          "version" : "2.2.6"
+        },
+        {
+          "optional" : false,
+          "shortName" : "script-security",
+          "version" : "1.46"
+        },
+        {
+          "optional" : false,
+          "shortName" : "structs",
+          "version" : "1.17"
+        },
+        {
+          "optional" : true,
+          "shortName" : "workflow-cps",
+          "version" : "2.58"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Pipeline Utility Steps",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.121.2",
+      "shortName" : "pipeline-utility-steps",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins.io/display/JENKINS/Pipeline+Utility+Steps+Plugin",
+      "version" : "2.3.0"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "structs",
+          "version" : "1.19"
+        },
+        {
+          "optional" : false,
+          "shortName" : "script-security",
+          "version" : "1.54"
+        },
+        {
+          "optional" : true,
+          "shortName" : "config-file-provider",
+          "version" : "2.15.4"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Job DSL",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "2.121",
+      "shortName" : "job-dsl",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Job+DSL+Plugin",
+      "version" : "1.74"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "credentials",
+          "version" : "2.1.17"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "SSH Credentials Plugin",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.73.3",
+      "shortName" : "ssh-credentials",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins.io/display/JENKINS/SSH+Credentials+Plugin",
+      "version" : "1.16"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "workflow-scm-step",
+          "version" : "2.4"
+        },
+        {
+          "optional" : false,
+          "shortName" : "workflow-step-api",
+          "version" : "2.13"
+        },
+        {
+          "optional" : false,
+          "shortName" : "credentials",
+          "version" : "2.1.14"
+        },
+        {
+          "optional" : false,
+          "shortName" : "git-client",
+          "version" : "2.7.7"
+        },
+        {
+          "optional" : false,
+          "shortName" : "mailer",
+          "version" : "1.18"
+        },
+        {
+          "optional" : false,
+          "shortName" : "matrix-project",
+          "version" : "1.7.1"
+        },
+        {
+          "optional" : false,
+          "shortName" : "scm-api",
+          "version" : "2.2.6"
+        },
+        {
+          "optional" : false,
+          "shortName" : "ssh-credentials",
+          "version" : "1.13"
+        },
+        {
+          "optional" : false,
+          "shortName" : "structs",
+          "version" : "1.18"
+        },
+        {
+          "optional" : true,
+          "shortName" : "token-macro",
+          "version" : "1.12.1"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Jenkins Git plugin",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.121.1",
+      "shortName" : "git",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "http://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin",
+      "version" : "3.10.0"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "pubsub-light",
+          "version" : "1.6"
+        },
+        {
+          "optional" : false,
+          "shortName" : "bouncycastle-api",
+          "version" : "2.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Server Sent Events (SSE) Gateway Plugin",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "2.2",
+      "shortName" : "sse-gateway",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/SSE+Gateway+Plugin",
+      "version" : "1.17"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "credentials",
+          "version" : "2.1.16"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Plain Credentials Plugin",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.60.3",
+      "shortName" : "plain-credentials",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins.io/display/JENKINS/Plain+Credentials+Plugin",
+      "version" : "1.5"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "token-macro",
+          "version" : "1.5.1"
+        },
+        {
+          "optional" : false,
+          "shortName" : "bouncycastle-api",
+          "version" : "2.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Build Timeout",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "1.625.1",
+      "shortName" : "build-timeout",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "http://wiki.jenkins-ci.org/display/JENKINS/Build-timeout+Plugin",
+      "version" : "1.19"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "workflow-durable-task-step",
+          "version" : "2.4"
+        },
+        {
+          "optional" : false,
+          "shortName" : "matrix-project",
+          "version" : "1.7.1"
+        },
+        {
+          "optional" : false,
+          "shortName" : "resource-disposer",
+          "version" : "0.3"
+        },
+        {
+          "optional" : false,
+          "shortName" : "script-security",
+          "version" : "1.18.1"
+        },
+        {
+          "optional" : false,
+          "shortName" : "structs",
+          "version" : "1.5"
+        },
+        {
+          "optional" : false,
+          "shortName" : "bouncycastle-api",
+          "version" : "2.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Jenkins Workspace Cleanup Plugin",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "1.642.1",
+      "shortName" : "ws-cleanup",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "http://wiki.jenkins-ci.org/display/JENKINS/Workspace+Cleanup+Plugin",
+      "version" : "0.37"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "junit",
+          "version" : "1.20"
+        },
+        {
+          "optional" : false,
+          "shortName" : "script-security",
+          "version" : "1.54"
+        },
+        {
+          "optional" : false,
+          "shortName" : "bouncycastle-api",
+          "version" : "2.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Matrix Project Plugin",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "2.7.3",
+      "shortName" : "matrix-project",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Matrix+Project+Plugin",
+      "version" : "1.14"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "mailer",
+          "version" : "1.20"
+        },
+        {
+          "optional" : false,
+          "shortName" : "bouncycastle-api",
+          "version" : "2.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "LDAP Plugin",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "1.651.3",
+      "shortName" : "ldap",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/LDAP+Plugin",
+      "version" : "1.20"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "credentials",
+          "version" : "1.22"
+        },
+        {
+          "optional" : false,
+          "shortName" : "bouncycastle-api",
+          "version" : "2.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Authentication Tokens API Plugin",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "1.580.1",
+      "shortName" : "authentication-tokens",
+      "supportsDynamicLoad" : "YES",
+      "url" : "http://wiki.jenkins-ci.org/display/JENKINS/Authentication+Tokens+API+Plugin",
+      "version" : "1.3"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : true,
+      "longName" : "Jackson 2 API Plugin",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "2.60.3",
+      "shortName" : "jackson2-api",
+      "supportsDynamicLoad" : "YES",
+      "url" : "https://wiki.jenkins.io/display/JENKINS/Jackson2+API+Plugin",
+      "version" : "2.9.8"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "pipeline-model-extensions",
+          "version" : "1.1.1"
+        },
+        {
+          "optional" : false,
+          "shortName" : "bouncycastle-api",
+          "version" : "2.16.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Pipeline: Declarative Agent API",
+      "minimumJavaVersion" : null,
+      "pinned" : false,
+      "requiredCoreVersion" : "2.7.1",
+      "shortName" : "pipeline-model-declarative-agent",
+      "supportsDynamicLoad" : "YES",
+      "url" : "https://wiki.jenkins-ci.org/display/JENKINS/Pipeline+Model+Definition+Plugin",
+      "version" : "1.1.1"
+    },
+    {
+      "active" : true,
+      "backupVersion" : null,
+      "bundled" : false,
+      "deleted" : false,
+      "dependencies" : [
+        {
+          "optional" : false,
+          "shortName" : "workflow-step-api",
+          "version" : "2.18"
+        },
+        {
+          "optional" : false,
+          "shortName" : "credentials",
+          "version" : "2.1.7"
+        },
+        {
+          "optional" : false,
+          "shortName" : "plain-credentials",
+          "version" : "1.3"
+        },
+        {
+          "optional" : false,
+          "shortName" : "ssh-credentials",
+          "version" : "1.11"
+        },
+        {
+          "optional" : false,
+          "shortName" : "structs",
+          "version" : "1.7"
+        },
+        {
+          "optional" : false,
+          "shortName" : "command-launcher",
+          "version" : "1.0"
+        },
+        {
+          "optional" : false,
+          "shortName" : "jdk-tool",
+          "version" : "1.0"
+        }
+      ],
+      "downgradable" : false,
+      "enabled" : true,
+      "hasUpdate" : false,
+      "longName" : "Credentials Binding Plugin",
+      "minimumJavaVersion" : "1.8",
+      "pinned" : false,
+      "requiredCoreVersion" : "2.60.3",
+      "shortName" : "credentials-binding",
+      "supportsDynamicLoad" : "MAYBE",
+      "url" : "https://wiki.jenkins.io/display/JENKINS/Credentials+Binding+Plugin",
+      "version" : "1.18"
+    }
+  ]
+}
