@@ -3,6 +3,7 @@ package ru.pulsar.jenkins.library.steps;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.pulsar.jenkins.library.IStepExecutor;
+import ru.pulsar.jenkins.library.MockStepExecutor;
 import ru.pulsar.jenkins.library.ioc.ContextRegistry;
 import ru.pulsar.jenkins.library.ioc.IContext;
 
@@ -13,6 +14,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -23,7 +25,7 @@ class CmdTest {
   @BeforeEach
   void setUp() {
     IContext context = mock(IContext.class);
-    steps = mock(IStepExecutor.class);
+    steps = spy(new MockStepExecutor());
 
     when(context.getStepExecutor()).thenReturn(steps);
 
@@ -52,12 +54,13 @@ class CmdTest {
     final String script = "false";
     Cmd cmd = new Cmd(script);
 
-    when(steps.bat(anyString(), anyBoolean(), anyString())).thenReturn(1);
-    when(steps.sh(anyString(), anyBoolean(), anyString())).thenReturn(1);
+    String thrownText = "failed";
+    when(steps.bat(anyString(), anyBoolean(), anyString())).thenThrow(new Error(thrownText));
+    when(steps.sh(anyString(), anyBoolean(), anyString())).thenThrow(new Error(thrownText));
 
     // when
     Throwable thrown = catchThrowable(cmd::run);
-    assertThat(thrown).hasMessageContaining("<1>");
+    assertThat(thrown).hasMessageContaining(thrownText);
 
     // then
     verify(steps).isUnix();

@@ -24,11 +24,7 @@ class Cmd implements Serializable {
         } else {
             returnValue = steps.bat("chcp 65001 > nul \n$script", returnStatus, encoding)
         }
-
-        if (!returnStatus && returnValue != 0) {
-            throw new Error("Returned status code <$returnValue> is not equal to 0.");
-        }
-
+        
         return returnValue
     }
 }
