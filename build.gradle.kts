@@ -16,17 +16,25 @@ val junitVersion = "5.6.1"
 val spockVersion = "1.3-groovy-2.4"
 val groovyVersion = "2.4.19"
 val slf4jVersion = "1.8.0-beta4"
+var jacksonVersion = "2.9.8"
 
 dependencies {
     implementation("org.codehaus.groovy", "groovy-all", groovyVersion)
 
+    // jackson
+    implementation("com.fasterxml.jackson.module", "jackson-module-jsonSchema", jacksonVersion)
+
+    // unit-tests
     testImplementation("org.junit.jupiter", "junit-jupiter-api", junitVersion)
     testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", junitVersion)
 
     testImplementation("org.assertj", "assertj-core", "3.15.0")
     testImplementation("org.mockito", "mockito-core", "3.3.3")
 
-    testImplementation("org.spockframework", "spock-core", spockVersion)
+    testImplementation("org.slf4j", "slf4j-api", slf4jVersion)
+    testImplementation("org.slf4j", "slf4j-simple", slf4jVersion)
+
+    // integration-tests
     integrationTestImplementation("org.spockframework", "spock-core", spockVersion)
     integrationTestImplementation("org.codehaus.groovy", "groovy-all", groovyVersion)
 

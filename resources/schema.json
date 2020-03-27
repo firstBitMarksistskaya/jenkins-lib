@@ -1,0 +1,14 @@
+{
+  "type" : "object",
+  "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:JobConfiguration",
+  "properties" : {
+    "v8version" : {
+      "type" : "string",
+      "description" : "Версия платформы 1С:Предприятие в формате 8.3.хх.хххх."
+    },
+    "sonarScannerToolName" : {
+      "type" : "string",
+      "description" : "Имя настроенной утилиты sonar-scanner."
+    }
+  }
+}

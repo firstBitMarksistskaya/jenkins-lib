@@ -8,4 +8,6 @@ interface IStepExecutor {
     
     int bat(String script, boolean returnStatus, String encoding)
 
+    String libraryResource(String path)
+
 }

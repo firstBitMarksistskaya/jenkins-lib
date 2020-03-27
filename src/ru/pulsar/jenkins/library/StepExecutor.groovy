@@ -22,4 +22,9 @@ class StepExecutor implements IStepExecutor {
     int bat(String script, boolean returnStatus, String encoding) {
         steps.bat script: script, returnStatus: returnStatus, encoding: encoding
     }
+
+    @Override
+    String libraryResource(String path) {
+        steps.libraryResource path
+    }
 }
