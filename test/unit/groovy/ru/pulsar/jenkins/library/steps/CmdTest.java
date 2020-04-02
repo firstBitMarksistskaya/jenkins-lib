@@ -34,7 +34,10 @@ class CmdTest {
 
     // then
     verify(steps).isUnix();
-    verify(steps).bat(contains(script), eq(false), anyString());
+    assertThat(steps).satisfiesAnyOf(
+      steps -> verify(steps).bat(contains(script), eq(false), anyString()),
+      steps -> verify(steps).sh(contains(script), eq(false), anyString())
+    );
 
     assertThat(run).isEqualTo(0);
   }
