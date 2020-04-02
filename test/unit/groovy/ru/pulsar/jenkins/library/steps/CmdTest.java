@@ -3,9 +3,7 @@ package ru.pulsar.jenkins.library.steps;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.pulsar.jenkins.library.IStepExecutor;
-import ru.pulsar.jenkins.library.MockStepExecutor;
-import ru.pulsar.jenkins.library.ioc.ContextRegistry;
-import ru.pulsar.jenkins.library.ioc.IContext;
+import ru.pulsar.jenkins.library.utils.TestUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -13,23 +11,16 @@ import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class CmdTest {
 
-  private IStepExecutor steps;
+  private IStepExecutor steps = TestUtils.getMockedStepExecutor();
 
   @BeforeEach
   void setUp() {
-    IContext context = mock(IContext.class);
-    steps = spy(new MockStepExecutor());
-
-    when(context.getStepExecutor()).thenReturn(steps);
-
-    ContextRegistry.registerContext(context);
+    TestUtils.setupMockedContext(steps);
   }
 
   @Test
