@@ -63,7 +63,7 @@ void call() {
                                 }
                             }
 
-                            stages {
+                            stage('Проверка качества') {
                                 parallel {
                                     stage('Синтаксический контроль') {
                                         steps {
