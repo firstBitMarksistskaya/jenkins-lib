@@ -2,8 +2,6 @@ package ru.pulsar.jenkins.library.configuration
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder
-import org.apache.commons.lang3.builder.ToStringStyle
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 class JobConfiguration implements Serializable {
@@ -18,6 +16,10 @@ class JobConfiguration implements Serializable {
 
     @Override
     String toString() {
-        return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE)
+        return "JobConfiguration{" +
+            "v8version='" + v8version + '\'' +
+            ", sonarScannerToolName='" + sonarScannerToolName + '\'' +
+            ", secrets=" + secrets.toString() +
+            '}';
     }
 }
