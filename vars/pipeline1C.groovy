@@ -2,10 +2,10 @@ import ru.pulsar.jenkins.library.configuration.JobConfiguration
 
 import java.util.concurrent.TimeUnit
 
-void call() {
+def config
+def agent1C
 
-    def config = jobConfiguration() as JobConfiguration
-    def agent1C = config.v8version
+void call() {
 
     //noinspection GroovyAssignabilityCheck
     pipeline {
@@ -17,14 +17,19 @@ void call() {
             timestamps()
         }
 
-        environment {
-            STORAGE_PATH = credentials(jobConfiguration.secrets.storagePath)
-            STORAGE = credentials(jobConfiguration.secrets.storage)
-        }
-
         stages {
 
+            stage('pre-stage') {
+                config = jobConfiguration() as JobConfiguration
+                agent1C = config.v8version
+            }
+
             stage('pipeline1C') {
+                environment {
+                    STORAGE_PATH = credentials(jobConfiguration.secrets.storagePath)
+                    STORAGE = credentials(jobConfiguration.secrets.storage)
+                }
+
                 parallel {
                     stage('SonarQube') {
                         agent {
