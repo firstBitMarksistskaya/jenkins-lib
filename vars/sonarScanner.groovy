@@ -11,8 +11,7 @@ def call(String rootFile = 'src/cf/Configuration.xml') {
     String scannerHome = tool config.sonarScannerToolName
     sonarCommand = "$scannerHome/bin/sonar-scanner -Dsonar.branch.name=$env.BRANCH_NAME"
 
-    def configurationText = readFile encoding: 'UTF-8', file: rootFile
-    String configurationVersion = version(configurationText)
+    String configurationVersion = versionParser.configuration(rootFile)
     if (configurationVersion) {
         sonarCommand += " -Dsonar.projectVersion=$configurationVersion"
     }
