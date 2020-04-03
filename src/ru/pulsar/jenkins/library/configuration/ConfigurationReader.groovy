@@ -1,28 +1,46 @@
 package ru.pulsar.jenkins.library.configuration
 
+import com.cloudbees.groovy.cps.NonCPS
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.commons.beanutils.BeanUtils
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 
 class ConfigurationReader implements Serializable {
-    static JobConfiguration create(String config) {
+
+    private static ObjectMapper mapper = new ObjectMapper()
+    private static final String DEFAULT_CONFIGURATION_RESOURCE = 'globalConfiguration.json'
+
+    static JobConfiguration create() {
         IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
 
-        def mapper = new ObjectMapper()
-        def globalConfig = steps.libraryResource 'globalConfiguration.json'
+        def globalConfig = steps.libraryResource DEFAULT_CONFIGURATION_RESOURCE
 
         def globalConfiguration = mapper.readValue(globalConfig, JobConfiguration.class)
+
+        return globalConfiguration
+    }
+
+    static JobConfiguration create(String config) {
+        def globalConfiguration = create()
         def jobConfiguration = mapper.readValue(config, JobConfiguration.class)
 
-        BeanUtils.describe(jobConfiguration).entrySet().stream()
+        return mergeConfigurations(globalConfiguration, jobConfiguration);
+    }
+
+    @NonCPS
+    private static JobConfiguration mergeConfigurations(
+        JobConfiguration baseConfiguration,
+        JobConfiguration configurationToMerge
+    ) {
+        BeanUtils.describe(configurationToMerge).entrySet().stream()
             .filter({ e -> e.getValue() != null })
             .filter({ e -> e.getKey() != "class" })
             .filter({ e -> e.getKey() != "metaClass" })
-            .forEach { e ->
-                BeanUtils.setProperty(globalConfiguration, e.getKey(), e.getValue());
+            .forEach {e ->
+                BeanUtils.setProperty(baseConfiguration, e.getKey(), e.getValue());
             }
 
-        return globalConfiguration
+        return baseConfiguration;
     }
 }

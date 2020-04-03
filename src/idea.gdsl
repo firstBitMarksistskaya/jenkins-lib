@@ -46,6 +46,7 @@ contributor(ctx) {
     method(name: 'readProperties', type: 'Object', namedParams: [parameter(name: 'defaults', type: 'java.util.Map'), parameter(name: 'file', type: 'java.lang.String'), parameter(name: 'interpolate', type: 'java.lang.Boolean'), parameter(name: 'text', type: 'java.lang.String'),], doc: 'Read properties from files in the workspace or text.')
     method(name: 'readFile', type: 'java.lang.String', params: [file: 'java.lang.String'], doc: 'Read file from workspace')
     method(name: 'readFile', type: 'java.lang.String', namedParams: [parameter(name: 'file', type: 'java.lang.String'), parameter(name: 'encoding', type: 'java.lang.String'),], doc: 'Read file from workspace')
+    method(name: 'fileExists', type: 'Object', params: [file: 'java.lang.String'], doc: 'Verify if file exists in workspace')
     method(name: 'readTrusted', type: 'Object', params: [path: 'java.lang.String'], doc: 'Read trusted file from SCM')
     method(name: 'readYaml', type: 'Object', params: [:], doc: 'Read yaml from files in the workspace or text.')
     method(name: 'readYaml', type: 'Object', namedParams: [parameter(name: 'file', type: 'java.lang.String'), parameter(name: 'text', type: 'java.lang.String'),], doc: 'Read yaml from files in the workspace or text.')
