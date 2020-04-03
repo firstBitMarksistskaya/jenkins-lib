@@ -32,7 +32,7 @@ void call() {
                         }
 
                         steps {
-                            log.location()
+                            printLocation()
 
                             sonarScanner()
                         }
@@ -46,7 +46,7 @@ void call() {
                         stages {
                             stage('Подготовка базы') {
                                 steps {
-                                    log.location()
+                                    printLocation()
 
                                     installLocalDependencies()
 
@@ -67,7 +67,7 @@ void call() {
                                 parallel {
                                     stage('Синтаксический контроль') {
                                         steps {
-                                            log.location()
+                                            printLocation()
 
                                             installLocalDependencies()
 
@@ -82,7 +82,7 @@ void call() {
 
                                     stage('Дымовые тесты') {
                                         steps {
-                                            log.location()
+                                            printLocation()
 
                                             installLocalDependencies()
 
