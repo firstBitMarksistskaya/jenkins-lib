@@ -20,8 +20,12 @@ void call() {
         stages {
 
             stage('pre-stage') {
-                config = jobConfiguration() as JobConfiguration
-                agent1C = config.v8version
+                steps {
+                    script {
+                        config = jobConfiguration() as JobConfiguration
+                        agent1C = config.v8version
+                    }
+                }
             }
 
             stage('pipeline1C') {
