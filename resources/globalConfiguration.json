@@ -1,4 +1,8 @@
 {
   "$schema": "schema.json",
-  "sonarScannerToolName": "sonar-scanner"
+  "sonarScannerToolName": "sonar-scanner",
+  "secrets": {
+    "storagePath": "UNKNOWN_ID",
+    "storage": "UNKNOWN_ID"
+  }
 }

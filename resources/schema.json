@@ -9,6 +9,21 @@
     "sonarScannerToolName" : {
       "type" : "string",
       "description" : "Имя настроенной утилиты sonar-scanner."
+    },
+    "secrets" : {
+      "type" : "object",
+      "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:Secrets",
+      "description" : "Идентификаторы сохраненных секретов",
+      "properties" : {
+        "storagePath" : {
+          "type" : "string",
+          "description" : "Путь к хранилищу конфигурации"
+        },
+        "storage" : {
+          "type" : "string",
+          "description" : "Данные авторизации в хранилище конфигурации"
+        }
+      }
     }
   }
 }

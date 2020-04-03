@@ -13,6 +13,9 @@ class JobConfiguration implements Serializable {
     @JsonPropertyDescription("Имя настроенной утилиты sonar-scanner.")
     String sonarScannerToolName
 
+    @JsonPropertyDescription("Идентификаторы сохраненных секретов")
+    Secrets secrets;
+
     @Override
     String toString() {
         return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE)
