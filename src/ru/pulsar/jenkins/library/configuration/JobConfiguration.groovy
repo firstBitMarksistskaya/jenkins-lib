@@ -15,6 +15,6 @@ class JobConfiguration implements Serializable {
 
     @Override
     String toString() {
-        return ReflectionToStringBuilder.toString(this, ToStringStyle.NO_CLASS_NAME_STYLE)
+        return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE)
     }
 }
