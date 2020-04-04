@@ -28,74 +28,68 @@ void call() {
                 }
             }
 
-            stage('pipeline1C') {
+            stage('SonarQube') {
+                agent {
+                    label 'sonar'
+                }
+                steps {
+                    printLocation()
 
-                parallel {
-                    stage('SonarQube') {
-                        agent {
-                            label 'sonar'
-                        }
+                    sonarScanner()
+                }
+            }
 
+            stage('1C') {
+                agent {
+                    label agent1C
+                }
+
+                stages {
+                    stage('Подготовка базы') {
                         steps {
                             printLocation()
 
-                            sonarScanner()
+                            installLocalDependencies()
+
+                            dir("build/out") { echo '' }
+
+                            script {
+                                def storageVersion = versionParser.storage()
+
+                                // Создание базы загрузкой конфигурации из хранилища
+                                withStorageCredentials(jobConfiguration) {
+                                    cmd "oscript_modules/bin/vrunner init-dev --storage --storage-name $STORAGE_PATH --storage-user $STORAGE_USR --storage-pwd $STORAGE_PSW --storage-ver $storageVersion --ibconnection \"/F./build/ib\""
+                                }
+                            }
+
+                            zipInfobase()
                         }
                     }
 
-                    stage('1C') {
-                        agent {
-                            label agent1C
-                        }
-
-                        stages {
-                            stage('Подготовка базы') {
+                    stage('Проверка качества') {
+                        parallel {
+                            stage('Синтаксический контроль') {
                                 steps {
                                     printLocation()
 
                                     installLocalDependencies()
 
-                                    dir("build/out") { echo '' }
+                                    unzipInfobase()
 
-                                    script {
-                                        def storageVersion = versionParser.storage()
+                                    // Запуск синтакс-проверки
+                                    cmd("oscript_modules/bin/vrunner syntax-check --settings tools/vrunner.json", true)
 
-                                        // Создание базы загрузкой конфигурации из хранилища
-                                        withStorageCredentials(jobConfiguration) {
-                                            cmd "oscript_modules/bin/vrunner init-dev --storage --storage-name $STORAGE_PATH --storage-user $STORAGE_USR --storage-pwd $STORAGE_PSW --storage-ver $storageVersion --ibconnection \"/F./build/ib\""
-                                        }
-                                    }
-
-                                    zipInfobase()
+                                    junit allowEmptyResults: true, testResults: 'build/out/junitsyntax.xml'
                                 }
                             }
 
-                            stage('Проверка качества') {
-                                parallel {
-                                    stage('Синтаксический контроль') {
-                                        steps {
-                                            printLocation()
+                            stage('Дымовые тесты') {
+                                steps {
+                                    printLocation()
 
-                                            installLocalDependencies()
+                                    installLocalDependencies()
 
-                                            unzipInfobase()
-
-                                            // Запуск синтакс-проверки
-                                            cmd("oscript_modules/bin/vrunner syntax-check --settings tools/vrunner.json", true)
-
-                                            junit allowEmptyResults: true, testResults: 'build/out/junitsyntax.xml'
-                                        }
-                                    }
-
-                                    stage('Дымовые тесты') {
-                                        steps {
-                                            printLocation()
-
-                                            installLocalDependencies()
-
-                                            unzipInfobase()
-                                        }
-                                    }
+                                    unzipInfobase()
                                 }
                             }
                         }
