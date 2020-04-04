@@ -20,6 +20,7 @@ void call() {
         stages {
 
             stage('pre-stage') {
+                agent any
                 steps {
                     script {
                         config = jobConfiguration() as JobConfiguration
