@@ -29,10 +29,6 @@ void call() {
             }
 
             stage('pipeline1C') {
-                environment {
-                    STORAGE_PATH = credentials(jobConfiguration.secrets.storagePath)
-                    STORAGE = credentials(jobConfiguration.secrets.storage)
-                }
 
                 parallel {
                     stage('SonarQube') {
@@ -65,7 +61,9 @@ void call() {
                                         def storageVersion = versionParser.storage()
 
                                         // Создание базы загрузкой конфигурации из хранилища
-                                        cmd "oscript_modules/bin/vrunner init-dev --storage --storage-name $STORAGE_PATH --storage-user $STORAGE_USR --storage-pwd $STORAGE_PSW --storage-ver $storageVersion --ibconnection \"/F./build/ib\""
+                                        withStorageCredentials(jobConfiguration) {
+                                            cmd "oscript_modules/bin/vrunner init-dev --storage --storage-name $STORAGE_PATH --storage-user $STORAGE_USR --storage-pwd $STORAGE_PSW --storage-ver $storageVersion --ibconnection \"/F./build/ib\""
+                                        }
                                     }
 
                                     zipInfobase()
