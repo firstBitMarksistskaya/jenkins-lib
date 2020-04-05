@@ -1,6 +1,6 @@
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 
-def call(JobConfiguration jobConfiguration, Closure body) {
+def <T extends Closure> void call(JobConfiguration jobConfiguration, T body) {
     withCredentials([
         usernamePassword(
             credentialsId: jobConfiguration.secrets.storage,
