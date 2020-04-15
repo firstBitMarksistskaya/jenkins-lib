@@ -6,10 +6,6 @@
       "type" : "string",
       "description" : "Версия платформы 1С:Предприятие в формате 8.3.хх.хххх."
     },
-    "sonarScannerToolName" : {
-      "type" : "string",
-      "description" : "Имя настроенной утилиты sonar-scanner."
-    },
     "secrets" : {
       "type" : "object",
       "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:Secrets",
@@ -22,6 +18,29 @@
         "storage" : {
           "type" : "string",
           "description" : "Данные авторизации в хранилище конфигурации"
+        }
+      }
+    },
+    "sonarqube" : {
+      "type" : "object",
+      "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:SonarQubeOptions",
+      "description" : "Настройки анализа SonarQube",
+      "properties" : {
+        "enabled" : {
+          "type" : "boolean",
+          "description" : "Анализ SonarQube включен"
+        },
+        "sonarQubeInstallation" : {
+          "type" : "string",
+          "description" : "Имя настроенного SonarQube-сервера (SonarQube installations).\nЕсли настроен только один сервер, то может быть оставлено пустым."
+        },
+        "useSonarScannerFromPath" : {
+          "type" : "boolean",
+          "description" : "Использовать sonar-scanner, доступный в PATH"
+        },
+        "sonarScannerToolName" : {
+          "type" : "string",
+          "description" : "Имя настроенной утилиты sonar-scanner.\nПрименяется, если useSonarScannerFromPath установлено в false."
         }
       }
     }
