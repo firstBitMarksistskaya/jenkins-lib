@@ -1,3 +1,5 @@
+import ru.pulsar.jenkins.library.steps.Logger
+
 def call() {
-    echo "Running on node $env.NODE_NAME"
+    Logger.printLocation()
 }
