@@ -1,5 +1,6 @@
 package ru.pulsar.jenkins.library.configuration
 
+import com.cloudbees.groovy.cps.NonCPS
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
 
@@ -12,8 +13,8 @@ class Secrets implements Serializable {
     @JsonPropertyDescription("Данные авторизации в хранилище конфигурации")
     String storage
 
-
     @Override
+    @NonCPS
     String toString() {
         return "Secrets{" +
             "storagePath='" + storagePath + '\'' +

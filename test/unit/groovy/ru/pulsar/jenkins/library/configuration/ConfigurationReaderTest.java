@@ -31,7 +31,7 @@ class ConfigurationReaderTest {
 
     // then
     assertThat(jobConfiguration.getV8version()).isEqualTo("8.3.14.1944");
-    assertThat(jobConfiguration.getSonarScannerToolName()).isEqualTo("sonar-scanner");
+    assertThat(jobConfiguration.getSonarQubeOptions().getSonarScannerToolName()).isEqualTo("sonar-scanner");
     assertThat(jobConfiguration.getSecrets())
       .hasFieldOrPropertyWithValue("storage", "1234")
       .hasFieldOrPropertyWithValue("storagePath", "UNKNOWN_ID")
