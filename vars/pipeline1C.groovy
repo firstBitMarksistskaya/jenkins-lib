@@ -40,9 +40,7 @@ void call() {
                     label 'sonar'
                 }
                 steps {
-                    printLocation()
-
-                    sonarScanner()
+                    sonarScanner config
                 }
             }
 

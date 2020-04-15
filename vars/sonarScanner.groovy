@@ -1,29 +1,10 @@
-import com.cloudbees.groovy.cps.NonCPS
-import groovy.transform.Field
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
-import ru.pulsar.jenkins.library.utils.VersionParser
+import ru.pulsar.jenkins.library.ioc.ContextRegistry
+import ru.pulsar.jenkins.library.steps.SonarScanner
 
-@Field def sonarCommand
+def call(JobConfiguration config, String rootFile = 'src/cf/Configuration.xml') {
+    ContextRegistry.registerDefaultContext(this)
 
-def call(String rootFile = 'src/cf/Configuration.xml') {
-
-    def config = jobConfiguration() as JobConfiguration
-
-    String scannerHome = tool config.sonarScannerToolName
-    sonarCommand = "$scannerHome/bin/sonar-scanner -Dsonar.branch.name=$env.BRANCH_NAME"
-
-    String configurationVersion = VersionParser.configuration(rootFile)
-    if (configurationVersion) {
-        sonarCommand += " -Dsonar.projectVersion=$configurationVersion"
-    }
-
-    withSonarQubeEnv('qa.dev.pulsar.ru') {
-        cmd sonarCommand
-    }
-}
-
-@NonCPS
-private static String version(String text) {
-    def matcher = text =~ /<Version>(.*)<\/Version>/
-    return matcher ? matcher.group(1) : ""
+    def sonarScanner = new SonarScanner(config, rootFile)
+    sonarScanner.run()
 }
