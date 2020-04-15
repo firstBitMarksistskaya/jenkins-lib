@@ -10,4 +10,5 @@ interface IStepExecutor {
 
     String libraryResource(String path)
 
+    String readFile(String file, String encoding)
 }

@@ -1,6 +1,7 @@
 import com.cloudbees.groovy.cps.NonCPS
 import groovy.transform.Field
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
+import ru.pulsar.jenkins.library.utils.VersionParser
 
 @Field def sonarCommand
 
@@ -11,7 +12,7 @@ def call(String rootFile = 'src/cf/Configuration.xml') {
     String scannerHome = tool config.sonarScannerToolName
     sonarCommand = "$scannerHome/bin/sonar-scanner -Dsonar.branch.name=$env.BRANCH_NAME"
 
-    String configurationVersion = versionParser.configuration(rootFile)
+    String configurationVersion = VersionParser.configuration(rootFile)
     if (configurationVersion) {
         sonarCommand += " -Dsonar.projectVersion=$configurationVersion"
     }

@@ -27,4 +27,9 @@ class StepExecutor implements IStepExecutor {
     String libraryResource(String path) {
         steps.libraryResource path
     }
+
+    @Override
+    String readFile(String file, String encoding) {
+        steps.readFile encoding: encoding, file: file
+    }
 }

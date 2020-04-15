@@ -56,12 +56,8 @@ void call() {
 
                             dir("build/out") { echo '' }
 
-                            script {
-                                def storageVersion = versionParser.storage()
-
-                                // Создание базы загрузкой конфигурации из хранилища
-                                initFromStorage(jobConfiguration, storageVersion)
-                            }
+                            // Создание базы загрузкой конфигурации из хранилища
+                            initFromStorage(jobConfiguration)
 
 
                             zipInfobase()

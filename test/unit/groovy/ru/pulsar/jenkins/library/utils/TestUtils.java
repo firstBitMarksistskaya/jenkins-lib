@@ -28,6 +28,12 @@ public class TestUtils {
       );
     });
 
+    when(steps.readFile(anyString(), anyString())).thenAnswer(invocation -> {
+      String file = invocation.getArgument(0);
+      String encoding = invocation.getArgument(1);
+      return FileUtils.readFileToString(new File(file), encoding);
+    });
+
     return steps;
   }
 
