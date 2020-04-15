@@ -32,4 +32,26 @@ class StepExecutor implements IStepExecutor {
     String readFile(String file, String encoding) {
         steps.readFile encoding: encoding, file: file
     }
+
+    @Override
+    void echo(Object message) {
+        steps.echo message
+    }
+
+    @Override
+    void cmd(String script, boolean returnStatus = false) {
+        steps.cmd script: script, returnStatus: returnStatus
+    }
+
+    @Override
+    void tool(String toolName) {
+        steps.tool toolName
+    }
+
+    @Override
+    void withSonarQubeEnv(String installationName, Closure body) {
+        steps.withSonarQubeEnv(installationName) {
+            body()
+        }
+    }
 }
