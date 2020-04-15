@@ -32,10 +32,12 @@ class ConfigurationReader implements Serializable {
         JobConfiguration baseConfiguration,
         JobConfiguration configurationToMerge
     ) {
-        def nonMergeableSettings = Arrays.asList("secrets").toSet()
+        def nonMergeableSettings = Arrays.asList(
+            "secrets",
+            "sonarQubeOptions"
+        ).toSet()
 
-        mergeObjects(baseConfiguration, configurationToMerge, nonMergeableSettings);
-        mergeObjects(baseConfiguration.secrets, configurationToMerge.secrets, Collections.emptySet())
+        mergeObjects(baseConfiguration, configurationToMerge, nonMergeableSettings)
 
         return baseConfiguration;
     }
@@ -47,8 +49,16 @@ class ConfigurationReader implements Serializable {
             .filter({ e -> e.getKey() != "class" })
             .filter({ e -> e.getKey() != "metaClass" })
             .filter({ e -> !nonMergeableSettings.contains(e.getKey()) })
-            .forEach {e ->
+            .forEach { e ->
                 BeanUtils.setProperty(baseObject, e.getKey(), e.getValue());
             }
+
+        nonMergeableSettings.forEach({ key ->
+            mergeObjects(
+                baseObject[key],
+                objectToMerge[key],
+                Collections.emptySet()
+            )
+        })
     }
 }
