@@ -61,7 +61,7 @@ void call() {
                             dir("build/out") { echo '' }
 
                             // Создание базы загрузкой конфигурации из хранилища
-                            initFromStorage(config)
+                            initFromStorage config
 
                             zipInfobase()
                         }
