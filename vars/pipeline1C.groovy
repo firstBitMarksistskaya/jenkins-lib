@@ -1,8 +1,12 @@
+import groovy.transform.Field
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 
 import java.util.concurrent.TimeUnit
 
-def config
+@Field
+JobConfiguration config
+
+@Field
 def agent1C
 
 void call() {
@@ -57,8 +61,7 @@ void call() {
                             dir("build/out") { echo '' }
 
                             // Создание базы загрузкой конфигурации из хранилища
-                            initFromStorage(jobConfiguration)
-
+                            initFromStorage(config)
 
                             zipInfobase()
                         }
