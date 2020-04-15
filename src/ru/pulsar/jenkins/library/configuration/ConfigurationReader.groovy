@@ -28,19 +28,27 @@ class ConfigurationReader implements Serializable {
         return mergeConfigurations(globalConfiguration, jobConfiguration);
     }
 
-    @NonCPS
     private static JobConfiguration mergeConfigurations(
         JobConfiguration baseConfiguration,
         JobConfiguration configurationToMerge
     ) {
-        BeanUtils.describe(configurationToMerge).entrySet().stream()
+        def nonMergeableSettings = Arrays.asList("secrets").toSet()
+
+        mergeObjects(baseConfiguration, configurationToMerge, nonMergeableSettings);
+        mergeObjects(baseConfiguration.secrets, configurationToMerge.secrets, Collections.emptySet())
+
+        return baseConfiguration;
+    }
+
+    @NonCPS
+    private static <T extends Object> void mergeObjects(T baseObject, T objectToMerge, Set<String> nonMergeableSettings) {
+        BeanUtils.describe(objectToMerge).entrySet().stream()
             .filter({ e -> e.getValue() != null })
             .filter({ e -> e.getKey() != "class" })
             .filter({ e -> e.getKey() != "metaClass" })
+            .filter({ e -> !nonMergeableSettings.contains(e.getKey()) })
             .forEach {e ->
-                BeanUtils.setProperty(baseConfiguration, e.getKey(), e.getValue());
+                BeanUtils.setProperty(baseObject, e.getKey(), e.getValue());
             }
-
-        return baseConfiguration;
     }
 }

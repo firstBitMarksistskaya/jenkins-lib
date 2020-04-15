@@ -1,3 +1,6 @@
 {
-  "v8version": "8.3.14.1944"
+  "v8version": "8.3.14.1944",
+  "secrets": {
+    "storage": "1234"
+  }
 }
