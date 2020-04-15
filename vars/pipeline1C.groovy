@@ -60,10 +60,9 @@ void call() {
                                 def storageVersion = versionParser.storage()
 
                                 // Создание базы загрузкой конфигурации из хранилища
-                                withStorageCredentials(jobConfiguration) {
-                                    cmd "oscript_modules/bin/vrunner init-dev --storage --storage-name $STORAGE_PATH --storage-user $STORAGE_USR --storage-pwd $STORAGE_PSW --storage-ver $storageVersion --ibconnection \"/F./build/ib\""
-                                }
+                                initFromStorage(jobConfiguration, storageVersion)
                             }
+
 
                             zipInfobase()
                         }
@@ -101,4 +100,5 @@ void call() {
             }
         }
     }
+
 }

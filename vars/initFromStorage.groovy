@@ -1,6 +1,6 @@
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 
-def <T extends Closure> void call(JobConfiguration jobConfiguration, T body) {
+def call(JobConfiguration jobConfiguration, String storageVersion) {
     withCredentials([
         usernamePassword(
             credentialsId: jobConfiguration.secrets.storage,
@@ -12,6 +12,6 @@ def <T extends Closure> void call(JobConfiguration jobConfiguration, T body) {
             variable: 'STORAGE_PATH'
         )
     ]) {
-        body()
+        cmd "oscript_modules/bin/vrunner init-dev --storage --storage-name $STORAGE_PATH --storage-user $STORAGE_USR --storage-pwd $STORAGE_PSW --storage-ver $storageVersion --ibconnection \"/F./build/ib\""
     }
 }
