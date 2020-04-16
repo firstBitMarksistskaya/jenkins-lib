@@ -3,6 +3,7 @@ package ru.pulsar.jenkins.library.steps
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
+import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.VersionParser
 
 class SonarScanner implements Serializable {
@@ -25,7 +26,7 @@ class SonarScanner implements Serializable {
             return
         }
 
-        def env = System.getenv();
+        def env = steps.env();
 
         def sonarScannerBinary
 

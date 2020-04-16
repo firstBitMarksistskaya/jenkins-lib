@@ -1,5 +1,7 @@
 package ru.pulsar.jenkins.library
 
+import org.jenkinsci.plugins.workflow.support.actions.EnvironmentAction
+
 interface IStepExecutor {
 
     boolean isUnix()
@@ -21,4 +23,6 @@ interface IStepExecutor {
     void tool(String toolName)
 
     void withSonarQubeEnv(String installationName, Closure body)
+
+    EnvironmentAction env()
 }

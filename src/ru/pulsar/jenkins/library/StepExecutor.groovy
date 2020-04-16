@@ -1,5 +1,7 @@
 package ru.pulsar.jenkins.library
 
+import org.jenkinsci.plugins.workflow.support.actions.EnvironmentAction
+
 class StepExecutor implements IStepExecutor {
 
     private steps
@@ -53,5 +55,10 @@ class StepExecutor implements IStepExecutor {
         steps.withSonarQubeEnv(installationName) {
             body()
         }
+    }
+
+    @Override
+    EnvironmentAction env() {
+        return steps.env
     }
 }
