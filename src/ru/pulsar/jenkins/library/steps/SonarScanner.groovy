@@ -37,7 +37,7 @@ class SonarScanner implements Serializable {
             sonarScannerBinary = "$scannerHome/bin/sonar-scanner"
         }
 
-        def sonarCommand = "$sonarScannerBinary -Dsonar.branch.name=$env.BRANCH_NAME"
+        String sonarCommand = "$sonarScannerBinary -Dsonar.branch.name=$env.BRANCH_NAME"
 
         String configurationVersion = VersionParser.configuration(rootFile)
         if (configurationVersion) {

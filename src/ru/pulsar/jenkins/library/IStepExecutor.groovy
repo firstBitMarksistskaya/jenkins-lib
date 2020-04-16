@@ -18,7 +18,7 @@ interface IStepExecutor {
 
     void cmd(String script, boolean returnStatus)
 
-    void cmd(String gString)
+    void cmd(String script)
 
     void tool(String toolName)
 
