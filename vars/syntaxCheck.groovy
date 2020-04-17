@@ -23,6 +23,8 @@ def call(JobConfiguration config) {
 
     String command = "oscript_modules/bin/vrunner syntax-check --ibconnection \"/F./build/ib\""
 
+    command += " --workspace $env.WORKSPACE"
+
     if (options.groupErrorsByMetadata) {
         command += " --groupbymetadata"
     }
