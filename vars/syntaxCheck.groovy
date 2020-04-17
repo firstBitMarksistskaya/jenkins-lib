@@ -1,4 +1,3 @@
-import hudson.FilePath
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 
@@ -18,8 +17,8 @@ def call(JobConfiguration config) {
 
     unzipInfobase()
 
-    def junitPath = new FilePath(new File(options.pathToJUnitReport))
-    junitPath.mkdirs()
+    def outPath = new File(options.pathToJUnitReport).getParent()
+    dir(outPath) { echo '' }
 
     String command = "oscript_modules/bin/vrunner syntax-check --ibconnection \"/F./build/ib\""
 
@@ -38,5 +37,5 @@ def call(JobConfiguration config) {
 
     junit allowEmptyResults: true, testResults: options.pathToJUnitReport
 
-    archiveArtifacts 'build/**/*.*'
+    archiveArtifacts 'build/**/*.*', excludes: '*.1CD'
 }
