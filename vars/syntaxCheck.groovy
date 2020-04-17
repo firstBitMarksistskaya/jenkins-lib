@@ -42,5 +42,5 @@ def call(JobConfiguration config) {
 
     junit allowEmptyResults: true, testResults: options.pathToJUnitReport
 
-    archiveArtifacts artifacts: 'build/**/*.*', excludes: '**/*.1CD'
+    archiveArtifacts options.pathToJUnitReport
 }
