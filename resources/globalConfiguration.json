@@ -5,7 +5,7 @@
     "storage": "UNKNOWN_ID"
   },
   "stages": {
-    "sonarQube": false,
+    "sonarqube": false,
     "syntaxCheck": false
   },
   "sonarqube": {
