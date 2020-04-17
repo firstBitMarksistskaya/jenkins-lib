@@ -7,9 +7,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyDescription
 @JsonIgnoreProperties(ignoreUnknown = true)
 class SonarQubeOptions implements Serializable {
 
-    @JsonPropertyDescription("Анализ SonarQube включен")
-    boolean enabled
-
     @JsonPropertyDescription(
         "Имя настроенного SonarQube-сервера (SonarQube installations).\nЕсли настроен только один сервер, то может быть оставлено пустым."
     )
@@ -27,8 +24,7 @@ class SonarQubeOptions implements Serializable {
     @NonCPS
     String toString() {
         return "SonarQubeOptions{" +
-            "enabled=" + enabled +
-            ", useSonarScannerFromPath=" + useSonarScannerFromPath +
+            "useSonarScannerFromPath=" + useSonarScannerFromPath +
             ", sonarScannerToolName='" + sonarScannerToolName + '\'' +
             ", sonarQubeInstallation='" + sonarQubeInstallation + '\'' +
             '}';

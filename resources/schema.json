@@ -21,15 +21,26 @@
         }
       }
     },
+    "stages" : {
+      "type" : "object",
+      "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:StageFlags",
+      "description" : "Включение этапов сборок",
+      "properties" : {
+        "sonarQube" : {
+          "type" : "boolean",
+          "description" : "Анализ SonarQube включен"
+        },
+        "syntaxCheck" : {
+          "type" : "boolean",
+          "description" : "Синтаксический контроль включен"
+        }
+      }
+    },
     "sonarqube" : {
       "type" : "object",
       "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:SonarQubeOptions",
       "description" : "Настройки анализа SonarQube",
       "properties" : {
-        "enabled" : {
-          "type" : "boolean",
-          "description" : "Анализ SonarQube включен"
-        },
         "sonarQubeInstallation" : {
           "type" : "string",
           "description" : "Имя настроенного SonarQube-сервера (SonarQube installations).\nЕсли настроен только один сервер, то может быть оставлено пустым."
@@ -49,10 +60,6 @@
       "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:SyntaxCheckOptions",
       "description" : "Настройки синтаксического контроля",
       "properties" : {
-        "enabled" : {
-          "type" : "boolean",
-          "description" : "Синтаксический контроль включен"
-        },
         "pathToJUnitReport" : {
           "type" : "string",
           "description" : "Путь к файлу отчета jUnit"

@@ -7,9 +7,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyDescription
 @JsonIgnoreProperties(ignoreUnknown = true)
 class SyntaxCheckOptions implements Serializable {
 
-    @JsonPropertyDescription("Синтаксический контроль включен")
-    boolean enabled
-
     @JsonPropertyDescription("Путь к файлу отчета jUnit")
     String pathToJUnitReport
 
@@ -23,8 +20,7 @@ class SyntaxCheckOptions implements Serializable {
     @NonCPS
     String toString() {
         return "SyntaxCheckOptions{" +
-            "enabled=" + enabled +
-            ", pathToJUnitReport='" + pathToJUnitReport + '\'' +
+            "pathToJUnitReport='" + pathToJUnitReport + '\'' +
             ", groupErrorsByMetadata=" + groupErrorsByMetadata +
             ", checkModes=" + checkModes +
             '}';

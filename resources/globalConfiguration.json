@@ -4,14 +4,16 @@
     "storagePath": "UNKNOWN_ID",
     "storage": "UNKNOWN_ID"
   },
+  "stages": {
+    "sonarQube": false,
+    "syntaxCheck": false
+  },
   "sonarqube": {
-    "enabled": false,
     "sonarQubeInstallation": "",
     "useSonarScannerFromPath": true,
     "sonarScannerToolName": "sonar-scanner"
   },
   "syntaxCheck": {
-    "enabled": false,
     "groupErrorsByMetadata": true,
     "pathToJUnitReport": "build/out/jUnit/syntax.xml",
     "checkModes": [

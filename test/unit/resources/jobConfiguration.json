@@ -3,8 +3,10 @@
   "secrets": {
     "storage": "1234"
   },
+  "stages": {
+    "syntaxCheck": true
+  },
   "syntaxCheck": {
-    "enabled": true,
     "checkModes": ["-ThinClient"]
   }
 }

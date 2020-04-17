@@ -7,11 +7,12 @@ def call(JobConfiguration config) {
 
     printLocation()
 
-    def options = config.syntaxCheckOptions
-    if (!options.enabled) {
+    if (!config.stageFlags.syntaxCheck) {
         echo("Syntax-check step is disabled")
         return
     }
+
+    def options = config.syntaxCheckOptions
 
     installLocalDependencies()
 
