@@ -1,6 +1,7 @@
 package ru.pulsar.jenkins.library.configuration
 
 import com.cloudbees.groovy.cps.NonCPS
+import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.commons.beanutils.BeanUtils
 import ru.pulsar.jenkins.library.IStepExecutor
@@ -8,7 +9,12 @@ import ru.pulsar.jenkins.library.ioc.ContextRegistry
 
 class ConfigurationReader implements Serializable {
 
-    private static ObjectMapper mapper = new ObjectMapper()
+    private static ObjectMapper mapper
+    static {
+        mapper = new ObjectMapper()
+        mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+    }
+
     private static final String DEFAULT_CONFIGURATION_RESOURCE = 'globalConfiguration.json'
 
     static JobConfiguration create() {
