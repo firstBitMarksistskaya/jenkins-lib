@@ -5,6 +5,8 @@ def call(JobConfiguration config) {
 
     ContextRegistry.registerDefaultContext(this)
 
+    // TODO: Вынести в отдельный класс по аналогии с SonarScanner
+
     printLocation()
 
     if (!config.stageFlags.syntaxCheck) {
@@ -38,5 +40,5 @@ def call(JobConfiguration config) {
 
     junit allowEmptyResults: true, testResults: options.pathToJUnitReport
 
-    archiveArtifacts 'build/**/*.*', excludes: '*.1CD'
+    archiveArtifacts artifacts: 'build/**/*.*', excludes: '**/*.1CD'
 }
