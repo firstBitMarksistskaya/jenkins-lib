@@ -25,7 +25,9 @@ def call(JobConfiguration config) {
 
     String command = "oscript_modules/bin/vrunner syntax-check --ibconnection \"/F./build/ib\""
 
-    command += " --workspace $env.WORKSPACE"
+    // Временно убрал передачу параметра.
+    // См. https://github.com/vanessa-opensource/vanessa-runner/issues/361
+    // command += " --workspace $env.WORKSPACE"
 
     if (options.groupErrorsByMetadata) {
         command += " --groupbymetadata"
