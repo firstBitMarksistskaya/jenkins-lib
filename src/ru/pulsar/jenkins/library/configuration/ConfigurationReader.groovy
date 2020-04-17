@@ -34,7 +34,8 @@ class ConfigurationReader implements Serializable {
     ) {
         def nonMergeableSettings = Arrays.asList(
             "secrets",
-            "sonarQubeOptions"
+            "sonarQubeOptions",
+            "syntaxCheckOptions"
         ).toSet()
 
         mergeObjects(baseConfiguration, configurationToMerge, nonMergeableSettings)

@@ -9,5 +9,23 @@
     "sonarQubeInstallation": "",
     "useSonarScannerFromPath": true,
     "sonarScannerToolName": "sonar-scanner"
+  },
+  "syntaxCheck": {
+    "enabled": false,
+    "groupErrorsByMetadata": true,
+    "pathToJUnitReport": "./build/out/jUnit/syntax.xml",
+    "checkModes": [
+      "-ThinClient",
+      "-WebClient",
+      "-Server",
+      "-ExtendedModulesCheck",
+      "-IncorrectReferences",
+      "-UnreferenceProcedures",
+      "-HandlersExistence",
+      "-EmptyHandlers",
+      "-CheckUseModality",
+      "-CheckUseSynchronousCalls",
+      "-DistributiveModules"
+    ]
   }
 }

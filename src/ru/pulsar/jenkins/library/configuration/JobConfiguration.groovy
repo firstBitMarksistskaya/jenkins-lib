@@ -17,6 +17,10 @@ class JobConfiguration implements Serializable {
     @JsonPropertyDescription("Настройки анализа SonarQube")
     SonarQubeOptions sonarQubeOptions;
 
+    @JsonProperty("syntaxCheck")
+    @JsonPropertyDescription("Настройки синтаксического контроля")
+    SyntaxCheckOptions syntaxCheckOptions;
+
     @Override
     @NonCPS
     String toString() {
@@ -24,6 +28,7 @@ class JobConfiguration implements Serializable {
             "v8version='" + v8version + '\'' +
             ", secrets=" + secrets +
             ", sonarQubeOptions=" + sonarQubeOptions +
+            ", syntaxCheckOptions=" + syntaxCheckOptions +
             '}';
     }
 }

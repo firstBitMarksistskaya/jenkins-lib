@@ -2,5 +2,9 @@
   "v8version": "8.3.14.1944",
   "secrets": {
     "storage": "1234"
+  },
+  "syntaxCheck": {
+    "enabled": true,
+    "checkModes": ["-ThinClient"]
   }
 }

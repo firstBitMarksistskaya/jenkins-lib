@@ -43,6 +43,32 @@
           "description" : "Имя настроенной утилиты sonar-scanner.\nПрименяется, если useSonarScannerFromPath установлено в false."
         }
       }
+    },
+    "syntaxCheck" : {
+      "type" : "object",
+      "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:SyntaxCheckOptions",
+      "description" : "Настройки синтаксического контроля",
+      "properties" : {
+        "enabled" : {
+          "type" : "boolean",
+          "description" : "Синтаксический контроль включен"
+        },
+        "pathToJUnitReport" : {
+          "type" : "string",
+          "description" : "Путь к файлу отчета jUnit"
+        },
+        "groupErrorsByMetadata" : {
+          "type" : "boolean",
+          "description" : "Группировать выявленные ошибки по объектам метаданных"
+        },
+        "checkModes" : {
+          "type" : "array",
+          "description" : "Режимы проверки конфигурации",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
     }
   }
 }

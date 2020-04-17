@@ -69,16 +69,7 @@ void call() {
                         parallel {
                             stage('Синтаксический контроль') {
                                 steps {
-                                    printLocation()
-
-                                    installLocalDependencies()
-
-                                    unzipInfobase()
-
-                                    // Запуск синтакс-проверки
-                                    cmd("oscript_modules/bin/vrunner syntax-check --settings tools/vrunner.json", true)
-
-                                    junit allowEmptyResults: true, testResults: 'build/out/junitsyntax.xml'
+                                    syntaxCheck config
                                 }
                             }
 
