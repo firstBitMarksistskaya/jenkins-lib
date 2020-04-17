@@ -21,7 +21,7 @@ class SonarScanner implements Serializable {
 
         Logger.printLocation()
 
-        if (!config.stageFlags.sonarQube) {
+        if (!config.stageFlags.sonarqube) {
             steps.echo("SonarQube step is disabled")
             return
         }

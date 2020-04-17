@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyDescription
 @JsonIgnoreProperties(ignoreUnknown = true)
 class StageFlags implements Serializable {
     @JsonPropertyDescription("Анализ SonarQube включен")
-    boolean sonarQube
+    boolean sonarqube
 
     @JsonPropertyDescription("Синтаксический контроль включен")
     boolean syntaxCheck
@@ -16,7 +16,7 @@ class StageFlags implements Serializable {
     @NonCPS
     String toString() {
         return "StageFlags{" +
-            "sonarQube=" + sonarQube +
+            "sonarQube=" + sonarqube +
             ", syntaxCheck=" + syntaxCheck +
             '}';
     }
