@@ -6,7 +6,8 @@
   },
   "stages": {
     "sonarqube": false,
-    "syntaxCheck": false
+    "syntaxCheck": false,
+    "edtValidate": false
   },
   "sonarqube": {
     "sonarQubeInstallation": "",

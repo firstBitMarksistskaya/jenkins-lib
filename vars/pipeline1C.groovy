@@ -67,6 +67,15 @@ void call() {
 
                     stage('Проверка качества') {
                         parallel {
+                            stage('EDT контроль') {
+                                agent {
+                                    label 'edt'
+                                }
+                                steps {
+                                    edtValidate config
+                                }
+                            }
+
                             stage('Синтаксический контроль') {
                                 steps {
                                     syntaxCheck config

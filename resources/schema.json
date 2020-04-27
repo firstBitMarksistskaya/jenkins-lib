@@ -33,6 +33,10 @@
         "syntaxCheck" : {
           "type" : "boolean",
           "description" : "Синтаксический контроль включен"
+        },
+        "edtValidate" : {
+          "type" : "boolean",
+          "description" : "Валидация EDT включена"
         }
       }
     },

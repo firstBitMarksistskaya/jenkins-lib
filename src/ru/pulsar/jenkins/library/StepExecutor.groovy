@@ -61,4 +61,9 @@ class StepExecutor implements IStepExecutor {
     EnvironmentAction env() {
         return steps.env
     }
+
+    @Override
+    void createDir(String path) {
+        steps.createDir(path)
+    }
 }

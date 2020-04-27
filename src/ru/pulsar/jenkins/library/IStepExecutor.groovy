@@ -25,4 +25,6 @@ interface IStepExecutor {
     void withSonarQubeEnv(String installationName, Closure body)
 
     EnvironmentAction env()
+
+    void createDir(String path)
 }

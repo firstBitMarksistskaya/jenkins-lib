@@ -12,12 +12,16 @@ class StageFlags implements Serializable {
     @JsonPropertyDescription("Синтаксический контроль включен")
     boolean syntaxCheck
 
+    @JsonPropertyDescription("Валидация EDT включена")
+    boolean edtValidate
+
     @Override
     @NonCPS
     String toString() {
         return "StageFlags{" +
-            "sonarQube=" + sonarqube +
+            "sonarqube=" + sonarqube +
             ", syntaxCheck=" + syntaxCheck +
+            ", edtValidate=" + edtValidate +
             '}';
     }
 }
