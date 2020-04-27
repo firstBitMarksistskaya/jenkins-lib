@@ -66,4 +66,11 @@ class StepExecutor implements IStepExecutor {
     void createDir(String path) {
         steps.createDir(path)
     }
+
+    @Override
+    def withEnv(List<String> strings, Closure body) {
+        steps.withEnv(strings) {
+            body()
+        }
+    }
 }

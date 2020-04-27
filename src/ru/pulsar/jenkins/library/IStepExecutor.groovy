@@ -27,4 +27,6 @@ interface IStepExecutor {
     EnvironmentAction env()
 
     void createDir(String path)
+
+    def withEnv(List<String> strings, Closure body)
 }

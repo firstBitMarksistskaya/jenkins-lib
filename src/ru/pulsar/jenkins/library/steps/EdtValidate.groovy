@@ -40,12 +40,17 @@ class EdtValidate implements Serializable {
         Logger.println("Конвертация исходников из формата конфигуратора в формат EDT")
 
         def ringCommand = "ring edt workspace import --configuration-files '$configurationRoot' --project '$projectDir' --workspace-location '$workspaceDir'"
-        steps.cmd(ringCommand)
+        
+        steps.withEnv(['RING_OPTS="-Dfile.encoding=UTF-8 -Dosgi.nl=ru -Duser.language=ru"']) {
+            steps.cmd(ringCommand)
+        }
 
         Logger.println("Выполнение валидации EDT")
 
-        env.RING_OPTS = '-Dfile.encoding=UTF-8 -Dosgi.nl=ru'
         ringCommand = "ring edt workspace validate --workspace-location '$workspaceDir' --file '$resultFile' --project '$projectDir'"
-        steps.cmd(ringCommand)
+
+        steps.withEnv(['RING_OPTS="-Dfile.encoding=UTF-8 -Dosgi.nl=ru -Duser.language=ru"']) {
+            steps.cmd(ringCommand)
+        }
     }
 }
