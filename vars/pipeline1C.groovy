@@ -84,11 +84,7 @@ void call() {
 
                             stage('Дымовые тесты') {
                                 steps {
-                                    printLocation()
-
-                                    installLocalDependencies()
-
-                                    unzipInfobase()
+                                    smoke config
                                 }
                             }
                         }

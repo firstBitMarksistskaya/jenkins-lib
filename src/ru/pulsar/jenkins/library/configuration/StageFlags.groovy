@@ -15,6 +15,9 @@ class StageFlags implements Serializable {
     @JsonPropertyDescription("Валидация EDT включена")
     boolean edtValidate
 
+    @JsonPropertyDescription("Дымовые тесты включены")
+    boolean smoke
+
     @Override
     @NonCPS
     String toString() {
@@ -22,6 +25,7 @@ class StageFlags implements Serializable {
             "sonarqube=" + sonarqube +
             ", syntaxCheck=" + syntaxCheck +
             ", edtValidate=" + edtValidate +
+            ", smoke=" + smoke +
             '}';
     }
 }

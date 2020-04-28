@@ -37,6 +37,10 @@
         "edtValidate" : {
           "type" : "boolean",
           "description" : "Валидация EDT включена"
+        },
+        "smoke" : {
+          "type" : "boolean",
+          "description" : "Дымовые тесты включены"
         }
       }
     },
