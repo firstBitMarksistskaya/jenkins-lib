@@ -37,7 +37,7 @@ class ResultsTransformer implements Serializable {
         Logger.println("Конвертация результата EDT в Generic Issue")
 
         def genericIssueRelative = "build/out/edt-generic-issue.json"
-        def edtValidateFile = "$env.WORKSPACE/build/out/edt-validate.xml"
+        def edtValidateFile = "$env.WORKSPACE/build/out/edt-validate.out"
         def genericIssueFile = "$env.WORKSPACE/$genericIssueRelative"
 
         steps.cmd("stebi convert $edtValidateFile $genericIssueFile $rootDir")

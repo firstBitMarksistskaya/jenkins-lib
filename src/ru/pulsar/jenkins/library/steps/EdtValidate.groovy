@@ -27,7 +27,7 @@ class EdtValidate implements Serializable {
 
         def env = steps.env();
 
-        def resultFileRelative = 'build/out/edt-validate.xml'
+        def resultFileRelative = 'build/out/edt-validate.out'
         def projectName = 'temp'
         def workspaceDir = "$env.WORKSPACE/build/workspace"
         def resultFile = "$env.WORKSPACE/$resultFileRelative"
