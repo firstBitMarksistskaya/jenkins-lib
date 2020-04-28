@@ -73,4 +73,9 @@ class StepExecutor implements IStepExecutor {
             body()
         }
     }
+
+    @Override
+    def archiveArtifacts(String path) {
+        steps.archiveArtifacts path
+    }
 }

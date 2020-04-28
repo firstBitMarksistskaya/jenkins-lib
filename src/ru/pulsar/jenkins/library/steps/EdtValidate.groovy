@@ -27,30 +27,32 @@ class EdtValidate implements Serializable {
 
         def env = steps.env();
 
-        def projectDir = "$env.WORKSPACE/build/project"
+        def resultFileRelative = 'build/out/edt-validate.xml'
+        def projectName = 'temp'
         def workspaceDir = "$env.WORKSPACE/build/workspace"
-        def resultFile = "$env.WORKSPACE/build/edt-validate.xml"
+        def resultFile = "$env.WORKSPACE/$resultFileRelative"
         def configurationRoot = new File(env.WORKSPACE, rootDir).getAbsolutePath()
 
-        steps.createDir(projectDir)
         steps.createDir(workspaceDir)
         steps.createDir(new File(resultFile).getParent())
 
-
         Logger.println("Конвертация исходников из формата конфигуратора в формат EDT")
 
-        def ringCommand = "ring edt workspace import --configuration-files '$configurationRoot' --project '$projectDir' --workspace-location '$workspaceDir'"
-        
-        steps.withEnv(['RING_OPTS="-Dfile.encoding=UTF-8 -Dosgi.nl=ru -Duser.language=ru"']) {
+        def ringCommand = "ring edt workspace import --configuration-files '$configurationRoot' --project-name $projectName --workspace-location '$workspaceDir'"
+
+        def ringOpts = ['_JAVA_OPTS="-Dfile.encoding=UTF-8 -Dosgi.nl=ru -Duser.language=ru"']
+        steps.withEnv(ringOpts) {
             steps.cmd(ringCommand)
         }
 
         Logger.println("Выполнение валидации EDT")
 
-        ringCommand = "ring edt workspace validate --workspace-location '$workspaceDir' --file '$resultFile' --project '$projectDir'"
+        ringCommand = "ring edt workspace validate --workspace-location '$workspaceDir' --file '$resultFile' --project-name-list $projectName"
 
-        steps.withEnv(['RING_OPTS="-Dfile.encoding=UTF-8 -Dosgi.nl=ru -Duser.language=ru"']) {
+        steps.withEnv(ringOpts) {
             steps.cmd(ringCommand)
         }
+
+        steps.archiveArtifacts(resultFileRelative)
     }
 }

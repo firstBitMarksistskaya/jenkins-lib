@@ -29,4 +29,6 @@ interface IStepExecutor {
     void createDir(String path)
 
     def withEnv(List<String> strings, Closure body)
+
+    def archiveArtifacts(String path)
 }

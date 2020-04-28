@@ -10,4 +10,10 @@ class Logger implements Serializable {
         def env = steps.env();
         steps.echo("Running on node $env.NODE_NAME")
     }
+
+    static void println(String message) {
+        IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
+
+        steps.echo(message)
+    }
 }
