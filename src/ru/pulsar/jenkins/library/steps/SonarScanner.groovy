@@ -44,6 +44,11 @@ class SonarScanner implements Serializable {
             sonarCommand += " -Dsonar.projectVersion=$configurationVersion"
         }
 
+        if (config.stageFlags.edtValidate) {
+            steps.unstash("edt-generic-issue")
+            sonarCommand += " -Dsonar.externalIssuesReportPaths=build/out/edt-generic-issue.json"
+        }
+
         def sonarQubeInstallation = config.sonarQubeOptions.sonarQubeInstallation
         if (sonarQubeInstallation == '') {
             sonarQubeInstallation = null

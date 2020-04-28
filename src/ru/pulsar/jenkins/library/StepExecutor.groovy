@@ -78,4 +78,14 @@ class StepExecutor implements IStepExecutor {
     def archiveArtifacts(String path) {
         steps.archiveArtifacts path
     }
+
+    @Override
+    def stash(String name, String includes) {
+        steps.stash name: name, includes: includes
+    }
+
+    @Override
+    def unstash(String name) {
+        steps.unstash name
+    }
 }

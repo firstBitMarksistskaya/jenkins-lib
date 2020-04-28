@@ -21,7 +21,7 @@ class EdtValidate implements Serializable {
         Logger.printLocation()
 
         if (!config.stageFlags.edtValidate) {
-            steps.echo("EDT validate step is disabled")
+            Logger.println("EDT validate step is disabled")
             return
         }
 
@@ -54,5 +54,6 @@ class EdtValidate implements Serializable {
         }
 
         steps.archiveArtifacts(resultFileRelative)
+        steps.stash('edt-validate', resultFileRelative)
     }
 }

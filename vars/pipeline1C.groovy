@@ -35,15 +35,6 @@ void call() {
                 }
             }
 
-            stage('SonarQube') {
-                agent {
-                    label 'sonar'
-                }
-                steps {
-                    sonarScanner config
-                }
-            }
-
             stage('1C') {
                 agent {
                     label agent1C
@@ -89,6 +80,24 @@ void call() {
                             }
                         }
                     }
+
+                    stage('Трансформация результатов') {
+                        agent {
+                            label 'oscript'
+                        }
+                        steps {
+                            transform config
+                        }
+                    }
+                }
+            }
+
+            stage('SonarQube') {
+                agent {
+                    label 'sonar'
+                }
+                steps {
+                    sonarScanner config
                 }
             }
         }

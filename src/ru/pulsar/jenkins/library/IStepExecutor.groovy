@@ -31,4 +31,8 @@ interface IStepExecutor {
     def withEnv(List<String> strings, Closure body)
 
     def archiveArtifacts(String path)
+
+    def stash(String name, String includes)
+
+    def unstash(String name)
 }
