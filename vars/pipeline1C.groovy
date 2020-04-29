@@ -41,6 +41,10 @@ void call() {
                         agent {
                             label agent1C
                         }
+                        when {
+                            beforeAgent true
+                            expression { config.stageFlags.needInfobase() }
+                        }
 
                         steps {
                             printLocation()
@@ -60,6 +64,10 @@ void call() {
                         agent {
                             label 'edt'
                         }
+                        when {
+                            beforeAgent true
+                            expression { config.stageFlags.edtValidate }
+                        }
                         steps {
                             edtTransform config
                         }
@@ -73,6 +81,10 @@ void call() {
                         agent {
                             label 'edt'
                         }
+                        when {
+                            beforeAgent true
+                            expression { config.stageFlags.edtValidate }
+                        }
                         steps {
                             edtValidate config
                         }
@@ -82,6 +94,10 @@ void call() {
                         agent {
                             label agent1C
                         }
+                        when {
+                            beforeAgent true
+                            expression { config.stageFlags.syntaxCheck }
+                        }
                         steps {
                             syntaxCheck config
                         }
@@ -90,6 +106,10 @@ void call() {
                     stage('Дымовые тесты') {
                         agent {
                             label agent1C
+                        }
+                        when {
+                            beforeAgent true
+                            expression { config.stageFlags.smoke }
                         }
                         steps {
                             smoke config
@@ -102,6 +122,10 @@ void call() {
                 agent {
                     label 'oscript'
                 }
+                when {
+                    beforeAgent true
+                    expression { config.stageFlags.edtValidate }
+                }
                 steps {
                     transform config
                 }
@@ -110,6 +134,10 @@ void call() {
             stage('SonarQube') {
                 agent {
                     label 'sonar'
+                }
+                when {
+                    beforeAgent true
+                    expression { config.stageFlags.sonarqube }
                 }
                 steps {
                     sonarScanner config
