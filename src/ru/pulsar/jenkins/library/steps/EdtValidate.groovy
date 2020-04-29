@@ -48,6 +48,8 @@ class EdtValidate implements Serializable {
                 steps.cmd(ringCommand)
             }
         }
+        steps.zip(EdtTransform.WORKSPACE, "temp.workspace.zip")
+        steps.archiveArtifacts("temp.workspace.zip")
         steps.archiveArtifacts("$EdtTransform.WORKSPACE/.metadata/.log")
         steps.archiveArtifacts(RESULT_FILE)
         steps.stash(RESULT_STASH, RESULT_FILE)
