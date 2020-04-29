@@ -98,4 +98,9 @@ class StepExecutor implements IStepExecutor {
     def unzip(String dir, String zipFile, quiet = true) {
         steps.unzip dir: dir, zipFile: zipFile, quiet: quiet
     }
+
+    @Override
+    def catchError(Closure body) {
+        steps.catchError body
+    }
 }

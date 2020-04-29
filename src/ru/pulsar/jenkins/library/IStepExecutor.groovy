@@ -41,6 +41,8 @@ interface IStepExecutor {
     def zip(String dir, String zipFile, String glob)
 
     def unzip(String dir, String zipFile)
-    
+
     def unzip(String dir, String zipFile, quiet)
+
+    def catchError(Closure body)
 }

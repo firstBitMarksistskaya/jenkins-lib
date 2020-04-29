@@ -44,9 +44,11 @@ class EdtValidate implements Serializable {
         def ringOpts = ['RING_OPTIONS=-Dfile.encoding=UTF-8 -Dosgi.nl=ru -Duser.language=ru']
 
         steps.withEnv(ringOpts) {
-            steps.cmd(ringCommand)
+            steps.catchError {
+                steps.cmd(ringCommand)
+            }
         }
-
+        steps.archiveArtifacts("$EdtTransform.WORKSPACE/.metadata/.log")
         steps.archiveArtifacts(RESULT_FILE)
         steps.stash(RESULT_STASH, RESULT_FILE)
     }
