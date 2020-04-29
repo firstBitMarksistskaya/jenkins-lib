@@ -88,4 +88,14 @@ class StepExecutor implements IStepExecutor {
     def unstash(String name) {
         steps.unstash name
     }
+
+    @Override
+    def zip(String dir, String zipFile, String glob = '') {
+        steps.zip dir: dir, zipFile: zipFile, glob: glob
+    }
+
+    @Override
+    def unzip(String dir, String zipFile) {
+        steps.unzip dir: dir, zipFile: zipFile
+    }
 }

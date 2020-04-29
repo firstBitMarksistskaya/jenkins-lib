@@ -7,6 +7,9 @@ import ru.pulsar.jenkins.library.utils.Logger
 
 class EdtValidate implements Serializable {
 
+    public static final String RESULT_STASH = 'edt-validate'
+    public static final String RESULT_FILE = 'build/out/edt-validate.out'
+
     private final JobConfiguration config;
     private final String rootDir
 
@@ -25,35 +28,25 @@ class EdtValidate implements Serializable {
             return
         }
 
+        steps.unstash(EdtTransform.WORKSPACE_ZIP_STASH)
+        steps.unzip(EdtTransform.WORKSPACE_ZIP, EdtTransform.WORKSPACE)
+
         def env = steps.env();
 
-        def resultFileRelative = 'build/out/edt-validate.out'
-        def projectName = 'temp'
-        def workspaceDir = "$env.WORKSPACE/build/workspace"
-        def resultFile = "$env.WORKSPACE/$resultFileRelative"
-        def configurationRoot = new File(env.WORKSPACE, rootDir).getAbsolutePath()
+        def resultFile = "$env.WORKSPACE/$RESULT_FILE"
 
-        steps.createDir(workspaceDir)
         steps.createDir(new File(resultFile).getParent())
-
-        Logger.println("Конвертация исходников из формата конфигуратора в формат EDT")
-
-        def ringCommand = "ring edt workspace import --configuration-files '$configurationRoot' --project-name $projectName --workspace-location '$workspaceDir'"
-
-        def ringOpts = ['_JAVA_OPTS="-Dfile.encoding=UTF-8 -Dosgi.nl=ru -Duser.language=ru"']
-        steps.withEnv(ringOpts) {
-            steps.cmd(ringCommand)
-        }
 
         Logger.println("Выполнение валидации EDT")
 
-        ringCommand = "ring edt workspace validate --workspace-location '$workspaceDir' --file '$resultFile' --project-name-list $projectName"
+        def ringCommand = "ring edt workspace validate --workspace-location '$EdtTransform.WORKSPACE' --file '$resultFile' --project-name-list $EdtTransform.PROJECT_NAME"
+        def ringOpts = ['RING_OPTIONS=-Dfile.encoding=UTF-8 -Dosgi.nl=ru -Duser.language=ru']
 
         steps.withEnv(ringOpts) {
             steps.cmd(ringCommand)
         }
 
-        steps.archiveArtifacts(resultFileRelative)
-        steps.stash('edt-validate', resultFileRelative)
+        steps.archiveArtifacts(RESULT_FILE)
+        steps.stash(RESULT_STASH, RESULT_FILE)
     }
 }

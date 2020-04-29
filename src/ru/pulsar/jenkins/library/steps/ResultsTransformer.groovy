@@ -7,12 +7,13 @@ import ru.pulsar.jenkins.library.utils.Logger
 
 class ResultsTransformer implements Serializable {
 
-    private final JobConfiguration config;
-    private final String rootDir
+    public static final String RESULT_STASH = 'edt-generic-issue'
+    public static final String RESULT_FILE = 'build/out/edt-generic-issue.json'
 
-    ResultsTransformer(JobConfiguration config, String rootDir = 'src/cf') {
+    private final JobConfiguration config;
+
+    ResultsTransformer(JobConfiguration config) {
         this.config = config
-        this.rootDir = rootDir
     }
 
     def run() {
@@ -32,17 +33,19 @@ class ResultsTransformer implements Serializable {
             return
         }
 
-        steps.unstash('edt-validate')
+        steps.unstash(EdtTransform.WORKSPACE_ZIP_STASH)
+        steps.unzip(EdtTransform.WORKSPACE_ZIP, EdtTransform.WORKSPACE)
+
+        steps.unstash(EdtValidate.RESULT_STASH)
 
         Logger.println("Конвертация результата EDT в Generic Issue")
 
-        def genericIssueRelative = "build/out/edt-generic-issue.json"
-        def edtValidateFile = "$env.WORKSPACE/build/out/edt-validate.out"
-        def genericIssueFile = "$env.WORKSPACE/$genericIssueRelative"
+        def edtValidateFile = "$env.WORKSPACE/$EdtValidate.RESULT_FILE"
+        def genericIssueFile = "$env.WORKSPACE/$RESULT_FILE"
 
-        steps.cmd("stebi convert $edtValidateFile $genericIssueFile $rootDir")
+        steps.cmd("stebi convert $edtValidateFile $genericIssueFile $EdtTransform.WORKSPACE")
 
-        steps.archiveArtifacts(genericIssueRelative)
-        steps.stash('edt-generic-issue', genericIssueRelative)
+        steps.archiveArtifacts(RESULT_FILE)
+        steps.stash(RESULT_STASH, RESULT_FILE)
     }
 }

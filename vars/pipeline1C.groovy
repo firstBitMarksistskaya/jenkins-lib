@@ -35,13 +35,13 @@ void call() {
                 }
             }
 
-            stage('1C') {
-                agent {
-                    label agent1C
-                }
+            stage('Подготовка') {
+                parallel {
+                    stage('Подготовка 1C базы') {
+                        agent {
+                            label agent1C
+                        }
 
-                stages {
-                    stage('Подготовка базы') {
                         steps {
                             printLocation()
 
@@ -56,39 +56,54 @@ void call() {
                         }
                     }
 
-                    stage('Проверка качества') {
-                        parallel {
-                            stage('EDT контроль') {
-                                agent {
-                                    label 'edt'
-                                }
-                                steps {
-                                    edtValidate config
-                                }
-                            }
-
-                            stage('Синтаксический контроль') {
-                                steps {
-                                    syntaxCheck config
-                                }
-                            }
-
-                            stage('Дымовые тесты') {
-                                steps {
-                                    smoke config
-                                }
-                            }
-                        }
-                    }
-
-                    stage('Трансформация результатов') {
+                    stage('Трансформация в формат EDT') {
                         agent {
-                            label 'oscript'
+                            label 'edt'
                         }
                         steps {
-                            transform config
+                            edtTransform config
                         }
                     }
+                }
+            }
+
+            stage('Проверка качества') {
+                parallel {
+                    stage('EDT контроль') {
+                        agent {
+                            label 'edt'
+                        }
+                        steps {
+                            edtValidate config
+                        }
+                    }
+
+                    stage('Синтаксический контроль') {
+                        agent {
+                            label agent1C
+                        }
+                        steps {
+                            syntaxCheck config
+                        }
+                    }
+
+                    stage('Дымовые тесты') {
+                        agent {
+                            label agent1C
+                        }
+                        steps {
+                            smoke config
+                        }
+                    }
+                }
+            }
+
+            stage('Трансформация результатов') {
+                agent {
+                    label 'oscript'
+                }
+                steps {
+                    transform config
                 }
             }
 
