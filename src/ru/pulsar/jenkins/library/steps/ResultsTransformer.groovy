@@ -42,7 +42,7 @@ class ResultsTransformer implements Serializable {
 
         def edtValidateFile = "$env.WORKSPACE/$EdtValidate.RESULT_FILE"
         def genericIssueFile = "$env.WORKSPACE/$RESULT_FILE"
-        def srcDir = "$EdtTransform.WORKSPACE/$EdtTransform.PROJECT_NAME/src"
+        def srcDir = "src/cf"
 
         steps.cmd("stebi convert $edtValidateFile $genericIssueFile $srcDir")
 
