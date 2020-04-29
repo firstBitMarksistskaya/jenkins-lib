@@ -29,7 +29,7 @@ class EdtValidate implements Serializable {
         }
 
         steps.unstash(EdtTransform.WORKSPACE_ZIP_STASH)
-        steps.unzip(EdtTransform.WORKSPACE_ZIP, EdtTransform.WORKSPACE)
+        steps.unzip(EdtTransform.WORKSPACE, EdtTransform.WORKSPACE_ZIP)
 
         def env = steps.env();
 
