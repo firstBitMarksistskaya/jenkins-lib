@@ -95,7 +95,7 @@ class StepExecutor implements IStepExecutor {
     }
 
     @Override
-    def unzip(String dir, String zipFile) {
-        steps.unzip dir: dir, zipFile: zipFile
+    def unzip(String dir, String zipFile, quiet = true) {
+        steps.unzip dir: dir, zipFile: zipFile, quiet: quiet
     }
 }
