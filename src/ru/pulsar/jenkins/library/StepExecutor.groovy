@@ -41,8 +41,8 @@ class StepExecutor implements IStepExecutor {
     }
 
     @Override
-    void cmd(String script, boolean returnStatus = false) {
-        steps.cmd(script, returnStatus)
+    int cmd(String script, boolean returnStatus = false) {
+        return steps.cmd(script, returnStatus)
     }
 
     @Override

@@ -35,4 +35,28 @@ class cmdTest {
 
         rule.assertLogContains('helloWorld', rule.buildAndAssertSuccess(workflowJob))
     }
+
+    @Test
+    void "cmd should return status"() {
+        def pipeline = '''
+        pipeline {
+            agent any
+            stages {
+                stage('test') {
+                    steps {
+                        script {
+                            def status = cmd("false", true)
+                            echo "status = $status"
+                        }
+                    }
+                }
+            }
+        } 
+    '''.stripIndent()
+        final CpsFlowDefinition flow = new CpsFlowDefinition(pipeline, true)
+        final WorkflowJob workflowJob = rule.createProject(WorkflowJob, 'project')
+        workflowJob.definition = flow
+
+        rule.assertLogContains('status = 1', rule.buildAndAssertSuccess(workflowJob))
+    }
 }
