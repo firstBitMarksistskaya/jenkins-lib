@@ -34,12 +34,13 @@ class EdtValidate implements Serializable {
         def env = steps.env();
 
         def resultFile = "$env.WORKSPACE/$RESULT_FILE"
+        def workspaceLocation = "$env.WORKSPACE/$EdtTransform.WORKSPACE"
 
         steps.createDir(new File(resultFile).getParent())
 
         Logger.println("Выполнение валидации EDT")
 
-        def ringCommand = "ring edt workspace validate --workspace-location '$EdtTransform.WORKSPACE' --file '$resultFile' --project-name-list $EdtTransform.PROJECT_NAME"
+        def ringCommand = "ring edt workspace validate --workspace-location '$workspaceLocation' --file '$resultFile' --project-name-list $EdtTransform.PROJECT_NAME"
         def ringOpts = ['RING_OPTIONS=-Dfile.encoding=UTF-8 -Dosgi.nl=ru -Duser.language=ru']
 
         steps.withEnv(ringOpts) {
