@@ -84,6 +84,21 @@
           }
         }
       }
+    },
+    "resultsTransform" : {
+      "type" : "object",
+      "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:ResultsTransformOptions",
+      "description" : "Настройки трансформации результатов анализа",
+      "properties" : {
+        "removeSupport" : {
+          "type" : "boolean",
+          "description" : "Фильтровать замечания по уровню поддержки модуля"
+        },
+        "supportLevel" : {
+          "type" : "integer",
+          "description" : "Настройка фильтрации замечаний по уровню поддержки.\n        0 - удалить файлы на замке;\n        1 - удалить файлы на замке и на поддержке;\n        2 - удалить файлы на замке, на поддержке и снятые с поддержки.\n    "
+        }
+      }
     }
   }
 }

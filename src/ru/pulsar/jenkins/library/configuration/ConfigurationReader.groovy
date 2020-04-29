@@ -42,7 +42,8 @@ class ConfigurationReader implements Serializable {
             "secrets",
             "stageFlags",
             "sonarQubeOptions",
-            "syntaxCheckOptions"
+            "syntaxCheckOptions",
+            "resultsTransformOptions"
         ).toSet()
 
         mergeObjects(baseConfiguration, configurationToMerge, nonMergeableSettings)

@@ -25,6 +25,10 @@ class JobConfiguration implements Serializable {
     @JsonPropertyDescription("Настройки синтаксического контроля")
     SyntaxCheckOptions syntaxCheckOptions;
 
+    @JsonProperty("resultsTransform")
+    @JsonPropertyDescription("Настройки трансформации результатов анализа")
+    ResultsTransformOptions resultsTransformOptions;
+
     @Override
     @NonCPS
     String toString() {
@@ -34,6 +38,7 @@ class JobConfiguration implements Serializable {
             ", secrets=" + secrets +
             ", sonarQubeOptions=" + sonarQubeOptions +
             ", syntaxCheckOptions=" + syntaxCheckOptions +
+            ", resultsTransformOptions=" + resultsTransformOptions +
             '}';
     }
 }

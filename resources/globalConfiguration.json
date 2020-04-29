@@ -31,5 +31,9 @@
       "-CheckUseSynchronousCalls",
       "-DistributiveModules"
     ]
+  },
+  "resultsTransform": {
+    "removeSupport": false,
+    "supportLevel": 0
   }
 }

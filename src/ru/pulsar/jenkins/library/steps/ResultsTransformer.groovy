@@ -45,6 +45,11 @@ class ResultsTransformer implements Serializable {
 
         steps.cmd("stebi convert $edtValidateFile $genericIssueFile $EdtTransform.WORKSPACE")
 
+        if (config.resultsTransformOptions.removeSupport) {
+            def supportLevel = config.resultsTransformOptions.supportLevel
+            steps.cmd("stebi transform --remove_support $supportLevel --src $EdtTransform.WORKSPACE $genericIssueFile")
+        }
+
         steps.archiveArtifacts(RESULT_FILE)
         steps.stash(RESULT_STASH, RESULT_FILE)
     }
