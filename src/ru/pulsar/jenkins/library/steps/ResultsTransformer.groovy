@@ -42,12 +42,13 @@ class ResultsTransformer implements Serializable {
 
         def edtValidateFile = "$env.WORKSPACE/$EdtValidate.RESULT_FILE"
         def genericIssueFile = "$env.WORKSPACE/$RESULT_FILE"
+        def srcDir = "$EdtTransform.WORKSPACE/$EdtTransform.PROJECT_NAME/src"
 
-        steps.cmd("stebi convert $edtValidateFile $genericIssueFile $EdtTransform.WORKSPACE")
+        steps.cmd("stebi convert $edtValidateFile $genericIssueFile $srcDir")
 
         if (config.resultsTransformOptions.removeSupport) {
             def supportLevel = config.resultsTransformOptions.supportLevel
-            steps.cmd("stebi transform --remove_support $supportLevel --src $EdtTransform.WORKSPACE $genericIssueFile")
+            steps.cmd("stebi transform --remove_support $supportLevel --src $srcDir $genericIssueFile")
         }
 
         steps.archiveArtifacts(RESULT_FILE)
