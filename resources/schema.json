@@ -6,6 +6,10 @@
       "type" : "string",
       "description" : "Версия платформы 1С:Предприятие в формате 8.3.хх.хххх."
     },
+    "srcDir" : {
+      "type" : "string",
+      "description" : "Путь к корневому каталогу с исходниками конфигурации"
+    },
     "secrets" : {
       "type" : "object",
       "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:Secrets",

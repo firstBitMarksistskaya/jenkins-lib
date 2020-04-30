@@ -10,6 +10,9 @@ class JobConfiguration implements Serializable {
     @JsonPropertyDescription("Версия платформы 1С:Предприятие в формате 8.3.хх.хххх.")
     String v8version
 
+    @JsonPropertyDescription("Путь к корневому каталогу с исходниками конфигурации")
+    String srcDir
+
     @JsonProperty("stages")
     @JsonPropertyDescription("Включение этапов сборок")
     StageFlags stageFlags;
@@ -34,6 +37,7 @@ class JobConfiguration implements Serializable {
     String toString() {
         return "JobConfiguration{" +
             "v8version='" + v8version + '\'' +
+            ", srcDir='" + srcDir + '\'' +
             ", stageFlags=" + stageFlags +
             ", secrets=" + secrets +
             ", sonarQubeOptions=" + sonarQubeOptions +

@@ -13,11 +13,9 @@ class EdtTransform implements Serializable {
     public static final String WORKSPACE_ZIP_STASH = 'edt-workspace-zip'
 
     private final JobConfiguration config;
-    private final String rootDir
 
-    EdtTransform(JobConfiguration config, String rootDir = 'src/cf') {
+    EdtTransform(JobConfiguration config) {
         this.config = config
-        this.rootDir = rootDir
     }
 
     def run() {
@@ -33,7 +31,7 @@ class EdtTransform implements Serializable {
         def env = steps.env();
 
         def workspaceDir = "$env.WORKSPACE/$WORKSPACE"
-        def configurationRoot = new File(env.WORKSPACE, rootDir).getAbsolutePath()
+        def configurationRoot = new File(env.WORKSPACE, config.srcDir).getAbsolutePath()
 
         steps.createDir(workspaceDir)
 

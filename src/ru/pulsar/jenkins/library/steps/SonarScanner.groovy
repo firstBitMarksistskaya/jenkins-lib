@@ -11,9 +11,9 @@ class SonarScanner implements Serializable {
     private final JobConfiguration config;
     private final String rootFile
 
-    SonarScanner(JobConfiguration config, String rootFile = 'src/cf/Configuration.xml') {
+    SonarScanner(JobConfiguration config) {
         this.config = config
-        this.rootFile = rootFile
+        this.rootFile = "$config.srcDir/Configuration.xml"
     }
 
     def run() {

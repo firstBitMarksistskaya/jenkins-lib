@@ -21,11 +21,6 @@ class ResultsTransformer implements Serializable {
 
         Logger.printLocation()
 
-        if (!config.stageFlags.sonarqube) {
-            Logger.println("No transform is needed.")
-            return
-        }
-
         def env = steps.env();
 
         if (!config.stageFlags.edtValidate) {
@@ -33,22 +28,18 @@ class ResultsTransformer implements Serializable {
             return
         }
 
-        steps.unstash(EdtTransform.WORKSPACE_ZIP_STASH)
-        steps.unzip(EdtTransform.WORKSPACE, EdtTransform.WORKSPACE_ZIP)
-
         steps.unstash(EdtValidate.RESULT_STASH)
 
         Logger.println("Конвертация результата EDT в Generic Issue")
 
         def edtValidateFile = "$env.WORKSPACE/$EdtValidate.RESULT_FILE"
         def genericIssueFile = "$env.WORKSPACE/$RESULT_FILE"
-        def srcDir = "src/cf"
 
-        steps.cmd("stebi convert $edtValidateFile $genericIssueFile $srcDir")
+        steps.cmd("stebi convert $edtValidateFile $genericIssueFile $config.srcDir")
 
         if (config.resultsTransformOptions.removeSupport) {
             def supportLevel = config.resultsTransformOptions.supportLevel
-            steps.cmd("stebi transform --remove_support $supportLevel --src $srcDir $genericIssueFile")
+            steps.cmd("stebi transform --remove_support $supportLevel --src $config.srcDir $genericIssueFile")
         }
 
         steps.archiveArtifacts(RESULT_FILE)

@@ -1,5 +1,6 @@
 {
   "$schema": "schema.json",
+  "srcDir": "src/cf",
   "secrets": {
     "storagePath": "UNKNOWN_ID",
     "storage": "UNKNOWN_ID"

@@ -11,11 +11,9 @@ class EdtValidate implements Serializable {
     public static final String RESULT_FILE = 'build/out/edt-validate.out'
 
     private final JobConfiguration config;
-    private final String rootDir
 
-    EdtValidate(JobConfiguration config, String rootDir = 'src/cf') {
+    EdtValidate(JobConfiguration config) {
         this.config = config
-        this.rootDir = rootDir
     }
 
     def run() {
