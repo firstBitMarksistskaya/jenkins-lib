@@ -16,13 +16,33 @@ interface IStepExecutor {
 
     void echo(message)
 
-    void cmd(String script, boolean returnStatus)
+    int cmd(String script, boolean returnStatus)
 
-    void cmd(String script)
+    int cmd(String script)
 
     void tool(String toolName)
 
     void withSonarQubeEnv(String installationName, Closure body)
 
     EnvironmentAction env()
+
+    void createDir(String path)
+
+    def withEnv(List<String> strings, Closure body)
+
+    def archiveArtifacts(String path)
+
+    def stash(String name, String includes)
+
+    def unstash(String name)
+
+    def zip(String dir, String zipFile)
+
+    def zip(String dir, String zipFile, String glob)
+
+    def unzip(String dir, String zipFile)
+
+    def unzip(String dir, String zipFile, quiet)
+
+    def catchError(Closure body)
 }

@@ -35,22 +35,17 @@ void call() {
                 }
             }
 
-            stage('SonarQube') {
-                agent {
-                    label 'sonar'
-                }
-                steps {
-                    sonarScanner config
-                }
-            }
+            stage('Подготовка') {
+                parallel {
+                    stage('Подготовка 1C базы') {
+                        agent {
+                            label agent1C
+                        }
+                        when {
+                            beforeAgent true
+                            expression { config.stageFlags.needInfobase() }
+                        }
 
-            stage('1C') {
-                agent {
-                    label agent1C
-                }
-
-                stages {
-                    stage('Подготовка базы') {
                         steps {
                             printLocation()
 
@@ -65,25 +60,87 @@ void call() {
                         }
                     }
 
-                    stage('Проверка качества') {
-                        parallel {
-                            stage('Синтаксический контроль') {
-                                steps {
-                                    syntaxCheck config
-                                }
-                            }
-
-                            stage('Дымовые тесты') {
-                                steps {
-                                    printLocation()
-
-                                    installLocalDependencies()
-
-                                    unzipInfobase()
-                                }
-                            }
+                    stage('Трансформация в формат EDT') {
+                        agent {
+                            label 'edt'
+                        }
+                        when {
+                            beforeAgent true
+                            expression { config.stageFlags.edtValidate }
+                        }
+                        steps {
+                            edtTransform config
                         }
                     }
+                }
+            }
+
+            stage('Проверка качества') {
+                parallel {
+                    stage('EDT контроль') {
+                        agent {
+                            label 'edt'
+                        }
+                        when {
+                            beforeAgent true
+                            expression { config.stageFlags.edtValidate }
+                        }
+                        steps {
+                            edtValidate config
+                        }
+                    }
+
+                    stage('Синтаксический контроль') {
+                        agent {
+                            label agent1C
+                        }
+                        when {
+                            beforeAgent true
+                            expression { config.stageFlags.syntaxCheck }
+                        }
+                        steps {
+                            syntaxCheck config
+                        }
+                    }
+
+                    stage('Дымовые тесты') {
+                        agent {
+                            label agent1C
+                        }
+                        when {
+                            beforeAgent true
+                            expression { config.stageFlags.smoke }
+                        }
+                        steps {
+                            smoke config
+                        }
+                    }
+                }
+            }
+
+            stage('Трансформация результатов') {
+                agent {
+                    label 'oscript'
+                }
+                when {
+                    beforeAgent true
+                    expression { config.stageFlags.edtValidate }
+                }
+                steps {
+                    transform config
+                }
+            }
+
+            stage('SonarQube') {
+                agent {
+                    label 'sonar'
+                }
+                when {
+                    beforeAgent true
+                    expression { config.stageFlags.sonarqube }
+                }
+                steps {
+                    sonarScanner config
                 }
             }
         }

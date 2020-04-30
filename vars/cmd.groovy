@@ -5,5 +5,5 @@ int call(String script, boolean returnStatus = false) {
     ContextRegistry.registerDefaultContext(this)
 
     def cmd = new Cmd(script, returnStatus)
-    cmd.run()
+    return cmd.run()
 }

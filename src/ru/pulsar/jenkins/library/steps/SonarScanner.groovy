@@ -11,9 +11,9 @@ class SonarScanner implements Serializable {
     private final JobConfiguration config;
     private final String rootFile
 
-    SonarScanner(JobConfiguration config, String rootFile = 'src/cf/Configuration.xml') {
+    SonarScanner(JobConfiguration config) {
         this.config = config
-        this.rootFile = rootFile
+        this.rootFile = "$config.srcDir/Configuration.xml"
     }
 
     def run() {
@@ -42,6 +42,11 @@ class SonarScanner implements Serializable {
         String configurationVersion = VersionParser.configuration(rootFile)
         if (configurationVersion) {
             sonarCommand += " -Dsonar.projectVersion=$configurationVersion"
+        }
+
+        if (config.stageFlags.edtValidate) {
+            steps.unstash("edt-generic-issue")
+            sonarCommand += " -Dsonar.externalIssuesReportPaths=build/out/edt-generic-issue.json"
         }
 
         def sonarQubeInstallation = config.sonarQubeOptions.sonarQubeInstallation

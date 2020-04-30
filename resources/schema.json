@@ -6,6 +6,10 @@
       "type" : "string",
       "description" : "Версия платформы 1С:Предприятие в формате 8.3.хх.хххх."
     },
+    "srcDir" : {
+      "type" : "string",
+      "description" : "Путь к корневому каталогу с исходниками конфигурации"
+    },
     "secrets" : {
       "type" : "object",
       "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:Secrets",
@@ -33,6 +37,14 @@
         "syntaxCheck" : {
           "type" : "boolean",
           "description" : "Синтаксический контроль включен"
+        },
+        "edtValidate" : {
+          "type" : "boolean",
+          "description" : "Валидация EDT включена"
+        },
+        "smoke" : {
+          "type" : "boolean",
+          "description" : "Дымовые тесты включены"
         }
       }
     },
@@ -74,6 +86,21 @@
           "items" : {
             "type" : "string"
           }
+        }
+      }
+    },
+    "resultsTransform" : {
+      "type" : "object",
+      "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:ResultsTransformOptions",
+      "description" : "Настройки трансформации результатов анализа",
+      "properties" : {
+        "removeSupport" : {
+          "type" : "boolean",
+          "description" : "Фильтровать замечания по уровню поддержки модуля"
+        },
+        "supportLevel" : {
+          "type" : "integer",
+          "description" : "Настройка фильтрации замечаний по уровню поддержки.\n        0 - удалить файлы на замке;\n        1 - удалить файлы на замке и на поддержке;\n        2 - удалить файлы на замке, на поддержке и снятые с поддержки.\n    "
         }
       }
     }

@@ -1,12 +1,15 @@
 {
   "$schema": "schema.json",
+  "srcDir": "src/cf",
   "secrets": {
     "storagePath": "UNKNOWN_ID",
     "storage": "UNKNOWN_ID"
   },
   "stages": {
     "sonarqube": false,
-    "syntaxCheck": false
+    "syntaxCheck": false,
+    "edtValidate": false,
+    "smoke": false
   },
   "sonarqube": {
     "sonarQubeInstallation": "",
@@ -29,5 +32,9 @@
       "-CheckUseSynchronousCalls",
       "-DistributiveModules"
     ]
+  },
+  "resultsTransform": {
+    "removeSupport": false,
+    "supportLevel": 0
   }
 }

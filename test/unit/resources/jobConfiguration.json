@@ -8,5 +8,8 @@
   },
   "syntaxCheck": {
     "checkModes": ["-ThinClient"]
+  },
+  "resultsTransform": {
+    "removeSupport": true
   }
 }

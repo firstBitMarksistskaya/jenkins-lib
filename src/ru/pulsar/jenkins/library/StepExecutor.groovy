@@ -41,8 +41,8 @@ class StepExecutor implements IStepExecutor {
     }
 
     @Override
-    void cmd(String script, boolean returnStatus = false) {
-        steps.cmd(script, returnStatus)
+    int cmd(String script, boolean returnStatus = false) {
+        return steps.cmd(script, returnStatus)
     }
 
     @Override
@@ -60,5 +60,47 @@ class StepExecutor implements IStepExecutor {
     @Override
     EnvironmentAction env() {
         return steps.env
+    }
+
+    @Override
+    void createDir(String path) {
+        steps.createDir(path)
+    }
+
+    @Override
+    def withEnv(List<String> strings, Closure body) {
+        steps.withEnv(strings) {
+            body()
+        }
+    }
+
+    @Override
+    def archiveArtifacts(String path) {
+        steps.archiveArtifacts path
+    }
+
+    @Override
+    def stash(String name, String includes) {
+        steps.stash name: name, includes: includes
+    }
+
+    @Override
+    def unstash(String name) {
+        steps.unstash name
+    }
+
+    @Override
+    def zip(String dir, String zipFile, String glob = '') {
+        steps.zip dir: dir, zipFile: zipFile, glob: glob
+    }
+
+    @Override
+    def unzip(String dir, String zipFile, quiet = true) {
+        steps.unzip dir: dir, zipFile: zipFile, quiet: quiet
+    }
+
+    @Override
+    def catchError(Closure body) {
+        steps.catchError body
     }
 }

@@ -21,7 +21,7 @@ def call(JobConfiguration config) {
     unzipInfobase()
 
     def outPath = new File(options.pathToJUnitReport).getParent()
-    dir(outPath) { echo '' }
+    createDir(outPath)
 
     String command = "oscript_modules/bin/vrunner syntax-check --ibconnection \"/F./build/ib\""
 
