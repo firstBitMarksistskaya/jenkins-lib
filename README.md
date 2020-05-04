@@ -58,6 +58,10 @@ pipeline1C()
 
 > Да, вот и весь пайплайн. Конфигурирование через json.
 
+## Внешний вид пайплайна в интерфейсе Blue Ocean
+
+![image](https://user-images.githubusercontent.com/1132840/80956084-27b14400-8e09-11ea-9e92-683818a14503.png)
+
 ## Конфигурирование
 
 По умолчанию применяется [файл конфигурации из ресурсов библиотеки](resources/globalConfiguration.json)
