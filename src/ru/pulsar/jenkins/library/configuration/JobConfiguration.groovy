@@ -20,6 +20,10 @@ class JobConfiguration implements Serializable {
     @JsonPropertyDescription("Идентификаторы сохраненных секретов")
     Secrets secrets;
 
+    @JsonProperty("initInfobase")
+    @JsonPropertyDescription("Настройки шага инициализации ИБ")
+    InitInfobaseOptions initInfobaseOptions;
+
     @JsonProperty("sonarqube")
     @JsonPropertyDescription("Настройки анализа SonarQube")
     SonarQubeOptions sonarQubeOptions;
@@ -40,6 +44,7 @@ class JobConfiguration implements Serializable {
             ", srcDir='" + srcDir + '\'' +
             ", stageFlags=" + stageFlags +
             ", secrets=" + secrets +
+            ", initInfobaseOptions=" + initInfobaseOptions +
             ", sonarQubeOptions=" + sonarQubeOptions +
             ", syntaxCheckOptions=" + syntaxCheckOptions +
             ", resultsTransformOptions=" + resultsTransformOptions +

@@ -45,6 +45,28 @@
         "smoke" : {
           "type" : "boolean",
           "description" : "Дымовые тесты включены"
+        },
+        "initSteps" : {
+          "type" : "boolean",
+          "description" : "Предварительные шаги инициализации включены"
+        }
+      }
+    },
+    "initInfobase" : {
+      "type" : "object",
+      "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:InitInfobaseOptions",
+      "description" : "Настройки шага инициализации ИБ",
+      "properties" : {
+        "runMigration" : {
+          "type" : "boolean",
+          "description" : "Запустить миграцию ИБ"
+        },
+        "additionalMigrationSteps" : {
+          "type" : "array",
+          "description" : "Дополнительные шаги, запускаемые через vrunner.\n        В каждой строке передается отдельная команда \n        vrunner и ее аргументы (например, \"vanessa --settings ./tools/vrunner.first.json\")\n    ",
+          "items" : {
+            "type" : "string"
+          }
         }
       }
     },
