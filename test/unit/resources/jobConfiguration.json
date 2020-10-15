@@ -6,6 +6,12 @@
   "stages": {
     "syntaxCheck": true
   },
+  "initInfobase": {
+    "runMigration": false,
+    "additionalMigrationSteps": [
+      "vanessa --settings ./tools/vrunner.first.json"
+    ]
+  },
   "syntaxCheck": {
     "checkModes": ["-ThinClient"]
   },

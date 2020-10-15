@@ -46,18 +46,43 @@ void call() {
                             expression { config.stageFlags.needInfobase() }
                         }
 
-                        steps {
-                            printLocation()
+                        stages {
+                            stage('Создание ИБ') {
+                                steps {
+                                    printLocation()
 
-                            installLocalDependencies()
+                                    installLocalDependencies()
 
-                            dir("build/out") { echo '' }
+                                    dir("build/out") { echo '' }
 
-                            // Создание базы загрузкой конфигурации из хранилища
-                            initFromStorage config
+                                    // Создание базы загрузкой конфигурации из хранилища
+                                    initFromStorage config
+                                }
+                            }
 
-                            zipInfobase()
+                            stage('Инициализация ИБ') {
+                                when {
+                                    beforeAgent true
+                                    expression { config.stageFlags.initSteps }
+                                }
+                                steps {
+                                    printLocation()
+
+                                    // Инициализация и первичная миграция
+                                    initInfobase config
+                                }
+                            }
+
+                            stage('Архивация ИБ') {
+                                steps {
+                                    printLocation()
+
+                                    zipInfobase()
+                                }
+
+                            }
                         }
+
                     }
 
                     stage('Трансформация в формат EDT') {

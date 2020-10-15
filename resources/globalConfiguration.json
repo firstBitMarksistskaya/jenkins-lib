@@ -6,10 +6,15 @@
     "storage": "UNKNOWN_ID"
   },
   "stages": {
+    "initSteps": false,
     "sonarqube": false,
     "syntaxCheck": false,
     "edtValidate": false,
     "smoke": false
+  },
+  "initInfobase": {
+    "runMigration": true,
+    "additionalMigrationSteps": []
   },
   "sonarqube": {
     "sonarQubeInstallation": "",

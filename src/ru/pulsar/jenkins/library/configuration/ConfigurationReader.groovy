@@ -41,12 +41,14 @@ class ConfigurationReader implements Serializable {
         def nonMergeableSettings = Arrays.asList(
             "secrets",
             "stageFlags",
+            "initInfobaseOptions",
             "sonarQubeOptions",
             "syntaxCheckOptions",
             "resultsTransformOptions"
         ).toSet()
 
         mergeObjects(baseConfiguration, configurationToMerge, nonMergeableSettings)
+        mergeInitInfobaseOptions(baseConfiguration.initInfobaseOptions, configurationToMerge.initInfobaseOptions);
 
         return baseConfiguration;
     }
@@ -69,5 +71,10 @@ class ConfigurationReader implements Serializable {
                 Collections.emptySet()
             )
         })
+    }
+
+    @NonCPS
+    private static void mergeInitInfobaseOptions(InitInfobaseOptions baseObject, InitInfobaseOptions objectToMerge) {
+        baseObject.additionalMigrationSteps = objectToMerge.additionalMigrationSteps.clone()
     }
 }
