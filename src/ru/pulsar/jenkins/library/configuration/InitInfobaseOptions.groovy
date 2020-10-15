@@ -11,8 +11,8 @@ class InitInfobaseOptions implements Serializable {
     boolean runMigration = true
 
     @JsonPropertyDescription("""Дополнительные шаги, запускаемые через vrunner.
-        В каждой строке передается отдельная команда 
-        vrunner и ее аргументы (например, "vanessa --settings ./tools/vrunner.first.json")
+    В каждой строке передается отдельная команда 
+    vrunner и ее аргументы (например, "vanessa --settings ./tools/vrunner.first.json")
     """)
     String[] additionalMigrationSteps
 
