@@ -53,7 +53,7 @@ void call() {
 
                                     installLocalDependencies()
 
-                                    dir("build/out") { echo '' }
+                                    createDir('build/out')
 
                                     // Создание базы загрузкой конфигурации из хранилища
                                     initFromStorage config

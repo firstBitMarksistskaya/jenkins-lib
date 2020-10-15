@@ -18,6 +18,8 @@ class InitInfobase implements Serializable {
 
         Logger.printLocation()
 
+        steps.createDir('build/out')
+
         if (!config.stageFlags.initSteps) {
             Logger.println("Init step is disabled")
             return
