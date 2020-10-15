@@ -27,7 +27,7 @@ class InitInfobase implements Serializable {
             Logger.println("Запуск миграции ИБ")
 
             // Запуск миграции
-            steps.cmd('oscript_modules/bin/vrunner run --command "ЗапуститьОбновлениеИнформационнойБазы;ЗавершитьРаботуСистемы;" --execute \$runnerRoot/epf/ЗакрытьПредприятие.epf --ibconnection "/F./build/ib"')
+            steps.cmd('oscript_modules/bin/vrunner run --command "ЗапуститьОбновлениеИнформационнойБазы;ЗавершитьРаботуСистемы;" --execute \\$runnerRoot/epf/ЗакрытьПредприятие.epf --ibconnection "/F./build/ib"')
         } else {
             Logger.println("Шаг миграции ИБ выключен")
         }
