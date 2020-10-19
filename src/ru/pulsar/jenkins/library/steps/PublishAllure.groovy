@@ -25,6 +25,7 @@ class PublishAllure implements Serializable {
         FilePath allurePath = FileUtils.getFilePath('build/out/allure')
         if (!allurePath.exists()) {
             Logger.println("Отсутствуют результаты allure для публикации")
+            return
         }
 
         List<String> results = new ArrayList<>();
