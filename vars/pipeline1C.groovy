@@ -66,8 +66,6 @@ void call() {
                                     expression { config.stageFlags.initSteps }
                                 }
                                 steps {
-                                    printLocation()
-
                                     // Инициализация и первичная миграция
                                     initInfobase config
                                 }
@@ -166,6 +164,14 @@ void call() {
                 }
                 steps {
                     sonarScanner config
+                }
+            }
+        }
+
+        post('post-stage') {
+            always {
+                node('agent') {
+                    saveResults config
                 }
             }
         }

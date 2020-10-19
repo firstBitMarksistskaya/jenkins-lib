@@ -29,7 +29,9 @@ class InitInfobase implements Serializable {
             Logger.println("Запуск миграции ИБ")
 
             // Запуск миграции
-            steps.cmd('oscript_modules/bin/vrunner run --command "ЗапуститьОбновлениеИнформационнойБазы;ЗавершитьРаботуСистемы;" --execute \\$runnerRoot/epf/ЗакрытьПредприятие.epf --ibconnection "/F./build/ib"')
+            steps.catchError {
+                steps.cmd('oscript_modules/bin/vrunner run --command "ЗапуститьОбновлениеИнформационнойБазы;ЗавершитьРаботуСистемы;" --execute \\$runnerRoot/epf/ЗакрытьПредприятие.epf --ibconnection "/F./build/ib"')
+            }
         } else {
             Logger.println("Шаг миграции ИБ выключен")
         }
@@ -40,9 +42,11 @@ class InitInfobase implements Serializable {
             'oscript_modules/vanessa-automation-single/vanessa-automation-single.epf'
         )
 
-        config.initInfobaseOptions.additionalMigrationSteps.each {
-            Logger.println("Первичная инициализация командой ${it}")
-            steps.cmd("oscript_modules/bin/vrunner ${it} --ibconnection \"/F./build/ib\"")
+        steps.catchError {
+            config.initInfobaseOptions.additionalMigrationSteps.each {
+                Logger.println("Первичная инициализация командой ${it}")
+                steps.cmd("oscript_modules/bin/vrunner ${it} --ibconnection \"/F./build/ib\"")
+            }
         }
 
         steps.stash('init-allure', 'build/out/allure/*', true)
