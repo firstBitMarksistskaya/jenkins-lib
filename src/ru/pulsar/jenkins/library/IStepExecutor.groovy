@@ -48,9 +48,9 @@ interface IStepExecutor {
 
     def catchError(Closure body)
 
-    def httpRequest(String url, String outputFile)
-
     def httpRequest(String url, String outputFile, String responseHandle, boolean wrapAsMultipart)
 
     def error(String errorMessage)
+
+    def allure(List<String> results)
 }

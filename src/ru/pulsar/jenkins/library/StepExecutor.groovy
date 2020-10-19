@@ -113,4 +113,16 @@ class StepExecutor implements IStepExecutor {
     def error(String errorMessage) {
         steps.error errorMessage
     }
+
+    @Override
+    def allure(List<String> results) {
+        steps.allure([
+            commandline: 'allure',
+            includeProperties: false,
+            jdk: '',
+            properties: [],
+            reportBuildPolicy: 'ALWAYS',
+            results: results
+        ])
+    }
 }
