@@ -45,4 +45,8 @@ interface IStepExecutor {
     def unzip(String dir, String zipFile, quiet)
 
     def catchError(Closure body)
+
+    def httpRequest(String url, String outputFile)
+
+    def httpRequest(String url, String outputFile, String responseHandle, boolean wrapAsMultipart)
 }

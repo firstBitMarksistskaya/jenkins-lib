@@ -103,4 +103,9 @@ class StepExecutor implements IStepExecutor {
     def catchError(Closure body) {
         steps.catchError body
     }
+
+    @Override
+    def httpRequest(String url, String outputFile, String responseHandle = 'NONE', boolean wrapAsMultipart = false) {
+        steps.httpRequest responseHandle: responseHandle, outputFile: outputFile, url: url, wrapAsMultipart: wrapAsMultipart
+    }
 }
