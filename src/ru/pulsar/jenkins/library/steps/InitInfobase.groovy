@@ -44,5 +44,8 @@ class InitInfobase implements Serializable {
             Logger.println("Первичная инициализация командой ${it}")
             steps.cmd("oscript_modules/bin/vrunner ${it} --ibconnection \"/F./build/ib\"")
         }
+
+        steps.stash('init-allure', 'build/out/allure/*', true)
+        steps.stash('init-cucumber', 'build/out/cucumber/*', true)
     }
 }

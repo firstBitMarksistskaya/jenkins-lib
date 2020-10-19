@@ -80,8 +80,8 @@ class StepExecutor implements IStepExecutor {
     }
 
     @Override
-    def stash(String name, String includes) {
-        steps.stash name: name, includes: includes
+    def stash(String name, String includes, boolean allowEmpty = false) {
+        steps.stash name: name, includes: includes, allowEmpty: allowEmpty
     }
 
     @Override
@@ -107,5 +107,10 @@ class StepExecutor implements IStepExecutor {
     @Override
     def httpRequest(String url, String outputFile, String responseHandle = 'NONE', boolean wrapAsMultipart = false) {
         steps.httpRequest responseHandle: responseHandle, outputFile: outputFile, url: url, wrapAsMultipart: wrapAsMultipart
+    }
+
+    @Override
+    def error(String errorMessage) {
+        steps.error errorMessage
     }
 }
