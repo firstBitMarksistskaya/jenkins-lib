@@ -38,7 +38,7 @@ class InitInfobase implements Serializable {
 
         // TODO: удалить после выхода VAS 1.0.35
         steps.httpRequest(
-            'https://cloud.svc.pulsar.ru/index.php/s/WKwmqpFXSjfYjAH',
+            'https://cloud.svc.pulsar.ru/index.php/s/WKwmqpFXSjfYjAH/download',
             'oscript_modules/vanessa-automation-single/vanessa-automation-single.epf'
         )
 
