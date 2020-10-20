@@ -34,15 +34,12 @@ class PublishAllure implements Serializable {
 
         def allureSubDirs = allurePath.listDirectories()
         if (allureSubDirs.size() > 0) {
-            allureSubDirs.forEach({ filePath -> results.add(getPath(filePath)) })
+            allureSubDirs.forEach({ filePath -> results.add(filePath.getRemote()) })
         } else {
-            results.add(getPath(allurePath))
+            results.add(allurePath.getRemote())
         }
 
         steps.allure(results)
     }
 
-    private static String getPath(FilePath filePath) {
-        filePath.getBaseName() + File.separator + filePath.getName()
-    }
 }
