@@ -22,7 +22,9 @@ class PublishAllure implements Serializable {
 
         steps.unstash('init-allure')
 
-        FilePath allurePath = FileUtils.getFilePath('build/out/allure')
+        def env = steps.env();
+
+        FilePath allurePath = FileUtils.getFilePath("$env.WORKSPACE/build/out/allure")
         if (!allurePath.exists()) {
             Logger.println("Отсутствуют результаты allure для публикации")
             return
