@@ -32,12 +32,17 @@ class PublishAllure implements Serializable {
 
         List<String> results = new ArrayList<>();
 
+        Logger.println(allurePath.toString())
+        Logger.println(allurePath.listDirectories().toString())
+
         allurePath.listDirectories().each { FilePath filePath ->
             results.add(filePath.getRemote())
         }
         if (results.isEmpty()) {
             results.add(allurePath.getRemote())
         }
+
+        Logger.println(results.toString())
 
         steps.allure(results)
     }
