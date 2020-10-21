@@ -17,7 +17,7 @@
     "runMigration": true,
     "additionalMigrationSteps": []
   },
-  "bddOptions": {
+  "bdd": {
     "vrunnerSteps": [
       "vanessa --settings ./tools/vrunner.json"
     ]
