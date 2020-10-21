@@ -1,7 +1,6 @@
 package ru.pulsar.jenkins.library
 
 import org.jenkinsci.plugins.workflow.support.actions.EnvironmentAction
-import ru.pulsar.jenkins.library.utils.Logger
 import ru.yandex.qatools.allure.jenkins.config.ResultsConfig
 
 class StepExecutor implements IStepExecutor {
@@ -118,7 +117,6 @@ class StepExecutor implements IStepExecutor {
 
     @Override
     def allure(List<String> results) {
-        Logger.println(ResultsConfig.convertPaths(results))
         steps.allure([
             commandline: 'allure',
             includeProperties: false,
