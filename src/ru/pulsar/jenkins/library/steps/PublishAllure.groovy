@@ -10,17 +10,19 @@ import ru.pulsar.jenkins.library.utils.Logger
 class PublishAllure implements Serializable {
 
     private final JobConfiguration config;
+    private IStepExecutor steps;
 
     PublishAllure(JobConfiguration config) {
         this.config = config
     }
 
     def run() {
-        IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
+        steps = ContextRegistry.getContext().getStepExecutor()
 
         Logger.printLocation()
 
-        steps.unstash('init-allure')
+        safeUnstash('init-allure')
+        safeUnstash('bdd-allure')
 
         def env = steps.env();
 
@@ -42,4 +44,11 @@ class PublishAllure implements Serializable {
         steps.allure(results)
     }
 
+    private void safeUnstash(String stashName) {
+        try {
+            steps.unstash(stashName)
+        } catch (Exception ex) {
+            Logger.println("Can't unstash $stashName")
+        }
+    }
 }
