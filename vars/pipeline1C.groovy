@@ -114,6 +114,9 @@ void call() {
                     }
 
                     stage('BDD сценарии') {
+                        agent {
+                            label agent1C
+                        }
                         when {
                             beforeAgent true
                             expression { config.stageFlags.bdd }
