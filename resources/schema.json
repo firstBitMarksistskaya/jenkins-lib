@@ -74,7 +74,7 @@
         }
       }
     },
-    "bddOptions" : {
+    "bdd" : {
       "type" : "object",
       "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:BddOptions",
       "description" : "Настройки шага запуска BDD сценариев",

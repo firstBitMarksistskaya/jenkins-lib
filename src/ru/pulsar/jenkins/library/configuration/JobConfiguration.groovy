@@ -24,7 +24,7 @@ class JobConfiguration implements Serializable {
     @JsonPropertyDescription("Настройки шага инициализации ИБ")
     InitInfobaseOptions initInfobaseOptions;
 
-    @JsonProperty("bddOptions")
+    @JsonProperty("bdd")
     @JsonPropertyDescription("Настройки шага запуска BDD сценариев")
     BddOptions bddOptions;
 
