@@ -125,7 +125,9 @@ void call() {
                             expression { config.stageFlags.bdd }
                         }
                         steps {
-                            // Инициализация и первичная миграция
+
+                            unzipInfobase()
+                            
                             bdd config
                         }
                     }
