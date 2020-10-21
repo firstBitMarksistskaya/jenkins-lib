@@ -24,6 +24,10 @@ class JobConfiguration implements Serializable {
     @JsonPropertyDescription("Настройки шага инициализации ИБ")
     InitInfobaseOptions initInfobaseOptions;
 
+    @JsonProperty("bddOptions")
+    @JsonPropertyDescription("Настройки шага запуска BDD сценариев")
+    BddOptions bddOptions;
+
     @JsonProperty("sonarqube")
     @JsonPropertyDescription("Настройки анализа SonarQube")
     SonarQubeOptions sonarQubeOptions;
@@ -45,6 +49,7 @@ class JobConfiguration implements Serializable {
             ", stageFlags=" + stageFlags +
             ", secrets=" + secrets +
             ", initInfobaseOptions=" + initInfobaseOptions +
+            ", bddOptions=" + bddOptions +
             ", sonarQubeOptions=" + sonarQubeOptions +
             ", syntaxCheckOptions=" + syntaxCheckOptions +
             ", resultsTransformOptions=" + resultsTransformOptions +

@@ -8,6 +8,7 @@
   "stages": {
     "initSteps": false,
     "sonarqube": false,
+    "bdd": false,
     "syntaxCheck": false,
     "edtValidate": false,
     "smoke": false
@@ -15,6 +16,11 @@
   "initInfobase": {
     "runMigration": true,
     "additionalMigrationSteps": []
+  },
+  "bddOptions": {
+    "vrunnerSteps": [
+      "vanessa --settings ./tools/vrunner.json"
+    ]
   },
   "sonarqube": {
     "sonarQubeInstallation": "",

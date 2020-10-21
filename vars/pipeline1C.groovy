@@ -113,6 +113,17 @@ void call() {
                         }
                     }
 
+                    stage('BDD сценарии') {
+                        when {
+                            beforeAgent true
+                            expression { config.stageFlags.bdd }
+                        }
+                        steps {
+                            // Инициализация и первичная миграция
+                            bdd config
+                        }
+                    }
+
                     stage('Синтаксический контроль') {
                         agent {
                             label agent1C

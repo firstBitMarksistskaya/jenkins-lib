@@ -49,6 +49,10 @@
         "initSteps" : {
           "type" : "boolean",
           "description" : "Предварительные шаги инициализации включены"
+        },
+        "bdd" : {
+          "type" : "boolean",
+          "description" : "Запуск BDD сценариев включен"
         }
       }
     },
@@ -63,7 +67,21 @@
         },
         "additionalMigrationSteps" : {
           "type" : "array",
-          "description" : "Дополнительные шаги, запускаемые через vrunner.\n        В каждой строке передается отдельная команда \n        vrunner и ее аргументы (например, \"vanessa --settings ./tools/vrunner.first.json\")\n    ",
+          "description" : "Дополнительные шаги, запускаемые через vrunner.\n    В каждой строке передается отдельная команда \n    vrunner и ее аргументы (например, \"vanessa --settings ./tools/vrunner.first.json\")\n    ",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "bddOptions" : {
+      "type" : "object",
+      "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:BddOptions",
+      "description" : "Настройки шага запуска BDD сценариев",
+      "properties" : {
+        "vrunnerSteps" : {
+          "type" : "array",
+          "description" : "Шаги, запускаемые через vrunner.\n    В каждой строке передается отдельная команда \n    vrunner и ее аргументы (например, \"vanessa --settings ./tools/vrunner.json\").\n    По умолчанию содержит одну команду \"vanessa --settings ./tools/vrunner.json\".\n    ",
           "items" : {
             "type" : "string"
           }

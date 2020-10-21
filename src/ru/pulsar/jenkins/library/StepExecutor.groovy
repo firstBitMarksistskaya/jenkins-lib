@@ -128,4 +128,9 @@ class StepExecutor implements IStepExecutor {
             results: ResultsConfig.convertPaths(results)
         ])
     }
+
+    @Override
+    def installLocalDependencies() {
+        steps.installLocalDependencies()
+    }
 }

@@ -46,6 +46,8 @@ class ConfigurationReaderTest {
 
     assertThat(jobConfiguration.getInitInfobaseOptions().getRunMigration()).isFalse();
     assertThat(jobConfiguration.getInitInfobaseOptions().getAdditionalMigrationSteps()).contains("vanessa --settings ./tools/vrunner.first.json");
+
+    assertThat(jobConfiguration.getBddOptions().getVrunnerSteps()).contains("vanessa --settings ./tools/vrunner.json");
   }
 
 }

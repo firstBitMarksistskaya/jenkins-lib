@@ -53,4 +53,6 @@ interface IStepExecutor {
     def error(String errorMessage)
 
     def allure(List<String> results)
+
+    def installLocalDependencies()
 }
