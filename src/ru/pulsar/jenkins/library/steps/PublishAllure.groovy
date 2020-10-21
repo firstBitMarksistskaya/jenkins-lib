@@ -32,10 +32,10 @@ class PublishAllure implements Serializable {
 
         List<String> results = new ArrayList<>();
 
-        def allureSubDirs = allurePath.listDirectories()
-        if (allureSubDirs.size() > 0) {
-            allureSubDirs.forEach({ filePath -> results.add(filePath.getRemote()) })
-        } else {
+        allurePath.listDirectories().each { FilePath filePath ->
+            results.add(filePath.getRemote())
+        }
+        if (results.isEmpty()) {
             results.add(allurePath.getRemote())
         }
 
