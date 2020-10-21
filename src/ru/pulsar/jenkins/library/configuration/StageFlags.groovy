@@ -21,6 +21,9 @@ class StageFlags implements Serializable {
     @JsonPropertyDescription("Предварительные шаги инициализации включены")
     boolean initSteps
 
+    @JsonPropertyDescription("Запуск BDD сценариев включен")
+    boolean bdd
+
     @Override
     @NonCPS
     String toString() {
@@ -30,10 +33,11 @@ class StageFlags implements Serializable {
             ", edtValidate=" + edtValidate +
             ", smoke=" + smoke +
             ", initSteps=" + initSteps +
+            ", bdd=" + bdd +
             '}';
     }
 
     boolean needInfobase() {
-        return smoke || syntaxCheck || initSteps
+        return smoke || syntaxCheck || initSteps || bdd
     }
 }

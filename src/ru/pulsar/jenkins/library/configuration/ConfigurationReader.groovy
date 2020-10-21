@@ -7,6 +7,8 @@ import org.apache.commons.beanutils.BeanUtils
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 
+import javax.annotation.CheckForNull
+
 class ConfigurationReader implements Serializable {
 
     private static ObjectMapper mapper
@@ -42,6 +44,7 @@ class ConfigurationReader implements Serializable {
             "secrets",
             "stageFlags",
             "initInfobaseOptions",
+            "bddOptions",
             "sonarQubeOptions",
             "syntaxCheckOptions",
             "resultsTransformOptions"
@@ -49,6 +52,7 @@ class ConfigurationReader implements Serializable {
 
         mergeObjects(baseConfiguration, configurationToMerge, nonMergeableSettings)
         mergeInitInfobaseOptions(baseConfiguration.initInfobaseOptions, configurationToMerge.initInfobaseOptions);
+        mergeBddOptions(baseConfiguration.bddOptions, configurationToMerge.bddOptions);
 
         return baseConfiguration;
     }
@@ -74,7 +78,18 @@ class ConfigurationReader implements Serializable {
     }
 
     @NonCPS
-    private static void mergeInitInfobaseOptions(InitInfobaseOptions baseObject, InitInfobaseOptions objectToMerge) {
+    private static void mergeInitInfobaseOptions(InitInfobaseOptions baseObject, @CheckForNull InitInfobaseOptions objectToMerge) {
+        if (objectToMerge == null || objectToMerge.additionalMigrationSteps == null) {
+            return
+        }
         baseObject.additionalMigrationSteps = objectToMerge.additionalMigrationSteps.clone()
+    }
+
+    @NonCPS
+    private static void mergeBddOptions(BddOptions baseObject, @CheckForNull BddOptions objectToMerge) {
+        if (objectToMerge == null || objectToMerge.vrunnerSteps == null) {
+            return
+        }
+        baseObject.vrunnerSteps = objectToMerge.vrunnerSteps.clone()
     }
 }
