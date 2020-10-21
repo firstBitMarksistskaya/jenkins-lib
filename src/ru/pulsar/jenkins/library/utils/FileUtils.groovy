@@ -24,4 +24,12 @@ class FileUtils {
             return new FilePath(Jenkins.getInstanceOrNull().getComputer(nodeName).getChannel(), path);
         }
     }
+
+    static String getLocalPath(FilePath filePath) {
+        IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
+
+        def env = steps.env();
+
+        return filePath.getRemote().replaceAll("^$env.WORKSPACE/", "").toString()
+    }
 }
