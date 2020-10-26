@@ -3,7 +3,8 @@
   "srcDir": "src/cf",
   "secrets": {
     "storagePath": "UNKNOWN_ID",
-    "storage": "UNKNOWN_ID"
+    "storage": "UNKNOWN_ID",
+    "lfs": "UNKNOWN_ID"
   },
   "stages": {
     "initSteps": false,
@@ -47,5 +48,9 @@
   "resultsTransform": {
     "removeSupport": false,
     "supportLevel": 0
+  },
+  "git": {
+    "lfsPull": false,
+    "lfsURI": ""
   }
 }
