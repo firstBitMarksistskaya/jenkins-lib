@@ -1,5 +1,7 @@
 package ru.pulsar.jenkins.library
 
+import hudson.plugins.git.GitSCM
+import hudson.scm.SCM
 import org.jenkinsci.plugins.workflow.support.actions.EnvironmentAction
 import ru.yandex.qatools.allure.jenkins.config.ResultsConfig
 
@@ -61,6 +63,16 @@ class StepExecutor implements IStepExecutor {
     @Override
     EnvironmentAction env() {
         return steps.env
+    }
+
+    @Override
+    GitSCM scm() {
+        return steps.scm
+    }
+
+    @Override
+    void checkout(SCM scm) {
+        steps.checkout(scm)
     }
 
     @Override

@@ -40,6 +40,10 @@ class JobConfiguration implements Serializable {
     @JsonPropertyDescription("Настройки трансформации результатов анализа")
     ResultsTransformOptions resultsTransformOptions;
 
+    @JsonProperty("git")
+    @JsonPropertyDescription("Настройки git-репозитория")
+    GitSCMOptions gitSCMOptions;
+
     @Override
     @NonCPS
     String toString() {
@@ -53,6 +57,7 @@ class JobConfiguration implements Serializable {
             ", sonarQubeOptions=" + sonarQubeOptions +
             ", syntaxCheckOptions=" + syntaxCheckOptions +
             ", resultsTransformOptions=" + resultsTransformOptions +
+            ", gitSCMOptions=" + gitSCMOptions +
             '}';
     }
 }

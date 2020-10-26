@@ -1,5 +1,9 @@
 package ru.pulsar.jenkins.library.steps
 
+
+import hudson.plugins.git.GitSCM
+import hudson.plugins.git.UserRemoteConfig
+import hudson.plugins.git.extensions.impl.GitLFSPull
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
@@ -28,6 +32,8 @@ class EdtTransform implements Serializable {
             return
         }
 
+        doSCM()
+
         def env = steps.env();
 
         def workspaceDir = "$env.WORKSPACE/$WORKSPACE"
@@ -46,5 +52,65 @@ class EdtTransform implements Serializable {
 
         steps.zip(WORKSPACE, WORKSPACE_ZIP)
         steps.stash(WORKSPACE_ZIP_STASH, WORKSPACE_ZIP)
+    }
+
+    private void doSCM() {
+
+        def gitSCMOptions = config.gitSCMOptions
+
+        if (!gitSCMOptions.lfsPull) {
+            return
+        }
+
+        IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
+
+        def scm = steps.scm()
+
+        boolean needToCheckout = false
+        needToCheckout = addLFS(scm, needToCheckout)
+        scm = addLFSRemoteConfig(scm)
+
+        if (needToCheckout) {
+            steps.checkout(scm)
+        }
+    }
+
+    private boolean addLFS(GitSCM scm, boolean needToCheckout) {
+        GitLFSPull gitLFS = new GitLFSPull();
+        def extensions = scm.getExtensions()
+        if (!extensions.contains(gitLFS)) {
+            needToCheckout = true
+            extensions.add(gitLFS)
+        }
+        needToCheckout
+    }
+
+    private GitSCM addLFSRemoteConfig(GitSCM scm) {
+        def gitSCMOptions = config.gitSCMOptions
+
+        if (gitSCMOptions.lfsURI.isEmpty()) {
+            return scm
+        }
+
+        List<UserRemoteConfig> userRemoteConfigs = new ArrayList<>(scm.getUserRemoteConfigs())
+
+        def userRemoteConfig = userRemoteConfigs.find { it.url == gitSCMOptions.lfsURI }
+        if (userRemoteConfig == null) {
+            def credentialsId = config.secrets.lfs.isEmpty() ? null : config.secrets.lfs
+            userRemoteConfig = new UserRemoteConfig(config.gitSCMOptions.lfsURI, null, null, credentialsId)
+            userRemoteConfigs.add(0, userRemoteConfig)
+
+            scm = new GitSCM(
+                userRemoteConfigs,
+                scm.branches,
+                scm.doGenerateSubmoduleConfigurations,
+                scm.submoduleCfg,
+                scm.browser,
+                scm.gitTool,
+                scm.extensions
+            )
+        }
+
+        return scm
     }
 }
