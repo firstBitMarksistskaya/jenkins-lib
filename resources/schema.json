@@ -158,7 +158,12 @@
           "description" : "Дополнительно выполнить git lfs pull"
         },
         "lfsURI" : {
-          "type" : "string"
+          "type" : "string",
+          "description" : "Адрес для получения данных LFS"
+        },
+        "lfsRepoURI" : {
+          "type" : "string",
+          "description" : "Адрес удаленного репозитория для авторизации на LFS"
         }
       }
     }

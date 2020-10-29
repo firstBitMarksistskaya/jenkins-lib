@@ -51,6 +51,7 @@
   },
   "git": {
     "lfsPull": false,
-    "lfsURI": ""
+    "lfsURI": "",
+    "lfsRepoURI": ""
   }
 }
