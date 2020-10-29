@@ -10,7 +10,11 @@ class GitSCMOptions implements Serializable {
     @JsonPropertyDescription("Дополнительно выполнить git lfs pull")
     boolean lfsPull
 
+    @JsonPropertyDescription("Адрес для получения данных LFS")
     String lfsURI = ""
+
+    @JsonPropertyDescription("Адрес удаленного репозитория для авторизации на LFS")
+    String lfsRepoURI = ""
 
     @Override
     @NonCPS
@@ -18,6 +22,7 @@ class GitSCMOptions implements Serializable {
         return "GitSCMOptions{" +
             "lfsPull=" + lfsPull +
             "lfsURI=" + lfsURI +
+            "lfsRepoURI=" + lfsRepoURI +
             '}';
     }
 }
