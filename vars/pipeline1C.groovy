@@ -21,6 +21,10 @@ void call() {
             timestamps()
         }
 
+        environment {
+            GIT_LFS_SKIP_SMUDGE = '1'
+        }
+
         stages {
 
             stage('pre-stage') {
