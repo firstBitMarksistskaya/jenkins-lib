@@ -117,9 +117,6 @@ void call() {
                         agent {
                             label agent1C
                         }
-                        environment  {
-                            LOGOS_LEVEL = 'DEBUG'
-                        }
                         when {
                             beforeAgent true
                             expression { config.stageFlags.bdd }
