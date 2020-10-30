@@ -99,6 +99,10 @@ class EdtTransform implements Serializable {
 
         List<UserRemoteConfig> userRemoteConfigs = new ArrayList<>(scm.getUserRemoteConfigs())
 
+        if (gitSCMOptions.lfsRepoURI.isEmpty()) {
+            return scm
+        }
+
         def userRemoteConfig = userRemoteConfigs.find { it.url == gitSCMOptions.lfsRepoURI }
         boolean needToUpdateUserRemoteConfigs
         if (userRemoteConfig == null) {
