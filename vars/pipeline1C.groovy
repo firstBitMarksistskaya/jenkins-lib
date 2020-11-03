@@ -30,7 +30,7 @@ void call() {
                 }
 
                 options {
-                    skipDefaultCheckout(false)
+                    skipDefaultCheckout(true)
                 }
 
                 environment {
@@ -39,6 +39,8 @@ void call() {
 
                 steps {
                     echo "test"
+                    cmd "env"
+                    checkout scm
                     script {
                         config = jobConfiguration() as JobConfiguration
                         agent1C = config.v8version
