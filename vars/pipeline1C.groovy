@@ -29,13 +29,16 @@ void call() {
                     label 'agent'
                 }
 
+                options {
+                    skipDefaultCheckout(false)
+                }
+
                 environment {
                     GIT_LFS_SKIP_SMUDGE=1
                 }
 
                 steps {
                     echo "test"
-                    checkout scm
                     script {
                         config = jobConfiguration() as JobConfiguration
                         agent1C = config.v8version
@@ -59,7 +62,7 @@ void call() {
                                 steps {
                                     printLocation()
 
-                                    checkout scm
+                                    customCheckout config
 
                                     installLocalDependencies()
 
@@ -102,7 +105,7 @@ void call() {
                             expression { config.stageFlags.edtValidate }
                         }
                         steps {
-                            checkout scm
+                            customCheckout config
                             edtTransform config
                         }
                     }
@@ -120,7 +123,7 @@ void call() {
                             expression { config.stageFlags.edtValidate }
                         }
                         steps {
-                            checkout scm
+                            customCheckout config
                             edtValidate config
                         }
                     }
@@ -134,7 +137,7 @@ void call() {
                             expression { config.stageFlags.bdd }
                         }
                         steps {
-                            checkout scm
+                            customCheckout config
                             unzipInfobase()
                             
                             bdd config
@@ -150,7 +153,7 @@ void call() {
                             expression { config.stageFlags.syntaxCheck }
                         }
                         steps {
-                            checkout scm
+                            customCheckout config
                             syntaxCheck config
                         }
                     }
@@ -164,7 +167,7 @@ void call() {
                             expression { config.stageFlags.smoke }
                         }
                         steps {
-                            checkout scm
+                            customCheckout config
                             smoke config
                         }
                     }
@@ -180,7 +183,7 @@ void call() {
                     expression { config.stageFlags.edtValidate }
                 }
                 steps {
-                    checkout scm
+                    customCheckout config
                     transform config
                 }
             }
@@ -194,7 +197,7 @@ void call() {
                     expression { config.stageFlags.sonarqube }
                 }
                 steps {
-                    checkout scm
+                    customCheckout config
                     sonarScanner config
                 }
             }
