@@ -29,8 +29,6 @@ class EdtTransform implements Serializable {
             return
         }
 
-        doSCM()
-
         def env = steps.env();
 
         def workspaceDir = "$env.WORKSPACE/$WORKSPACE"

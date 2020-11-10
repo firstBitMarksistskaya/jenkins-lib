@@ -19,7 +19,6 @@ void call() {
             buildDiscarder(logRotator(numToKeepStr: '30'))
             timeout(time: 2, unit: TimeUnit.HOURS)
             timestamps()
-            skipDefaultCheckout(true)
         }
 
         stages {
@@ -29,18 +28,7 @@ void call() {
                     label 'agent'
                 }
 
-                options {
-                    skipDefaultCheckout(true)
-                }
-
-                environment {
-                    GIT_LFS_SKIP_SMUDGE=1
-                }
-
                 steps {
-                    echo "test"
-                    cmd "env"
-                    checkout scm
                     script {
                         config = jobConfiguration() as JobConfiguration
                         agent1C = config.v8version
@@ -63,8 +51,6 @@ void call() {
                             stage('Создание ИБ') {
                                 steps {
                                     printLocation()
-
-                                    customCheckout config
 
                                     installLocalDependencies()
 
@@ -107,7 +93,6 @@ void call() {
                             expression { config.stageFlags.edtValidate }
                         }
                         steps {
-                            customCheckout config
                             edtTransform config
                         }
                     }
@@ -125,7 +110,6 @@ void call() {
                             expression { config.stageFlags.edtValidate }
                         }
                         steps {
-                            customCheckout config
                             edtValidate config
                         }
                     }
@@ -139,7 +123,6 @@ void call() {
                             expression { config.stageFlags.bdd }
                         }
                         steps {
-                            customCheckout config
                             unzipInfobase()
                             
                             bdd config
@@ -155,7 +138,6 @@ void call() {
                             expression { config.stageFlags.syntaxCheck }
                         }
                         steps {
-                            customCheckout config
                             syntaxCheck config
                         }
                     }
@@ -169,7 +151,6 @@ void call() {
                             expression { config.stageFlags.smoke }
                         }
                         steps {
-                            customCheckout config
                             smoke config
                         }
                     }
@@ -185,7 +166,6 @@ void call() {
                     expression { config.stageFlags.edtValidate }
                 }
                 steps {
-                    customCheckout config
                     transform config
                 }
             }
@@ -199,7 +179,6 @@ void call() {
                     expression { config.stageFlags.sonarqube }
                 }
                 steps {
-                    customCheckout config
                     sonarScanner config
                 }
             }
