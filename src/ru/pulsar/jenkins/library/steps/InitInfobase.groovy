@@ -36,12 +36,6 @@ class InitInfobase implements Serializable {
             Logger.println("Шаг миграции ИБ выключен")
         }
 
-        // TODO: удалить после выхода VAS 1.0.35
-        steps.httpRequest(
-            'https://cloud.svc.pulsar.ru/index.php/s/WKwmqpFXSjfYjAH/download',
-            'oscript_modules/vanessa-automation-single/vanessa-automation-single.epf'
-        )
-
         steps.catchError {
             config.initInfobaseOptions.additionalMigrationSteps.each {
                 Logger.println("Первичная инициализация командой ${it}")
