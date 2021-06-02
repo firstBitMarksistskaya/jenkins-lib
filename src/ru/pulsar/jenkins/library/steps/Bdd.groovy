@@ -23,20 +23,23 @@ class Bdd implements Serializable {
             return
         }
 
-        steps.installLocalDependencies()
+        List<String> logosConfig = ["LOGOS_CONFIG=$config.logosConfig"]
+        steps.withEnv(logosConfig) {
+            steps.installLocalDependencies()
 
-        steps.createDir('build/out')
+            steps.createDir('build/out')
 
-        // TODO: удалить после выхода VAS 1.0.35
-        steps.httpRequest(
-            'https://cloud.svc.pulsar.ru/index.php/s/WKwmqpFXSjfYjAH/download',
-            'oscript_modules/vanessa-automation-single/vanessa-automation-single.epf'
-        )
+            // TODO: удалить после выхода VAS 1.0.35
+            steps.httpRequest(
+                'https://cloud.svc.pulsar.ru/index.php/s/WKwmqpFXSjfYjAH/download',
+                'oscript_modules/vanessa-automation-single/vanessa-automation-single.epf'
+            )
 
-        steps.catchError {
-            config.bddOptions.vrunnerSteps.each {
-                Logger.println("Шаг запуска сценариев командой ${it}")
-                steps.cmd("oscript_modules/bin/vrunner ${it} --ibconnection \"/F./build/ib\"")
+            steps.catchError {
+                config.bddOptions.vrunnerSteps.each {
+                    Logger.println("Шаг запуска сценариев командой ${it}")
+                    steps.cmd("oscript_modules/bin/vrunner ${it} --ibconnection \"/F./build/ib\"")
+                }
             }
         }
 

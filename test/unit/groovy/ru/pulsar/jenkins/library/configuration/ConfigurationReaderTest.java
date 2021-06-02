@@ -48,6 +48,8 @@ class ConfigurationReaderTest {
     assertThat(jobConfiguration.getInitInfobaseOptions().getAdditionalMigrationSteps()).contains("vanessa --settings ./tools/vrunner.first.json");
 
     assertThat(jobConfiguration.getBddOptions().getVrunnerSteps()).contains("vanessa --settings ./tools/vrunner.json");
+
+    assertThat(jobConfiguration.getLogosConfig()).isEqualTo("logger.rootLogger=DEBUG");
   }
 
 }

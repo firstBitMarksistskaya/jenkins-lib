@@ -53,5 +53,6 @@
     "lfsPull": false,
     "lfsURI": "",
     "lfsRepoURI": ""
-  }
+  },
+  "logosConfig": ""
 }

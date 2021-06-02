@@ -44,6 +44,10 @@ class JobConfiguration implements Serializable {
     @JsonPropertyDescription("Настройки git-репозитория")
     GitSCMOptions gitSCMOptions;
 
+    @JsonProperty("logosConfig")
+    @JsonPropertyDescription("Конфигурация библиотеки logos. Применяется перед запуском каждой стадии сборки")
+    String logosConfig;
+
     @Override
     @NonCPS
     String toString() {
@@ -58,6 +62,7 @@ class JobConfiguration implements Serializable {
             ", syntaxCheckOptions=" + syntaxCheckOptions +
             ", resultsTransformOptions=" + resultsTransformOptions +
             ", gitSCMOptions=" + gitSCMOptions +
+            ", logosConfig=" + logosConfig +
             '}';
     }
 }

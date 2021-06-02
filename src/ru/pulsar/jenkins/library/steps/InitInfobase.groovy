@@ -25,27 +25,31 @@ class InitInfobase implements Serializable {
             return
         }
 
-        if (config.initInfobaseOptions.runMigration) {
-            Logger.println("Запуск миграции ИБ")
-
-            // Запуск миграции
-            steps.catchError {
-                steps.cmd('oscript_modules/bin/vrunner run --command "ЗапуститьОбновлениеИнформационнойБазы;ЗавершитьРаботуСистемы;" --execute \\$runnerRoot/epf/ЗакрытьПредприятие.epf --ibconnection "/F./build/ib"')
-            }
-        } else {
-            Logger.println("Шаг миграции ИБ выключен")
-        }
-
         // TODO: удалить после выхода VAS 1.0.35
         steps.httpRequest(
             'https://cloud.svc.pulsar.ru/index.php/s/WKwmqpFXSjfYjAH/download',
             'oscript_modules/vanessa-automation-single/vanessa-automation-single.epf'
         )
 
-        steps.catchError {
-            config.initInfobaseOptions.additionalMigrationSteps.each {
-                Logger.println("Первичная инициализация командой ${it}")
-                steps.cmd("oscript_modules/bin/vrunner ${it} --ibconnection \"/F./build/ib\"")
+        List<String> logosConfig = ["LOGOS_CONFIG=$config.logosConfig"]
+        steps.withEnv(logosConfig) {
+
+            if (config.initInfobaseOptions.runMigration) {
+                Logger.println("Запуск миграции ИБ")
+
+                // Запуск миграции
+                steps.catchError {
+                    steps.cmd('oscript_modules/bin/vrunner run --command "ЗапуститьОбновлениеИнформационнойБазы;ЗавершитьРаботуСистемы;" --execute \\$runnerRoot/epf/ЗакрытьПредприятие.epf --ibconnection "/F./build/ib"')
+                }
+            } else {
+                Logger.println("Шаг миграции ИБ выключен")
+            }
+
+            steps.catchError {
+                config.initInfobaseOptions.additionalMigrationSteps.each {
+                    Logger.println("Первичная инициализация командой ${it}")
+                    steps.cmd("oscript_modules/bin/vrunner ${it} --ibconnection \"/F./build/ib\"")
+                }
             }
         }
 
