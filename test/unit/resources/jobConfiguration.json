@@ -17,5 +17,6 @@
   },
   "resultsTransform": {
     "removeSupport": true
-  }
+  },
+  "logosConfig": "logger.rootLogger=DEBUG"
 }
