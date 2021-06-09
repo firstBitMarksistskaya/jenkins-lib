@@ -30,7 +30,7 @@
   },
   "syntaxCheck": {
     "groupErrorsByMetadata": true,
-    "pathToJUnitReport": "build/out/jUnit/syntax.xml",
+    "pathToJUnitReport": "./build/out/jUnit/syntax.xml",
     "checkModes": [
       "-ThinClient",
       "-WebClient",
@@ -43,7 +43,8 @@
       "-CheckUseModality",
       "-CheckUseSynchronousCalls",
       "-DistributiveModules"
-    ]
+    ],
+    "vrunnerSettings": "./tools/vrunner.json"
   },
   "resultsTransform": {
     "removeSupport": false,
