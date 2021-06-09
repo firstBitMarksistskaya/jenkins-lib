@@ -7,14 +7,23 @@ import com.fasterxml.jackson.annotation.JsonPropertyDescription
 @JsonIgnoreProperties(ignoreUnknown = true)
 class SyntaxCheckOptions implements Serializable {
 
-    @JsonPropertyDescription("Путь к файлу отчета jUnit")
-    String pathToJUnitReport
+    @JsonPropertyDescription("""Путь к файлу отчета jUnit
+    По умолчанию содержит значение "./build/out/jUnit/syntax.xml"
+    """)
+    String pathToJUnitReport = "./build/out/jUnit/syntax.xml"
 
-    @JsonPropertyDescription("Группировать выявленные ошибки по объектам метаданных")
-    boolean groupErrorsByMetadata;
+    @JsonPropertyDescription("""Группировать выявленные ошибки по объектам метаданных.
+    По умолчанию включено.
+    """)
+    boolean groupErrorsByMetadata = true
 
     @JsonPropertyDescription("Режимы проверки конфигурации")
-    String[] checkModes;
+    String[] checkModes
+
+    @JsonPropertyDescription("""Путь к конфигурационному файлу vanessa-runner.
+    По умолчанию содержит значение "./tools/vrunner.json".
+    """)
+    String vrunnerSettings = "./tools/vrunner.json"
 
     @Override
     @NonCPS
@@ -23,6 +32,7 @@ class SyntaxCheckOptions implements Serializable {
             "pathToJUnitReport='" + pathToJUnitReport + '\'' +
             ", groupErrorsByMetadata=" + groupErrorsByMetadata +
             ", checkModes=" + checkModes +
+            ", vrunnerSettings=" + vrunnerSettings +
             '}';
     }
 }

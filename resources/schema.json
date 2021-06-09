@@ -118,7 +118,7 @@
       "properties" : {
         "pathToJUnitReport" : {
           "type" : "string",
-          "description" : "Путь к файлу отчета jUnit"
+          "description" : "Путь к файлу отчета jUnit\n    По умолчанию содержит значение \"./build/out/junitsyntax.xml\"\n    "
         },
         "groupErrorsByMetadata" : {
           "type" : "boolean",
@@ -130,6 +130,10 @@
           "items" : {
             "type" : "string"
           }
+        },
+        "vrunnerSettings" : {
+          "type" : "string",
+          "description" : "Путь к конфигурационному файлу vanessa-runner.\n    По умолчанию содержит значение \"./tools/vrunner.json\".\n    "
         }
       }
     },
