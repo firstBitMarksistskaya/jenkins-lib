@@ -1,5 +1,6 @@
 package ru.pulsar.jenkins.library
 
+import org.jenkinsci.plugins.pipeline.utility.steps.fs.FileWrapper
 import org.jenkinsci.plugins.workflow.support.actions.EnvironmentAction
 
 interface IStepExecutor {
@@ -11,6 +12,10 @@ interface IStepExecutor {
     int bat(String script, boolean returnStatus, String encoding)
 
     String libraryResource(String path)
+
+    FileWrapper[] findFiles(String glob)
+
+    FileWrapper[] findFiles(String glob, String excludes)
 
     String readFile(String file, String encoding)
 
@@ -34,6 +39,8 @@ interface IStepExecutor {
 
     def stash(String name, String includes)
 
+    def stash(String name, String includes, boolean allowEmpty)
+
     def unstash(String name)
 
     def zip(String dir, String zipFile)
@@ -45,4 +52,12 @@ interface IStepExecutor {
     def unzip(String dir, String zipFile, quiet)
 
     def catchError(Closure body)
+
+    def httpRequest(String url, String outputFile, String responseHandle, boolean wrapAsMultipart)
+
+    def error(String errorMessage)
+
+    def allure(List<String> results)
+
+    def installLocalDependencies()
 }

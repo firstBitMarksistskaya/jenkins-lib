@@ -78,7 +78,10 @@ sharedLibrary {
     // TODO: retrieve downloaded plugin resource
     pluginDependencies {
         dependency("org.jenkins-ci.plugins", "pipeline-build-step", "2.12")
+        dependency("org.jenkins-ci.plugins", "pipeline-utility-steps", "2.8.0")
+        dependency("org.jenkins-ci.plugins", "git", "4.4.4")
         dependency("org.6wind.jenkins", "lockable-resources", "2.7")
+        dependency("ru.yandex.qatools.allure", "allure-jenkins-plugin", "2.28.1")
         val declarativePluginsVersion = "1.6.0"
         dependency("org.jenkinsci.plugins", "pipeline-model-api", declarativePluginsVersion)
         dependency("org.jenkinsci.plugins", "pipeline-model-declarative-agent", "1.1.1")
