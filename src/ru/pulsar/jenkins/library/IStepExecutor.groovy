@@ -1,5 +1,6 @@
 package ru.pulsar.jenkins.library
 
+import org.jenkinsci.plugins.pipeline.utility.steps.fs.FileWrapper
 import org.jenkinsci.plugins.workflow.support.actions.EnvironmentAction
 
 interface IStepExecutor {
@@ -11,6 +12,10 @@ interface IStepExecutor {
     int bat(String script, boolean returnStatus, String encoding)
 
     String libraryResource(String path)
+
+    FileWrapper[] findFiles(String glob)
+
+    FileWrapper[] findFiles(String glob, String excludes)
 
     String readFile(String file, String encoding)
 

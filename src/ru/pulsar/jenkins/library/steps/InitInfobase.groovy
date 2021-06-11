@@ -1,5 +1,6 @@
 package ru.pulsar.jenkins.library.steps
 
+import org.jenkinsci.plugins.pipeline.utility.steps.fs.FileWrapper
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
@@ -46,9 +47,18 @@ class InitInfobase implements Serializable {
             }
 
             steps.catchError {
-                config.initInfobaseOptions.additionalInitializationSteps.each {
-                    Logger.println("Первичная инициализация командой ${it}")
-                    steps.cmd("oscript_modules/bin/vrunner ${it} --ibconnection \"/F./build/ib\"")
+                if (config.initInfobaseOptions.additionalInitializationSteps.length == 0) {
+                    FileWrapper[] files = steps.findFiles("tools/vrunner.init*.json")
+                    files = files.sort new OrderBy( { it.name })
+                    files.each {
+                        Logger.println("Первичная инициализация файлом ${it.path}")
+                        steps.cmd("oscript_modules/bin/vrunner vanessa --settings ${it.path} --ibconnection \"/F./build/ib\"")
+                    }
+                } else {
+                    config.initInfobaseOptions.additionalInitializationSteps.each {
+                        Logger.println("Первичная инициализация командой ${it}")
+                        steps.cmd("oscript_modules/bin/vrunner ${it} --ibconnection \"/F./build/ib\"")
+                    }
                 }
             }
         }
