@@ -27,6 +27,7 @@ void call() {
                 agent {
                     label 'agent'
                 }
+
                 steps {
                     script {
                         config = jobConfiguration() as JobConfiguration
@@ -46,18 +47,41 @@ void call() {
                             expression { config.stageFlags.needInfobase() }
                         }
 
-                        steps {
-                            printLocation()
+                        stages {
+                            stage('Создание ИБ') {
+                                steps {
+                                    printLocation()
 
-                            installLocalDependencies()
+                                    installLocalDependencies()
 
-                            dir("build/out") { echo '' }
+                                    createDir('build/out')
 
-                            // Создание базы загрузкой конфигурации из хранилища
-                            initFromStorage config
+                                    // Создание базы загрузкой конфигурации из хранилища
+                                    initFromStorage config
+                                }
+                            }
 
-                            zipInfobase()
+                            stage('Инициализация ИБ') {
+                                when {
+                                    beforeAgent true
+                                    expression { config.stageFlags.initSteps }
+                                }
+                                steps {
+                                    // Инициализация и первичная миграция
+                                    initInfobase config
+                                }
+                            }
+
+                            stage('Архивация ИБ') {
+                                steps {
+                                    printLocation()
+
+                                    zipInfobase()
+                                }
+
+                            }
                         }
+
                     }
 
                     stage('Трансформация в формат EDT') {
@@ -87,6 +111,21 @@ void call() {
                         }
                         steps {
                             edtValidate config
+                        }
+                    }
+
+                    stage('BDD сценарии') {
+                        agent {
+                            label agent1C
+                        }
+                        when {
+                            beforeAgent true
+                            expression { config.stageFlags.bdd }
+                        }
+                        steps {
+                            unzipInfobase()
+                            
+                            bdd config
                         }
                     }
 
@@ -141,6 +180,14 @@ void call() {
                 }
                 steps {
                     sonarScanner config
+                }
+            }
+        }
+
+        post('post-stage') {
+            always {
+                node('agent') {
+                    saveResults config
                 }
             }
         }

@@ -21,7 +21,7 @@ public class JobConfigurationSchemaGenerator {
     File jsonSchemaFile = new File("./resources/schema.json");
     mapper.writeValue(jsonSchemaFile, jsonSchema);
 
-    System.out.println(json.toString());
+    System.out.println(json);
   }
 
 }

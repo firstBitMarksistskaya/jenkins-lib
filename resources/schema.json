@@ -45,6 +45,46 @@
         "smoke" : {
           "type" : "boolean",
           "description" : "Дымовые тесты включены"
+        },
+        "initSteps" : {
+          "type" : "boolean",
+          "description" : "Предварительные шаги инициализации включены"
+        },
+        "bdd" : {
+          "type" : "boolean",
+          "description" : "Запуск BDD сценариев включен"
+        }
+      }
+    },
+    "initInfobase" : {
+      "type" : "object",
+      "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:InitInfobaseOptions",
+      "description" : "Настройки шага инициализации ИБ",
+      "properties" : {
+        "runMigration" : {
+          "type" : "boolean",
+          "description" : "Запустить миграцию ИБ"
+        },
+        "additionalInitializationSteps" : {
+          "type" : "array",
+          "description" : "Дополнительные шаги, запускаемые через vrunner.\n    В каждой строке передается отдельная команда \n    vrunner и ее аргументы (например, \"vanessa --settings ./tools/vrunner.first.json\")\n    ",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "bdd" : {
+      "type" : "object",
+      "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:BddOptions",
+      "description" : "Настройки шага запуска BDD сценариев",
+      "properties" : {
+        "vrunnerSteps" : {
+          "type" : "array",
+          "description" : "Шаги, запускаемые через vrunner.\n    В каждой строке передается отдельная команда \n    vrunner и ее аргументы (например, \"vanessa --settings ./tools/vrunner.json\").\n    По умолчанию содержит одну команду \"vanessa --settings ./tools/vrunner.json\".\n    ",
+          "items" : {
+            "type" : "string"
+          }
         }
       }
     },
@@ -74,11 +114,11 @@
       "properties" : {
         "pathToJUnitReport" : {
           "type" : "string",
-          "description" : "Путь к файлу отчета jUnit"
+          "description" : "Путь к файлу отчета jUnit\n    По умолчанию содержит значение \"./build/out/jUnit/syntax.xml\"\n    "
         },
         "groupErrorsByMetadata" : {
           "type" : "boolean",
-          "description" : "Группировать выявленные ошибки по объектам метаданных"
+          "description" : "Группировать выявленные ошибки по объектам метаданных.\n    По умолчанию включено.\n    "
         },
         "checkModes" : {
           "type" : "array",
@@ -86,6 +126,10 @@
           "items" : {
             "type" : "string"
           }
+        },
+        "vrunnerSettings" : {
+          "type" : "string",
+          "description" : "Путь к конфигурационному файлу vanessa-runner.\n    По умолчанию содержит значение \"./tools/vrunner.json\".\n    "
         }
       }
     },
@@ -96,13 +140,17 @@
       "properties" : {
         "removeSupport" : {
           "type" : "boolean",
-          "description" : "Фильтровать замечания по уровню поддержки модуля"
+          "description" : "Фильтровать замечания по уровню поддержки модуля. По умолчанию включено."
         },
         "supportLevel" : {
           "type" : "integer",
           "description" : "Настройка фильтрации замечаний по уровню поддержки.\n        0 - удалить файлы на замке;\n        1 - удалить файлы на замке и на поддержке;\n        2 - удалить файлы на замке, на поддержке и снятые с поддержки.\n    "
         }
       }
+    },
+    "logosConfig" : {
+      "type" : "string",
+      "description" : "Конфигурация библиотеки logos. Применяется перед запуском каждой стадии сборки"
     }
   }
 }

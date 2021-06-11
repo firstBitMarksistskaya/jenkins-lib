@@ -6,10 +6,21 @@
     "storage": "UNKNOWN_ID"
   },
   "stages": {
+    "initSteps": false,
     "sonarqube": false,
+    "bdd": false,
     "syntaxCheck": false,
     "edtValidate": false,
     "smoke": false
+  },
+  "initInfobase": {
+    "runMigration": true,
+    "additionalInitializationSteps": []
+  },
+  "bdd": {
+    "vrunnerSteps": [
+      "vanessa --settings ./tools/vrunner.json"
+    ]
   },
   "sonarqube": {
     "sonarQubeInstallation": "",
@@ -18,7 +29,7 @@
   },
   "syntaxCheck": {
     "groupErrorsByMetadata": true,
-    "pathToJUnitReport": "build/out/jUnit/syntax.xml",
+    "pathToJUnitReport": "./build/out/jUnit/syntax.xml",
     "checkModes": [
       "-ThinClient",
       "-WebClient",
@@ -31,10 +42,12 @@
       "-CheckUseModality",
       "-CheckUseSynchronousCalls",
       "-DistributiveModules"
-    ]
+    ],
+    "vrunnerSettings": "./tools/vrunner.json"
   },
   "resultsTransform": {
-    "removeSupport": false,
+    "removeSupport": true,
     "supportLevel": 0
-  }
+  },
+  "logosConfig": ""
 }

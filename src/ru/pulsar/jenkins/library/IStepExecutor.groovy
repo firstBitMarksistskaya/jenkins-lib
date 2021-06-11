@@ -34,6 +34,8 @@ interface IStepExecutor {
 
     def stash(String name, String includes)
 
+    def stash(String name, String includes, boolean allowEmpty)
+
     def unstash(String name)
 
     def zip(String dir, String zipFile)
@@ -45,4 +47,12 @@ interface IStepExecutor {
     def unzip(String dir, String zipFile, quiet)
 
     def catchError(Closure body)
+
+    def httpRequest(String url, String outputFile, String responseHandle, boolean wrapAsMultipart)
+
+    def error(String errorMessage)
+
+    def allure(List<String> results)
+
+    def installLocalDependencies()
 }

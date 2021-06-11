@@ -1,6 +1,8 @@
 package ru.pulsar.jenkins.library
 
+
 import org.jenkinsci.plugins.workflow.support.actions.EnvironmentAction
+import ru.yandex.qatools.allure.jenkins.config.ResultsConfig
 
 class StepExecutor implements IStepExecutor {
 
@@ -80,8 +82,8 @@ class StepExecutor implements IStepExecutor {
     }
 
     @Override
-    def stash(String name, String includes) {
-        steps.stash name: name, includes: includes
+    def stash(String name, String includes, boolean allowEmpty = false) {
+        steps.stash name: name, includes: includes, allowEmpty: allowEmpty
     }
 
     @Override
@@ -102,5 +104,32 @@ class StepExecutor implements IStepExecutor {
     @Override
     def catchError(Closure body) {
         steps.catchError body
+    }
+
+    @Override
+    def httpRequest(String url, String outputFile, String responseHandle = 'NONE', boolean wrapAsMultipart = false) {
+        steps.httpRequest responseHandle: responseHandle, outputFile: outputFile, url: url, wrapAsMultipart: wrapAsMultipart
+    }
+
+    @Override
+    def error(String errorMessage) {
+        steps.error errorMessage
+    }
+
+    @Override
+    def allure(List<String> results) {
+        steps.allure([
+            commandline: 'allure',
+            includeProperties: false,
+            jdk: '',
+            properties: [],
+            reportBuildPolicy: 'ALWAYS',
+            results: ResultsConfig.convertPaths(results)
+        ])
+    }
+
+    @Override
+    def installLocalDependencies() {
+        steps.installLocalDependencies()
     }
 }

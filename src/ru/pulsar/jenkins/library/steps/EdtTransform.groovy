@@ -1,5 +1,6 @@
 package ru.pulsar.jenkins.library.steps
 
+
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
@@ -47,4 +48,5 @@ class EdtTransform implements Serializable {
         steps.zip(WORKSPACE, WORKSPACE_ZIP)
         steps.stash(WORKSPACE_ZIP_STASH, WORKSPACE_ZIP)
     }
+
 }

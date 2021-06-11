@@ -20,6 +20,14 @@ class JobConfiguration implements Serializable {
     @JsonPropertyDescription("Идентификаторы сохраненных секретов")
     Secrets secrets;
 
+    @JsonProperty("initInfobase")
+    @JsonPropertyDescription("Настройки шага инициализации ИБ")
+    InitInfobaseOptions initInfobaseOptions;
+
+    @JsonProperty("bdd")
+    @JsonPropertyDescription("Настройки шага запуска BDD сценариев")
+    BddOptions bddOptions;
+
     @JsonProperty("sonarqube")
     @JsonPropertyDescription("Настройки анализа SonarQube")
     SonarQubeOptions sonarQubeOptions;
@@ -32,6 +40,10 @@ class JobConfiguration implements Serializable {
     @JsonPropertyDescription("Настройки трансформации результатов анализа")
     ResultsTransformOptions resultsTransformOptions;
 
+    @JsonProperty("logosConfig")
+    @JsonPropertyDescription("Конфигурация библиотеки logos. Применяется перед запуском каждой стадии сборки")
+    String logosConfig;
+
     @Override
     @NonCPS
     String toString() {
@@ -40,9 +52,12 @@ class JobConfiguration implements Serializable {
             ", srcDir='" + srcDir + '\'' +
             ", stageFlags=" + stageFlags +
             ", secrets=" + secrets +
+            ", initInfobaseOptions=" + initInfobaseOptions +
+            ", bddOptions=" + bddOptions +
             ", sonarQubeOptions=" + sonarQubeOptions +
             ", syntaxCheckOptions=" + syntaxCheckOptions +
             ", resultsTransformOptions=" + resultsTransformOptions +
+            ", logosConfig=" + logosConfig +
             '}';
     }
 }

@@ -6,10 +6,17 @@
   "stages": {
     "syntaxCheck": true
   },
+  "initInfobase": {
+    "runMigration": false,
+    "additionalInitializationSteps": [
+      "vanessa --settings ./tools/vrunner.first.json"
+    ]
+  },
   "syntaxCheck": {
     "checkModes": ["-ThinClient"]
   },
   "resultsTransform": {
-    "removeSupport": true
-  }
+    "removeSupport": false
+  },
+  "logosConfig": "logger.rootLogger=DEBUG"
 }
