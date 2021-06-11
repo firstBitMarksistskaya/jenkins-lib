@@ -69,7 +69,7 @@
           "type" : "boolean",
           "description" : "Запустить миграцию ИБ"
         },
-        "additionalMigrationSteps" : {
+        "additionalInitializationSteps" : {
           "type" : "array",
           "description" : "Дополнительные шаги, запускаемые через vrunner.\n    В каждой строке передается отдельная команда \n    vrunner и ее аргументы (например, \"vanessa --settings ./tools/vrunner.first.json\")\n    ",
           "items" : {
@@ -118,11 +118,11 @@
       "properties" : {
         "pathToJUnitReport" : {
           "type" : "string",
-          "description" : "Путь к файлу отчета jUnit\n    По умолчанию содержит значение \"./build/out/junitsyntax.xml\"\n    "
+          "description" : "Путь к файлу отчета jUnit\n    По умолчанию содержит значение \"./build/out/jUnit/syntax.xml\"\n    "
         },
         "groupErrorsByMetadata" : {
           "type" : "boolean",
-          "description" : "Группировать выявленные ошибки по объектам метаданных"
+          "description" : "Группировать выявленные ошибки по объектам метаданных.\n    По умолчанию включено.\n    "
         },
         "checkModes" : {
           "type" : "array",

@@ -14,14 +14,14 @@ class InitInfobaseOptions implements Serializable {
     В каждой строке передается отдельная команда 
     vrunner и ее аргументы (например, "vanessa --settings ./tools/vrunner.first.json")
     """)
-    String[] additionalMigrationSteps
+    String[] additionalInitializationSteps
 
     @Override
     @NonCPS
     String toString() {
         return "InitInfobaseOptions{" +
             "runMigration=" + runMigration +
-            ", additionalMigrationSteps=" + additionalMigrationSteps +
+            ", additionalInitializationSteps=" + additionalInitializationSteps +
             '}';
     }
 }

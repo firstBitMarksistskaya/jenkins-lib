@@ -80,10 +80,10 @@ class ConfigurationReader implements Serializable {
 
     @NonCPS
     private static void mergeInitInfobaseOptions(InitInfobaseOptions baseObject, @CheckForNull InitInfobaseOptions objectToMerge) {
-        if (objectToMerge == null || objectToMerge.additionalMigrationSteps == null) {
+        if (objectToMerge == null || objectToMerge.additionalInitializationSteps == null) {
             return
         }
-        baseObject.additionalMigrationSteps = objectToMerge.additionalMigrationSteps.clone()
+        baseObject.additionalInitializationSteps = objectToMerge.additionalInitializationSteps.clone()
     }
 
     @NonCPS

@@ -46,7 +46,7 @@ class InitInfobase implements Serializable {
             }
 
             steps.catchError {
-                config.initInfobaseOptions.additionalMigrationSteps.each {
+                config.initInfobaseOptions.additionalInitializationSteps.each {
                     Logger.println("Первичная инициализация командой ${it}")
                     steps.cmd("oscript_modules/bin/vrunner ${it} --ibconnection \"/F./build/ib\"")
                 }
