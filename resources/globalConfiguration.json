@@ -47,7 +47,7 @@
     "vrunnerSettings": "./tools/vrunner.json"
   },
   "resultsTransform": {
-    "removeSupport": false,
+    "removeSupport": true,
     "supportLevel": 0
   },
   "git": {

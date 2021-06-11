@@ -7,8 +7,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyDescription
 @JsonIgnoreProperties(ignoreUnknown = true)
 class ResultsTransformOptions implements Serializable {
 
-    @JsonPropertyDescription("Фильтровать замечания по уровню поддержки модуля")
-    boolean removeSupport
+    @JsonPropertyDescription("Фильтровать замечания по уровню поддержки модуля. По умолчанию включено.")
+    boolean removeSupport = true
 
     @JsonPropertyDescription("""Настройка фильтрации замечаний по уровню поддержки.
         0 - удалить файлы на замке;
