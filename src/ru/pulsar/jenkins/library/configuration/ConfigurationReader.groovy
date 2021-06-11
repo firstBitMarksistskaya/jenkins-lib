@@ -47,8 +47,7 @@ class ConfigurationReader implements Serializable {
             "bddOptions",
             "sonarQubeOptions",
             "syntaxCheckOptions",
-            "resultsTransformOptions",
-            "gitSCMOptions"
+            "resultsTransformOptions"
         ).toSet()
 
         mergeObjects(baseConfiguration, configurationToMerge, nonMergeableSettings)
