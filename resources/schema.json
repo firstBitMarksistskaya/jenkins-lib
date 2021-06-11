@@ -144,7 +144,7 @@
       "properties" : {
         "removeSupport" : {
           "type" : "boolean",
-          "description" : "Фильтровать замечания по уровню поддержки модуля"
+          "description" : "Фильтровать замечания по уровню поддержки модуля. По умолчанию включено."
         },
         "supportLevel" : {
           "type" : "integer",
