@@ -16,7 +16,7 @@
   },
   "initInfobase": {
     "runMigration": true,
-    "additionalMigrationSteps": []
+    "additionalInitializationSteps": []
   },
   "bdd": {
     "vrunnerSteps": [
