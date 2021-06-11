@@ -1,6 +1,6 @@
 package ru.pulsar.jenkins.library
 
-
+import org.jenkinsci.plugins.pipeline.utility.steps.fs.FileWrapper
 import org.jenkinsci.plugins.workflow.support.actions.EnvironmentAction
 import ru.yandex.qatools.allure.jenkins.config.ResultsConfig
 
@@ -35,6 +35,11 @@ class StepExecutor implements IStepExecutor {
     @Override
     String readFile(String file, String encoding) {
         steps.readFile encoding: encoding, file: file
+    }
+
+    @Override
+    FileWrapper[] findFiles(String glob, String excludes = '') {
+        steps.findFiles glob: glob, excludes: excludes
     }
 
     @Override
