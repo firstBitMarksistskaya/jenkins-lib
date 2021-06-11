@@ -22,10 +22,6 @@
         "storage" : {
           "type" : "string",
           "description" : "Данные авторизации в хранилище конфигурации"
-        },
-        "lfs" : {
-          "type" : "string",
-          "description" : "Данные авторизации для работы с LFS"
         }
       }
     },
@@ -149,25 +145,6 @@
         "supportLevel" : {
           "type" : "integer",
           "description" : "Настройка фильтрации замечаний по уровню поддержки.\n        0 - удалить файлы на замке;\n        1 - удалить файлы на замке и на поддержке;\n        2 - удалить файлы на замке, на поддержке и снятые с поддержки.\n    "
-        }
-      }
-    },
-    "git" : {
-      "type" : "object",
-      "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:GitSCMOptions",
-      "description" : "Настройки git-репозитория",
-      "properties" : {
-        "lfsPull" : {
-          "type" : "boolean",
-          "description" : "Дополнительно выполнить git lfs pull"
-        },
-        "lfsURI" : {
-          "type" : "string",
-          "description" : "Адрес для получения данных LFS"
-        },
-        "lfsRepoURI" : {
-          "type" : "string",
-          "description" : "Адрес удаленного репозитория для авторизации на LFS"
         }
       }
     },

@@ -41,11 +41,11 @@ class ConfigurationReaderTest {
 
     assertThat(jobConfiguration.getSyntaxCheckOptions().getCheckModes()).hasSize(1);
 
-    assertThat(jobConfiguration.getResultsTransformOptions().isRemoveSupport()).isTrue();
+    assertThat(jobConfiguration.getResultsTransformOptions().isRemoveSupport()).isFalse();
     assertThat(jobConfiguration.getResultsTransformOptions().getSupportLevel()).isZero();
 
     assertThat(jobConfiguration.getInitInfobaseOptions().getRunMigration()).isFalse();
-    assertThat(jobConfiguration.getInitInfobaseOptions().getAdditionalMigrationSteps()).contains("vanessa --settings ./tools/vrunner.first.json");
+    assertThat(jobConfiguration.getInitInfobaseOptions().getAdditionalInitializationSteps()).contains("vanessa --settings ./tools/vrunner.first.json");
 
     assertThat(jobConfiguration.getBddOptions().getVrunnerSteps()).contains("vanessa --settings ./tools/vrunner.json");
 

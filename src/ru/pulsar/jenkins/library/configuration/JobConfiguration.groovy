@@ -40,10 +40,6 @@ class JobConfiguration implements Serializable {
     @JsonPropertyDescription("Настройки трансформации результатов анализа")
     ResultsTransformOptions resultsTransformOptions;
 
-    @JsonProperty("git")
-    @JsonPropertyDescription("Настройки git-репозитория")
-    GitSCMOptions gitSCMOptions;
-
     @JsonProperty("logosConfig")
     @JsonPropertyDescription("Конфигурация библиотеки logos. Применяется перед запуском каждой стадии сборки")
     String logosConfig;
@@ -61,7 +57,6 @@ class JobConfiguration implements Serializable {
             ", sonarQubeOptions=" + sonarQubeOptions +
             ", syntaxCheckOptions=" + syntaxCheckOptions +
             ", resultsTransformOptions=" + resultsTransformOptions +
-            ", gitSCMOptions=" + gitSCMOptions +
             ", logosConfig=" + logosConfig +
             '}';
     }

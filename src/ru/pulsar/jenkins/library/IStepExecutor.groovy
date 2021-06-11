@@ -1,7 +1,5 @@
 package ru.pulsar.jenkins.library
 
-import hudson.plugins.git.GitSCM
-import hudson.scm.SCM
 import org.jenkinsci.plugins.workflow.support.actions.EnvironmentAction
 
 interface IStepExecutor {
@@ -27,10 +25,6 @@ interface IStepExecutor {
     void withSonarQubeEnv(String installationName, Closure body)
 
     EnvironmentAction env()
-
-    GitSCM scm()
-
-    void checkout(SCM scm)
 
     void createDir(String path)
 

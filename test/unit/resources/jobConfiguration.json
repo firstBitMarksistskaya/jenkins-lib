@@ -8,7 +8,7 @@
   },
   "initInfobase": {
     "runMigration": false,
-    "additionalMigrationSteps": [
+    "additionalInitializationSteps": [
       "vanessa --settings ./tools/vrunner.first.json"
     ]
   },
@@ -16,7 +16,7 @@
     "checkModes": ["-ThinClient"]
   },
   "resultsTransform": {
-    "removeSupport": true
+    "removeSupport": false
   },
   "logosConfig": "logger.rootLogger=DEBUG"
 }
