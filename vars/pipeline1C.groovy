@@ -1,3 +1,4 @@
+/* groovylint-disable NestedBlockDepth */
 import groovy.transform.Field
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 
@@ -7,7 +8,7 @@ import java.util.concurrent.TimeUnit
 JobConfiguration config
 
 @Field
-def agent1C
+String agent1C
 
 void call() {
 
