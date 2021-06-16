@@ -7,8 +7,6 @@ import org.apache.commons.beanutils.BeanUtils
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 
-import javax.annotation.CheckForNull
-
 class ConfigurationReader implements Serializable {
 
     private static ObjectMapper mapper
@@ -78,7 +76,7 @@ class ConfigurationReader implements Serializable {
     }
 
     @NonCPS
-    private static void mergeInitInfobaseOptions(InitInfobaseOptions baseObject, @CheckForNull InitInfobaseOptions objectToMerge) {
+    private static void mergeInitInfobaseOptions(InitInfobaseOptions baseObject, InitInfobaseOptions objectToMerge) {
         if (objectToMerge == null || objectToMerge.additionalInitializationSteps == null) {
             return
         }
@@ -86,7 +84,7 @@ class ConfigurationReader implements Serializable {
     }
 
     @NonCPS
-    private static void mergeBddOptions(BddOptions baseObject, @CheckForNull BddOptions objectToMerge) {
+    private static void mergeBddOptions(BddOptions baseObject, BddOptions objectToMerge) {
         if (objectToMerge == null || objectToMerge.vrunnerSteps == null) {
             return
         }

@@ -4,6 +4,6 @@ import ru.pulsar.jenkins.library.ioc.ContextRegistry
 int call(String script, boolean returnStatus = false) {
     ContextRegistry.registerDefaultContext(this)
 
-    def cmd = new Cmd(script, returnStatus)
+    Cmd cmd = new Cmd(script, returnStatus)
     return cmd.run()
 }
