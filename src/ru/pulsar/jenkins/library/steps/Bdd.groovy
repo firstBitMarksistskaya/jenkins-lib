@@ -43,6 +43,7 @@ class Bdd implements Serializable {
             }
         }
 
+        steps.zip('build/ib', 'bdd_1Cv8.1CD.zip', '1Cv8.1CD', true)
         steps.stash('bdd-allure', 'build/out/allure/**', true)
         steps.stash('bdd-cucumber', 'build/out/cucumber/**', true)
     }
