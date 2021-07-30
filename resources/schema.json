@@ -53,6 +53,10 @@
         "bdd" : {
           "type" : "boolean",
           "description" : "Запуск BDD сценариев включен"
+        },
+        "srcEDT" : {
+          "type" : "boolean",
+          "description" : "Конвертировать исходники из формата EDT в формат конфигуратора"
         }
       }
     },

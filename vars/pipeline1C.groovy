@@ -49,6 +49,19 @@ void call() {
                         }
 
                         stages {
+                            stage('Трансформация из формата EDT') {
+                                agent {
+                                    label 'edt'
+                                }
+                                when {
+                                    beforeAgent true
+                                    expression { config.stageFlags.srcEDT }
+                                }
+                                steps {
+                                    edtTransform config true
+                                }
+                            }
+
                             stage('Создание ИБ') {
                                 steps {
                                     printLocation()
