@@ -58,7 +58,9 @@ void call() {
                                     expression { config.stageFlags.srcEDT }
                                 }
                                 steps {
-                                    edtTransform config true
+                                    script{
+                                        edtTransform config true
+                                    }
                                 }
                             }
 
