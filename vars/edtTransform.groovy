@@ -8,10 +8,3 @@ def call(JobConfiguration config) {
     def edtTransform = new EdtTransform(config)
     edtTransform.run()
 }
-
-def call(JobConfiguration config, boolean srcEDT) {
-    ContextRegistry.registerDefaultContext(this)
-
-    def edtTransform = new EdtTransform(config)
-    edtTransform.run(true)
-}

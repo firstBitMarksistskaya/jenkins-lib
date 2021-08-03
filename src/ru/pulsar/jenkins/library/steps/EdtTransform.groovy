@@ -12,10 +12,6 @@ class EdtTransform implements Serializable {
     public static final String WORKSPACE = 'build/edt-workspace'
     public static final String WORKSPACE_ZIP = 'build/edt-workspace.zip'
     public static final String WORKSPACE_ZIP_STASH = 'edt-workspace-zip'
-    public static final String WORKSPACECFG = 'build/cfg-workspace'
-    public static final String WORKSPACE_ZIP_CFG = 'build/cfg-workspace.zip'
-    public static final String WORKSPACE_ZIP_STASH_CFG = 'cfg-workspace-zip'
-    
 
     private final JobConfiguration config;
 
@@ -53,35 +49,4 @@ class EdtTransform implements Serializable {
         steps.stash(WORKSPACE_ZIP_STASH, WORKSPACE_ZIP)
     }
 
-    def run(boolean srcEDT) {
-        IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
-
-        Logger.printLocation()
-
-        if (!config.stageFlags.srcEDT) {
-            Logger.println("SRC is not EDT format.")
-            return
-        }
-
-        def env = steps.env();
-
-
-        def workspaceDir = config.srcDir
-        def configurationRoot = "$env.WORKSPACE/$WORKSPACECFG"
-        def PROJECT_NAME = "pb17" // TODO взять из srcDIR
-
-        steps.createDir(workspaceDir)
-
-        Logger.println("Конвертация исходников из формата EDT в формат конфигуратора")
-
-        def ringCommand = "ring edt workspace import --configuration-files '$configurationRoot' --project-name $PROJECT_NAME --workspace-location '$workspaceDir'"
-
-        def ringOpts = ['RING_OPTS=-Dfile.encoding=UTF-8 -Dosgi.nl=ru -Duser.language=ru']
-        steps.withEnv(ringOpts) {
-            steps.cmd(ringCommand)
-        }
-
-        steps.zip(WORKSPACECFG, WORKSPACE_ZIP_CFG)
-        steps.stash(WORKSPACE_ZIP_STASH_CFG, WORKSPACE_ZIP_CFG)
-    }
 }
