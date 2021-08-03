@@ -59,7 +59,7 @@ void call() {
                                 }
                                 steps {
                                     script{
-                                        edtTransform config true
+                                        edtBackTransform config
                                     }
                                 }
                             }
