@@ -31,7 +31,8 @@ class EdtBackTransform implements Serializable {
 
         def env = steps.env();
 
-        def projectDir = config.srcDir
+        def srcDir = config.srcDir
+        def projectDir = "$env.WORKSPACE/$srcDir"
         def workspaceDir = "$env.WORKSPACE/$WORKSPACE" 
         def configurationRoot = "$env.WORKSPACE/$CONFIGURATION_DIR"
 
