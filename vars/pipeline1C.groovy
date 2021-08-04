@@ -37,19 +37,6 @@ void call() {
                 }
             }
 
-            stage('Трансформация из формата EDT') {
-                agent {
-                    label 'edt'
-                }
-                when {
-                    beforeAgent true
-                    expression { config.stageFlags.srcEDT }
-                }
-                steps {
-                    edtBackTransform config
-                }
-            }
-
             stage('Подготовка') {
                 parallel {
                     stage('Подготовка 1C базы') {
@@ -62,6 +49,21 @@ void call() {
                         }
 
                         stages {
+                            stage('Трансформация из формата EDT') {
+                                agent {
+                                    label 'edt'
+                                }
+                                when {
+                                    beforeAgent true
+                                    expression { config.stageFlags.srcEDT }
+                                }
+                                steps {
+                                    script{
+                                        edtBackTransform config
+                                    }
+                                }
+                            }
+
                             stage('Создание ИБ') {
                                 steps {
                                     printLocation()
