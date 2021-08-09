@@ -72,8 +72,14 @@ void call() {
 
                                     createDir('build/out')
 
-                                    // Создание базы загрузкой конфигурации из хранилища
-                                    initFromStorage config
+                                    if (config.stageFlags.infobaseFromFiles()){
+                                        // Создание базы загрузкой из файлов
+                                        initFromFiles config
+                                    }
+                                    else{
+                                        // Создание базы загрузкой конфигурации из хранилища
+                                        initFromStorage config 
+                                    }
                                 }
                             }
 
@@ -106,7 +112,7 @@ void call() {
                         }
                         when {
                             beforeAgent true
-                            expression { config.stageFlags.edtValidate }
+                            expression { config.stageFlags.edtValidate && !config.stageFlags.srcEDT}
                         }
                         steps {
                             edtTransform config
