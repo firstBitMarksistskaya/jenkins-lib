@@ -66,19 +66,21 @@ void call() {
 
                             stage('Создание ИБ') {
                                 steps {
-                                    printLocation()
+                                    script{
+                                        printLocation()
 
-                                    installLocalDependencies()
+                                        installLocalDependencies()
 
-                                    createDir('build/out')
+                                        createDir('build/out')
 
-                                    if (config.stageFlags.infobaseFromFiles()){
-                                        // Создание базы загрузкой из файлов
-                                        initFromFiles config
-                                    }
-                                    else{
-                                        // Создание базы загрузкой конфигурации из хранилища
-                                        initFromStorage config 
+                                        if (config.stageFlags.infobaseFromFiles()){
+                                            // Создание базы загрузкой из файлов
+                                            initFromFiles config
+                                        }
+                                        else{
+                                            // Создание базы загрузкой конфигурации из хранилища
+                                            initFromStorage config 
+                                        }
                                     }
                                 }
                             }
