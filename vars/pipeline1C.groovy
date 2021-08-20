@@ -59,7 +59,7 @@ void call() {
                                 }
                                 steps {
                                     script{
-                                        edtBackTransform config
+                                        // edtBackTransform config
                                     }
                                 }
                             }
@@ -75,7 +75,7 @@ void call() {
 
                                         if (config.stageFlags.infobaseFromFiles()){
                                             // Создание базы загрузкой из файлов
-                                            initFromFiles config
+                                            // initFromFiles config
                                         }
                                         else{
                                             // Создание базы загрузкой конфигурации из хранилища

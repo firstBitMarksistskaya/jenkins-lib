@@ -30,4 +30,12 @@ class VersionParser implements Serializable {
         return matcher != null && matcher.getCount() == 1 ? matcher[0][1] : ""
     }
 
+    static String edt(rootFile = 'src/Configuration/Configuration.mdo') {
+
+        IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
+
+        def configurationText = steps.readFile(rootFile, 'UTF-8');
+        return version(configurationText, VERSION_REGEXP)
+    }
+
 }

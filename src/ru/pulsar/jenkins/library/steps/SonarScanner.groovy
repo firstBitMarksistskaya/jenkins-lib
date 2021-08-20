@@ -9,7 +9,7 @@ import ru.pulsar.jenkins.library.utils.VersionParser
 class SonarScanner implements Serializable {
 
     private final JobConfiguration config;
-    private final String rootFile
+    private String rootFile
 
     SonarScanner(JobConfiguration config) {
         this.config = config
@@ -39,7 +39,14 @@ class SonarScanner implements Serializable {
 
         String sonarCommand = "$sonarScannerBinary -Dsonar.branch.name=$env.BRANCH_NAME"
 
-        String configurationVersion = VersionParser.configuration(rootFile)
+        String configurationVersion = ""
+        if (config.stageFlags.srcEDT) {
+            rootFile = "$config.srcDir/Configuration/Configuration.mdo"
+            configurationVersion = VersionParser.edt(rootFile)
+        }else {
+            configurationVersion = VersionParser.configuration(rootFile)
+        }
+        
         if (configurationVersion) {
             sonarCommand += " -Dsonar.projectVersion=$configurationVersion"
         }
