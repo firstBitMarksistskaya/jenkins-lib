@@ -42,7 +42,7 @@ class StageFlags implements Serializable {
     }
 
     boolean needInfobase() {
-        return smoke || syntaxCheck || initSteps || bdd || srcEDT
+        return smoke || syntaxCheck || initSteps || bdd
     }
 
     boolean infobaseFromFiles() {
