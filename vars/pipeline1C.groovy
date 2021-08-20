@@ -49,20 +49,20 @@ void call() {
                         }
 
                         stages {
-                            stage('Трансформация из формата EDT') {
-                                agent {
-                                    label 'edt'
-                                }
-                                when {
-                                    beforeAgent true
-                                    expression { config.stageFlags.srcEDT }
-                                }
-                                steps {
-                                    // script{
-                                    //     // edtBackTransform config
-                                    // }
-                                }
-                            }
+                            // stage('Трансформация из формата EDT') {
+                            //     agent {
+                            //         label 'edt'
+                            //     }
+                            //     when {
+                            //         beforeAgent true
+                            //         expression { config.stageFlags.srcEDT }
+                            //     }
+                            //     steps {
+                            //         script{
+                            //             edtBackTransform config
+                            //         }
+                            //     }
+                            // }
 
                             stage('Создание ИБ') {
                                 steps {
@@ -75,7 +75,7 @@ void call() {
 
                                         if (config.stageFlags.infobaseFromFiles()){
                                             // Создание базы загрузкой из файлов
-                                            // initFromFiles config
+                                            initFromFiles config
                                         }
                                         else{
                                             // Создание базы загрузкой конфигурации из хранилища
