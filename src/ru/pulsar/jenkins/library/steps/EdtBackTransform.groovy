@@ -43,7 +43,7 @@ class EdtBackTransform implements Serializable {
 
         def ringCommand = "ring edt workspace export --configuration-files '$configurationRoot' --project $projectDir --workspace-location '$workspaceDir'"
 
-        def ringOpts = ['RING_OPTS=-Dfile.encoding=UTF-8 -Dosgi.nl=ru -Duser.language=ru']
+        def ringOpts = ['RING_OPTS=-Dfile.encoding=UTF-8 -Dosgi.nl=ru -Duser.language=ru -Xmx=16376m']
         steps.withEnv(ringOpts) {
             steps.cmd(ringCommand)
         }
