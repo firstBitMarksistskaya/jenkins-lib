@@ -6,7 +6,7 @@ import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.Logger
 
-class EdtTransform implements Serializable {
+class DesignerToEdtFormatTransformation implements Serializable {
 
     public static final String PROJECT_NAME = 'temp'
     public static final String WORKSPACE = 'build/edt-workspace'
@@ -15,7 +15,7 @@ class EdtTransform implements Serializable {
 
     private final JobConfiguration config;
 
-    EdtTransform(JobConfiguration config) {
+    DesignerToEdtFormatTransformation(JobConfiguration config) {
         this.config = config
     }
 

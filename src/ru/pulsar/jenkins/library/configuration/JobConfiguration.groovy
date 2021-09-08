@@ -10,7 +10,7 @@ class JobConfiguration implements Serializable {
     @JsonPropertyDescription("Версия платформы 1С:Предприятие в формате 8.3.хх.хххх.")
     String v8version
 
-    @JsonPropertyDescription("Путь к корневому каталогу с исходниками конфигурации")
+    @JsonPropertyDescription("Путь к корневому каталогу с исходниками конфигурации, в случае хранения исходников в формате EDT, необходимо указать путь к проекту")
     String srcDir
 
     @JsonPropertyDescription("Формат исходников конфигурации")
@@ -63,5 +63,9 @@ class JobConfiguration implements Serializable {
             ", resultsTransformOptions=" + resultsTransformOptions +
             ", logosConfig=" + logosConfig +
             '}';
+    }
+
+    boolean infobaseFromFiles(){
+        return sourceFormat.EDT
     }
 }

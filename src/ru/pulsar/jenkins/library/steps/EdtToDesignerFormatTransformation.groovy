@@ -4,18 +4,19 @@ package ru.pulsar.jenkins.library.steps
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
+import ru.pulsar.jenkins.library.utils.Constants
 import ru.pulsar.jenkins.library.utils.Logger
 
-class EdtBackTransform implements Serializable {
+class EdtToDesignerFormatTransformation implements Serializable {
 
-    public static final String WORKSPACE = 'build/workcspace'
+    public static final String WORKSPACE = 'build/edt-workspace'
     public static final String CONFIGURATION_DIR = 'build/cfg'
     public static final String CONFIGURATION_ZIP = 'build/cfg.zip'
     public static final String CONFIGURATION_ZIP_STASH = 'cfg-zip'
 
     private final JobConfiguration config;
 
-    EdtBackTransform(JobConfiguration config) {
+    EdtToDesignerFormatTransformation(JobConfiguration config) {
         this.config = config
     }
 
@@ -24,8 +25,8 @@ class EdtBackTransform implements Serializable {
 
         Logger.printLocation()
 
-        if (!config.stageFlags.srcEDT) {
-            Logger.println("SRC is not EDT format. No transform is needed.")
+        if (!config.sourceFormat.EDT) {
+            Logger.println("SRC is not in EDT format. No transform is needed.")
             return
         }
 
@@ -43,7 +44,7 @@ class EdtBackTransform implements Serializable {
 
         def ringCommand = "ring edt workspace export --configuration-files '$configurationRoot' --project $projectDir --workspace-location '$workspaceDir'"
 
-        def ringOpts = ['RING_OPTS=-Dfile.encoding=UTF-8 -Dosgi.nl=ru -Duser.language=ru']
+        def ringOpts =[Constants.DEFAULT_RING_OPTS]
         steps.withEnv(ringOpts) {
             steps.cmd(ringCommand)
         }

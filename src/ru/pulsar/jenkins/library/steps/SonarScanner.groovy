@@ -9,11 +9,15 @@ import ru.pulsar.jenkins.library.utils.VersionParser
 class SonarScanner implements Serializable {
 
     private final JobConfiguration config;
-    private String rootFile
+    private final String rootFile
 
     SonarScanner(JobConfiguration config) {
         this.config = config
-        this.rootFile = "$config.srcDir/Configuration.xml"
+        if (config.sourceFormat.EDT){
+            this.rootFile = "$config.srcDir/src/Configuration/Configuration.mdo"
+        } else {
+            this.rootFile = "$config.srcDir/Configuration.xml"
+        }
     }
 
     def run() {
@@ -40,8 +44,7 @@ class SonarScanner implements Serializable {
         String sonarCommand = "$sonarScannerBinary -Dsonar.branch.name=$env.BRANCH_NAME"
 
         String configurationVersion = ""
-        if (config.stageFlags.srcEDT) {
-            rootFile = "$config.srcDir/Configuration/Configuration.mdo"
+        if (config.sourceFormat.EDT) {
             configurationVersion = VersionParser.edt(rootFile)
         }else {
             configurationVersion = VersionParser.configuration(rootFile)

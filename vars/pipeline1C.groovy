@@ -55,31 +55,29 @@ void call() {
                                 }
                                 when {
                                     beforeAgent true
-                                    expression { config.sourceFormat.infobaseFromFiles() }
+                                    expression { config.infobaseFromFiles() }
                                 }
                                 steps {
-                                    script{
-                                        edtBackTransform config
-                                    }
+                                    edtToDesignerFormatTransformation config
                                 }
                             }
 
                             stage('Создание ИБ') {
                                 steps {
-                                    script{
-                                        printLocation()
+                                    printLocation()
 
-                                        installLocalDependencies()
+                                    installLocalDependencies()
 
-                                        createDir('build/out')
+                                    createDir('build/out')
 
-                                        if (config.sourceFormat.infobaseFromFiles()){
+                                    script {
+                                        if (config.infobaseFromFiles()){
                                             // Создание базы загрузкой из файлов
                                             initFromFiles config
                                         }
                                         else{
                                             // Создание базы загрузкой конфигурации из хранилища
-                                            initFromStorage config 
+                                            initFromStorage config
                                         }
                                     }
                                 }
@@ -114,7 +112,7 @@ void call() {
                         }
                         when {
                             beforeAgent true
-                            expression { config.stageFlags.edtValidate && !config.stageFlags.srcEDT}
+                            expression { config.sourceFormat.DESIGNER && config.stageFlags.edtValidate}
                         }
                         steps {
                             edtTransform config

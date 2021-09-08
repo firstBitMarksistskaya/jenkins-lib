@@ -18,7 +18,7 @@ class InitFromFiles implements Serializable {
 
         Logger.printLocation()
 
-        if (!config.stageFlags.infobaseFromFiles()) {
+        if (!config.infobaseFromFiles()) {
             Logger.println("init infoBase from files is disabled")
             return
         }
@@ -27,10 +27,10 @@ class InitFromFiles implements Serializable {
         
         def env = steps.env();
 
-        def srcDir = "$env.WORKSPACE/$EdtBackTransform.CONFIGURATION_DIR"
+        def srcDir = "$env.WORKSPACE/$EdtToDesignerFormatTransformation.CONFIGURATION_DIR"
 
-        steps.unstash(EdtBackTransform.CONFIGURATION_ZIP_STASH)
-        steps.unzip(srcDir, EdtBackTransform.CONFIGURATION_ZIP)
+        steps.unstash(EdtToDesignerFormatTransformation.CONFIGURATION_ZIP_STASH)
+        steps.unzip(srcDir, EdtToDesignerFormatTransformation.CONFIGURATION_ZIP)
 
         Logger.println("Выполнение загрузки конфигурации из файлов")
         def initCommand = "oscript_modules/bin/vrunner init-dev --src $srcDir --ibconnection \"/F./build/ib\""
