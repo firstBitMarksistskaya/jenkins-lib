@@ -55,7 +55,7 @@ void call() {
                                 }
                                 when {
                                     beforeAgent true
-                                    expression { config.stageFlags.srcEDT }
+                                    expression { config.sourceFormat.infobaseFromFiles() }
                                 }
                                 steps {
                                     script{
@@ -73,7 +73,7 @@ void call() {
 
                                         createDir('build/out')
 
-                                        if (config.stageFlags.infobaseFromFiles()){
+                                        if (config.sourceFormat.infobaseFromFiles()){
                                             // Создание базы загрузкой из файлов
                                             initFromFiles config
                                         }

@@ -13,6 +13,9 @@ class JobConfiguration implements Serializable {
     @JsonPropertyDescription("Путь к корневому каталогу с исходниками конфигурации")
     String srcDir
 
+    @JsonPropertyDescription("Формат исходников конфигурации")
+    SourceFormat sourceFormat;
+
     @JsonProperty("stages")
     @JsonPropertyDescription("Включение этапов сборок")
     StageFlags stageFlags;
@@ -50,6 +53,7 @@ class JobConfiguration implements Serializable {
         return "JobConfiguration{" +
             "v8version='" + v8version + '\'' +
             ", srcDir='" + srcDir + '\'' +
+            ", sourceFormat='" + sourceFormat +
             ", stageFlags=" + stageFlags +
             ", secrets=" + secrets +
             ", initInfobaseOptions=" + initInfobaseOptions +

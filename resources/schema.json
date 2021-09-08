@@ -10,6 +10,11 @@
       "type" : "string",
       "description" : "Путь к корневому каталогу с исходниками конфигурации"
     },
+    "sourceFormat" : {
+      "type" : "string",
+      "description" : "Формат исходников конфигурации",
+      "enum" : [ "edt", "designer" ]
+    },
     "secrets" : {
       "type" : "object",
       "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:Secrets",
@@ -53,10 +58,6 @@
         "bdd" : {
           "type" : "boolean",
           "description" : "Запуск BDD сценариев включен"
-        },
-        "srcEDT" : {
-          "type" : "boolean",
-          "description" : "Конвертировать исходники из формата EDT в формат конфигуратора"
         }
       }
     },
