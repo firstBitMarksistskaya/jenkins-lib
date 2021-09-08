@@ -24,9 +24,6 @@ class StageFlags implements Serializable {
     @JsonPropertyDescription("Запуск BDD сценариев включен")
     boolean bdd
 
-    @JsonPropertyDescription("Исходники в формате EDT")
-    boolean srcEDT
-
     @Override
     @NonCPS
     String toString() {
@@ -37,15 +34,10 @@ class StageFlags implements Serializable {
             ", smoke=" + smoke +
             ", initSteps=" + initSteps +
             ", bdd=" + bdd +
-            ", srcEDT=" + srcEDT +
             '}';
     }
 
     boolean needInfobase() {
         return smoke || syntaxCheck || initSteps || bdd
-    }
-
-    boolean infobaseFromFiles() {
-        return srcEDT
     }
 }

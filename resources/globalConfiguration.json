@@ -1,12 +1,12 @@
 {
   "$schema": "schema.json",
   "srcDir": "src/cf",
+  "sourceFormat": "designer",
   "secrets": {
     "storagePath": "UNKNOWN_ID",
     "storage": "UNKNOWN_ID"
   },
   "stages": {
-    "srcEDT" : true,
     "initSteps": false,
     "sonarqube": false,
     "bdd": false,
