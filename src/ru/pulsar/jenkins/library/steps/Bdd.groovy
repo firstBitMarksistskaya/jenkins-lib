@@ -29,12 +29,6 @@ class Bdd implements Serializable {
 
             steps.createDir('build/out')
 
-            // TODO: удалить после выхода VAS 1.0.35
-            steps.httpRequest(
-                'https://cloud.svc.pulsar.ru/index.php/s/WKwmqpFXSjfYjAH/download',
-                'oscript_modules/vanessa-automation-single/vanessa-automation-single.epf'
-            )
-
             steps.catchError {
                 config.bddOptions.vrunnerSteps.each {
                     Logger.println("Шаг запуска сценариев командой ${it}")
