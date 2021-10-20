@@ -26,12 +26,6 @@ class InitInfobase implements Serializable {
             return
         }
 
-        // TODO: удалить после выхода VAS 1.0.35
-        steps.httpRequest(
-            'https://cloud.svc.pulsar.ru/index.php/s/WKwmqpFXSjfYjAH/download',
-            'oscript_modules/vanessa-automation-single/vanessa-automation-single.epf'
-        )
-
         List<String> logosConfig = ["LOGOS_CONFIG=$config.logosConfig"]
         steps.withEnv(logosConfig) {
 
