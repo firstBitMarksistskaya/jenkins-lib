@@ -1,4 +1,5 @@
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
+import ru.pulsar.jenkins.library.utils.VRunner
 import ru.pulsar.jenkins.library.utils.VersionParser
 
 def call(JobConfiguration jobConfiguration) {
@@ -17,6 +18,7 @@ def call(JobConfiguration jobConfiguration) {
             variable: 'STORAGE_PATH'
         )
     ]) {
-        cmd "oscript_modules/bin/vrunner init-dev --storage --storage-name $STORAGE_PATH --storage-user $STORAGE_USR --storage-pwd $STORAGE_PSW $storageVersionParameter --ibconnection \"/F./build/ib\""
+        String vrunnerPath = VRunner.getVRunnerPath();
+        cmd "$vrunnerPath init-dev --storage --storage-name $STORAGE_PATH --storage-user $STORAGE_USR --storage-pwd $STORAGE_PSW $storageVersionParameter --ibconnection \"/F./build/ib\""
     }
 }
