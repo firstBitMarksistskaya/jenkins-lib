@@ -19,6 +19,8 @@ interface IStepExecutor {
 
     String readFile(String file, String encoding)
 
+    boolean fileExists(String file)
+
     void echo(message)
 
     int cmd(String script, boolean returnStatus)

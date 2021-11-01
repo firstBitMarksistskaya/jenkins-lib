@@ -38,6 +38,11 @@ class StepExecutor implements IStepExecutor {
     }
 
     @Override
+    boolean fileExists(String file) {
+        steps.fileExists file
+    }
+
+    @Override
     FileWrapper[] findFiles(String glob, String excludes = '') {
         steps.findFiles glob: glob, excludes: excludes
     }

@@ -34,6 +34,11 @@ public class TestUtils {
       return FileUtils.readFileToString(new File(file), encoding);
     });
 
+    when(steps.fileExists(anyString())).thenAnswer(invocation -> {
+      String file = invocation.getArgument(0);
+      return new File(file).exists();
+    });
+
     return steps;
   }
 
