@@ -1,9 +1,12 @@
 package ru.pulsar.jenkins.library.configuration
 
 import com.cloudbees.groovy.cps.NonCPS
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
+import ru.pulsar.jenkins.library.IStepExecutor
+import ru.pulsar.jenkins.library.ioc.ContextRegistry
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 class JobConfiguration implements Serializable {
@@ -19,6 +22,9 @@ class JobConfiguration implements Serializable {
     @JsonProperty("stages")
     @JsonPropertyDescription("Включение этапов сборок")
     StageFlags stageFlags;
+
+    @JsonPropertyDescription("Имя ветки по умолчанию. Значение по умолчанию - main.")
+    String defaultBranch
 
     @JsonPropertyDescription("Идентификаторы сохраненных секретов")
     Secrets secrets;
@@ -53,7 +59,8 @@ class JobConfiguration implements Serializable {
         return "JobConfiguration{" +
             "v8version='" + v8version + '\'' +
             ", srcDir='" + srcDir + '\'' +
-            ", sourceFormat='" + sourceFormat +
+            ", sourceFormat=" + sourceFormat +
+            ", defaultBranch=" + defaultBranch +
             ", stageFlags=" + stageFlags +
             ", secrets=" + secrets +
             ", initInfobaseOptions=" + initInfobaseOptions +
@@ -66,6 +73,13 @@ class JobConfiguration implements Serializable {
     }
 
     boolean infobaseFromFiles(){
-        return sourceFormat.EDT
+        IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
+        def env = steps.env();
+        String branchName = env.BRANCH_NAME;
+        def initMethod = initInfobaseOptions.initMethod
+
+        return sourceFormat == SourceFormat.EDT ||
+            (initMethod == InitInfobaseMethod.FROM_SOURCE) ||
+            (initMethod == InitInfobaseMethod.DEFAULT_BRANCH_FROM_STORAGE && branchName != defaultBranch)
     }
 }

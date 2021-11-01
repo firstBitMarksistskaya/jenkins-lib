@@ -3,6 +3,7 @@
   "v8version": "8.3",
   "srcDir": "src/cf",
   "sourceFormat": "designer",
+  "defaultBranch": "main",
   "secrets": {
     "storagePath": "UNKNOWN_ID",
     "storage": "UNKNOWN_ID"
@@ -16,6 +17,7 @@
     "smoke": false
   },
   "initInfobase": {
+    "initMethod": "fromStorage",
     "runMigration": true,
     "additionalInitializationSteps": []
   },

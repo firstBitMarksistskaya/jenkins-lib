@@ -2,8 +2,10 @@ package ru.pulsar.jenkins.library.steps
 
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
+import ru.pulsar.jenkins.library.configuration.SourceFormat
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.Logger
+import ru.pulsar.jenkins.library.utils.VRunner
 
 class InitFromFiles implements Serializable {
 
@@ -23,17 +25,25 @@ class InitFromFiles implements Serializable {
             return
         }
 
+        steps.installLocalDependencies();
+
         Logger.println("Распаковка файлов")
-        
-        def env = steps.env();
 
-        def srcDir = "$env.WORKSPACE/$EdtToDesignerFormatTransformation.CONFIGURATION_DIR"
+        String srcDir;
 
-        steps.unstash(EdtToDesignerFormatTransformation.CONFIGURATION_ZIP_STASH)
-        steps.unzip(srcDir, EdtToDesignerFormatTransformation.CONFIGURATION_ZIP)
+        if (config.sourceFormat == SourceFormat.EDT) {
+            def env = steps.env();
+            srcDir = "$env.WORKSPACE/$EdtToDesignerFormatTransformation.CONFIGURATION_DIR"
+
+            steps.unstash(EdtToDesignerFormatTransformation.CONFIGURATION_ZIP_STASH)
+            steps.unzip(srcDir, EdtToDesignerFormatTransformation.CONFIGURATION_ZIP)
+        } else {
+            srcDir = config.srcDir;
+        }
 
         Logger.println("Выполнение загрузки конфигурации из файлов")
-        def initCommand = "oscript_modules/bin/vrunner init-dev --src $srcDir --ibconnection \"/F./build/ib\""
+        String vrunnerPath = VRunner.getVRunnerPath();
+        def initCommand = "$vrunnerPath init-dev --src $srcDir --ibconnection \"/F./build/ib\""
         steps.cmd(initCommand)
     }
 }

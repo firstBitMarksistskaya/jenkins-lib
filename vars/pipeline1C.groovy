@@ -1,6 +1,7 @@
 /* groovylint-disable NestedBlockDepth */
 import groovy.transform.Field
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
+import ru.pulsar.jenkins.library.configuration.SourceFormat
 
 import java.util.concurrent.TimeUnit
 
@@ -55,7 +56,7 @@ void call() {
                                 }
                                 when {
                                     beforeAgent true
-                                    expression { config.infobaseFromFiles() }
+                                    expression { config.stageFlags.needInfobase() && config.sourceFormat == SourceFormat.EDT }
                                 }
                                 steps {
                                     edtToDesignerFormatTransformation config
@@ -65,8 +66,6 @@ void call() {
                             stage('Создание ИБ') {
                                 steps {
                                     printLocation()
-
-                                    installLocalDependencies()
 
                                     createDir('build/out')
 
@@ -115,7 +114,7 @@ void call() {
                             expression { config.sourceFormat.DESIGNER && config.stageFlags.edtValidate}
                         }
                         steps {
-                            edtTransform config
+                            designerToEdtFormatTransformation config
                         }
                     }
                 }

@@ -1,3 +1,6 @@
 {
-  "v8version": "8.3.12.1500"
+  "v8version": "8.3.12.1500",
+  "initInfobase": {
+    "initMethod": "fromSource"
+  }
 }
