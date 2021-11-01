@@ -2,6 +2,7 @@ package ru.pulsar.jenkins.library.steps
 
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
+import ru.pulsar.jenkins.library.configuration.SourceFormat
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.VersionParser
@@ -13,7 +14,7 @@ class SonarScanner implements Serializable {
 
     SonarScanner(JobConfiguration config) {
         this.config = config
-        if (config.sourceFormat.EDT){
+        if (config.sourceFormat == SourceFormat.EDT){
             this.rootFile = "$config.srcDir/src/Configuration/Configuration.mdo"
         } else {
             this.rootFile = "$config.srcDir/Configuration.xml"
@@ -43,10 +44,10 @@ class SonarScanner implements Serializable {
 
         String sonarCommand = "$sonarScannerBinary -Dsonar.branch.name=$env.BRANCH_NAME"
 
-        String configurationVersion = ""
-        if (config.sourceFormat.EDT) {
+        String configurationVersion
+        if (config.sourceFormat == SourceFormat.EDT) {
             configurationVersion = VersionParser.edt(rootFile)
-        }else {
+        } else {
             configurationVersion = VersionParser.configuration(rootFile)
         }
         
