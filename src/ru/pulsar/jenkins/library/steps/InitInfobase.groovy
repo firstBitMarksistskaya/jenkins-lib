@@ -5,6 +5,7 @@ import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.Logger
+import ru.pulsar.jenkins.library.utils.VRunner
 
 class InitInfobase implements Serializable {
 
@@ -29,12 +30,14 @@ class InitInfobase implements Serializable {
         List<String> logosConfig = ["LOGOS_CONFIG=$config.logosConfig"]
         steps.withEnv(logosConfig) {
 
+            String vrunnerPath = VRunner.getVRunnerPath();
+
             if (config.initInfobaseOptions.runMigration) {
                 Logger.println("Запуск миграции ИБ")
 
                 // Запуск миграции
                 steps.catchError {
-                    steps.cmd('oscript_modules/bin/vrunner run --command "ЗапуститьОбновлениеИнформационнойБазы;ЗавершитьРаботуСистемы;" --execute \\$runnerRoot/epf/ЗакрытьПредприятие.epf --ibconnection "/F./build/ib"')
+                    steps.cmd(vrunnerPath + ' run --command "ЗапуститьОбновлениеИнформационнойБазы;ЗавершитьРаботуСистемы;" --execute \\$runnerRoot/epf/ЗакрытьПредприятие.epf --ibconnection "/F./build/ib"')
                 }
             } else {
                 Logger.println("Шаг миграции ИБ выключен")
@@ -46,12 +49,12 @@ class InitInfobase implements Serializable {
                     files = files.sort new OrderBy( { it.name })
                     files.each {
                         Logger.println("Первичная инициализация файлом ${it.path}")
-                        steps.cmd("oscript_modules/bin/vrunner vanessa --settings ${it.path} --ibconnection \"/F./build/ib\"")
+                        steps.cmd("$vrunnerPath vanessa --settings ${it.path} --ibconnection \"/F./build/ib\"")
                     }
                 } else {
                     config.initInfobaseOptions.additionalInitializationSteps.each {
                         Logger.println("Первичная инициализация командой ${it}")
-                        steps.cmd("oscript_modules/bin/vrunner ${it} --ibconnection \"/F./build/ib\"")
+                        steps.cmd("$vrunnerPath ${it} --ibconnection \"/F./build/ib\"")
                     }
                 }
             }

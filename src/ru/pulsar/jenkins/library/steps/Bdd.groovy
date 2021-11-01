@@ -4,6 +4,7 @@ import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.Logger
+import ru.pulsar.jenkins.library.utils.VRunner
 
 class Bdd implements Serializable {
 
@@ -32,7 +33,8 @@ class Bdd implements Serializable {
             steps.catchError {
                 config.bddOptions.vrunnerSteps.each {
                     Logger.println("Шаг запуска сценариев командой ${it}")
-                    steps.cmd("oscript_modules/bin/vrunner ${it} --ibconnection \"/F./build/ib\"")
+                    String vrunnerPath = VRunner.getVRunnerPath();
+                    steps.cmd("$vrunnerPath ${it} --ibconnection \"/F./build/ib\"")
                 }
             }
         }
