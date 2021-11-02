@@ -111,7 +111,7 @@ void call() {
                         }
                         when {
                             beforeAgent true
-                            expression { config.sourceFormat.DESIGNER && config.stageFlags.edtValidate}
+                            expression { config.sourceFormat == SourceFormat.DESIGNER && config.stageFlags.edtValidate}
                         }
                         steps {
                             designerToEdtFormatTransformation config

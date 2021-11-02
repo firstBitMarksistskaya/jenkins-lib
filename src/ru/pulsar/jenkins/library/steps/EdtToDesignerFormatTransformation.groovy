@@ -3,6 +3,7 @@ package ru.pulsar.jenkins.library.steps
 
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
+import ru.pulsar.jenkins.library.configuration.SourceFormat
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.Constants
 import ru.pulsar.jenkins.library.utils.Logger
@@ -25,7 +26,7 @@ class EdtToDesignerFormatTransformation implements Serializable {
 
         Logger.printLocation()
 
-        if (!config.sourceFormat.EDT) {
+        if (config.sourceFormat != SourceFormat.EDT) {
             Logger.println("SRC is not in EDT format. No transform is needed.")
             return
         }
