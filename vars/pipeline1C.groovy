@@ -65,8 +65,6 @@ void call() {
 
                             stage('Создание ИБ') {
                                 steps {
-                                    printLocation()
-
                                     createDir('build/out')
 
                                     script {
