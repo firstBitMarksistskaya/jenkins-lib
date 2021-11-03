@@ -31,6 +31,7 @@
   "syntaxCheck": {
     "groupErrorsByMetadata": true,
     "pathToJUnitReport": "./build/out/jUnit/syntax.xml",
+    "exceptionFile": "./tools/syntax-check-exception-file.txt",
     "checkModes": [
       "-ThinClient",
       "-WebClient",

@@ -51,6 +51,10 @@ def call(JobConfiguration config) {
         command += " --mode $checkModes"
     }
 
+    if (!options.exceptionFile.empty && fileExists(options.exceptionFile)) {
+        command += " --exception-file $options.exceptionFile"
+    }
+
     // Запуск синтакс-проверки
     cmd(command, true)
 
