@@ -1,6 +1,7 @@
 /* groovylint-disable NestedBlockDepth */
 import groovy.transform.Field
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
+import ru.pulsar.jenkins.library.configuration.SourceFormat
 
 import java.util.concurrent.TimeUnit
 
@@ -49,16 +50,33 @@ void call() {
                         }
 
                         stages {
+                            stage('Трансформация из формата EDT') {
+                                agent {
+                                    label 'edt'
+                                }
+                                when {
+                                    beforeAgent true
+                                    expression { config.stageFlags.needInfobase() && config.sourceFormat == SourceFormat.EDT }
+                                }
+                                steps {
+                                    edtToDesignerFormatTransformation config
+                                }
+                            }
+
                             stage('Создание ИБ') {
                                 steps {
-                                    printLocation()
-
-                                    installLocalDependencies()
-
                                     createDir('build/out')
 
-                                    // Создание базы загрузкой конфигурации из хранилища
-                                    initFromStorage config
+                                    script {
+                                        if (config.infobaseFromFiles()){
+                                            // Создание базы загрузкой из файлов
+                                            initFromFiles config
+                                        }
+                                        else{
+                                            // Создание базы загрузкой конфигурации из хранилища
+                                            initFromStorage config
+                                        }
+                                    }
                                 }
                             }
 
@@ -91,10 +109,10 @@ void call() {
                         }
                         when {
                             beforeAgent true
-                            expression { config.stageFlags.edtValidate }
+                            expression { config.sourceFormat == SourceFormat.DESIGNER && config.stageFlags.edtValidate}
                         }
                         steps {
-                            edtTransform config
+                            designerToEdtFormatTransformation config
                         }
                     }
                 }

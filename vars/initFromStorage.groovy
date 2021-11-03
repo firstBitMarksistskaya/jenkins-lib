@@ -4,6 +4,10 @@ import ru.pulsar.jenkins.library.utils.VersionParser
 
 def call(JobConfiguration jobConfiguration) {
 
+    printLocation()
+
+    installLocalDependencies();
+
     def storageVersion = VersionParser.storage()
     def storageVersionParameter = storageVersion == "" ? "" : "--storage-ver $storageVersion"
 

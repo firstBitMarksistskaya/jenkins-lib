@@ -2,6 +2,7 @@ package ru.pulsar.jenkins.library.steps
 
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
+import ru.pulsar.jenkins.library.configuration.SourceFormat
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.Logger
 
@@ -26,26 +27,34 @@ class EdtValidate implements Serializable {
             return
         }
 
-        steps.unstash(EdtTransform.WORKSPACE_ZIP_STASH)
-        steps.unzip(EdtTransform.WORKSPACE, EdtTransform.WORKSPACE_ZIP)
-
         def env = steps.env();
 
-        def resultFile = "$env.WORKSPACE/$RESULT_FILE"
-        def workspaceLocation = "$env.WORKSPACE/$EdtTransform.WORKSPACE"
+        String workspaceLocation = "$env.WORKSPACE/$DesignerToEdtFormatTransformation.WORKSPACE"
+        String projectList;
 
+        if (config.sourceFormat == SourceFormat.DESIGNER) {
+            steps.unstash(DesignerToEdtFormatTransformation.WORKSPACE_ZIP_STASH)
+            steps.unzip(DesignerToEdtFormatTransformation.WORKSPACE, DesignerToEdtFormatTransformation.WORKSPACE_ZIP)
+
+            projectList = "--project-name-list $DesignerToEdtFormatTransformation.PROJECT_NAME"
+        } else {
+            projectList = "--project-list '$config.srcDir'"
+        }
+
+        def resultFile = "$env.WORKSPACE/$RESULT_FILE"
         steps.createDir(new File(resultFile).getParent())
 
         Logger.println("Выполнение валидации EDT")
 
-        def ringCommand = "ring edt workspace validate --workspace-location '$workspaceLocation' --file '$resultFile' --project-name-list $EdtTransform.PROJECT_NAME"
+        def ringCommand = "ring edt workspace validate --workspace-location '$workspaceLocation' --file '$resultFile' $projectList"
         def ringOpts = ['RING_OPTS=-Dfile.encoding=UTF-8 -Dosgi.nl=ru -Duser.language=ru']
         steps.withEnv(ringOpts) {
             steps.catchError {
                 steps.cmd(ringCommand)
             }
         }
-        steps.archiveArtifacts("$EdtTransform.WORKSPACE/.metadata/.log")
+
+        steps.archiveArtifacts("$DesignerToEdtFormatTransformation.WORKSPACE/.metadata/.log")
         steps.archiveArtifacts(RESULT_FILE)
         steps.stash(RESULT_STASH, RESULT_FILE)
     }
