@@ -33,7 +33,13 @@ interface IStepExecutor {
 
     EnvironmentAction env()
 
+    def dir(String path, Closure body)
+
     void createDir(String path)
+
+    void deleteDir()
+
+    void deleteDir(String path)
 
     def withEnv(List<String> strings, Closure body)
 
