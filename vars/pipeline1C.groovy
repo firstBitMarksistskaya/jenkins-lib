@@ -121,15 +121,28 @@ void call() {
             stage('Проверка качества') {
                 parallel {
                     stage('EDT контроль') {
-                        agent {
-                            label 'edt'
-                        }
                         when {
                             beforeAgent true
                             expression { config.stageFlags.edtValidate }
                         }
-                        steps {
-                            edtValidate config
+                        stages {
+                            stage('Валидация EDT') {
+                                agent {
+                                    label 'edt'
+                                }
+                                steps {
+                                    edtValidate config
+                                }
+                            }
+
+                            stage('Трансформация результатов') {
+                                agent {
+                                    label 'oscript'
+                                }
+                                steps {
+                                    transform config
+                                }
+                            }
                         }
                     }
 
@@ -173,19 +186,6 @@ void call() {
                             smoke config
                         }
                     }
-                }
-            }
-
-            stage('Трансформация результатов') {
-                agent {
-                    label 'oscript'
-                }
-                when {
-                    beforeAgent true
-                    expression { config.stageFlags.edtValidate }
-                }
-                steps {
-                    transform config
                 }
             }
 

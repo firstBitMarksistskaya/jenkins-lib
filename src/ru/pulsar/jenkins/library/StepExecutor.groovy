@@ -80,6 +80,25 @@ class StepExecutor implements IStepExecutor {
     }
 
     @Override
+    def dir(String path, Closure body) {
+        steps.dir(path) {
+            body()
+        }
+    }
+
+    @Override
+    void deleteDir() {
+        steps.deleteDir()
+    }
+
+    @Override
+    void deleteDir(String path) {
+        steps.dir(path) {
+            steps.deleteDir()
+        }
+    }
+
+    @Override
     def withEnv(List<String> strings, Closure body) {
         steps.withEnv(strings) {
             body()

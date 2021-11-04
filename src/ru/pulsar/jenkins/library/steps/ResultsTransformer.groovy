@@ -2,8 +2,11 @@ package ru.pulsar.jenkins.library.steps
 
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
+import ru.pulsar.jenkins.library.configuration.SourceFormat
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.Logger
+
+import java.nio.file.Paths
 
 class ResultsTransformer implements Serializable {
 
@@ -35,11 +38,12 @@ class ResultsTransformer implements Serializable {
         def edtValidateFile = "$env.WORKSPACE/$EdtValidate.RESULT_FILE"
         def genericIssueFile = "$env.WORKSPACE/$RESULT_FILE"
 
-        steps.cmd("stebi convert $edtValidateFile $genericIssueFile $config.srcDir")
+        String srcDir = config.sourceFormat == SourceFormat.DESIGNER ? config.srcDir : Paths.get(config.srcDir, "src")
+        steps.cmd("stebi convert $edtValidateFile $genericIssueFile $srcDir")
 
         if (config.resultsTransformOptions.removeSupport) {
             def supportLevel = config.resultsTransformOptions.supportLevel
-            steps.cmd("stebi transform --remove_support $supportLevel --src $config.srcDir $genericIssueFile")
+            steps.cmd("stebi transform --remove_support $supportLevel --src $srcDir $genericIssueFile")
         }
 
         steps.archiveArtifacts(RESULT_FILE)

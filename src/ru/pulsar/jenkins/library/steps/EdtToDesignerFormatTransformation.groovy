@@ -38,8 +38,8 @@ class EdtToDesignerFormatTransformation implements Serializable {
         def workspaceDir = "$env.WORKSPACE/$WORKSPACE" 
         def configurationRoot = "$env.WORKSPACE/$CONFIGURATION_DIR"
 
-        steps.createDir(workspaceDir)
-        steps.createDir(configurationRoot)
+        steps.deleteDir(workspaceDir)
+        steps.deleteDir(configurationRoot)
 
         Logger.println("Конвертация исходников из формата EDT в формат Конфигуратора")
 
