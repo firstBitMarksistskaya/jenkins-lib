@@ -130,4 +130,6 @@ pipeline1C()
 * Анализ SonarQube:
   * Предполагается наличие единственной настройки `SonarQube installation` (`sonarqube` -> `sonarQubeInstallation`).
   * Используется `sonar-scanner` из переменной окружения `PATH` (`sonarqube` -> `useSonarScannerFromPath`).
-  * Если использование `sonar-scanner` из переменной окружения `PATH` выключено, предполагается наличие настроенного глобального инструмента `SonarQube Scanner` с идентификатором инструмента `sonar-scanner` (`sonarqube` -> `sonarScannerToolName`). 
+  * Если использование `sonar-scanner` из переменной окружения `PATH` выключено, предполагается наличие настроенного глобального инструмента `SonarQube Scanner` с идентификатором инструмента `sonar-scanner` (`sonarqube` -> `sonarScannerToolName`).
+  * Версия из корня конфигурации передается утилите `sonar-scanner` как значение параметра `sonar.projectVersion=$configurationVersion`.
+  * Если выполнялась валидация EDT, результаты валидации в формате `generic issues` передаются утилите `sonar-scanner` как значение параметра `sonar.externalIssuesReportPaths`.
