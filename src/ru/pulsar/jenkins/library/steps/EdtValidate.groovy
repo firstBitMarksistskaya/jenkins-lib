@@ -43,7 +43,6 @@ class EdtValidate implements Serializable {
         }
 
         def resultFile = "$env.WORKSPACE/$RESULT_FILE"
-        steps.createDir(new File(resultFile).getParent())
 
         Logger.println("Выполнение валидации EDT")
 

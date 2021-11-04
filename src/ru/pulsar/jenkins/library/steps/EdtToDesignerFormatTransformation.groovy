@@ -41,9 +41,6 @@ class EdtToDesignerFormatTransformation implements Serializable {
         steps.deleteDir(workspaceDir)
         steps.deleteDir(configurationRoot)
 
-        steps.createDir(workspaceDir)
-        steps.createDir(configurationRoot)
-
         Logger.println("Конвертация исходников из формата EDT в формат Конфигуратора")
 
         def ringCommand = "ring edt workspace export --workspace-location '$workspaceDir' --project '$projectDir' --configuration-files '$configurationRoot'"
