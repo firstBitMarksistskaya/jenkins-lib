@@ -56,7 +56,7 @@ def call(JobConfiguration config) {
     }
 
     // Запуск синтакс-проверки
-    cmd(command, true)
+    VRunner.exec(command, true)
 
     junit allowEmptyResults: true, testResults: FileUtils.getLocalPath(pathToJUnitReport)
 

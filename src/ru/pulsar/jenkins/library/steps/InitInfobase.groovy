@@ -37,7 +37,7 @@ class InitInfobase implements Serializable {
 
                 // Запуск миграции
                 steps.catchError {
-                    steps.cmd(vrunnerPath + ' run --command "ЗапуститьОбновлениеИнформационнойБазы;ЗавершитьРаботуСистемы;" --execute \\$runnerRoot/epf/ЗакрытьПредприятие.epf --ibconnection "/F./build/ib"')
+                    VRunner.exec(vrunnerPath + ' run --command "ЗапуститьОбновлениеИнформационнойБазы;ЗавершитьРаботуСистемы;" --execute \\$runnerRoot/epf/ЗакрытьПредприятие.epf --ibconnection "/F./build/ib"')
                 }
             } else {
                 Logger.println("Шаг миграции ИБ выключен")
@@ -49,12 +49,12 @@ class InitInfobase implements Serializable {
                     files = files.sort new OrderBy( { it.name })
                     files.each {
                         Logger.println("Первичная инициализация файлом ${it.path}")
-                        steps.cmd("$vrunnerPath vanessa --settings ${it.path} --ibconnection \"/F./build/ib\"")
+                        VRunner.exec("$vrunnerPath vanessa --settings ${it.path} --ibconnection \"/F./build/ib\"")
                     }
                 } else {
                     config.initInfobaseOptions.additionalInitializationSteps.each {
                         Logger.println("Первичная инициализация командой ${it}")
-                        steps.cmd("$vrunnerPath ${it} --ibconnection \"/F./build/ib\"")
+                        VRunner.exec("$vrunnerPath ${it} --ibconnection \"/F./build/ib\"")
                     }
                 }
             }
