@@ -1,5 +1,6 @@
 package ru.pulsar.jenkins.library
 
+import org.jenkinsci.plugins.credentialsbinding.MultiBinding
 import org.jenkinsci.plugins.pipeline.utility.steps.fs.FileWrapper
 import org.jenkinsci.plugins.workflow.support.actions.EnvironmentAction
 
@@ -28,6 +29,8 @@ interface IStepExecutor {
     int cmd(String script)
 
     void tool(String toolName)
+
+    def withCredentials(List<MultiBinding> bindings, Closure body)
 
     void withSonarQubeEnv(String installationName, Closure body)
 

@@ -1,5 +1,6 @@
 package ru.pulsar.jenkins.library
 
+import org.jenkinsci.plugins.credentialsbinding.MultiBinding
 import org.jenkinsci.plugins.pipeline.utility.steps.fs.FileWrapper
 import org.jenkinsci.plugins.workflow.support.actions.EnvironmentAction
 import ru.yandex.qatools.allure.jenkins.config.ResultsConfig
@@ -65,6 +66,13 @@ class StepExecutor implements IStepExecutor {
     @Override
     void withSonarQubeEnv(String installationName, Closure body) {
         steps.withSonarQubeEnv(installationName) {
+            body()
+        }
+    }
+
+    @Override
+    def withCredentials(List<MultiBinding> bindings, Closure body) {
+        steps.withCredentials(bindings) {
             body()
         }
     }

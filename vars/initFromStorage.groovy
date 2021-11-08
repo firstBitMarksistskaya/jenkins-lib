@@ -1,28 +1,10 @@
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
-import ru.pulsar.jenkins.library.utils.VRunner
-import ru.pulsar.jenkins.library.utils.VersionParser
+import ru.pulsar.jenkins.library.ioc.ContextRegistry
+import ru.pulsar.jenkins.library.steps.InitFromStorage
 
-def call(JobConfiguration jobConfiguration) {
+def call(JobConfiguration config) {
+    ContextRegistry.registerDefaultContext(this)
 
-    printLocation()
-
-    installLocalDependencies();
-
-    def storageVersion = VersionParser.storage()
-    def storageVersionParameter = storageVersion == "" ? "" : "--storage-ver $storageVersion"
-
-    withCredentials([
-        usernamePassword(
-            credentialsId: jobConfiguration.secrets.storage,
-            passwordVariable: 'STORAGE_PSW',
-            usernameVariable: 'STORAGE_USR'
-        ),
-        string(
-            credentialsId: jobConfiguration.secrets.storagePath,
-            variable: 'STORAGE_PATH'
-        )
-    ]) {
-        String vrunnerPath = VRunner.getVRunnerPath();
-        cmd "$vrunnerPath init-dev --storage --storage-name $STORAGE_PATH --storage-user $STORAGE_USR --storage-pwd $STORAGE_PSW $storageVersionParameter --ibconnection \"/F./build/ib\""
-    }
+    def initFromStorage = new InitFromStorage(config)
+    initFromStorage.run()
 }
