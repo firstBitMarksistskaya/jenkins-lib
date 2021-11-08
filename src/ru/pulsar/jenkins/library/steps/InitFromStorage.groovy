@@ -48,16 +48,16 @@ class InitFromStorage implements Serializable {
         steps.withCredentials([
             steps.usernamePassword(
                 storageCredentials,
-                'STORAGE_USR',
-                'STORAGE_PSW'
+                'RUNNER_STORAGE_USER',
+                'RUNNER_STORAGE_PWD'
             ),
             steps.string(
                 storagePath,
-                'STORAGE_PATH'
+                'RUNNER_STORAGE_NAME'
             )
         ]) {
             String vrunnerPath = VRunner.getVRunnerPath()
-            steps.cmd "$vrunnerPath init-dev --storage --storage-name $STORAGE_PATH --storage-user $STORAGE_USR --storage-pwd $STORAGE_PSW $storageVersionParameter --ibconnection \"/F./build/ib\""
+            steps.cmd "$vrunnerPath init-dev --storage $storageVersionParameter --ibconnection \"/F./build/ib\""
         }
     }
 
