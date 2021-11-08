@@ -5,6 +5,8 @@ import ru.pulsar.jenkins.library.ioc.ContextRegistry
 
 class VRunner {
 
+    static final String DEFAULT_VRUNNER_OPTS = "RUNNER_NOCACHEUSE=1"
+
     static String getVRunnerPath() {
 
         IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
@@ -16,5 +18,13 @@ class VRunner {
         }
 
         return vrunnerPath;
+    }
+
+    static int exec(String command, boolean returnStatus = false) {
+        IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
+
+        steps.withEnv([DEFAULT_VRUNNER_OPTS]) {
+            return steps.cmd(command, returnStatus)
+        } as int
     }
 }

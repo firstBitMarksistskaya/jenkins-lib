@@ -34,7 +34,7 @@ class Bdd implements Serializable {
                 config.bddOptions.vrunnerSteps.each {
                     Logger.println("Шаг запуска сценариев командой ${it}")
                     String vrunnerPath = VRunner.getVRunnerPath();
-                    steps.cmd("$vrunnerPath ${it} --ibconnection \"/F./build/ib\"")
+                    VRunner.exec("$vrunnerPath ${it} --ibconnection \"/F./build/ib\"")
                 }
             }
         }

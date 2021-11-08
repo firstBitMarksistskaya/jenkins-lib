@@ -5,3 +5,6 @@ bin/
 lib/
 
 *.iml
+.classpath
+.project
+.settings/
