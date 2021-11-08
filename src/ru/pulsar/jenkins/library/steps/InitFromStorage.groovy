@@ -1,7 +1,6 @@
 package ru.pulsar.jenkins.library.steps
 
-import org.jenkinsci.plugins.credentialsbinding.impl.StringBinding
-import org.jenkinsci.plugins.credentialsbinding.impl.UsernamePasswordMultiBinding
+
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
@@ -32,17 +31,17 @@ class InitFromStorage implements Serializable {
         def storageVersion = VersionParser.storage()
         def storageVersionParameter = storageVersion == "" ? "" : "--storage-ver $storageVersion"
 
-        steps.withCredentials(Arrays.asList(
-            new UsernamePasswordMultiBinding(
+        steps.withCredentials([
+            steps.usernamePassword(
+                config.secrets.storage,
                 'STORAGE_USR',
-                'STORAGE_PSW',
-                config.secrets.storage
+                'STORAGE_PSW'
             ),
-            new StringBinding(
-                'STORAGE_PATH',
-                config.secrets.storagePath
+            steps.string(
+                config.secrets.storagePath,
+                'STORAGE_PATH'
             )
-        )) {
+        ]) {
             String vrunnerPath = VRunner.getVRunnerPath();
             steps.cmd "$vrunnerPath init-dev --storage --storage-name $STORAGE_PATH --storage-user $STORAGE_USR --storage-pwd $STORAGE_PSW $storageVersionParameter --ibconnection \"/F./build/ib\""
         }

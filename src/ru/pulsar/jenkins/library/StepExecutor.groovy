@@ -1,6 +1,5 @@
 package ru.pulsar.jenkins.library
 
-import org.jenkinsci.plugins.credentialsbinding.MultiBinding
 import org.jenkinsci.plugins.pipeline.utility.steps.fs.FileWrapper
 import org.jenkinsci.plugins.workflow.support.actions.EnvironmentAction
 import ru.yandex.qatools.allure.jenkins.config.ResultsConfig
@@ -71,10 +70,20 @@ class StepExecutor implements IStepExecutor {
     }
 
     @Override
-    def withCredentials(List<MultiBinding> bindings, Closure body) {
+    def withCredentials(List bindings, Closure body) {
         steps.withCredentials(bindings) {
             body()
         }
+    }
+
+    @Override
+    def string(String credentialsId, String variable) {
+        return steps.string(credentialsId: credentialsId, variable: variable)
+    }
+
+    @Override
+    def usernamePassword(String credentialsId, String usernameVariable, String passwordVariable) {
+        return steps.string(credentialsId: credentialsId, usernameVariable: usernameVariable, passwordVariable: passwordVariable)
     }
 
     @Override
