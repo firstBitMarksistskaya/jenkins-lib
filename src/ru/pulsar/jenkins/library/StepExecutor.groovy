@@ -83,7 +83,7 @@ class StepExecutor implements IStepExecutor {
 
     @Override
     def usernamePassword(String credentialsId, String usernameVariable, String passwordVariable) {
-        return steps.string(credentialsId: credentialsId, usernameVariable: usernameVariable, passwordVariable: passwordVariable)
+        return steps.usernamePassword(credentialsId: credentialsId, usernameVariable: usernameVariable, passwordVariable: passwordVariable)
     }
 
     @Override
