@@ -38,6 +38,11 @@ class StepExecutor implements IStepExecutor {
     }
 
     @Override
+    boolean fileExists(String file) {
+        steps.fileExists file
+    }
+
+    @Override
     FileWrapper[] findFiles(String glob, String excludes = '') {
         steps.findFiles glob: glob, excludes: excludes
     }
@@ -65,6 +70,23 @@ class StepExecutor implements IStepExecutor {
     }
 
     @Override
+    def withCredentials(List bindings, Closure body) {
+        steps.withCredentials(bindings) {
+            body()
+        }
+    }
+
+    @Override
+    def string(String credentialsId, String variable) {
+        return steps.string(credentialsId: credentialsId, variable: variable)
+    }
+
+    @Override
+    def usernamePassword(String credentialsId, String usernameVariable, String passwordVariable) {
+        return steps.usernamePassword(credentialsId: credentialsId, usernameVariable: usernameVariable, passwordVariable: passwordVariable)
+    }
+
+    @Override
     EnvironmentAction env() {
         return steps.env
     }
@@ -72,6 +94,25 @@ class StepExecutor implements IStepExecutor {
     @Override
     void createDir(String path) {
         steps.createDir(path)
+    }
+
+    @Override
+    def dir(String path, Closure body) {
+        steps.dir(path) {
+            body()
+        }
+    }
+
+    @Override
+    void deleteDir() {
+        steps.deleteDir()
+    }
+
+    @Override
+    void deleteDir(String path) {
+        steps.dir(path) {
+            steps.deleteDir()
+        }
     }
 
     @Override

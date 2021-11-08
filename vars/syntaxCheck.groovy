@@ -2,6 +2,7 @@ import hudson.FilePath
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.FileUtils
+import ru.pulsar.jenkins.library.utils.VRunner
 
 def call(JobConfiguration config) {
 
@@ -27,7 +28,8 @@ def call(JobConfiguration config) {
     String outPath = pathToJUnitReport.getParent()
     createDir(outPath)
 
-    String command = 'oscript_modules/bin/vrunner syntax-check --ibconnection "/F./build/ib"'
+    String vrunnerPath = VRunner.getVRunnerPath();
+    String command = "$vrunnerPath syntax-check --ibconnection \"/F./build/ib\""
 
     // Временно убрал передачу параметра.
     // См. https://github.com/vanessa-opensource/vanessa-runner/issues/361
@@ -49,8 +51,12 @@ def call(JobConfiguration config) {
         command += " --mode $checkModes"
     }
 
+    if (!options.exceptionFile.empty && fileExists(options.exceptionFile)) {
+        command += " --exception-file $options.exceptionFile"
+    }
+
     // Запуск синтакс-проверки
-    cmd(command, true)
+    VRunner.exec(command, true)
 
     junit allowEmptyResults: true, testResults: FileUtils.getLocalPath(pathToJUnitReport)
 

@@ -10,18 +10,26 @@ class VersionParser implements Serializable {
     final static VERSION_REGEXP = ~/(?i)<version>(.*)<\/version>/
 
     static String configuration(rootFile = 'src/cf/Configuration.xml') {
+        return extractVersionFromFile(rootFile, VERSION_REGEXP)
+    }
 
-        IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
-
-        def configurationText = steps.readFile(rootFile, 'UTF-8');
-        return version(configurationText, VERSION_REGEXP)
+    static String edt(rootFile = 'src/Configuration/Configuration.mdo') {
+        return extractVersionFromFile(rootFile, VERSION_REGEXP)
     }
 
     static String storage(versionFile = 'src/cf/VERSION') {
+        return extractVersionFromFile(versionFile, VERSION_REGEXP)
+    }
+
+    private static String extractVersionFromFile(String filePath, Pattern regexp) {
         IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
 
-        def storageVersionText = steps.readFile(versionFile, 'UTF-8')
-        return version(storageVersionText, VERSION_REGEXP)
+        if (!steps.fileExists(filePath)) {
+            return ""
+        }
+
+        def configurationText = steps.readFile(filePath, 'UTF-8');
+        return version(configurationText, regexp)
     }
 
     @NonCPS

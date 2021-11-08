@@ -19,6 +19,8 @@ interface IStepExecutor {
 
     String readFile(String file, String encoding)
 
+    boolean fileExists(String file)
+
     void echo(message)
 
     int cmd(String script, boolean returnStatus)
@@ -27,11 +29,23 @@ interface IStepExecutor {
 
     void tool(String toolName)
 
+    def withCredentials(List bindings, Closure body)
+
+    def string(String credentialsId, String variable)
+
+    def usernamePassword(String credentialsId, String usernameVariable, String passwordVariable)
+
     void withSonarQubeEnv(String installationName, Closure body)
 
     EnvironmentAction env()
 
+    def dir(String path, Closure body)
+
     void createDir(String path)
+
+    void deleteDir()
+
+    void deleteDir(String path)
 
     def withEnv(List<String> strings, Closure body)
 

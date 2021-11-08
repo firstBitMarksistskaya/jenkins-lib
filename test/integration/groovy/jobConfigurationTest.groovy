@@ -73,5 +73,6 @@ class jobConfigurationTest {
         def run = rule.buildAndAssertSuccess(workflowJob)
         rule.assertLogContains("v8version='8.3.12.1500'", run)
         rule.assertLogContains("sonarScannerToolName='sonar-scanner'", run)
+        rule.assertLogContains("initMethod=FROM_SOURCE", run)
     }
 }

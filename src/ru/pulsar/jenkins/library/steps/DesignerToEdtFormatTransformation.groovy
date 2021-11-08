@@ -6,7 +6,7 @@ import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.Logger
 
-class EdtTransform implements Serializable {
+class DesignerToEdtFormatTransformation implements Serializable {
 
     public static final String PROJECT_NAME = 'temp'
     public static final String WORKSPACE = 'build/edt-workspace'
@@ -15,7 +15,7 @@ class EdtTransform implements Serializable {
 
     private final JobConfiguration config;
 
-    EdtTransform(JobConfiguration config) {
+    DesignerToEdtFormatTransformation(JobConfiguration config) {
         this.config = config
     }
 
@@ -34,7 +34,7 @@ class EdtTransform implements Serializable {
         def workspaceDir = "$env.WORKSPACE/$WORKSPACE"
         def configurationRoot = new File(env.WORKSPACE, config.srcDir).getAbsolutePath()
 
-        steps.createDir(workspaceDir)
+        steps.deleteDir(workspaceDir)
 
         Logger.println("Конвертация исходников из формата конфигуратора в формат EDT")
 

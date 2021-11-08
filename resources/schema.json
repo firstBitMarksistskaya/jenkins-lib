@@ -8,7 +8,16 @@
     },
     "srcDir" : {
       "type" : "string",
-      "description" : "Путь к корневому каталогу с исходниками конфигурации"
+      "description" : "Путь к корневому каталогу с исходниками конфигурации, в случае хранения исходников в формате EDT, необходимо указать путь к проекту"
+    },
+    "sourceFormat" : {
+      "type" : "string",
+      "description" : "Формат исходников конфигурации",
+      "enum" : [ "edt", "designer" ]
+    },
+    "defaultBranch" : {
+      "type" : "string",
+      "description" : "Имя ветки по умолчанию"
     },
     "secrets" : {
       "type" : "object",
@@ -61,6 +70,11 @@
       "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:InitInfobaseOptions",
       "description" : "Настройки шага инициализации ИБ",
       "properties" : {
+        "initMethod" : {
+          "type" : "string",
+          "description" : "\n    Способ инициализации информационной базы.\n    Поддерживается три варианта:\n        * fromStorage - инициализация информационной базы из хранилища конфигурации;\n        * fromSource - инициализация информационной базы из исходников конфигурации;\n        * defaultBranchFromStorage - инициализация основной ветки из хранилища конфигурации, остальных - из исходников конфигурации.\n    По умолчанию содержит значение \"fromStorage\".",
+          "enum" : [ "fromStorage", "fromSource", "defaultBranchFromStorage" ]
+        },
         "runMigration" : {
           "type" : "boolean",
           "description" : "Запустить миграцию ИБ"
@@ -126,6 +140,10 @@
           "items" : {
             "type" : "string"
           }
+        },
+        "exceptionFile" : {
+          "type" : "string",
+          "description" : "Путь к файлу с указанием пропускаемых ошибок.\n    Формат файла: в каждой строке файла указан текст пропускаемого исключения или его часть\n    Кодировка: UTF-8\n    "
         },
         "vrunnerSettings" : {
           "type" : "string",

@@ -20,6 +20,12 @@ class SyntaxCheckOptions implements Serializable {
     @JsonPropertyDescription("Режимы проверки конфигурации")
     String[] checkModes
 
+    @JsonPropertyDescription("""Путь к файлу с указанием пропускаемых ошибок.
+    Формат файла: в каждой строке файла указан текст пропускаемого исключения или его часть
+    Кодировка: UTF-8
+    """)
+    String exceptionFile = "./tools/syntax-check-exception-file.txt"
+
     @JsonPropertyDescription("""Путь к конфигурационному файлу vanessa-runner.
     По умолчанию содержит значение "./tools/vrunner.json".
     """)
