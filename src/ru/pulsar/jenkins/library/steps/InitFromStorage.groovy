@@ -1,16 +1,22 @@
 package ru.pulsar.jenkins.library.steps
 
-
+import com.cloudbees.groovy.cps.NonCPS
+import org.jenkinsci.plugins.workflow.support.actions.EnvironmentAction
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
+import ru.pulsar.jenkins.library.configuration.Secrets
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.VRunner
 import ru.pulsar.jenkins.library.utils.VersionParser
 
+import static ru.pulsar.jenkins.library.configuration.Secrets.UNKNOWN_ID
+
 class InitFromStorage implements Serializable {
 
-    private final JobConfiguration config;
+    final static REPO_SLUG_REGEXP = ~/(?m)^(?:[^:\/?#\n]+:)?(?:\/+[^\/?#\n]*)?\/?([^?\n]*)/
+
+    private final JobConfiguration config
 
     InitFromStorage(JobConfiguration config) {
         this.config = config
@@ -26,24 +32,43 @@ class InitFromStorage implements Serializable {
             return
         }
 
-        steps.installLocalDependencies();
+        steps.installLocalDependencies()
 
-        def storageVersion = VersionParser.storage()
-        def storageVersionParameter = storageVersion == "" ? "" : "--storage-ver $storageVersion"
+        String storageVersion = VersionParser.storage()
+        String storageVersionParameter = storageVersion == "" ? "" : "--storage-ver $storageVersion"
+
+        EnvironmentAction env = steps.env();
+        String repoSlug = computeRepoSlug(env.GIT_URL)
+
+        Secrets secrets = config.secrets
+
+        String storageCredentials = secrets.storage == UNKNOWN_ID ? repoSlug + "_STORAGE_USER" : secrets.storage
+        String storagePath = secrets.storagePath == UNKNOWN_ID ? repoSlug + "_STORAGE_PATH" : secrets.storagePath
 
         steps.withCredentials([
             steps.usernamePassword(
-                config.secrets.storage,
+                storageCredentials,
                 'STORAGE_USR',
                 'STORAGE_PSW'
             ),
             steps.string(
-                config.secrets.storagePath,
+                storagePath,
                 'STORAGE_PATH'
             )
         ]) {
-            String vrunnerPath = VRunner.getVRunnerPath();
+            String vrunnerPath = VRunner.getVRunnerPath()
             steps.cmd "$vrunnerPath init-dev --storage --storage-name $STORAGE_PATH --storage-user $STORAGE_USR --storage-pwd $STORAGE_PSW $storageVersionParameter --ibconnection \"/F./build/ib\""
         }
+    }
+
+    @NonCPS
+    private static String computeRepoSlug(String text) {
+        def matcher = text =~ REPO_SLUG_REGEXP
+        String repoSlug = matcher != null && matcher.getCount() == 1 ? matcher[0][1] : ""
+        if (repoSlug.endsWith(".git")) {
+            repoSlug = repoSlug[0..-5]
+        }
+        repoSlug = repoSlug.replace('/', '_')
+        return repoSlug
     }
 }
