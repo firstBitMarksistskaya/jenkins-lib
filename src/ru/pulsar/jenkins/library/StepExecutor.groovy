@@ -70,6 +70,23 @@ class StepExecutor implements IStepExecutor {
     }
 
     @Override
+    def withCredentials(List bindings, Closure body) {
+        steps.withCredentials(bindings) {
+            body()
+        }
+    }
+
+    @Override
+    def string(String credentialsId, String variable) {
+        return steps.string(credentialsId: credentialsId, variable: variable)
+    }
+
+    @Override
+    def usernamePassword(String credentialsId, String usernameVariable, String passwordVariable) {
+        return steps.usernamePassword(credentialsId: credentialsId, usernameVariable: usernameVariable, passwordVariable: passwordVariable)
+    }
+
+    @Override
     EnvironmentAction env() {
         return steps.env
     }

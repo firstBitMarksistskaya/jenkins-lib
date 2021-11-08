@@ -29,6 +29,12 @@ interface IStepExecutor {
 
     void tool(String toolName)
 
+    def withCredentials(List bindings, Closure body)
+
+    def string(String credentialsId, String variable)
+
+    def usernamePassword(String credentialsId, String usernameVariable, String passwordVariable)
+
     void withSonarQubeEnv(String installationName, Closure body)
 
     EnvironmentAction env()

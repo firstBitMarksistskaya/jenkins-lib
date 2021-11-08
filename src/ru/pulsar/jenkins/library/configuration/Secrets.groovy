@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyDescription
 @JsonIgnoreProperties(ignoreUnknown = true)
 class Secrets implements Serializable {
 
+    public static final String UNKNOWN_ID = "UNKNOWN_ID"
+
     @JsonPropertyDescription("Путь к хранилищу конфигурации")
     String storagePath
 
