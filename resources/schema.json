@@ -17,7 +17,7 @@
     },
     "defaultBranch" : {
       "type" : "string",
-      "description" : "Имя ветки по умолчанию"
+      "description" : "Имя ветки по умолчанию. Значение по умолчанию - main."
     },
     "secrets" : {
       "type" : "object",
