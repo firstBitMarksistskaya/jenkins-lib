@@ -21,9 +21,9 @@ class SonarQubeOptions implements Serializable {
     String sonarScannerToolName
 
     @JsonPropertyDescription(
-            "Имя общего модуля где храниться версия библиотеки"
+            "Имя общего модуля где хранится версия библиотеки"
     )
-    String sonarScannerPathNameModule
+    String pathNameModule
 
     @Override
     @NonCPS
