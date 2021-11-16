@@ -29,7 +29,8 @@
   "sonarqube": {
     "sonarQubeInstallation": "",
     "useSonarScannerFromPath": true,
-    "sonarScannerToolName": "sonar-scanner"
+    "sonarScannerToolName": "sonar-scanner",
+    "sonarScannerPathNameModule" : "ОбновлениеИнформационнойБазыПеринаПерони"
   },
   "syntaxCheck": {
     "groupErrorsByMetadata": true,

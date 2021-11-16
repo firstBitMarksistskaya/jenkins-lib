@@ -20,6 +20,11 @@ class SonarQubeOptions implements Serializable {
     )
     String sonarScannerToolName
 
+    @JsonPropertyDescription(
+            "Имя общего модуля где храниться версия библиотеки"
+    )
+    String sonarScannerPathNameModule
+
     @Override
     @NonCPS
     String toString() {
@@ -27,6 +32,7 @@ class SonarQubeOptions implements Serializable {
             "useSonarScannerFromPath=" + useSonarScannerFromPath +
             ", sonarScannerToolName='" + sonarScannerToolName + '\'' +
             ", sonarQubeInstallation='" + sonarQubeInstallation + '\'' +
+            ", sonarScannerPathNameModule='" + sonarScannerPathNameModule + '\'' +
             '}';
     }
 }

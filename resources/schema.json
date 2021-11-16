@@ -17,7 +17,7 @@
     },
     "defaultBranch" : {
       "type" : "string",
-      "description" : "Имя ветки по умолчанию"
+      "description" : "Имя ветки по умолчанию. Значение по умолчанию - main."
     },
     "secrets" : {
       "type" : "object",
@@ -118,6 +118,10 @@
         "sonarScannerToolName" : {
           "type" : "string",
           "description" : "Имя настроенной утилиты sonar-scanner.\nПрименяется, если useSonarScannerFromPath установлено в false."
+        },
+        "sonarScannerPathNameModule" : {
+          "type" : "string",
+          "description" : "Имя общего модуля где храниться версия библиотеки"
         }
       }
     },
