@@ -17,16 +17,18 @@ class SonarScanner implements Serializable {
 
         String pathToParent
         String pathToModule
+        String nameOfModule = config.sonarQubeOptions.sonarScannerPathNameModule
 
         if (config.sourceFormat == SourceFormat.EDT) {
             pathToParent = "$config.srcDir/src/Configuration/Configuration.mdo"
-            pathToModule = "$config.srcDir/src/CommonModules/$config.sonarQubeOptions.sonarScannerPathNameModule/Module.bsl"
+            pathToModule = "$config.srcDir/src/CommonModules/$nameOfModule/Module.bsl"
         }
         else {
             pathToParent = "$config.srcDir/Configuration.xml"
+            pathToModule = "$config.srcDir/CommonModules/$nameOfModule/Ext/Module.bsl"
         }
 
-        if (config.sonarQubeOptions.getSonarScannerPathNameModule().isEmpty()) {
+        if (nameOfModule.isEmpty()) {
             this.rootFile = pathToParent
         }
         else {
@@ -67,8 +69,6 @@ class SonarScanner implements Serializable {
             configurationVersion = VersionParser.configuration(rootFile)
         }
 
-        steps.echo(configurationVersion)
-        
         if (configurationVersion) {
             sonarCommand += " -Dsonar.projectVersion=$configurationVersion"
         }
