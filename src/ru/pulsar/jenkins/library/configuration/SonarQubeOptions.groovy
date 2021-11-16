@@ -32,7 +32,7 @@ class SonarQubeOptions implements Serializable {
             "useSonarScannerFromPath=" + useSonarScannerFromPath +
             ", sonarScannerToolName='" + sonarScannerToolName + '\'' +
             ", sonarQubeInstallation='" + sonarQubeInstallation + '\'' +
-            ", sonarScannerPathNameModule='" + sonarScannerPathNameModule + '\'' +
+            ", pathNameModule='" + pathNameModule + '\'' +
             '}';
     }
 }
