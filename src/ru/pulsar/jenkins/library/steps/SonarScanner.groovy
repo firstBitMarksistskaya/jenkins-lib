@@ -17,7 +17,7 @@ class SonarScanner implements Serializable {
 
         String pathToParent
         String pathToModule
-        String nameOfModule = config.sonarQubeOptions.sonarScannerPathNameModule
+        String nameOfModule = config.sonarQubeOptions.nameModule
 
         if (config.sourceFormat == SourceFormat.EDT) {
             pathToParent = "$config.srcDir/src/Configuration/Configuration.mdo"
@@ -60,7 +60,7 @@ class SonarScanner implements Serializable {
         String sonarCommand = "$sonarScannerBinary -Dsonar.branch.name=$env.BRANCH_NAME"
 
         String configurationVersion
-        if (!config.sonarQubeOptions.sonarScannerPathNameModule.isEmpty()){
+        if (!config.sonarQubeOptions.nameModule.isEmpty()){
             configurationVersion = VersionParser.ssl(rootFile)
         }
         else if (config.sourceFormat == SourceFormat.EDT) {
