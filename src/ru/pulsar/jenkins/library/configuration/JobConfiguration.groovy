@@ -78,8 +78,7 @@ class JobConfiguration implements Serializable {
         String branchName = env.BRANCH_NAME;
         def initMethod = initInfobaseOptions.initMethod
 
-        return sourceFormat == SourceFormat.EDT ||
-            (initMethod == InitInfobaseMethod.FROM_SOURCE) ||
+        return (initMethod == InitInfobaseMethod.FROM_SOURCE) ||
             (initMethod == InitInfobaseMethod.DEFAULT_BRANCH_FROM_STORAGE && branchName != defaultBranch)
     }
 }
