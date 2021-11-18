@@ -1,7 +1,6 @@
 package ru.pulsar.jenkins.library.configuration
 
 import com.cloudbees.groovy.cps.NonCPS
-import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
@@ -45,6 +44,10 @@ class JobConfiguration implements Serializable {
     @JsonPropertyDescription("Настройки синтаксического контроля")
     SyntaxCheckOptions syntaxCheckOptions;
 
+    @JsonProperty("smoke")
+    @JsonPropertyDescription("Настройки дымового тестирования")
+    SmokeTestOptions smokeTestOptions;
+
     @JsonProperty("resultsTransform")
     @JsonPropertyDescription("Настройки трансформации результатов анализа")
     ResultsTransformOptions resultsTransformOptions;
@@ -67,6 +70,7 @@ class JobConfiguration implements Serializable {
             ", bddOptions=" + bddOptions +
             ", sonarQubeOptions=" + sonarQubeOptions +
             ", syntaxCheckOptions=" + syntaxCheckOptions +
+            ", smokeTestOptions=" + smokeTestOptions +
             ", resultsTransformOptions=" + resultsTransformOptions +
             ", logosConfig=" + logosConfig +
             '}';

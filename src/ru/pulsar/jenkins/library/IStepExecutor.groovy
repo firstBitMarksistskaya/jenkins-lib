@@ -17,6 +17,8 @@ interface IStepExecutor {
 
     FileWrapper[] findFiles(String glob, String excludes)
 
+    String readFile(String file)
+
     String readFile(String file, String encoding)
 
     boolean fileExists(String file)
@@ -72,6 +74,8 @@ interface IStepExecutor {
     def error(String errorMessage)
 
     def allure(List<String> results)
+
+    def junit(String testResults, boolean allowEmptyResults)
 
     def installLocalDependencies()
 }

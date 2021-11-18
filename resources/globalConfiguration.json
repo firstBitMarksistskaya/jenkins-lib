@@ -50,6 +50,11 @@
     ],
     "vrunnerSettings": "./tools/vrunner.json"
   },
+  "smoke": {
+    "vrunnerSettings": "./tools/vrunner.json",
+    "publishToAllureReport": false,
+    "publishToJUnitReport": true
+  },
   "resultsTransform": {
     "removeSupport": true,
     "supportLevel": 0

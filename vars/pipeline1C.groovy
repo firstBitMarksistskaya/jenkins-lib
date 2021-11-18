@@ -183,6 +183,8 @@ void call() {
                             expression { config.stageFlags.smoke }
                         }
                         steps {
+                            unzipInfobase()
+
                             smoke config
                         }
                     }
