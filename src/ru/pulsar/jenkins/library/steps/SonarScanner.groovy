@@ -14,10 +14,25 @@ class SonarScanner implements Serializable {
 
     SonarScanner(JobConfiguration config) {
         this.config = config
-        if (config.sourceFormat == SourceFormat.EDT){
-            this.rootFile = "$config.srcDir/src/Configuration/Configuration.mdo"
-        } else {
-            this.rootFile = "$config.srcDir/Configuration.xml"
+
+        String pathToParent
+        String pathToModule
+        String nameOfModule = config.sonarQubeOptions.nameModule
+
+        if (config.sourceFormat == SourceFormat.EDT) {
+            pathToParent = "$config.srcDir/src/Configuration/Configuration.mdo"
+            pathToModule = "$config.srcDir/src/CommonModules/$nameOfModule/Module.bsl"
+        }
+        else {
+            pathToParent = "$config.srcDir/Configuration.xml"
+            pathToModule = "$config.srcDir/CommonModules/$nameOfModule/Ext/Module.bsl"
+        }
+
+        if (nameOfModule.isEmpty()) {
+            this.rootFile = pathToParent
+        }
+        else {
+            this.rootFile = pathToModule
         }
     }
 
@@ -45,12 +60,15 @@ class SonarScanner implements Serializable {
         String sonarCommand = "$sonarScannerBinary -Dsonar.branch.name=$env.BRANCH_NAME"
 
         String configurationVersion
-        if (config.sourceFormat == SourceFormat.EDT) {
+        if (!config.sonarQubeOptions.nameModule.isEmpty()){
+            configurationVersion = VersionParser.ssl(rootFile)
+        }
+        else if (config.sourceFormat == SourceFormat.EDT) {
             configurationVersion = VersionParser.edt(rootFile)
         } else {
             configurationVersion = VersionParser.configuration(rootFile)
         }
-        
+
         if (configurationVersion) {
             sonarCommand += " -Dsonar.projectVersion=$configurationVersion"
         }

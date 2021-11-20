@@ -118,6 +118,10 @@
         "sonarScannerToolName" : {
           "type" : "string",
           "description" : "Имя настроенной утилиты sonar-scanner.\nПрименяется, если useSonarScannerFromPath установлено в false."
+        },
+        "nameModule" : {
+          "type" : "string",
+          "description" : "Имя общего модуля где хранится версия библиотеки"
         }
       }
     },
