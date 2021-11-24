@@ -18,7 +18,7 @@ class FileUtils {
             steps.error 'Переменная среды NODE_NAME не задана. Запуск вне node или без agent?'
         }
 
-        if (nodeName == "master") {
+        if (nodeName == "master" || nodeName == "built-in") {
             return new FilePath(new File(path));
         } else {
             return new FilePath(Jenkins.getInstanceOrNull().getComputer(nodeName).getChannel(), path);
