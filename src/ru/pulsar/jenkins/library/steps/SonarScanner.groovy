@@ -49,6 +49,7 @@ class SonarScanner implements Serializable {
         def env = steps.env();
 
         def sonarScannerBinary
+
         steps.echo(config.sonarQubeOptions.useSonarScannerFromPath)
         if (config.sonarQubeOptions.useSonarScannerFromPath) {
             steps.echo("1")
