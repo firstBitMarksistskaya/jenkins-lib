@@ -49,7 +49,7 @@ class SonarScanner implements Serializable {
         def env = steps.env();
 
         def sonarScannerBinary
-
+        steps.echo(config.sonarQubeOptions.useSonarScannerFromPath)
         if (config.sonarQubeOptions.useSonarScannerFromPath) {
             steps.echo("1")
             sonarScannerBinary = "sonar-scanner"
@@ -58,6 +58,7 @@ class SonarScanner implements Serializable {
             String scannerHome = steps.tool(config.sonarQubeOptions.sonarScannerToolName)
             sonarScannerBinary = "$scannerHome/bin/sonar-scanner"
         }
+        steps.echo(sonarScannerBinary)
 
         String sonarCommand = "$sonarScannerBinary -Dsonar.branch.name=$env.BRANCH_NAME"
 
