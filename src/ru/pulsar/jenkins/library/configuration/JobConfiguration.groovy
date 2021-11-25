@@ -56,6 +56,10 @@ class JobConfiguration implements Serializable {
     @JsonPropertyDescription("Конфигурация библиотеки logos. Применяется перед запуском каждой стадии сборки")
     String logosConfig;
 
+    @JsonProperty("stageTimeout")
+    @JsonPropertyDescription("Таймаут для выполнения шагов (в часах)")
+    Integer stageTimeout;
+
     @Override
     @NonCPS
     String toString() {
@@ -73,6 +77,7 @@ class JobConfiguration implements Serializable {
             ", smokeTestOptions=" + smokeTestOptions +
             ", resultsTransformOptions=" + resultsTransformOptions +
             ", logosConfig=" + logosConfig +
+            ", stageTimeout=" + stageTimeout +
             '}';
     }
 

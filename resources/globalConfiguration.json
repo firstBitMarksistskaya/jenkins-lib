@@ -16,6 +16,7 @@
     "edtValidate": false,
     "smoke": false
   },
+  "stageTimeout": 2,
   "initInfobase": {
     "initMethod": "fromStorage",
     "runMigration": true,

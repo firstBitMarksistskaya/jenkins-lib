@@ -19,7 +19,6 @@ void call() {
 
         options {
             buildDiscarder(logRotator(numToKeepStr: '30'))
-            timeout(time: 2, unit: TimeUnit.HOURS)
             timestamps()
         }
 
@@ -28,6 +27,9 @@ void call() {
             stage('pre-stage') {
                 agent {
                     label 'agent'
+                }
+                options {
+                    timeout(time: 1, unit: TimeUnit.HOURS)
                 }
 
                 steps {
@@ -59,22 +61,25 @@ void call() {
                                     expression { config.stageFlags.needInfobase() && config.infobaseFromFiles() && config.sourceFormat == SourceFormat.EDT }
                                 }
                                 steps {
-                                    edtToDesignerFormatTransformation config
+                                    timeout(time: config.stageTimeout, unit: TimeUnit.HOURS) {
+                                        edtToDesignerFormatTransformation config
+                                    }
                                 }
                             }
 
                             stage('Создание ИБ') {
                                 steps {
-                                    createDir('build/out')
+                                    timeout(time: config.stageTimeout, unit: TimeUnit.HOURS) {
+                                        createDir('build/out')
 
-                                    script {
-                                        if (config.infobaseFromFiles()){
-                                            // Создание базы загрузкой из файлов
-                                            initFromFiles config
-                                        }
-                                        else{
-                                            // Создание базы загрузкой конфигурации из хранилища
-                                            initFromStorage config
+                                        script {
+                                            if (config.infobaseFromFiles()) {
+                                                // Создание базы загрузкой из файлов
+                                                initFromFiles config
+                                            } else {
+                                                // Создание базы загрузкой конфигурации из хранилища
+                                                initFromStorage config
+                                            }
                                         }
                                     }
                                 }
@@ -86,16 +91,20 @@ void call() {
                                     expression { config.stageFlags.initSteps }
                                 }
                                 steps {
-                                    // Инициализация и первичная миграция
-                                    initInfobase config
+                                    timeout(time: config.stageTimeout, unit: TimeUnit.HOURS) {
+                                        // Инициализация и первичная миграция
+                                        initInfobase config
+                                    }
                                 }
                             }
 
                             stage('Архивация ИБ') {
                                 steps {
-                                    printLocation()
+                                    timeout(time: config.stageTimeout, unit: TimeUnit.HOURS) {
+                                        printLocation()
 
-                                    zipInfobase()
+                                        zipInfobase()
+                                    }
                                 }
 
                             }
@@ -109,10 +118,12 @@ void call() {
                         }
                         when {
                             beforeAgent true
-                            expression { config.sourceFormat == SourceFormat.DESIGNER && config.stageFlags.edtValidate}
+                            expression { config.sourceFormat == SourceFormat.DESIGNER && config.stageFlags.edtValidate }
                         }
                         steps {
-                            designerToEdtFormatTransformation config
+                            timeout(time: config.stageTimeout, unit: TimeUnit.HOURS) {
+                                designerToEdtFormatTransformation config
+                            }
                         }
                     }
                 }
@@ -131,7 +142,9 @@ void call() {
                                     label 'edt'
                                 }
                                 steps {
-                                    edtValidate config
+                                    timeout(time: config.stageTimeout, unit: TimeUnit.HOURS) {
+                                        edtValidate config
+                                    }
                                 }
                             }
 
@@ -140,7 +153,9 @@ void call() {
                                     label 'oscript'
                                 }
                                 steps {
-                                    transform config
+                                    timeout(time: config.stageTimeout, unit: TimeUnit.HOURS) {
+                                        transform config
+                                    }
                                 }
                             }
                         }
@@ -155,9 +170,11 @@ void call() {
                             expression { config.stageFlags.bdd }
                         }
                         steps {
-                            unzipInfobase()
-                            
-                            bdd config
+                            timeout(time: config.stageTimeout, unit: TimeUnit.HOURS) {
+                                unzipInfobase()
+
+                                bdd config
+                            }
                         }
                     }
 
@@ -170,7 +187,9 @@ void call() {
                             expression { config.stageFlags.syntaxCheck }
                         }
                         steps {
-                            syntaxCheck config
+                            timeout(time: config.stageTimeout, unit: TimeUnit.HOURS) {
+                                syntaxCheck config
+                            }
                         }
                     }
 
@@ -183,9 +202,11 @@ void call() {
                             expression { config.stageFlags.smoke }
                         }
                         steps {
-                            unzipInfobase()
+                            timeout(time: config.stageTimeout, unit: TimeUnit.HOURS) {
+                                unzipInfobase()
 
-                            smoke config
+                                smoke config
+                            }
                         }
                     }
                 }
@@ -200,7 +221,9 @@ void call() {
                     expression { config.stageFlags.sonarqube }
                 }
                 steps {
-                    sonarScanner config
+                    timeout(time: config.stageTimeout, unit: TimeUnit.HOURS) {
+                        sonarScanner config
+                    }
                 }
             }
         }

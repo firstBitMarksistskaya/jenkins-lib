@@ -54,6 +54,8 @@ class ConfigurationReaderTest {
     assertThat(jobConfiguration.getBddOptions().getVrunnerSteps()).contains("vanessa --settings ./tools/vrunner.json");
 
     assertThat(jobConfiguration.getLogosConfig()).isEqualTo("logger.rootLogger=DEBUG");
+
+    assertThat(jobConfiguration.getStageTimeout()).isEqualTo(2);
   }
 
 }

@@ -192,6 +192,10 @@
     "logosConfig" : {
       "type" : "string",
       "description" : "Конфигурация библиотеки logos. Применяется перед запуском каждой стадии сборки"
+    },
+    "stageTimeout" : {
+      "type" : "integer",
+      "description" : "Таймаут для выполнения шагов (в часах)"
     }
   }
 }
