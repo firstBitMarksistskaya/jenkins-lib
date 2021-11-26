@@ -5,6 +5,8 @@ import jenkins.model.Jenkins
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 
+import java.nio.file.Path
+
 class FileUtils {
 
     static FilePath getFilePath(String path) {
@@ -30,6 +32,13 @@ class FileUtils {
 
         def env = steps.env();
 
-        return filePath.getRemote().replaceAll("^$env.WORKSPACE/", "").toString()
+        Path workspacePath = new File(env.WORKSPACE).toPath()
+        Path rawFilePath = new File(filePath.getRemote()).toPath()
+
+        return workspacePath.relativize(rawFilePath)
+            .toString()
+            .replaceAll('\\\\\\\\', '/')
+            .replaceAll('\\\\', '/')
+            .toString()
     }
 }
