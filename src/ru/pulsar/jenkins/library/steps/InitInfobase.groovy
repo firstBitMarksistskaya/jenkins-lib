@@ -58,6 +58,15 @@ class InitInfobase implements Serializable {
                         VRunner.exec("$vrunnerPath ${it} --ibconnection \"/F./build/ib\"")
                     }
                 }
+                if (config.sourceFormat == SourceFormat.EDT) {
+                    if (config.srcExtPath.length != 0) {
+                        config.srcExtPath.each {
+                            Logger.println("Загрузка расширения ${it} в ИБ")
+                            VRunner.exec("$vrunnerPath compileext --inputpath \"build/cfg/ext${it}\" --extensionName --ibconnection \"/F./build/ib\"")
+                        }
+                }
+                
+
             }
         }
 
