@@ -62,7 +62,7 @@ class JobConfiguration implements Serializable {
         return "JobConfiguration{" +
             "v8version='" + v8version + '\'' +
             ", srcDir='" + srcDir + '\'' +
-            ", srcExtDir='" + srcExtDir + '\'' +
+            ", srcExtPath='" + srcExtPath + '\'' +
             ", sourceFormat=" + sourceFormat +
             ", defaultBranch=" + defaultBranch +
             ", stageFlags=" + stageFlags +
