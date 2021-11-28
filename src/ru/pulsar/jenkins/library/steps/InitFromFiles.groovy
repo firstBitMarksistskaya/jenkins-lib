@@ -37,7 +37,7 @@ class InitFromFiles implements Serializable {
             srcDir = "$env.WORKSPACE/$EdtToDesignerFormatTransformation.CONFIGURATION_DIR"
             
             def extPrefix = "$EdtToDesignerFormatTransformation.EXT_PATH_PEFIX"
-            def extSuffix = "$EdtToDesignerFormatTransformation.EXT_PATH_SUFFIX")
+            def extSuffix = "$EdtToDesignerFormatTransformation.EXT_PATH_SUFFIX"
             def configurationZipStash = EdtToDesignerFormatTransformation.CONFIGURATION_ZIP_STASH 
             def configurationZip = EdtToDesignerFormatTransformation.CONFIGURATION_ZIP
 
