@@ -14,7 +14,7 @@ class InitInfobaseOptions implements Serializable {
         * fromSource - инициализация информационной базы из исходников конфигурации;
         * defaultBranchFromStorage - инициализация основной ветки из хранилища конфигурации, остальных - из исходников конфигурации.
     По умолчанию содержит значение "fromStorage".""")
-    InitInfobaseMethod initMethod = InitInfobaseMethod.FROM_SOURCE;
+    InitInfobaseMethod initMethod = InitInfobaseMethod.FROM_STORAGE;
 
     @JsonPropertyDescription("Запустить миграцию ИБ")
     boolean runMigration = true
