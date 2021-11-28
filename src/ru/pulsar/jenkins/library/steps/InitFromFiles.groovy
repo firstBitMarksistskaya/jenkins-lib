@@ -39,10 +39,10 @@ class InitFromFiles implements Serializable {
             def env = steps.env();
             srcDir = "$env.WORKSPACE/$EdtToDesignerFormatTransformation.CONFIGURATION_DIR"
             
-            def extPrefix = "$EdtToDesignerFormatTransformation.EXT_PATH_PEFIX"
+            def extPrefix = "$EdtToDesignerFormatTransformation.EXT_PATH_PREFIX"
             def extSuffix = "$EdtToDesignerFormatTransformation.EXT_PATH_SUFFIX"
-            def configurationZipStash = EdtToDesignerFormatTransformation.CONFIGURATION_ZIP_STASH 
-            def configurationZip = EdtToDesignerFormatTransformation.CONFIGURATION_ZIP
+            def configurationZipStash = "$EdtToDesignerFormatTransformation.CONFIGURATION_ZIP_STASH"
+            def configurationZip = "$EdtToDesignerFormatTransformation.CONFIGURATION_ZIP"
 
             steps.unstash(configurationZipStash)
             steps.unzip(srcDir, configurationZip)
@@ -50,8 +50,9 @@ class InitFromFiles implements Serializable {
             if (config.srcExtDir.length != 0) {
                 config.srcExtDir.each {
                     saveExtDir = srcDir.replace(extPrefix,"$extPrefix/$extSuffix${it}") 
-                    configurationExtZipStash = "${it}_$EdtToDesignerFormatTransformation.$CONFIGURATION_ZIP_STASH"
+                    configurationExtZipStash = "ext_${it}_$configurationZipStash"
                     configurationExtZip = configurationZip.replace(extPrefix,"$extPrefix/$extSuffix${it}")
+                    
                     steps.unstash(configurationExtZipStash)
                     steps.unzip(saveExtDir, configurationExtZip)
                 }
