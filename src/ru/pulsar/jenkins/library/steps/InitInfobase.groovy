@@ -62,7 +62,7 @@ class InitInfobase implements Serializable {
                     if (config.srcExtPath.length != 0) {
                         config.srcExtPath.each {
                             Logger.println("Загрузка расширения ${it} в ИБ")
-                            VRunner.exec("$vrunnerPath compileext --inputpath \"build/cfg/ext${it}\" --extensionName --ibconnection \"/F./build/ib\"")
+                            VRunner.exec("$vrunnerPath compileext --inputpath \"build/ext_${it}/cfg\" --extensionName --ibconnection \"/F./build/ib\"") //todo: добавить префикс/суффикс
                         }
                 }
                 
