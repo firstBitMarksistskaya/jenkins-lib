@@ -61,8 +61,10 @@ class EdtToDesignerFormatTransformation implements Serializable {
         def ringOpts = [Constants.DEFAULT_RING_OPTS]
         steps.withEnv(ringOpts) {
             steps.cmd(ringCommand)
-            srcExtDir.each{
-                
+            steps.zip(CONFIGURATION_DIR, CONFIGURATION_ZIP)
+            steps.stash(CONFIGURATION_ZIP_STASH, CONFIGURATION_ZIP)
+            
+            srcExtDir.each{  
                 workspaceExtDir = workspaceDir.replace(extPrefix,"$extPrefix/$extSuffix${it}")
                 projectExtDir = new File("$env.WORKSPACE/${it}").getCanonicalPath()
                 configurationExtRoot = configurationRoot.replace(extPrefix,"$extPrefix/$extSuffix${it}") 
@@ -79,10 +81,6 @@ class EdtToDesignerFormatTransformation implements Serializable {
                 steps.zip(configurationExtRoot, configurationExtZip)
                 steps.stash("${it}_$CONFIGURATION_ZIP_STASH", configurationExtZip)
             }  
-        }
-        
-        steps.zip(CONFIGURATION_DIR, CONFIGURATION_ZIP)
-        steps.stash(CONFIGURATION_ZIP_STASH, CONFIGURATION_ZIP)
+        }      
     }
-
 }
