@@ -24,7 +24,7 @@ class InitInfobaseOptions implements Serializable {
     vrunner и ее аргументы (например, "vanessa --settings ./tools/vrunner.first.json")
     """)
     String[] additionalInitializationSteps
-    
+
     @Override
     @NonCPS
     String toString() {

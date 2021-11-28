@@ -16,7 +16,6 @@ class EdtToDesignerFormatTransformation implements Serializable {
     public static final String CONFIGURATION_DIR = 'build/cfg'
     public static final String CONFIGURATION_ZIP = 'build/cfg.zip'
     public static final String CONFIGURATION_ZIP_STASH = 'cfg-zip'
-    public static final String CONFIGURATION_ZIP_STASH = 'cfg-zip'
 
     private final JobConfiguration config;
 
@@ -45,7 +44,7 @@ class EdtToDesignerFormatTransformation implements Serializable {
 
         steps.deleteDir(workspaceDir)
         steps.deleteDir(configurationRoot)
-        
+
         def extPrefix = "$EXT_PATH_PEFIX"
         def extSuffix = "$EXT_PATH_SUFFIX"
 

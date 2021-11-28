@@ -30,7 +30,7 @@ class InitFromFiles implements Serializable {
         Logger.println("Распаковка файлов")
 
         String srcDir;
-        String srcExtDir;
+        String saveExtDir;
 
         if (config.sourceFormat == SourceFormat.EDT) {
             def env = steps.env();

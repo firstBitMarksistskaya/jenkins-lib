@@ -44,7 +44,6 @@ class InitInfobase implements Serializable {
             }
 
             steps.catchError {
-
                 if (config.initInfobaseOptions.additionalInitializationSteps.length == 0) {
                     FileWrapper[] files = steps.findFiles("tools/vrunner.init*.json")
                     files = files.sort new OrderBy( { it.name })
@@ -57,7 +56,7 @@ class InitInfobase implements Serializable {
                         Logger.println("Первичная инициализация командой ${it}")
                         VRunner.exec("$vrunnerPath ${it} --ibconnection \"/F./build/ib\"")
                     }
-                }              
+                }
             }
         }
 
