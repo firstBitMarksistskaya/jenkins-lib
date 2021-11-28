@@ -49,8 +49,8 @@ class InitFromFiles implements Serializable {
             
             if (config.srcExtDir.length != 0) {
                 config.srcExtDir.each {
-                    saveExtDir = srcDir.replace(extPrefix,"$extPrefix/$extSuffix${it}")
-                    configurationExtZipStash = configurationZipStash.replace(extPrefix,"$extPrefix/$extSuffix${it}") 
+                    saveExtDir = srcDir.replace(extPrefix,"$extPrefix/$extSuffix${it}") 
+                    configurationExtZipStash = "${it}_$EdtToDesignerFormatTransformation.$CONFIGURATION_ZIP_STASH"
                     configurationExtZip = configurationZip.replace(extPrefix,"$extPrefix/$extSuffix${it}")
                     steps.unstash(configurationExtZipStash)
                     steps.unzip(saveExtDir, configurationExtZip)
