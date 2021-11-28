@@ -30,13 +30,29 @@ class InitFromFiles implements Serializable {
         Logger.println("Распаковка файлов")
 
         String srcDir;
+        String srcExtDir;
 
         if (config.sourceFormat == SourceFormat.EDT) {
             def env = steps.env();
             srcDir = "$env.WORKSPACE/$EdtToDesignerFormatTransformation.CONFIGURATION_DIR"
+            
+            def extPrefix = "$EdtToDesignerFormatTransformation.EXT_PATH_PEFIX"
+            def extSuffix = "$EdtToDesignerFormatTransformation.EXT_PATH_SUFFIX")
+            def configurationZipStash = EdtToDesignerFormatTransformation.CONFIGURATION_ZIP_STASH 
+            def configurationZip = EdtToDesignerFormatTransformation.CONFIGURATION_ZIP
 
-            steps.unstash(EdtToDesignerFormatTransformation.CONFIGURATION_ZIP_STASH)
-            steps.unzip(srcDir, EdtToDesignerFormatTransformation.CONFIGURATION_ZIP)
+            steps.unstash(configurationZipStash)
+            steps.unzip(srcDir, configurationZip)
+            
+            if (config.srcExtDir.length != 0) {
+                config.srcExtDir.each {
+                    def saveExtDir = srcDir.replace(extPrefix,"$extPrefix/$extSuffix${it}")
+                    def configurationExtZipStash = configurationZipStash.replace(extPrefix,"$extPrefix/$extSuffix${it}") 
+                    def configurationExtZip = configurationZip.replace(extPrefix,"$extPrefix/$extSuffix${it}")
+                    steps.unstash(configurationExtZipStash)
+                    steps.unzip(saveExtDir, configurationExtZip)
+                }
+            }
         } else {
             srcDir = config.srcDir;
         }
@@ -45,5 +61,18 @@ class InitFromFiles implements Serializable {
         String vrunnerPath = VRunner.getVRunnerPath();
         def initCommand = "$vrunnerPath init-dev --src $srcDir --ibconnection \"/F./build/ib\""
         VRunner.exec(initCommand)
+
+        if (config.srcExtDir.length != 0) {
+                config.srcExtDir.each {
+                    if (config.sourceFormat == SourceFormat.EDT) {
+                        def inputExtDir = srcDir.replace(extPrefix,"$extPrefix/$extSuffix${it}")                        
+                    }else{
+                        def inputExtDir = "${it}"
+                    }
+                    Logger.println("Загрузка расширения ${it} в ИБ")
+                    VRunner.exec("$vrunnerPath compileext --inputpath \"$inputExtDir\" --extensionName \"${it}\"  --ibconnection \"/F./build/ib\"")
+                }
+            }
+
     }
 }

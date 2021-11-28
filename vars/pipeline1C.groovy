@@ -56,7 +56,7 @@ void call() {
                                 }
                                 when {
                                     beforeAgent true
-                                    expression { config.sourceFormat == SourceFormat.EDT }
+                                    expression { config.stageFlags.needInfobase() && config.infobaseFromFiles() && config.sourceFormat == SourceFormat.EDT }
                                 }
                                 steps {
                                     edtToDesignerFormatTransformation config

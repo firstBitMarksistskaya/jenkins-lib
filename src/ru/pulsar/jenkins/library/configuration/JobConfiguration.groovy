@@ -17,7 +17,7 @@ class JobConfiguration implements Serializable {
     String srcDir
 
     @JsonPropertyDescription("Массив путей к исходникам расширенийв формате EDT, (в формате XML - не работает)")
-    String[] srcExtPath
+    String[] srcExtDir
 
     @JsonPropertyDescription("Формат исходников конфигурации")
     SourceFormat sourceFormat;
@@ -62,7 +62,7 @@ class JobConfiguration implements Serializable {
         return "JobConfiguration{" +
             "v8version='" + v8version + '\'' +
             ", srcDir='" + srcDir + '\'' +
-            ", srcExtPath='" + srcExtPath + '\'' +
+            ", srcExtDir='" + srcExtDir + '\'' +
             ", sourceFormat=" + sourceFormat +
             ", defaultBranch=" + defaultBranch +
             ", stageFlags=" + stageFlags +

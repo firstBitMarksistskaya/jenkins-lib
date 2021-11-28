@@ -10,11 +10,14 @@ import ru.pulsar.jenkins.library.utils.Logger
 
 class EdtToDesignerFormatTransformation implements Serializable {
 
+    public static final String EXT_PATH_PEFIX = 'build'
+    public static final String EXT_PATH_SUFFIX = 'ext_'
     public static final String WORKSPACE = 'build/edt-workspace'
     public static final String CONFIGURATION_DIR = 'build/cfg'
     public static final String CONFIGURATION_ZIP = 'build/cfg.zip'
     public static final String CONFIGURATION_ZIP_STASH = 'cfg-zip'
- 
+    public static final String CONFIGURATION_ZIP_STASH = 'cfg-zip'
+
     private final JobConfiguration config;
 
     EdtToDesignerFormatTransformation(JobConfiguration config) {
@@ -34,7 +37,7 @@ class EdtToDesignerFormatTransformation implements Serializable {
         def env = steps.env();
  
         def srcDir = config.srcDir
-        def srcExtPath = config.srcExtPath
+        def srcExtDir = config.srcExtDir
         def projectDir = new File("$env.WORKSPACE/$srcDir").getCanonicalPath()
         def workspaceDir = "$env.WORKSPACE/$WORKSPACE" 
         def configurationRoot = "$env.WORKSPACE/$CONFIGURATION_DIR"
@@ -43,8 +46,8 @@ class EdtToDesignerFormatTransformation implements Serializable {
         steps.deleteDir(workspaceDir)
         steps.deleteDir(configurationRoot)
         
-        def extPrefix = "build"
-        def extSuffix = "ext_"
+        def extPrefix = "$EXT_PATH_PEFIX"
+        def extSuffix = "$EXT_PATH_SUFFIX"
 
         Logger.println("Конвертация исходников из формата EDT в формат Конфигуратора")
 
@@ -54,7 +57,7 @@ class EdtToDesignerFormatTransformation implements Serializable {
         steps.withEnv(ringOpts) {
             steps.cmd(ringCommand)
 
-            srcExtPath.each{
+            srcExtDir.each{
                 
                 def workspaceExtDir = workspaceDir.replace(extPrefix,"$extPrefix/$extSuffix${it}")
                 def projectExtDir = new File("$env.WORKSPACE/${it}").getCanonicalPath()
