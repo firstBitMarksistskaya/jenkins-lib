@@ -29,10 +29,13 @@ class InitFromFiles implements Serializable {
 
         Logger.println("Распаковка файлов")
 
-        String srcDir;
-        String saveExtDir;
-
+        String srcDir
+                 
         if (config.sourceFormat == SourceFormat.EDT) {
+            String saveExtDir
+            String configurationExtZipStash
+            String configurationExtZip
+            
             def env = steps.env();
             srcDir = "$env.WORKSPACE/$EdtToDesignerFormatTransformation.CONFIGURATION_DIR"
             
@@ -46,9 +49,9 @@ class InitFromFiles implements Serializable {
             
             if (config.srcExtDir.length != 0) {
                 config.srcExtDir.each {
-                    def saveExtDir = srcDir.replace(extPrefix,"$extPrefix/$extSuffix${it}")
-                    def configurationExtZipStash = configurationZipStash.replace(extPrefix,"$extPrefix/$extSuffix${it}") 
-                    def configurationExtZip = configurationZip.replace(extPrefix,"$extPrefix/$extSuffix${it}")
+                    saveExtDir = srcDir.replace(extPrefix,"$extPrefix/$extSuffix${it}")
+                    configurationExtZipStash = configurationZipStash.replace(extPrefix,"$extPrefix/$extSuffix${it}") 
+                    configurationExtZip = configurationZip.replace(extPrefix,"$extPrefix/$extSuffix${it}")
                     steps.unstash(configurationExtZipStash)
                     steps.unzip(saveExtDir, configurationExtZip)
                 }

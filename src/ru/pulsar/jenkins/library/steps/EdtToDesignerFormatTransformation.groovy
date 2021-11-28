@@ -48,6 +48,12 @@ class EdtToDesignerFormatTransformation implements Serializable {
         def extPrefix = "$EXT_PATH_PEFIX"
         def extSuffix = "$EXT_PATH_SUFFIX"
 
+        String workspaceExtDir
+        String projectExtDir
+        String configurationExtRoot
+        String configurationExtZip
+        String ringCommandExt
+
         Logger.println("Конвертация исходников из формата EDT в формат Конфигуратора")
 
         def ringCommand = "ring edt workspace export --workspace-location \"$workspaceDir\" --project \"$projectDir\" --configuration-files \"$configurationRoot\""
@@ -55,15 +61,14 @@ class EdtToDesignerFormatTransformation implements Serializable {
         def ringOpts = [Constants.DEFAULT_RING_OPTS]
         steps.withEnv(ringOpts) {
             steps.cmd(ringCommand)
-
             srcExtDir.each{
                 
-                def workspaceExtDir = workspaceDir.replace(extPrefix,"$extPrefix/$extSuffix${it}")
-                def projectExtDir = new File("$env.WORKSPACE/${it}").getCanonicalPath()
-                def configurationExtRoot = configurationRoot.replace(extPrefix,"$extPrefix/$extSuffix${it}") 
-                def configurationExtZip = configurationZip.replace(extPrefix,"$extPrefix/$extSuffix${it}")
+                workspaceExtDir = workspaceDir.replace(extPrefix,"$extPrefix/$extSuffix${it}")
+                projectExtDir = new File("$env.WORKSPACE/${it}").getCanonicalPath()
+                configurationExtRoot = configurationRoot.replace(extPrefix,"$extPrefix/$extSuffix${it}") 
+                configurationExtZip = configurationZip.replace(extPrefix,"$extPrefix/$extSuffix${it}")
 
-                def ringCommandExt = "ring edt workspace export --workspace-location \"$workspaceExtDir\" --project \"$projectExtDir\" --configuration-files \"$configurationExtRoot\""
+                ringCommandExt = "ring edt workspace export --workspace-location \"$workspaceExtDir\" --project \"$projectExtDir\" --configuration-files \"$configurationExtRoot\""
                 
                 steps.deleteDir(workspaceExtDir)
                 steps.deleteDir(configurationExtRoot)
