@@ -57,7 +57,6 @@ class EdtToDesignerFormatTransformation implements Serializable {
             }  
         }
         
-        for
         steps.zip(CONFIGURATION_DIR, CONFIGURATION_ZIP)
         steps.stash(CONFIGURATION_ZIP_STASH, CONFIGURATION_ZIP)
     }
