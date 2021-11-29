@@ -62,6 +62,10 @@
         "bdd" : {
           "type" : "boolean",
           "description" : "Запуск BDD сценариев включен"
+        },
+        "swagger" : {
+          "type" : "boolean",
+          "description" : "Подготовка Swagger документации"
         }
       }
     },

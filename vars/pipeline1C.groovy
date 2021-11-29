@@ -2,6 +2,7 @@
 import groovy.transform.Field
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.SourceFormat
+import ru.pulsar.jenkins.library.steps.Swagger
 
 import java.util.concurrent.TimeUnit
 
@@ -199,6 +200,22 @@ void call() {
                 }
                 steps {
                     sonarScanner config
+                }
+            }
+
+            stage('Документирование'){
+                parallel {
+                    stage('Swagger') {
+                        agent {
+                            label 'oscript'
+                        }
+                        steps {
+                            script {
+                                def swagger = new Swagger(config)
+                                swagger.run()
+                            }
+                        }
+                    }
                 }
             }
         }

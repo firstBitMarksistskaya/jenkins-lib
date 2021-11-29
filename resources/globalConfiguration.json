@@ -14,7 +14,8 @@
     "bdd": false,
     "syntaxCheck": false,
     "edtValidate": false,
-    "smoke": false
+    "smoke": false,
+    "swagger": false
   },
   "initInfobase": {
     "initMethod": "fromStorage",
