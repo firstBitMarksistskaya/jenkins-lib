@@ -65,9 +65,6 @@ void call() {
 
                             stage('Создание ИБ') {
                                 steps {
-                                    configFileProvider([configFile(fileId: 'NETHASP-FILE', targetLocation: '/opt/1cv8/conf/nethasp.ini')]) {
-                                        sh "chown -R usr1cv8 /opt/1cv8/conf"
-                                        }
                                     createDir('build/out')
 
                                     script {
