@@ -26,7 +26,7 @@ class InitInfobase implements Serializable {
             Logger.println("Init step is disabled")
             return
         }
-
+        
         List<String> logosConfig = ["LOGOS_CONFIG=$config.logosConfig"]
         steps.withEnv(logosConfig) {
 
