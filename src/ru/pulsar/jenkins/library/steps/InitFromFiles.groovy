@@ -28,7 +28,10 @@ class InitFromFiles implements Serializable {
         steps.installLocalDependencies();
 
         Logger.println("Распаковка файлов")
-
+        def extPrefix = "$EdtToDesignerFormatTransformation.EXT_PATH_PREFIX"
+        def extSuffix = "$EdtToDesignerFormatTransformation.EXT_PATH_SUFFIX"
+        def configurationZipStash = "$EdtToDesignerFormatTransformation.CONFIGURATION_ZIP_STASH"
+        def configurationZip = "$EdtToDesignerFormatTransformation.CONFIGURATION_ZIP"        
         String srcDir
                  
         if (config.sourceFormat == SourceFormat.EDT) {
@@ -38,12 +41,6 @@ class InitFromFiles implements Serializable {
             
             def env = steps.env();
             srcDir = "$env.WORKSPACE/$EdtToDesignerFormatTransformation.CONFIGURATION_DIR"
-            
-            def extPrefix = "$EdtToDesignerFormatTransformation.EXT_PATH_PREFIX"
-            def extSuffix = "$EdtToDesignerFormatTransformation.EXT_PATH_SUFFIX"
-            def configurationZipStash = "$EdtToDesignerFormatTransformation.CONFIGURATION_ZIP_STASH"
-            def configurationZip = "$EdtToDesignerFormatTransformation.CONFIGURATION_ZIP"
-
             steps.unstash(configurationZipStash)
             steps.unzip(srcDir, configurationZip)
             
