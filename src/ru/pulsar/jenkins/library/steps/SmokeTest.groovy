@@ -54,19 +54,40 @@ class SmokeTest implements Serializable {
             command += " --xddConfig $xddConfigPath"
         }
 
-        String junitReport = "build/out/jUnit/smoke/smoke.xml"
-        FilePath pathToJUnitReport = FileUtils.getFilePath("$env.WORKSPACE/$junitReport")
-        String junitReportDir = FileUtils.getLocalPath(pathToJUnitReport.getParent())
+        if (options.publishToAllureReport || options.publishToJUnitReport) {
+            
+            command += " --reportsxunit \"%REPORTS%\""
 
-        steps.createDir(junitReportDir)
+            String allureReportCommand = ""
+            if (options.publishToAllureReport) {
 
-        String allureReport = "build/out/allure/smoke/allure.xml"
-        FilePath pathToAllureReport = FileUtils.getFilePath("$env.WORKSPACE/$allureReport")
-        String allureReportDir = FileUtils.getLocalPath(pathToAllureReport.getParent())
+                String allureReport = "build/out/allure/smoke/allure.xml"
+                FilePath pathToAllureReport = FileUtils.getFilePath("$env.WORKSPACE/$allureReport")
+                String allureReportDir = FileUtils.getLocalPath(pathToAllureReport.getParent())
 
-        steps.createDir(allureReportDir)
+                steps.createDir(allureReportDir)
 
-        command += " --reportsxunit \"ГенераторОтчетаJUnitXML{$junitReport};ГенераторОтчетаAllureXMLВерсия2{$allureReport}\""
+                allureReportCommand = "ГенераторОтчетаAllureXMLВерсия2{$allureReport}"
+
+            }
+
+            String junitReportCommand = ""
+            if (options.publishToJUnitReport) {
+
+                String junitReport = "build/out/jUnit/smoke/smoke.xml"
+                FilePath pathToJUnitReport = FileUtils.getFilePath("$env.WORKSPACE/$junitReport")
+                String junitReportDir = FileUtils.getLocalPath(pathToJUnitReport.getParent())
+
+                steps.createDir(junitReportDir)
+
+                junitReportCommand = "ГенераторОтчетаJUnitXML{$junitReport}"
+            }
+            
+            def commandsList = [allureReportCommand, junitReportCommand]
+            commandsList.removeAll([""])
+            def reportsCommand = commandsList.join(";")
+            command.replace("%REPORTS%", reportsCommand)
+        }
         if (steps.isUnix()) {
             command = command.replace(';', '\\;')
         }
