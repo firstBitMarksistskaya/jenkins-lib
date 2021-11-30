@@ -62,13 +62,13 @@ class InitFromFiles implements Serializable {
         String vrunnerPath = VRunner.getVRunnerPath();
         def initCommand = "$vrunnerPath init-dev --src $srcDir --ibconnection \"/F./build/ib\""
         VRunner.exec(initCommand)
-
+        String inputExtDir
         if (config.srcExtDir.length != 0) {
                 config.srcExtDir.each {
                     if (config.sourceFormat == SourceFormat.EDT) {
-                        def inputExtDir = srcDir.replace(extPrefix,"$extPrefix/$extSuffix${it}")                        
+                        inputExtDir = srcDir.replace(extPrefix,"$extPrefix/$extSuffix${it}")                        
                     }else{
-                        def inputExtDir = "${it}"
+                        inputExtDir = "${it}"
                     }
                     Logger.println("Загрузка расширения ${it} в ИБ")
                     VRunner.exec("$vrunnerPath compileext --inputpath \"$inputExtDir\" --extensionName \"${it}\"  --ibconnection \"/F./build/ib\"")
