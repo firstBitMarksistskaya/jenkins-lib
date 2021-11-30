@@ -71,7 +71,7 @@ class InitFromFiles implements Serializable {
                         inputExtDir = "${it}"
                     }
                     Logger.println("Загрузка расширения ${it} в ИБ")
-                    VRunner.exec("$vrunnerPath compileext --inputpath \"$inputExtDir\" --extensionName \"${it}\"  --ibconnection \"/F./build/ib\"")
+                    VRunner.exec("$vrunnerPath compileext --inputpath \"$inputExtDir\" --ibconnection \"/F./build/ib\"")
                 }
             }
 
