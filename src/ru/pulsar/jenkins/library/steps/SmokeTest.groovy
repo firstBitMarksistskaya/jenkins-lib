@@ -12,7 +12,7 @@ class SmokeTest implements Serializable {
 
     public static final String SMOKE_ALLURE_STASH = 'smoke-allure'
 
-    private final JobConfiguration config;
+    private final JobConfiguration config
 
     SmokeTest(JobConfiguration config) {
         this.config = config
@@ -41,7 +41,7 @@ class SmokeTest implements Serializable {
 
         String vrunnerSettings = options.vrunnerSettings
         if (steps.fileExists(vrunnerSettings)) {
-            command += " --settings $vrunnerSettings";
+            command += " --settings $vrunnerSettings"
         }
 
         String xddTestRunnerPath = "./oscript_modules/add/xddTestRunner.epf"

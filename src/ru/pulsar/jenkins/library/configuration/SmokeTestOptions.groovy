@@ -25,10 +25,10 @@ class SmokeTestOptions implements Serializable {
     @Override
     @NonCPS
     String toString() {
-        return "SyntaxCheckOptions{" +
+        return "SmokeTestOptions{" +
             "vrunnerSettings=" + vrunnerSettings +
             ", publishToAllureReport=" + publishToAllureReport +
             ", publishToJUnitReport=" + publishToJUnitReport +
-            '}';
+            '}'
     }
 }
