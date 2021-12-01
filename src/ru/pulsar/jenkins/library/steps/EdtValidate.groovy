@@ -42,7 +42,7 @@ class EdtValidate implements Serializable {
             String projectDir = new File("$env.WORKSPACE/$config.srcDir").getCanonicalPath()
             projectList = "--project-list '$projectDir'"
             config.srcExtDir.each {
-                projectList += " $env.WORKSPACE/$it"
+                projectList += " $env.WORKSPACE/${it}"
             }
         }
 
