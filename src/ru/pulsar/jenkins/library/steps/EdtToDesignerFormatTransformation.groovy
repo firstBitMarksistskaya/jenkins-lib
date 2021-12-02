@@ -66,7 +66,7 @@ class EdtToDesignerFormatTransformation implements Serializable {
             
             srcExtDir.each{  
                 workspaceExtDir = workspaceDir.replace(extPrefix,"$extPrefix/$extSuffix${it}")
-                projectExtDir = new File("$env.WORKSPACE/${it}").getCanonicalPath()
+                projectExtDir = "$env.WORKSPACE/${it}"
                 configurationExtRoot = configurationRoot.replace(extPrefix,"$extPrefix/$extSuffix${it}") 
                 configurationExtZip = configurationZip.replace(extPrefix,"$extPrefix/$extSuffix${it}")
 
