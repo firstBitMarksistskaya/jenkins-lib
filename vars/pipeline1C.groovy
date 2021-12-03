@@ -211,8 +211,7 @@ void call() {
                         }
                         steps {
                             script {
-                                def swagger = new Swagger(config)
-                                swagger.run()
+                                swagger config
                             }
                         }
                     }

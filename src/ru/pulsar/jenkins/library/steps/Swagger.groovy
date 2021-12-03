@@ -4,11 +4,10 @@ import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.Logger
-
-import java.nio.file.Paths
+import ru.pulsar.jenkins.library.utils.OscriptModules
 
 class Swagger {
-    public static final String OUT = 'build/out/'
+    public static final String OUT = 'build/out/swagger'
 
     private final JobConfiguration config;
 
@@ -17,22 +16,22 @@ class Swagger {
     }
 
     def run() {
+        if (!config.stageFlags.swagger) {
+            Logger.println("Swagger documentation is disabled")
+            return
+        }
+
         IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
 
         Logger.printLocation()
 
         def env = steps.env();
 
-        if (!config.stageFlags.swagger) {
-            Logger.println("Swagger documentation is disabled")
-            return
-        }
-
         steps.installLocalDependencies()
 
-        String SRC_PATH =  new File("$env.WORKSPACE/$config.srcDir").getCanonicalPath()
+        String swaggerPath = OscriptModules.getModulePath("swagger");
 
-        steps.cmd("oscript_modules/bin/swagger generate --src-path $SRC_PATH --out $OUT")
+        steps.cmd(swaggerPath + "generate --src-path $config.srcDir --out $OUT")
 
         steps.archiveArtifacts(OUT)
     }
