@@ -25,11 +25,9 @@ class Swagger {
 
         Logger.printLocation()
 
-        def env = steps.env();
-
         steps.installLocalDependencies()
 
-        String swaggerPath = OscriptModules.getModulePath("swagger");
+        String swaggerPath = OscriptModules.getAppExecutable("swagger");
 
         steps.cmd(swaggerPath + " generate --src-path $config.srcDir --out $OUT")
 

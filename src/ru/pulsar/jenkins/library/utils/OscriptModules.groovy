@@ -4,16 +4,16 @@ import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 
 class OscriptModules {
-    static String getModulePath(String moduleName) {
+    static String getAppExecutable(String executableName) {
 
         IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
 
-        String moduleBinary = steps.isUnix() ? moduleName : "$moduleName.bat";
-        String modulePath = "oscript_modules/bin/$moduleBinary";
-        if (!steps.fileExists(modulePath)) {
-            modulePath = moduleBinary;
+        String executableBinary = steps.isUnix() ? executableName : "${executableName}.bat";
+        String executablePath = "oscript_modules/bin/$executableBinary";
+        if (!steps.fileExists(executablePath)) {
+            executablePath = executableBinary;
         }
 
-        return modulePath;
+        return executablePath;
     }
 }
