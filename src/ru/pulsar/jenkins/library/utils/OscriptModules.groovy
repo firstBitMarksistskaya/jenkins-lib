@@ -8,7 +8,7 @@ class OscriptModules {
 
         IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
 
-        String moduleBinary = steps.isUnix() ? moduleName : "$moduleName"".bat";
+        String moduleBinary = steps.isUnix() ? moduleName : "$moduleName.bat";
         String modulePath = "oscript_modules/bin/$moduleBinary";
         if (!steps.fileExists(modulePath)) {
             modulePath = moduleBinary;

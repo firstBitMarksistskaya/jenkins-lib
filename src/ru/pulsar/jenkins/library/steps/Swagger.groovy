@@ -31,7 +31,7 @@ class Swagger {
 
         String swaggerPath = OscriptModules.getModulePath("swagger");
 
-        steps.cmd(swaggerPath + "generate --src-path $config.srcDir --out $OUT")
+        steps.cmd(swaggerPath + " generate --src-path $config.srcDir --out $OUT")
 
         steps.archiveArtifacts(OUT)
     }
