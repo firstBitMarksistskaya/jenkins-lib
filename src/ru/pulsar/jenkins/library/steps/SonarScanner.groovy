@@ -60,12 +60,13 @@ class SonarScanner implements Serializable {
 
         if (config.stageFlags.edtValidate) {
             steps.unstash("edt-generic-issue")
-            sonarCommand += " -Dsonar.externalIssuesReportPaths=$sonarAddComm"
+            sonarCommand += " -Dsonar.externalIssuesReportPaths='$sonarAddComm"
             if (config.sourceFormat == SourceFormat.EDT) {
                 srcExtDir.each{
-                    sonarCommand += sonarAddComm.replace(extPrefix,"$extPrefix/$extSuffix${it}")
+                    sonarCommand += "," + sonarAddComm.replace(extPrefix,"$extPrefix/$extSuffix${it}")
                 }
             }
+            sonarCommand += "'"
         }
 
         def sonarQubeInstallation = config.sonarQubeOptions.sonarQubeInstallation
