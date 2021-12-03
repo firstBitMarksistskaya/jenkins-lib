@@ -7,7 +7,7 @@ import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.OscriptModules
 
 class Swagger {
-    public static final String OUT = 'build/out/swagger'
+    public static final String OUT = 'build/out/swagger/'
 
     private final JobConfiguration config;
 
