@@ -36,6 +36,7 @@ class SonarScanner implements Serializable {
         def sonarScannerBinary
         def extPrefix = "$EdtToDesignerFormatTransformation.EXT_PATH_PREFIX"
         def extSuffix = "$EdtToDesignerFormatTransformation.EXT_PATH_SUFFIX"
+        def srcExtDir = config.srcExtDir
 
         if (config.sonarQubeOptions.useSonarScannerFromPath) {
             sonarScannerBinary = "sonar-scanner"

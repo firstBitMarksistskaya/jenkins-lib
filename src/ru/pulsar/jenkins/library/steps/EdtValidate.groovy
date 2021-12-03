@@ -29,12 +29,15 @@ class EdtValidate implements Serializable {
         }
 
         def env = steps.env();
+        def srcExtDir = config.srcExtDir
         def extPrefix = "$EdtToDesignerFormatTransformation.EXT_PATH_PREFIX"
         def extSuffix = "$EdtToDesignerFormatTransformation.EXT_PATH_SUFFIX"
+        def resStash = "$RESULT_STASH"
+        def resFileExt = "$RESULT_FILE"
 
         String workspaceLocation = "$env.WORKSPACE/$DesignerToEdtFormatTransformation.WORKSPACE"
         String workspaceExtLocation
-        String workspaceExt = "$DesignerToEdtFormatTransformation.WORKSPACE"
+
         String projectList
         String resultFileExt
         
@@ -69,14 +72,14 @@ class EdtValidate implements Serializable {
                 projectList += "--project-list $env.WORKSPACE/${it}" 
                 resultFileExt = resultFile.replace(extPrefix,"$extPrefix/$extSuffix${it}")
                 workspaceExtLocation = workspaceLocation.replace(extPrefix,"$extPrefix/$extSuffix${it}")
-                
+               
                 Logger.println("Выполнение валидации EDT расширения ${it}")    
                 ringCommand = "ring edt workspace validate --workspace-location \"$workspaceExtLocation\" --file \"$resultFileExt\" $projectList"                
                 steps.cmd(ringCommand)
                 
-                steps.archiveArtifacts(workspaceExt.replace(extPrefix,"$extPrefix/$extSuffix${it}") +"/.metadata/.log")
-                steps.archiveArtifacts(RESULT_FILE.replace(extPrefix,"$extPrefix/$extSuffix${it}")
-                steps.stash("$RESULT_STASH${it}", RESULT_FILE.replace(extPrefix,"$extPrefix/$extSuffix${it}")
+                steps.archiveArtifacts("$workspaceExtLocation/.metadata/.log")
+                steps.archiveArtifacts(resFileExt.replace(extPrefix,"$extPrefix/$extSuffix${it}"))
+                steps.stash("$resStash${it}", resFileExt.replace(extPrefix,"$extPrefix/$extSuffix${it}"))
             } 
         }
 
