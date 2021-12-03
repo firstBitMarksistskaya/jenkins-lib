@@ -69,7 +69,7 @@ class EdtValidate implements Serializable {
 
         if (config.sourceFormat == SourceFormat.EDT) {
             srcExtDir.each{ 
-                projectList += "--project-list $env.WORKSPACE/${it}" 
+                projectList = " --project-list $env.WORKSPACE/${it}" 
                 resultFileExt = resultFile.replace(extPrefix,"$extPrefix/$extSuffix${it}")
                 workspaceExtLocation = workspaceLocation.replace(extPrefix,"$extPrefix/$extSuffix${it}")
                
