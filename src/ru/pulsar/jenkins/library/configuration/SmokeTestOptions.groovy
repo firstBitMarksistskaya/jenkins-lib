@@ -12,6 +12,11 @@ class SmokeTestOptions implements Serializable {
     """)
     String vrunnerSettings
 
+    @JsonPropertyDescription("""Путь к конфигурационному файлу для xddTestRunner.
+    По умолчанию содержит значение "./tools/xUnitParams.json".
+    """)
+    String xddConfigPath;
+
     @JsonPropertyDescription("""Выполнять публикацию результатов в отчет Allure.
     По умолчанию выключено.
     """)
@@ -26,7 +31,8 @@ class SmokeTestOptions implements Serializable {
     @NonCPS
     String toString() {
         return "SmokeTestOptions{" +
-            "vrunnerSettings=" + vrunnerSettings +
+            "vrunnerSettings='" + vrunnerSettings + '\'' +
+            ", xddConfigPath='" + xddConfigPath + '\'' +
             ", publishToAllureReport=" + publishToAllureReport +
             ", publishToJUnitReport=" + publishToJUnitReport +
             '}'

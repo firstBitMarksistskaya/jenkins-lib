@@ -49,9 +49,8 @@ class SmokeTest implements Serializable {
             command += " --pathxunit $xddTestRunnerPath"
         }
 
-        String xddConfigPath = "./tools/xUnitParams.json"
-        if (steps.fileExists(xddConfigPath)) {
-            command += " --xddConfig $xddConfigPath"
+        if (steps.fileExists(options.xddConfigPath)) {
+            command += " --xddConfig $options.xddConfigPath"
         }
 
         String junitReport = "build/out/jUnit/smoke/smoke.xml"

@@ -160,6 +160,10 @@
           "type" : "string",
           "description" : "Путь к конфигурационному файлу vanessa-runner.\n    По умолчанию содержит значение \"./tools/vrunner.json\".\n    "
         },
+        "xddConfigPath" : {
+          "type" : "string",
+          "description" : "Путь к конфигурационному файлу для xddTestRunner.\n    По умолчанию содержит значение \"./tools/xUnitParams.json\".\n    "
+        },
         "publishToAllureReport" : {
           "type" : "boolean",
           "description" : "Выполнять публикацию результатов в отчет Allure.\n    По умолчанию выключено.\n    "

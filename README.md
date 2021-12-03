@@ -124,8 +124,12 @@ pipeline1C()
   * Если в настройках шага инициализации не заполнен массив дополнительных шагов миграции (`initInfobase` -> `additionalInitializationSteps`), но в каталоге `tools` присутствуют файлы с именами, удовлетворяющими шаблону `vrunner.init*.json`, то автоматически выполняется запуск `vrunner vanessa` с передачей найденных файлов в качестве значения настроек (параметр `--settings`) в порядке лексикографической сортировки имен файлов.
 * BDD:
   * Если в конфигурационном файле проекта не заполнена настройка `bdd` -> `vrunnerSteps`, то автоматически выполняется запуск `vrunner vanessa --settings tools/vrunner.json`.
-* Дымовые тесты
-  * Если в конфигурационном файле проекта не заполнена настройка `smoke` -> `vrunnerSettings`, то автоматически выполняется запуск `vrunner vanessa --settings tools/vrunner.json`, а на выходе формируется только отчет в формате JUnit
+* Дымовые тесты:
+  * Если в репозитории существует файл `tools/vrunner.json`, то запуск дымовых тестов будет выполняться с передачей файла в параметры запуска `vrunner xunit --settings tools/vrunner.json` (`smoke` -> `vrunnerSettings`).
+  * Если установка локальных зависимостей `opm` установит пакет `add`, то будет использоваться обработка `xddTestRunner.epf` из локальных зависимостей.
+  * Если в репозитории существует файл `tools/xUnitParams.json`, то этот путь к файлу будет передан в параметр запуска `vrunner xunit --xddConfig ./tools/xUnitParams.json` (`smoke -> xUnitParams`).
+  * Если используемый конфигурационный файл (`vrunner.json`) не содержит настройку `testsPath`, то запускается полный комплект дымовых тестов, расположенных в `$addRoot/tests/smoke`.
+  * По умолчанию включено формирование отчета в формате `jUnit` (`smoke` -> `publishToJUnitReport`) и выключено формирование отчета в формате Allure (`smoke` -> `publishToAllureReport`).
 * Синтаксический контроль:
   * Если в репозитории существует файл `tools/vrunner.json`, то синтаксический контроль конфигурации с помощью конфигуратора будет выполняться с передачей файла в параметры запуска `vrunner syntax-check --settings tools/vrunner.json` (`syntaxCheck` -> `vrunnerSettings`).
   * Применяется группировка ошибок по метаданным (`syntaxCheck` -> `groupErrorsByMetadata`).
