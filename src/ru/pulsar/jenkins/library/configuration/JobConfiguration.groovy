@@ -69,7 +69,6 @@ class JobConfiguration implements Serializable {
             ", initInfobaseOptions=" + initInfobaseOptions +
             ", bddOptions=" + bddOptions +
             ", sonarQubeOptions=" + sonarQubeOptions +
-            ", smokeTestOptions=" + smokeTestOptions +
             ", syntaxCheckOptions=" + syntaxCheckOptions +
             ", smokeTestOptions=" + smokeTestOptions +
             ", resultsTransformOptions=" + resultsTransformOptions +
