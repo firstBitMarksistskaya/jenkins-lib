@@ -151,6 +151,25 @@
         }
       }
     },
+    "smoke" : {
+      "type" : "object",
+      "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:SmokeTestOptions",
+      "description" : "Настройки дымового тестирования",
+      "properties" : {
+        "vrunnerSettings" : {
+          "type" : "string",
+          "description" : "Путь к конфигурационному файлу vanessa-runner.\n    По умолчанию содержит значение \"./tools/vrunner.json\".\n    "
+        },
+        "publishToAllureReport" : {
+          "type" : "boolean",
+          "description" : "Выполнять публикацию результатов в отчет Allure.\n    По умолчанию выключено.\n    "
+        },
+        "publishToJUnitReport" : {
+          "type" : "boolean",
+          "description" : "Выполнять публикацию результатов в отчет JUnit.\n    По умолчанию включено.\n    "
+        }
+      }
+    },
     "resultsTransform" : {
       "type" : "object",
       "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:ResultsTransformOptions",

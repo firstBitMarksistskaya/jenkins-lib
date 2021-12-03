@@ -18,5 +18,10 @@
   "resultsTransform": {
     "removeSupport": false
   },
+  "smoke": {
+    "vrunnerSettings": "./tools/vrunner-smoke.json",
+    "publishToAllureReport": false,
+    "publishToJUnitReport": true
+  },
   "logosConfig": "logger.rootLogger=DEBUG"
 }
