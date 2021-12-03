@@ -54,40 +54,37 @@ class SmokeTest implements Serializable {
             command += " --xddConfig $xddConfigPath"
         }
 
-        if (options.publishToAllureReport || options.publishToJUnitReport) {
-            
-            command += " --reportsxunit \"%REPORTS%\""
+        String junitReport = "build/out/jUnit/smoke/smoke.xml"
+        FilePath pathToJUnitReport = FileUtils.getFilePath("$env.WORKSPACE/$junitReport")
+        String junitReportDir = FileUtils.getLocalPath(pathToJUnitReport.getParent())
 
-            String allureReportCommand = ""
-            if (options.publishToAllureReport) {
+        String allureReport = "build/out/allure/smoke/allure.xml"
+        FilePath pathToAllureReport = FileUtils.getFilePath("$env.WORKSPACE/$allureReport")
+        String allureReportDir = FileUtils.getLocalPath(pathToAllureReport.getParent())
 
-                String allureReport = "build/out/allure/smoke/allure.xml"
-                FilePath pathToAllureReport = FileUtils.getFilePath("$env.WORKSPACE/$allureReport")
-                String allureReportDir = FileUtils.getLocalPath(pathToAllureReport.getParent())
+        StringJoiner reportsConfigConstructor = new StringJoiner(";")
 
-                steps.createDir(allureReportDir)
+        if (options.publishToJUnitReport) {
+            steps.createDir(junitReportDir)
 
-                allureReportCommand = "ГенераторОтчетаAllureXMLВерсия2{$allureReport}"
+            String junitReportCommand = "ГенераторОтчетаJUnitXML{$junitReport}"
 
-            }
-
-            String junitReportCommand = ""
-            if (options.publishToJUnitReport) {
-
-                String junitReport = "build/out/jUnit/smoke/smoke.xml"
-                FilePath pathToJUnitReport = FileUtils.getFilePath("$env.WORKSPACE/$junitReport")
-                String junitReportDir = FileUtils.getLocalPath(pathToJUnitReport.getParent())
-
-                steps.createDir(junitReportDir)
-
-                junitReportCommand = "ГенераторОтчетаJUnitXML{$junitReport}"
-            }
-            
-            def commandsList = [allureReportCommand, junitReportCommand]
-            commandsList.removeAll([""])
-            def reportsCommand = commandsList.join(";")
-            command.replace("%REPORTS%", reportsCommand)
+            reportsConfigConstructor.add(junitReportCommand)
         }
+
+        if (options.publishToAllureReport) {
+            steps.createDir(allureReportDir)
+
+            String allureReportCommand = "ГенераторОтчетаAllureXMLВерсия2{$allureReport}"
+
+            reportsConfigConstructor.add(allureReportCommand)
+        }
+
+        if (reportsConfigConstructor.length() > 0) {
+            String reportsConfig = reportsConfigConstructor.toString()
+            command += " --reportsxunit \"$reportsConfig\""
+        }
+
         if (steps.isUnix()) {
             command = command.replace(';', '\\;')
         }
@@ -107,13 +104,15 @@ class SmokeTest implements Serializable {
             VRunner.exec(command)
         }
 
-        steps.stash(SMOKE_ALLURE_STASH, "$allureReportDir/**", true)
+        if (options.publishToAllureReport) {
+            steps.stash(SMOKE_ALLURE_STASH, "$allureReportDir/**", true)
+            steps.archiveArtifacts("$allureReportDir/**")
+        }
 
         if (options.publishToJUnitReport) {
             steps.junit("$junitReportDir/*.xml", true)
+            steps.archiveArtifacts("$junitReportDir/**")
         }
 
-        steps.archiveArtifacts("$junitReportDir/**")
-        steps.archiveArtifacts("$allureReportDir/**")
     }
 }
