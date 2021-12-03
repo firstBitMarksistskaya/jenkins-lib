@@ -28,7 +28,7 @@ class VersionParser implements Serializable {
             return ""
         }
 
-        def configurationText = steps.readFile(filePath);
+        def configurationText = steps.readFile(filePath)
         return version(configurationText, regexp)
     }
 

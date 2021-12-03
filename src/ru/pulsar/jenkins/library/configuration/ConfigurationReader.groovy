@@ -59,6 +59,7 @@ class ConfigurationReader implements Serializable {
             "initInfobaseOptions",
             "bddOptions",
             "sonarQubeOptions",
+            "smokeTestOptions",
             "syntaxCheckOptions",
             "resultsTransformOptions"
         ).toSet()

@@ -12,7 +12,7 @@ class SmokeTest implements Serializable {
 
     public static final String SMOKE_ALLURE_STASH = 'smoke-allure'
 
-    private final JobConfiguration config;
+    private final JobConfiguration config
 
     SmokeTest(JobConfiguration config) {
         this.config = config
@@ -41,7 +41,7 @@ class SmokeTest implements Serializable {
 
         String vrunnerSettings = options.vrunnerSettings
         if (steps.fileExists(vrunnerSettings)) {
-            command += " --settings $vrunnerSettings";
+            command += " --settings $vrunnerSettings"
         }
 
         String xddTestRunnerPath = "./oscript_modules/add/xddTestRunner.epf"
@@ -58,15 +58,33 @@ class SmokeTest implements Serializable {
         FilePath pathToJUnitReport = FileUtils.getFilePath("$env.WORKSPACE/$junitReport")
         String junitReportDir = FileUtils.getLocalPath(pathToJUnitReport.getParent())
 
-        steps.createDir(junitReportDir)
-
         String allureReport = "build/out/allure/smoke/allure.xml"
         FilePath pathToAllureReport = FileUtils.getFilePath("$env.WORKSPACE/$allureReport")
         String allureReportDir = FileUtils.getLocalPath(pathToAllureReport.getParent())
 
-        steps.createDir(allureReportDir)
+        StringJoiner reportsConfigConstructor = new StringJoiner(";")
 
-        command += " --reportsxunit \"ГенераторОтчетаJUnitXML{$junitReport};ГенераторОтчетаAllureXMLВерсия2{$allureReport}\""
+        if (options.publishToJUnitReport) {
+            steps.createDir(junitReportDir)
+
+            String junitReportCommand = "ГенераторОтчетаJUnitXML{$junitReport}"
+
+            reportsConfigConstructor.add(junitReportCommand)
+        }
+
+        if (options.publishToAllureReport) {
+            steps.createDir(allureReportDir)
+
+            String allureReportCommand = "ГенераторОтчетаAllureXMLВерсия2{$allureReport}"
+
+            reportsConfigConstructor.add(allureReportCommand)
+        }
+
+        if (reportsConfigConstructor.length() > 0) {
+            String reportsConfig = reportsConfigConstructor.toString()
+            command += " --reportsxunit \"$reportsConfig\""
+        }
+
         if (steps.isUnix()) {
             command = command.replace(';', '\\;')
         }
@@ -86,13 +104,15 @@ class SmokeTest implements Serializable {
             VRunner.exec(command)
         }
 
-        steps.stash(SMOKE_ALLURE_STASH, "$allureReportDir/**", true)
+        if (options.publishToAllureReport) {
+            steps.stash(SMOKE_ALLURE_STASH, "$allureReportDir/**", true)
+            steps.archiveArtifacts("$allureReportDir/**")
+        }
 
         if (options.publishToJUnitReport) {
             steps.junit("$junitReportDir/*.xml", true)
+            steps.archiveArtifacts("$junitReportDir/**")
         }
 
-        steps.archiveArtifacts("$junitReportDir/**")
-        steps.archiveArtifacts("$allureReportDir/**")
     }
 }
