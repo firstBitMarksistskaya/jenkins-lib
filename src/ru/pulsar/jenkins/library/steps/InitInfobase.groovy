@@ -35,9 +35,17 @@ class InitInfobase implements Serializable {
             if (config.initInfobaseOptions.runMigration) {
                 Logger.println("Запуск миграции ИБ")
 
+                String command = vrunnerPath + ' run --command "ЗапуститьОбновлениеИнформационнойБазы;ЗавершитьРаботуСистемы;" --execute '
+                String executeParameter = '$runnerRoot/epf/ЗакрытьПредприятие.epf'
+                if (steps.isUnix()) {
+                    executeParameter = '\\' + executeParameter
+                }
+                command += executeParameter;
+                command += ' --ibconnection "/F./build/ib"'
+
                 // Запуск миграции
                 steps.catchError {
-                    VRunner.exec(vrunnerPath + ' run --command "ЗапуститьОбновлениеИнформационнойБазы;ЗавершитьРаботуСистемы;" --execute \\$runnerRoot/epf/ЗакрытьПредприятие.epf --ibconnection "/F./build/ib"')
+                    VRunner.exec(command)
                 }
             } else {
                 Logger.println("Шаг миграции ИБ выключен")
