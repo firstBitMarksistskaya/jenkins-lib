@@ -18,8 +18,8 @@ void call() {
         agent none
 
         options {
-            buildDiscarder(logRotator(numToKeepStr: '30'))
-            timeout(time: 3, unit: TimeUnit.HOURS)
+            buildDiscarder(logRotator(numToKeepStr: '7'))
+            timeout(time: 4, unit: TimeUnit.HOURS)
             timestamps()
         }
 
