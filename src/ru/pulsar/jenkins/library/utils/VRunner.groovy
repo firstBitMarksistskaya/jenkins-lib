@@ -31,6 +31,10 @@ class VRunner {
     static boolean configContainsSetting(String configPath, String settingName) {
         IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
 
+        if (!steps.fileExists(configPath)) {
+            return false
+        }
+
         String fileContent = steps.readFile(configPath)
         return fileContent.contains("\"$settingName\"")
     }
