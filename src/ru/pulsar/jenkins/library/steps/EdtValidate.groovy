@@ -72,11 +72,13 @@ class EdtValidate implements Serializable {
                 projectList = " --project-list $env.WORKSPACE/${it}" 
                 resultFileExt = resultFile.replace(extPrefix,"$extPrefix/$extSuffix${it}")
                 workspaceExtLocation = workspaceLocation.replace(extPrefix,"$extPrefix/$extSuffix${it}")
-                 
                 Logger.println("Выполнение валидации EDT расширения ${it}")    
                 ringCommand = "ring edt workspace validate --workspace-location \"$workspaceExtLocation\" --file \"$resultFileExt\" $projectList"                
-                steps.cmd(ringCommand)
-                
+                steps.withEnv(ringOpts) {
+                    steps.catchError {
+                        steps.cmd(ringCommand)
+                    }
+                }           
                 steps.archiveArtifacts(workspaceExtProject.replace(extPrefix,"$extPrefix/$extSuffix${it}") + "/.metadata/.log")
                 steps.archiveArtifacts(resFileExt.replace(extPrefix,"$extPrefix/$extSuffix${it}"))
                 steps.stash("$resStash${it}", resFileExt.replace(extPrefix,"$extPrefix/$extSuffix${it}"))
