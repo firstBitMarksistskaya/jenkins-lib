@@ -32,7 +32,7 @@ class SonarScanner implements Serializable {
         }
 
         def env = steps.env();
-
+        
         def sonarScannerBinary
         def extPrefix = "$EdtToDesignerFormatTransformation.EXT_PATH_PREFIX"
         def extSuffix = "$EdtToDesignerFormatTransformation.EXT_PATH_SUFFIX"
@@ -63,6 +63,7 @@ class SonarScanner implements Serializable {
             sonarCommand += " -Dsonar.externalIssuesReportPaths='$sonarAddComm"
             if (config.sourceFormat == SourceFormat.EDT) {
                 srcExtDir.each{
+                    steps.unstash("edt-generic-issue${it}")
                     sonarCommand += "," + sonarAddComm.replace(extPrefix,"$extPrefix-$extSuffix${it}")
                 }
             }
