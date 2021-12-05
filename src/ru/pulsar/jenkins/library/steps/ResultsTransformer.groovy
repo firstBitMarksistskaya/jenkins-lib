@@ -61,8 +61,8 @@ class ResultsTransformer implements Serializable {
 
             srcExtDir.each{
                 steps.unstash("$edtResStah${it}")
-                edtValidateExtFile = edtValidateFile.replace(extPrefix,"$extPrefix-$extSuffix${it}/")
-                genericIssueExtFile = genericIssueFile.replace(extPrefix,"$extPrefix-$extSuffix${it}/")
+                edtValidateExtFile = edtValidateFile.replace(extPrefix,"$extPrefix-$extSuffix${it}")
+                genericIssueExtFile = genericIssueFile.replace(extPrefix,"$extPrefix-$extSuffix${it}")
                 srcDir = "${it}/src"
                 Logger.println("Конвертация результата валидации расширения ${it} EDT в Generic Issue")
                 steps.cmd("stebi convert $edtValidateExtFile $genericIssueExtFile $srcDir")

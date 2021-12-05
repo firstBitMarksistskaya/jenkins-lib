@@ -79,9 +79,9 @@ class EdtValidate implements Serializable {
                         steps.cmd(ringCommand)
                     }
                 }           
-                steps.archiveArtifacts(workspaceExtProject.replace(extPrefix,"$extPrefix-$extSuffix${it}/") + "/.metadata/.log")
-                steps.archiveArtifacts(resFileExt.replace(extPrefix,"$extPrefix-$extSuffix${it}/"))
-                steps.stash("$resStash${it}", resFileExt.replace(extPrefix,"$extPrefix-$extSuffix${it}/"))
+                steps.archiveArtifacts(workspaceExtProject.replace(extPrefix,"$extPrefix-$extSuffix${it}") + "/.metadata/.log")
+                steps.archiveArtifacts(resFileExt.replace(extPrefix,"$extPrefix-$extSuffix${it}"))
+                steps.stash("$resStash${it}", resFileExt.replace(extPrefix,"$extPrefix-$extSuffix${it}"))
             } 
         }
 

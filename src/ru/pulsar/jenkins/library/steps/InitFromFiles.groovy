@@ -46,9 +46,9 @@ class InitFromFiles implements Serializable {
             
             if (config.srcExtDir.length != 0) {
                 config.srcExtDir.each {
-                    saveExtDir = srcDir.replace(extPrefix,"$extPrefix-$extSuffix${it}/") 
+                    saveExtDir = srcDir.replace(extPrefix,"$extPrefix-$extSuffix${it}") 
                     configurationExtZipStash = "ext_${it}_$configurationZipStash"
-                    configurationExtZip = configurationZip.replace(extPrefix,"$extPrefix-$extSuffix${it}/")
+                    configurationExtZip = configurationZip.replace(extPrefix,"$extPrefix-$extSuffix${it}")
                     
                     steps.unstash(configurationExtZipStash)
                     steps.unzip(saveExtDir, configurationExtZip)
@@ -66,7 +66,7 @@ class InitFromFiles implements Serializable {
         if (config.srcExtDir.length != 0) {
                 config.srcExtDir.each {
                     if (config.sourceFormat == SourceFormat.EDT) {
-                        inputExtDir = srcDir.replace(extPrefix,"$extPrefix-$extSuffix${it}/")                        
+                        inputExtDir = srcDir.replace(extPrefix,"$extPrefix-$extSuffix${it}")                        
                     }else{
                         inputExtDir = "${it}"
                     }
