@@ -72,8 +72,8 @@ class ResultsTransformer implements Serializable {
 //                    steps.cmd("stebi transform --remove_support $supportLevel --src $srcDir $genericIssueExtFile")
 //                }
                 
-                steps.archiveArtifacts(exrResultFile.replace(extPrefix,"$extPrefix-$extSuffix${it}/"))
-                steps.stash("$RESULT_STASH${it}", exrResultFile.replace(extPrefix,"$extPrefix-$extSuffix${it}/"))
+                steps.archiveArtifacts(exrResultFile.replace(extPrefix,"$extPrefix-$extSuffix${it}"))
+                steps.stash("$RESULT_STASH${it}", exrResultFile.replace(extPrefix,"$extPrefix-$extSuffix${it}"))
 
             } 
         }

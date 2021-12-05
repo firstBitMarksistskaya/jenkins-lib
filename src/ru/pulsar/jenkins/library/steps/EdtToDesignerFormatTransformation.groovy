@@ -11,7 +11,7 @@ import ru.pulsar.jenkins.library.utils.Logger
 class EdtToDesignerFormatTransformation implements Serializable {
 
     public static final String EXT_PATH_PREFIX = 'build'
-    public static final String EXT_PATH_SUFFIX = '-ext-'
+    public static final String EXT_PATH_SUFFIX = 'ext-'
     public static final String WORKSPACE = 'build/edt-workspace'
     public static final String CONFIGURATION_DIR = 'build/cfg'
     public static final String CONFIGURATION_ZIP = 'build/cfg.zip'
@@ -79,7 +79,7 @@ class EdtToDesignerFormatTransformation implements Serializable {
                 steps.cmd(ringCommandExt)
                 
                 steps.zip(configurationExtRoot, configurationExtZip)
-                steps.stash("ext_${it}_$CONFIGURATION_ZIP_STASH", configurationExtZip)
+                steps.stash("$extSuffix${it}_$CONFIGURATION_ZIP_STASH", configurationExtZip)
             }  
         }      
     }

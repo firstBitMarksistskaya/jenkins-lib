@@ -63,7 +63,7 @@ class SonarScanner implements Serializable {
             sonarCommand += " -Dsonar.externalIssuesReportPaths='$sonarAddComm"
             if (config.sourceFormat == SourceFormat.EDT) {
                 srcExtDir.each{
-                    sonarCommand += "," + sonarAddComm.replace(extPrefix,"$extPrefix/$extSuffix${it}")
+                    sonarCommand += "," + sonarAddComm.replace(extPrefix,"$extPrefix-$extSuffix${it}")
                 }
             }
             sonarCommand += "'"
