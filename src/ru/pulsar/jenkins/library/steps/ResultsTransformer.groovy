@@ -61,19 +61,19 @@ class ResultsTransformer implements Serializable {
 
             srcExtDir.each{
                 steps.unstash("$edtResStah${it}")
-                edtValidateExtFile = edtValidateFile.replace(extPrefix,"$extPrefix/$extSuffix${it}")
-                genericIssueExtFile = genericIssueFile.replace(extPrefix,"$extPrefix/$extSuffix${it}")
+                edtValidateExtFile = edtValidateFile.replace(extPrefix,"$extPrefix-$extSuffix${it}/")
+                genericIssueExtFile = genericIssueFile.replace(extPrefix,"$extPrefix-$extSuffix${it}/")
                 srcDir = "${it}/src"
                 Logger.println("Конвертация результата валидации расширения ${it} EDT в Generic Issue")
                 steps.cmd("stebi convert $edtValidateExtFile $genericIssueExtFile $srcDir")
 
-                if (config.resultsTransformOptions.removeSupport) {
-                    def supportLevel = config.resultsTransformOptions.supportLevel
-                    steps.cmd("stebi transform --remove_support $supportLevel --src $srcDir $genericIssueExtFile")
-                }
+//               if (config.resultsTransformOptions.removeSupport) {
+//                  def supportLevel = config.resultsTransformOptions.supportLevel
+//                    steps.cmd("stebi transform --remove_support $supportLevel --src $srcDir $genericIssueExtFile")
+//                }
                 
-                steps.archiveArtifacts(exrResultFile.replace(extPrefix,"$extPrefix/$extSuffix${it}"))
-                steps.stash("$RESULT_STASH${it}", exrResultFile.replace(extPrefix,"$extPrefix/$extSuffix${it}"))
+                steps.archiveArtifacts(exrResultFile.replace(extPrefix,"$extPrefix-$extSuffix${it}/"))
+                steps.stash("$RESULT_STASH${it}", exrResultFile.replace(extPrefix,"$extPrefix-$extSuffix${it}/"))
 
             } 
         }

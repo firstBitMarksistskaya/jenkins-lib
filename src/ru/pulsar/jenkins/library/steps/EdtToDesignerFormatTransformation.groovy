@@ -11,7 +11,7 @@ import ru.pulsar.jenkins.library.utils.Logger
 class EdtToDesignerFormatTransformation implements Serializable {
 
     public static final String EXT_PATH_PREFIX = 'build'
-    public static final String EXT_PATH_SUFFIX = 'ext_'
+    public static final String EXT_PATH_SUFFIX = '-ext-'
     public static final String WORKSPACE = 'build/edt-workspace'
     public static final String CONFIGURATION_DIR = 'build/cfg'
     public static final String CONFIGURATION_ZIP = 'build/cfg.zip'
@@ -65,10 +65,10 @@ class EdtToDesignerFormatTransformation implements Serializable {
             steps.stash(CONFIGURATION_ZIP_STASH, CONFIGURATION_ZIP)
             
             srcExtDir.each{  
-                workspaceExtDir = workspaceDir.replace(extPrefix,"$extPrefix/$extSuffix${it}")
+                workspaceExtDir = workspaceDir.replace(extPrefix,"$extPrefix-$extSuffix${it}/")
                 projectExtDir = "$env.WORKSPACE/${it}"
-                configurationExtRoot = configurationRoot.replace(extPrefix,"$extPrefix/$extSuffix${it}") 
-                configurationExtZip = configurationZip.replace(extPrefix,"$extPrefix/$extSuffix${it}")
+                configurationExtRoot = configurationRoot.replace(extPrefix,"$extPrefix-$extSuffix${it}/") 
+                configurationExtZip = configurationZip.replace(extPrefix,"$extPrefix-$extSuffix${it}/")
 
                 ringCommandExt = "ring edt workspace export --workspace-location \"$workspaceExtDir\" --project \"$projectExtDir\" --configuration-files \"$configurationExtRoot\""
                 
