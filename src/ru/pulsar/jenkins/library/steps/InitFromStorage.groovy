@@ -1,11 +1,13 @@
 package ru.pulsar.jenkins.library.steps
 
 import com.cloudbees.groovy.cps.NonCPS
+import hudson.FilePath
 import org.jenkinsci.plugins.workflow.support.actions.EnvironmentAction
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.Secrets
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
+import ru.pulsar.jenkins.library.utils.FileUtils
 import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.VRunner
 import ru.pulsar.jenkins.library.utils.VersionParser
@@ -15,6 +17,7 @@ import static ru.pulsar.jenkins.library.configuration.Secrets.UNKNOWN_ID
 class InitFromStorage implements Serializable {
 
     final static REPO_SLUG_REGEXP = ~/(?m)^(?:[^:\/?#\n]+:)?(?:\/+[^\/?#\n]*)?\/?([^?\n]*)/
+    final static PRELOAD_DT_LOCAL_PATH = "build/out/preload.dt"
 
     private final JobConfiguration config
 
@@ -34,10 +37,12 @@ class InitFromStorage implements Serializable {
 
         steps.installLocalDependencies()
 
-        String storageVersion = VersionParser.storage()
+        steps.createDir('build/out')
+
+        String storageVersion = VersionParser.storage(config.getSrcDir())
         String storageVersionParameter = storageVersion == "" ? "" : "--storage-ver $storageVersion"
 
-        EnvironmentAction env = steps.env();
+        EnvironmentAction env = steps.env()
         String repoSlug = computeRepoSlug(env.GIT_URL)
 
         Secrets secrets = config.secrets
@@ -57,6 +62,17 @@ class InitFromStorage implements Serializable {
             )
         ]) {
             String vrunnerPath = VRunner.getVRunnerPath()
+
+            String preloadDTURL = config.initInfobaseOptions.getPreloadDTURL()
+            if (!preloadDTURL.isEmpty()) {
+
+                FilePath localPathToPreloadDT = FileUtils.getFilePath("$env.WORKSPACE/$PRELOAD_DT_LOCAL_PATH")
+                Logger.println("Скачивание DT в $localPathToPreloadDT")
+                localPathToPreloadDT.copyFrom(new URL("$preloadDTURL"))
+
+                Logger.println("Загрузка DT")
+                VRunner.exec "$vrunnerPath init-dev --dt $localPathToPreloadDT"
+            }
             VRunner.exec "$vrunnerPath init-dev --storage $storageVersionParameter --ibconnection \"/F./build/ib\""
         }
     }

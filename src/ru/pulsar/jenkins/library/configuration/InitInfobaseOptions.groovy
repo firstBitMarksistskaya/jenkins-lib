@@ -8,7 +8,12 @@ import com.fasterxml.jackson.annotation.JsonPropertyDescription
 class InitInfobaseOptions implements Serializable {
 
     @JsonPropertyDescription("""
-    Способ инициализации информационной базы.
+    Путь к выгрузке информационной базы в формате DT, которая должна быть загружена в самом начале инициализации.
+    По умолчанию не заполнено""")
+    String preloadDTURL = "";
+
+    @JsonPropertyDescription("""
+    Способ инициализации конфигурации информационной базы.
     Поддерживается три варианта:
         * fromStorage - инициализация информационной базы из хранилища конфигурации;
         * fromSource - инициализация информационной базы из исходников конфигурации;
@@ -29,6 +34,7 @@ class InitInfobaseOptions implements Serializable {
     @NonCPS
     String toString() {
         return "InitInfobaseOptions{" +
+            "preloadDTURL=" + preloadDTURL +
             "initMethod=" + initMethod +
             ", runMigration=" + runMigration +
             ", additionalInitializationSteps=" + additionalInitializationSteps +

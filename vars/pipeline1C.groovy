@@ -65,7 +65,6 @@ void call() {
 
                             stage('Создание ИБ') {
                                 steps {
-                                    createDir('build/out')
 
                                     script {
                                         if (config.infobaseFromFiles()){
