@@ -73,7 +73,7 @@ class ResultsTransformer implements Serializable {
 //                }
                 
                 steps.archiveArtifacts(exrResultFile.replace(extPrefix,"$extPrefix-$extSuffix${it}"))
-                steps.stash("$RESULT_STASH${it}", exrResultFile.replace(extPrefix,"$extPrefix-$extSuffix${it}"))
+                steps.stash("$RESULT_STASH-${it}", exrResultFile.replace(extPrefix,"$extPrefix-$extSuffix${it}"))
 
             } 
         }
