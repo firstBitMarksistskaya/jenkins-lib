@@ -70,6 +70,7 @@ class InitFromStorage implements Serializable {
             String vrunnerPath = VRunner.getVRunnerPath()
 
             String preloadDTURL = config.initInfobaseOptions.getPreloadDTURL()
+            String initUpdate = "init"
             if (!preloadDTURL.isEmpty()) {
 
                 FilePath localPathToPreloadDT = FileUtils.getFilePath("$env.WORKSPACE/$PRELOAD_DT_LOCAL_PATH")
@@ -78,8 +79,9 @@ class InitFromStorage implements Serializable {
 
                 Logger.println("Загрузка DT")
                 VRunner.exec "$vrunnerPath init-dev --dt $localPathToPreloadDT"
+                initUpdate = "update"
             }
-            VRunner.exec "$vrunnerPath init-dev --storage $storageVersionParameter --ibconnection \"/F./build/ib\""
+            VRunner.exec "$vrunnerPath $initUpdate-dev --storage $storageVersionParameter --ibconnection \"/F./build/ib\""
         }
     }
 
