@@ -6,6 +6,9 @@
   "stages": {
     "syntaxCheck": true
   },
+  "timeout": {
+    "zipInfoBase": 123
+  },
   "initInfobase": {
     "runMigration": false,
     "additionalInitializationSteps": [

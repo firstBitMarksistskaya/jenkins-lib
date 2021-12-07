@@ -56,6 +56,7 @@ class ConfigurationReader implements Serializable {
         def nonMergeableSettings = Arrays.asList(
             "secrets",
             "stageFlags",
+            "timeoutOptions",
             "initInfobaseOptions",
             "bddOptions",
             "sonarQubeOptions",

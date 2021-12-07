@@ -61,7 +61,7 @@ void call() {
                                     expression { config.stageFlags.needInfobase() && config.infobaseFromFiles() && config.sourceFormat == SourceFormat.EDT }
                                 }
                                 steps {
-                                    timeout(time: config.stageTimeout, unit: TimeUnit.HOURS) {
+                                    timeout(time: config.timeoutOptions.edtToDesignerFormatTransformation, unit: TimeUnit.MINUTES) {
                                         edtToDesignerFormatTransformation config
                                     }
                                 }
@@ -69,7 +69,7 @@ void call() {
 
                             stage('Создание ИБ') {
                                 steps {
-                                    timeout(time: config.stageTimeout, unit: TimeUnit.HOURS) {
+                                    timeout(time: config.timeoutOptions.createInfoBase, unit: TimeUnit.MINUTES) {
                                         createDir('build/out')
 
                                         script {
@@ -91,7 +91,7 @@ void call() {
                                     expression { config.stageFlags.initSteps }
                                 }
                                 steps {
-                                    timeout(time: config.stageTimeout, unit: TimeUnit.HOURS) {
+                                    timeout(time: config.timeoutOptions.initInfoBase, unit: TimeUnit.MINUTES) {
                                         // Инициализация и первичная миграция
                                         initInfobase config
                                     }
@@ -100,7 +100,7 @@ void call() {
 
                             stage('Архивация ИБ') {
                                 steps {
-                                    timeout(time: config.stageTimeout, unit: TimeUnit.HOURS) {
+                                    timeout(time: config.timeoutOptions.zipInfoBase, unit: TimeUnit.MINUTES) {
                                         printLocation()
 
                                         zipInfobase()
@@ -121,7 +121,7 @@ void call() {
                             expression { config.sourceFormat == SourceFormat.DESIGNER && config.stageFlags.edtValidate }
                         }
                         steps {
-                            timeout(time: config.stageTimeout, unit: TimeUnit.HOURS) {
+                            timeout(time: config.timeoutOptions.designerToEdtFormatTransformation, unit: TimeUnit.MINUTES) {
                                 designerToEdtFormatTransformation config
                             }
                         }
@@ -142,7 +142,7 @@ void call() {
                                     label 'edt'
                                 }
                                 steps {
-                                    timeout(time: config.stageTimeout, unit: TimeUnit.HOURS) {
+                                    timeout(time: config.timeoutOptions.edtValidate, unit: TimeUnit.MINUTES) {
                                         edtValidate config
                                     }
                                 }
@@ -153,7 +153,7 @@ void call() {
                                     label 'oscript'
                                 }
                                 steps {
-                                    timeout(time: config.stageTimeout, unit: TimeUnit.HOURS) {
+                                    timeout(time: config.timeoutOptions.resultTransformation, unit: TimeUnit.MINUTES) {
                                         transform config
                                     }
                                 }
@@ -170,7 +170,7 @@ void call() {
                             expression { config.stageFlags.bdd }
                         }
                         steps {
-                            timeout(time: config.stageTimeout, unit: TimeUnit.HOURS) {
+                            timeout(time: config.timeoutOptions.bdd, unit: TimeUnit.MINUTES) {
                                 unzipInfobase()
 
                                 bdd config
@@ -187,7 +187,7 @@ void call() {
                             expression { config.stageFlags.syntaxCheck }
                         }
                         steps {
-                            timeout(time: config.stageTimeout, unit: TimeUnit.HOURS) {
+                            timeout(time: config.timeoutOptions.syntaxCheck, unit: TimeUnit.MINUTES) {
                                 syntaxCheck config
                             }
                         }
@@ -202,7 +202,7 @@ void call() {
                             expression { config.stageFlags.smoke }
                         }
                         steps {
-                            timeout(time: config.stageTimeout, unit: TimeUnit.HOURS) {
+                            timeout(time: config.timeoutOptions.smoke, unit: TimeUnit.MINUTES) {
                                 unzipInfobase()
 
                                 smoke config
@@ -221,7 +221,7 @@ void call() {
                     expression { config.stageFlags.sonarqube }
                 }
                 steps {
-                    timeout(time: config.stageTimeout, unit: TimeUnit.HOURS) {
+                    timeout(time: config.timeoutOptions.sonarqube, unit: TimeUnit.MINUTES) {
                         sonarScanner config
                     }
                 }

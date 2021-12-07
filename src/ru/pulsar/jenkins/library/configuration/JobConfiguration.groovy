@@ -22,6 +22,10 @@ class JobConfiguration implements Serializable {
     @JsonPropertyDescription("Включение этапов сборок")
     StageFlags stageFlags;
 
+    @JsonProperty("timeout")
+    @JsonPropertyDescription("Настройка таймаутов для шагов")
+    TimeoutOptions timeoutOptions;
+
     @JsonPropertyDescription("Имя ветки по умолчанию. Значение по умолчанию - main.")
     String defaultBranch
 
@@ -56,10 +60,6 @@ class JobConfiguration implements Serializable {
     @JsonPropertyDescription("Конфигурация библиотеки logos. Применяется перед запуском каждой стадии сборки")
     String logosConfig;
 
-    @JsonProperty("stageTimeout")
-    @JsonPropertyDescription("Таймаут для выполнения шагов (в часах)")
-    Integer stageTimeout;
-
     @Override
     @NonCPS
     String toString() {
@@ -67,8 +67,9 @@ class JobConfiguration implements Serializable {
             "v8version='" + v8version + '\'' +
             ", srcDir='" + srcDir + '\'' +
             ", sourceFormat=" + sourceFormat +
-            ", defaultBranch=" + defaultBranch +
             ", stageFlags=" + stageFlags +
+            ", timeoutOptions=" + timeoutOptions +
+            ", defaultBranch='" + defaultBranch + '\'' +
             ", secrets=" + secrets +
             ", initInfobaseOptions=" + initInfobaseOptions +
             ", bddOptions=" + bddOptions +
@@ -76,12 +77,11 @@ class JobConfiguration implements Serializable {
             ", syntaxCheckOptions=" + syntaxCheckOptions +
             ", smokeTestOptions=" + smokeTestOptions +
             ", resultsTransformOptions=" + resultsTransformOptions +
-            ", logosConfig=" + logosConfig +
-            ", stageTimeout=" + stageTimeout +
+            ", logosConfig='" + logosConfig + '\'' +
             '}';
     }
 
-    boolean infobaseFromFiles(){
+    boolean infobaseFromFiles() {
         IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
         def env = steps.env();
         String branchName = env.BRANCH_NAME;

@@ -55,7 +55,8 @@ class ConfigurationReaderTest {
 
     assertThat(jobConfiguration.getLogosConfig()).isEqualTo("logger.rootLogger=DEBUG");
 
-    assertThat(jobConfiguration.getStageTimeout()).isEqualTo(2);
+    assertThat(jobConfiguration.getTimeoutOptions().getBdd()).isEqualTo(120);
+    assertThat(jobConfiguration.getTimeoutOptions().getZipInfoBase()).isEqualTo(123);
   }
 
 }
