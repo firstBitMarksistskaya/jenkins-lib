@@ -26,11 +26,15 @@
       "properties" : {
         "storagePath" : {
           "type" : "string",
-          "description" : "Путь к хранилищу конфигурации"
+          "description" : "Ид секрета Jenkins, хранящего путь к хранилищу конфигурации"
         },
         "storage" : {
           "type" : "string",
-          "description" : "Данные авторизации в хранилище конфигурации"
+          "description" : "Ид секрета Jenkins, хранящего логин и пароль для хранилища конфигурации"
+        },
+        "infobaseCredentials" : {
+          "type" : "string",
+          "description" : "Ид секрета Jenkins, хранящего логин и пароль пользователя ИБ"
         }
       }
     },

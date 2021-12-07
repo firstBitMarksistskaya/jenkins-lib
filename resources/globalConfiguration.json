@@ -6,7 +6,8 @@
   "defaultBranch": "main",
   "secrets": {
     "storagePath": "UNKNOWN_ID",
-    "storage": "UNKNOWN_ID"
+    "storage": "UNKNOWN_ID",
+    "infobaseCredentials": "UNKNOWN_ID"
   },
   "stages": {
     "initSteps": false,

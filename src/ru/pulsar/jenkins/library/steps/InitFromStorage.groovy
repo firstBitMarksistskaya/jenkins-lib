@@ -49,6 +49,7 @@ class InitFromStorage implements Serializable {
 
         String storageCredentials = secrets.storage == UNKNOWN_ID ? repoSlug + "_STORAGE_USER" : secrets.storage
         String storagePath = secrets.storagePath == UNKNOWN_ID ? repoSlug + "_STORAGE_PATH" : secrets.storagePath
+        String infobaseCredentials = secrets.infobaseCredentials == UNKNOWN_ID ? repoSlug + "_IB_CREDENTIALS" : secrets.infobaseCredentials
 
         steps.withCredentials([
             steps.usernamePassword(
@@ -59,6 +60,11 @@ class InitFromStorage implements Serializable {
             steps.string(
                 storagePath,
                 'RUNNER_STORAGE_NAME'
+            ),
+            steps.usernamePassword(
+                infobaseCredentials,
+                'RUNNER_DBUSER',
+                'RUNNER_DBPWD'
             )
         ]) {
             String vrunnerPath = VRunner.getVRunnerPath()

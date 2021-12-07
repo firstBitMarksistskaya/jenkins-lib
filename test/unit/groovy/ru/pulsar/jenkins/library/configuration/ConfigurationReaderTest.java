@@ -37,6 +37,7 @@ class ConfigurationReaderTest {
     assertThat(jobConfiguration.getSecrets())
       .hasFieldOrPropertyWithValue("storage", "1234")
       .hasFieldOrPropertyWithValue("storagePath", "UNKNOWN_ID")
+      .hasFieldOrPropertyWithValue("infobaseCredentials", "UNKNOWN_ID")
     ;
 
     assertThat(jobConfiguration.getSyntaxCheckOptions().getCheckModes()).hasSize(1);
