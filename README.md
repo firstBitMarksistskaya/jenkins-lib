@@ -96,6 +96,12 @@ pipeline1C()
 }
 ```
 
+## Управление лицензиями в Docker Swarm mode
+
+Для того, чтобы динамически создаваемые в Swarm mode агенты могли получать лицензии от вашего сервера лицензирования 1С необходимо:
+- создать docker config из вашего файла nethasp.ini командой `docker config create nethasp.ini ./nethasp.ini`
+- в Jenkins, в настройках Docker Agent templates у соответствующих агентов в параметре Configs указать `nethasp.ini:/opt/1cv8/current/conf/nethasp.ini`  
+
 ## Параметры по умолчанию
 
 В библиотеке применяется принцип "соглашения по конфигурации" (convention over configuration): конфигурационный файл
