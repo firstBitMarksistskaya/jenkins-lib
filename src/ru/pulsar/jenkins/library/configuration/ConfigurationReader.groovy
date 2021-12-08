@@ -57,7 +57,7 @@ class ConfigurationReader implements Serializable {
             "secrets",
             "stageFlags",
             "timeoutOptions",
-            "initInfobaseOptions",
+            "initInfoBaseOptions",
             "bddOptions",
             "sonarQubeOptions",
             "smokeTestOptions",
@@ -66,7 +66,7 @@ class ConfigurationReader implements Serializable {
         ).toSet()
 
         mergeObjects(baseConfiguration, configurationToMerge, nonMergeableSettings)
-        mergeInitInfobaseOptions(baseConfiguration.initInfobaseOptions, configurationToMerge.initInfobaseOptions);
+        mergeInitInfoBaseOptions(baseConfiguration.initInfoBaseOptions, configurationToMerge.initInfoBaseOptions);
         mergeBddOptions(baseConfiguration.bddOptions, configurationToMerge.bddOptions);
 
         return baseConfiguration;
@@ -93,7 +93,7 @@ class ConfigurationReader implements Serializable {
     }
 
     @NonCPS
-    private static void mergeInitInfobaseOptions(InitInfobaseOptions baseObject, InitInfobaseOptions objectToMerge) {
+    private static void mergeInitInfoBaseOptions(InitInfoBaseOptions baseObject, InitInfoBaseOptions objectToMerge) {
         if (objectToMerge == null || objectToMerge.additionalInitializationSteps == null) {
             return
         }

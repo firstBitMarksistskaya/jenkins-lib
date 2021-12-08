@@ -37,7 +37,7 @@ class StageFlags implements Serializable {
             '}';
     }
 
-    boolean needInfobase() {
+    boolean needInfoBase() {
         return smoke || syntaxCheck || initSteps || bdd
     }
 }

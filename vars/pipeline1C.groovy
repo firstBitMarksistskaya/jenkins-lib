@@ -48,7 +48,7 @@ void call() {
                         }
                         when {
                             beforeAgent true
-                            expression { config.stageFlags.needInfobase() }
+                            expression { config.stageFlags.needInfoBase() }
                         }
 
                         stages {
@@ -58,7 +58,7 @@ void call() {
                                 }
                                 when {
                                     beforeAgent true
-                                    expression { config.stageFlags.needInfobase() && config.infobaseFromFiles() && config.sourceFormat == SourceFormat.EDT }
+                                    expression { config.stageFlags.needInfoBase() && config.infoBaseFromFiles() && config.sourceFormat == SourceFormat.EDT }
                                 }
                                 steps {
                                     timeout(time: config.timeoutOptions.edtToDesignerFormatTransformation, unit: TimeUnit.MINUTES) {
@@ -73,7 +73,7 @@ void call() {
                                         createDir('build/out')
 
                                         script {
-                                            if (config.infobaseFromFiles()) {
+                                            if (config.infoBaseFromFiles()) {
                                                 // Создание базы загрузкой из файлов
                                                 initFromFiles config
                                             } else {

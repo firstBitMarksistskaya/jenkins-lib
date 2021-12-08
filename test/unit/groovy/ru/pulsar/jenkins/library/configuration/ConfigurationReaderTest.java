@@ -48,8 +48,8 @@ class ConfigurationReaderTest {
     assertThat(jobConfiguration.getSmokeTestOptions().isPublishToAllureReport()).isFalse();
     assertThat(jobConfiguration.getSmokeTestOptions().isPublishToJUnitReport()).isTrue();
 
-    assertThat(jobConfiguration.getInitInfobaseOptions().getRunMigration()).isFalse();
-    assertThat(jobConfiguration.getInitInfobaseOptions().getAdditionalInitializationSteps()).contains("vanessa --settings ./tools/vrunner.first.json");
+    assertThat(jobConfiguration.getInitInfoBaseOptions().getRunMigration()).isFalse();
+    assertThat(jobConfiguration.getInitInfoBaseOptions().getAdditionalInitializationSteps()).contains("vanessa --settings ./tools/vrunner.first.json");
 
     assertThat(jobConfiguration.getBddOptions().getVrunnerSteps()).contains("vanessa --settings ./tools/vrunner.json");
 
