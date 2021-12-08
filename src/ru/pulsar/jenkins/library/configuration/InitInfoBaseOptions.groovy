@@ -17,7 +17,7 @@ class InitInfoBaseOptions implements Serializable {
     InitInfoBaseMethod initMethod = InitInfoBaseMethod.FROM_STORAGE;
 
     @JsonPropertyDescription("Запустить миграцию ИБ")
-    boolean runMigration = true
+    Boolean runMigration = true
 
     @JsonPropertyDescription("""Дополнительные шаги, запускаемые через vrunner.
     В каждой строке передается отдельная команда 

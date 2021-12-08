@@ -33,6 +33,8 @@ class ConfigurationReaderTest {
     assertThat(jobConfiguration.getV8version()).isEqualTo("8.3.14.1944");
 
     assertThat(jobConfiguration.getSonarQubeOptions().getSonarScannerToolName()).isEqualTo("sonar-scanner");
+    assertThat(jobConfiguration.getSonarQubeOptions().getSonarQubeInstallation()).isEqualTo("qa");
+    assertThat(jobConfiguration.getSonarQubeOptions().getUseSonarScannerFromPath()).isTrue();
 
     assertThat(jobConfiguration.getSecrets())
       .hasFieldOrPropertyWithValue("storage", "1234")
@@ -41,7 +43,7 @@ class ConfigurationReaderTest {
 
     assertThat(jobConfiguration.getSyntaxCheckOptions().getCheckModes()).hasSize(1);
 
-    assertThat(jobConfiguration.getResultsTransformOptions().isRemoveSupport()).isFalse();
+    assertThat(jobConfiguration.getResultsTransformOptions().getRemoveSupport()).isFalse();
     assertThat(jobConfiguration.getResultsTransformOptions().getSupportLevel()).isZero();
 
     assertThat(jobConfiguration.getSmokeTestOptions().getVrunnerSettings()).contains("./tools/vrunner-smoke.json");

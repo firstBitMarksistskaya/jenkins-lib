@@ -13,7 +13,7 @@ class SonarQubeOptions implements Serializable {
     String sonarQubeInstallation;
 
     @JsonPropertyDescription("Использовать sonar-scanner, доступный в PATH")
-    boolean useSonarScannerFromPath
+    Boolean useSonarScannerFromPath
 
     @JsonPropertyDescription(
         "Имя настроенной утилиты sonar-scanner.\nПрименяется, если useSonarScannerFromPath установлено в false."

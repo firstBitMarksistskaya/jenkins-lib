@@ -15,6 +15,9 @@
       "vanessa --settings ./tools/vrunner.first.json"
     ]
   },
+  "sonarqube": {
+    "sonarQubeInstallation": "qa"
+  },
   "syntaxCheck": {
     "checkModes": ["-ThinClient"]
   },
