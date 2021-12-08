@@ -30,7 +30,7 @@
     "sonarQubeInstallation": "",
     "useSonarScannerFromPath": true,
     "sonarScannerToolName": "sonar-scanner",
-    "nameModule" : ""
+    "infoBaseUpdateModuleName" : ""
   },
   "syntaxCheck": {
     "groupErrorsByMetadata": true,
