@@ -16,6 +16,19 @@
     "edtValidate": false,
     "smoke": false
   },
+  "timeout": {
+    "smoke": 240,
+    "bdd": 120,
+    "createInfoBase": 60,
+    "designerToEdtFormatTransformation": 60,
+    "edtToDesignerFormatTransformation": 60,
+    "edtValidate": 240,
+    "initInfoBase": 60,
+    "resultTransformation": 10,
+    "sonarqube": 90,
+    "syntaxCheck": 240,
+    "zipInfoBase": 60
+  },
   "initInfobase": {
     "initMethod": "fromStorage",
     "runMigration": true,
