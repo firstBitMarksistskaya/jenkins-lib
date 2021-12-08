@@ -33,21 +33,19 @@ class Swagger {
 
         steps.cmd(swaggerPath + " generate --src-path $config.srcDir --out $OUT")
 
-        def dir = new File(OUT)
+        def dir = new File("$env.WORKSPACE/$OUT")
         dir.eachFile(FileType.FILES){
-            String reportdir = "$OUT_HTML$it.name"
             Logger.println(it.name)
-            Logger.println(reportdir)
             Logger.println(it.path)
-            steps.cmd("bootprint openapi $it.path $reportdir")
-            publishHTML (target : [allowMissing: false,
-                                   alwaysLinkToLastBuild: true,
-                                   keepAll: true,
-                                   reportDir: $reportdir,
-                                   reportFiles: 'index.html',
-                                   reportName: 'Swagger API',
-                                   reportTitles: 'API $it.name'])
+            steps.cmd("bootprint openapi $it.path $OUT_HTML")
         }
+        publishHTML (target : [allowMissing: false,
+                               alwaysLinkToLastBuild: true,
+                               keepAll: true,
+                               reportDir: $OUT_HTML,
+                               reportFiles: 'index.html',
+                               reportName: 'Swagger API',
+                               reportTitles: 'API $it.name'])
 
         steps.archiveArtifacts(OUT)
     }
