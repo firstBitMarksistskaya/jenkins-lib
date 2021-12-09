@@ -56,15 +56,18 @@ class InitFromFiles implements Serializable {
             localPathToPreloadDT.copyFrom(new URL("$preloadDTURL"))
 
             Logger.println("Загрузка DT")
-            VRunner.exec "$vrunnerPath init-dev --dt $localPathToPreloadDT"
 
-            String command = "$vrunnerPath update-dev --src $srcDir --ibconnection \"/F./build/ib\""
-
+            String command = vrunnerPath + " init-dev --dt $localPathToPreloadDT"
             String vrunnerSettings = config.initInfobaseOptions.vrunnerSettings
             if (steps.fileExists(vrunnerSettings)) {
                 command += " --settings $vrunnerSettings"
             }
+            VRunner.exec(command)
 
+            command = vrunnerPath + " update-dev --src $srcDir --ibconnection \"/F./build/ib\""
+            if (steps.fileExists(vrunnerSettings)) {
+                command += " --settings $vrunnerSettings"
+            }
             VRunner.exec(command)
 
             } else {
