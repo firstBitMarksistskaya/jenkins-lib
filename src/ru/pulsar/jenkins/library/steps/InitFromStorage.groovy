@@ -69,15 +69,19 @@ class InitFromStorage implements Serializable {
                 Logger.println("Скачивание DT в $localPathToPreloadDT")
                 localPathToPreloadDT.copyFrom(new URL("$preloadDTURL"))
                 Logger.println("Загрузка DT")
-                VRunner.exec "$vrunnerPath init-dev --dt $localPathToPreloadDT"
 
-                String command = vrunnerPath + "update-dev --storage $storageVersionParameter --ibconnection \"/F./build/ib\""
-
+                String command = vrunnerPath + "init-dev --dt $localPathToPreloadDT"
                 String vrunnerSettings = config.initInfobaseOptions.vrunnerSettings
                 if (steps.fileExists(vrunnerSettings)) {
                     command += " --settings $vrunnerSettings"
                 }
+                VRunner.exec(command)
 
+                String command = vrunnerPath + "update-dev --storage $storageVersionParameter --ibconnection \"/F./build/ib\""
+                String vrunnerSettings = config.initInfobaseOptions.vrunnerSettings
+                if (steps.fileExists(vrunnerSettings)) {
+                    command += " --settings $vrunnerSettings"
+                }
                 VRunner.exec(command)
 
             } else {
