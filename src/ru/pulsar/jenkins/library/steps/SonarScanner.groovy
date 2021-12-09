@@ -10,15 +10,9 @@ import ru.pulsar.jenkins.library.utils.VersionParser
 class SonarScanner implements Serializable {
 
     private final JobConfiguration config;
-    private final String rootFile
 
     SonarScanner(JobConfiguration config) {
         this.config = config
-        if (config.sourceFormat == SourceFormat.EDT){
-            this.rootFile = "$config.srcDir/src/Configuration/Configuration.mdo"
-        } else {
-            this.rootFile = "$config.srcDir/Configuration.xml"
-        }
     }
 
     def run() {
@@ -44,15 +38,9 @@ class SonarScanner implements Serializable {
 
         String sonarCommand = "$sonarScannerBinary -Dsonar.branch.name=$env.BRANCH_NAME"
 
-        String configurationVersion
-        if (config.sourceFormat == SourceFormat.EDT) {
-            configurationVersion = VersionParser.edt(rootFile)
-        } else {
-            configurationVersion = VersionParser.configuration(rootFile)
-        }
-        
-        if (configurationVersion) {
-            sonarCommand += " -Dsonar.projectVersion=$configurationVersion"
+        String projectVersion = computeProjectVersion()
+        if (projectVersion) {
+            sonarCommand += " -Dsonar.projectVersion=$projectVersion"
         }
 
         if (config.stageFlags.edtValidate) {
@@ -68,5 +56,28 @@ class SonarScanner implements Serializable {
         steps.withSonarQubeEnv(sonarQubeInstallation) {
             steps.cmd(sonarCommand)
         }
+    }
+
+    private String computeProjectVersion() {
+        String projectVersion
+        String nameOfModule = config.sonarQubeOptions.infoBaseUpdateModuleName
+
+        if (!nameOfModule.isEmpty()) {
+            String rootFile
+            if (config.sourceFormat == SourceFormat.EDT) {
+                rootFile = "$config.srcDir/src/CommonModules/$nameOfModule/Module.bsl"
+            } else {
+                rootFile = "$config.srcDir/CommonModules/$nameOfModule/Ext/Module.bsl"
+            }
+            projectVersion = VersionParser.ssl(rootFile)
+        } else if (config.sourceFormat == SourceFormat.EDT) {
+            String rootFile = "$config.srcDir/src/Configuration/Configuration.mdo"
+            projectVersion = VersionParser.edt(rootFile)
+        } else {
+            String rootFile = "$config.srcDir/Configuration.xml"
+            projectVersion = VersionParser.configuration(rootFile)
+        }
+
+        return projectVersion
     }
 }

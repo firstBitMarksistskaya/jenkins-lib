@@ -46,13 +46,13 @@ def call(JobConfiguration config) {
         command += " --settings $vrunnerSettings";
     }
 
+    if (!options.exceptionFile.empty && fileExists(options.exceptionFile)) {
+        command += " --exception-file $options.exceptionFile"
+    }
+
     if (options.checkModes.length > 0) {
         def checkModes = options.checkModes.join(" ")
         command += " --mode $checkModes"
-    }
-
-    if (!options.exceptionFile.empty && fileExists(options.exceptionFile)) {
-        command += " --exception-file $options.exceptionFile"
     }
 
     // Запуск синтакс-проверки

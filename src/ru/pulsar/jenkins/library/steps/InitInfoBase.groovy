@@ -7,11 +7,11 @@ import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.VRunner
 
-class InitInfobase implements Serializable {
+class InitInfoBase implements Serializable {
 
     private final JobConfiguration config;
 
-    InitInfobase(JobConfiguration config) {
+    InitInfoBase(JobConfiguration config) {
         this.config = config
     }
 
@@ -32,19 +32,27 @@ class InitInfobase implements Serializable {
 
             String vrunnerPath = VRunner.getVRunnerPath();
 
-            if (config.initInfobaseOptions.runMigration) {
+            if (config.initInfoBaseOptions.runMigration) {
                 Logger.println("Запуск миграции ИБ")
+
+                String command = vrunnerPath + ' run --command "ЗапуститьОбновлениеИнформационнойБазы;ЗавершитьРаботуСистемы;" --execute '
+                String executeParameter = '$runnerRoot/epf/ЗакрытьПредприятие.epf'
+                if (steps.isUnix()) {
+                    executeParameter = '\\' + executeParameter
+                }
+                command += executeParameter;
+                command += ' --ibconnection "/F./build/ib"'
 
                 // Запуск миграции
                 steps.catchError {
-                    VRunner.exec(vrunnerPath + ' run --command "ЗапуститьОбновлениеИнформационнойБазы;ЗавершитьРаботуСистемы;" --execute \\$runnerRoot/epf/ЗакрытьПредприятие.epf --ibconnection "/F./build/ib"')
+                    VRunner.exec(command)
                 }
             } else {
                 Logger.println("Шаг миграции ИБ выключен")
             }
 
             steps.catchError {
-                if (config.initInfobaseOptions.additionalInitializationSteps.length == 0) {
+                if (config.initInfoBaseOptions.additionalInitializationSteps.length == 0) {
                     FileWrapper[] files = steps.findFiles("tools/vrunner.init*.json")
                     files = files.sort new OrderBy( { it.name })
                     files.each {
@@ -52,7 +60,7 @@ class InitInfobase implements Serializable {
                         VRunner.exec("$vrunnerPath vanessa --settings ${it.path} --ibconnection \"/F./build/ib\"")
                     }
                 } else {
-                    config.initInfobaseOptions.additionalInitializationSteps.each {
+                    config.initInfoBaseOptions.additionalInitializationSteps.each {
                         Logger.println("Первичная инициализация командой ${it}")
                         VRunner.exec("$vrunnerPath ${it} --ibconnection \"/F./build/ib\"")
                     }

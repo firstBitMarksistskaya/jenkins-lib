@@ -43,9 +43,9 @@ class EdtToDesignerFormatTransformation implements Serializable {
 
         Logger.println("Конвертация исходников из формата EDT в формат Конфигуратора")
 
-        def ringCommand = "ring edt workspace export --workspace-location '$workspaceDir' --project '$projectDir' --configuration-files '$configurationRoot'"
+        def ringCommand = "ring edt workspace export --workspace-location \"$workspaceDir\" --project \"$projectDir\" --configuration-files \"$configurationRoot\""
 
-        def ringOpts =[Constants.DEFAULT_RING_OPTS]
+        def ringOpts = [Constants.DEFAULT_RING_OPTS]
         steps.withEnv(ringOpts) {
             steps.cmd(ringCommand)
         }

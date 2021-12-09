@@ -8,14 +8,14 @@ import com.fasterxml.jackson.annotation.JsonPropertyDescription
 class ResultsTransformOptions implements Serializable {
 
     @JsonPropertyDescription("Фильтровать замечания по уровню поддержки модуля. По умолчанию включено.")
-    boolean removeSupport = true
+    Boolean removeSupport = true
 
     @JsonPropertyDescription("""Настройка фильтрации замечаний по уровню поддержки.
         0 - удалить файлы на замке;
         1 - удалить файлы на замке и на поддержке;
         2 - удалить файлы на замке, на поддержке и снятые с поддержки.
     """)
-    int supportLevel
+    Integer supportLevel
 
     @Override
     @NonCPS
