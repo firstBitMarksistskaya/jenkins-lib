@@ -1,14 +1,13 @@
 package ru.pulsar.jenkins.library.steps
 
 import com.cloudbees.groovy.cps.NonCPS
-import hudson.FilePath
 import org.jenkinsci.plugins.workflow.support.actions.EnvironmentAction
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.Secrets
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
-import ru.pulsar.jenkins.library.utils.FileUtils
 import ru.pulsar.jenkins.library.utils.Logger
+import ru.pulsar.jenkins.library.utils.PreloadDT
 import ru.pulsar.jenkins.library.utils.VRunner
 import ru.pulsar.jenkins.library.utils.VersionParser
 
@@ -17,7 +16,6 @@ import static ru.pulsar.jenkins.library.configuration.Secrets.UNKNOWN_ID
 class InitFromStorage implements Serializable {
 
     final static REPO_SLUG_REGEXP = ~/(?m)^(?:[^:\/?#\n]+:)?(?:\/+[^\/?#\n]*)?\/?([^?\n]*)/
-    final static PRELOAD_DT_LOCAL_PATH = "build/out/preload.dt"
 
     private final JobConfiguration config
 
@@ -65,26 +63,18 @@ class InitFromStorage implements Serializable {
 
             String preloadDTURL = config.initInfobaseOptions.getPreloadDTURL()
             if (!preloadDTURL.isEmpty()) {
-                FilePath localPathToPreloadDT = FileUtils.getFilePath("$env.WORKSPACE/$PRELOAD_DT_LOCAL_PATH")
-                Logger.println("Скачивание DT в $localPathToPreloadDT")
-                localPathToPreloadDT.copyFrom(new URL("$preloadDTURL"))
-                Logger.println("Загрузка DT")
 
-                String command = vrunnerPath + " init-dev --dt $localPathToPreloadDT"
-                String vrunnerSettings = config.initInfobaseOptions.vrunnerSettings
-                if (steps.fileExists(vrunnerSettings)) {
-                    command += " --settings $vrunnerSettings"
-                }
-                VRunner.exec(command)
+                String vrunnerSettings = config.initInfobaseOptions.getVrunnerSettings()
+                PreloadDT.preloadDT(preloadDTURL, vrunnerSettings)
 
-                command = vrunnerPath + " update-dev --storage $storageVersionParameter --ibconnection \"/F./build/ib\""
+                String command = vrunnerPath + " update-dev --storage $storageVersionParameter --ibconnection \"/F./build/ib\""
                 if (steps.fileExists(vrunnerSettings)) {
                     command += " --settings $vrunnerSettings"
                 }
                 VRunner.exec(command)
 
             } else {
-                 VRunner.exec "$vrunnerPath init-dev --storage $storageVersionParameter --ibconnection \"/F./build/ib\""
+                VRunner.exec "$vrunnerPath init-dev --storage $storageVersionParameter --ibconnection \"/F./build/ib\""
             }
         }
     }
