@@ -77,8 +77,7 @@ class InitFromStorage implements Serializable {
                 }
                 VRunner.exec(command)
 
-                String command = vrunnerPath + "update-dev --storage $storageVersionParameter --ibconnection \"/F./build/ib\""
-                String vrunnerSettings = config.initInfobaseOptions.vrunnerSettings
+                command = vrunnerPath + "update-dev --storage $storageVersionParameter --ibconnection \"/F./build/ib\""
                 if (steps.fileExists(vrunnerSettings)) {
                     command += " --settings $vrunnerSettings"
                 }
