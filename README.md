@@ -143,5 +143,6 @@ pipeline1C()
   * Предполагается наличие единственной настройки `SonarQube installation` (`sonarqube` -> `sonarQubeInstallation`).
   * Используется `sonar-scanner` из переменной окружения `PATH` (`sonarqube` -> `useSonarScannerFromPath`).
   * Если использование `sonar-scanner` из переменной окружения `PATH` выключено, предполагается наличие настроенного глобального инструмента `SonarQube Scanner` с идентификатором инструмента `sonar-scanner` (`sonarqube` -> `sonarScannerToolName`).
-  * Версия из корня конфигурации передается утилите `sonar-scanner` как значение параметра `sonar.projectVersion=$configurationVersion`.
+  * Если разработка ведется с использованием подсистемы [БСП "Обновление версии ИБ"](https://its.1c.ru/db/bsp315doc#content:4:1:issogl1_обновление_версии_иб), то в значение параметра `sonar.projectVersion=$configurationVersion` утилиты `sonar-scanner` можно передавать версию из созданного общего модуля.
+  Для этого необходимо заполнить параметр (`sonarqube` -> `infoBaseUpdateModuleName`). Если параметр не заполнен, версия передается из корня конфигурации.
   * Если выполнялась валидация EDT, результаты валидации в формате `generic issues` передаются утилите `sonar-scanner` как значение параметра `sonar.externalIssuesReportPaths`.

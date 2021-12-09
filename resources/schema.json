@@ -169,6 +169,10 @@
         "sonarScannerToolName" : {
           "type" : "string",
           "description" : "Имя настроенной утилиты sonar-scanner.\nПрименяется, если useSonarScannerFromPath установлено в false."
+        },
+        "infoBaseUpdateModuleName" : {
+          "type" : "string",
+          "description" : "Имя общего модуля (например, ОбновлениеИнформационнойБазыXXX), в котором указана версия библиотеки.\n    Версия должна задаваться в виде присвоения `Описание.Версия = \"ваш номер версии\";`\n    "
         }
       }
     },
