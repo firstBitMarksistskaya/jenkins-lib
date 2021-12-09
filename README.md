@@ -86,8 +86,7 @@ pipeline1C()
     "v8version": "8.3.14.1976",
     "secrets": {
         "storagePath": "f7b21c02-711a-4883-81c5-d429454e3f8b",
-        "storage" : "c1fc5f33-67d4-493f-a2a4-97d3040e4b8c",
-        "infobaseCredentials": "d23daf1a-2fe5-4cec-be84-fa669de5eca8"
+        "storage" : "c1fc5f33-67d4-493f-a2a4-97d3040e4b8c"
     },
     "stages": {
         "sonarqube": true,
@@ -111,7 +110,6 @@ pipeline1C()
   * Имена "секретов" (jenkins credentials, `secrets`) по умолчанию высчитываются из пути к git-репозиторию (без учета домена, с заменой `/` на `_`) с прибавлением ключа секрета. Например, для репозитория https://github.com/firstBitSemenovskaya/jenkins-lib секрет с адресом хранилища будет выглядеть как `firstBitSemenovskaya_jenkins-lib_STORAGE_PATH`. Ключи секретов:
     * `STORAGE_PATH` - путь к хранилищу конфигурации (для `secrets` -> `storagePath`);
     * `STORAGE_USER` - параметры авторизации в хранилище вида "username with password" (для `secrets` -> `storage`).
-    * `IB_CREDENTIALS` - параметры авторизации в информационной базе вида "username with password" (для `secrets` -> `infobaseCredentials`).
   * Все "шаги" по умолчанию выключены (`stages`).
   * Если в корне репозитория существует файл `packagedef`, то в шагах, работающих с информационной базой, будет выполнена попытка установки локальных зависимостей средствами `opm`.
   * Если после установки локальных зависимостей в каталоге `oscript_modules/bin` существует файл `vrunner`, то для выполнения команд работы с информационной базой будет использоваться он, а не глобально установленный `vrunner` из `PATH`.

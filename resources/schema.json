@@ -31,10 +31,6 @@
         "storage" : {
           "type" : "string",
           "description" : "Ид секрета Jenkins, хранящего логин и пароль для хранилища конфигурации"
-        },
-        "infobaseCredentials" : {
-          "type" : "string",
-          "description" : "Ид секрета Jenkins, хранящего логин и пароль пользователя ИБ"
         }
       }
     },
@@ -82,6 +78,10 @@
         "runMigration" : {
           "type" : "boolean",
           "description" : "Запустить миграцию ИБ"
+        },
+        "vrunnerSettings" : {
+          "type" : "string",
+          "description" : "Путь к конфигурационному файлу vanessa-runner.\n    По умолчанию содержит значение \"./tools/vrunner.json\".\n    "
         },
         "additionalInitializationSteps" : {
           "type" : "array",

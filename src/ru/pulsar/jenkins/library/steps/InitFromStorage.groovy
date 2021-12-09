@@ -49,7 +49,6 @@ class InitFromStorage implements Serializable {
 
         String storageCredentials = secrets.storage == UNKNOWN_ID ? repoSlug + "_STORAGE_USER" : secrets.storage
         String storagePath = secrets.storagePath == UNKNOWN_ID ? repoSlug + "_STORAGE_PATH" : secrets.storagePath
-        String infobaseCredentials = secrets.infobaseCredentials == UNKNOWN_ID ? repoSlug + "_IB_CREDENTIALS" : secrets.infobaseCredentials
 
         steps.withCredentials([
             steps.usernamePassword(
@@ -60,28 +59,30 @@ class InitFromStorage implements Serializable {
             steps.string(
                 storagePath,
                 'RUNNER_STORAGE_NAME'
-            ),
-            steps.usernamePassword(
-                infobaseCredentials,
-                'RUNNER_DBUSER',
-                'RUNNER_DBPWD'
             )
         ]) {
             String vrunnerPath = VRunner.getVRunnerPath()
 
             String preloadDTURL = config.initInfobaseOptions.getPreloadDTURL()
-            String initUpdate = "init"
             if (!preloadDTURL.isEmpty()) {
-
                 FilePath localPathToPreloadDT = FileUtils.getFilePath("$env.WORKSPACE/$PRELOAD_DT_LOCAL_PATH")
                 Logger.println("Скачивание DT в $localPathToPreloadDT")
                 localPathToPreloadDT.copyFrom(new URL("$preloadDTURL"))
-
                 Logger.println("Загрузка DT")
                 VRunner.exec "$vrunnerPath init-dev --dt $localPathToPreloadDT"
-                initUpdate = "update"
+
+                String command = vrunnerPath + "update-dev --storage $storageVersionParameter --ibconnection \"/F./build/ib\""
+
+                String vrunnerSettings = config.initInfobaseOptions.vrunnerSettings
+                if (steps.fileExists(vrunnerSettings)) {
+                    command += " --settings $vrunnerSettings"
+                }
+
+                VRunner.exec(command)
+
+            } else {
+                 VRunner.exec "$vrunnerPath init-dev --storage $storageVersionParameter --ibconnection \"/F./build/ib\""
             }
-            VRunner.exec "$vrunnerPath $initUpdate-dev --storage $storageVersionParameter --ibconnection \"/F./build/ib\""
         }
     }
 

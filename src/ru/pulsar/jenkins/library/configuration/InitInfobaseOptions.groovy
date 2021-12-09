@@ -24,6 +24,11 @@ class InitInfobaseOptions implements Serializable {
     @JsonPropertyDescription("Запустить миграцию ИБ")
     boolean runMigration = true
 
+    @JsonPropertyDescription("""Путь к конфигурационному файлу vanessa-runner.
+    По умолчанию содержит значение "./tools/vrunner.json".
+    """)
+    String vrunnerSettings
+
     @JsonPropertyDescription("""Дополнительные шаги, запускаемые через vrunner.
     В каждой строке передается отдельная команда 
     vrunner и ее аргументы (например, "vanessa --settings ./tools/vrunner.first.json")
@@ -37,6 +42,7 @@ class InitInfobaseOptions implements Serializable {
             "preloadDTURL=" + preloadDTURL +
             "initMethod=" + initMethod +
             ", runMigration=" + runMigration +
+            ", vrunnerSettings=" + vrunnerSettings +
             ", additionalInitializationSteps=" + additionalInitializationSteps +
             '}';
     }

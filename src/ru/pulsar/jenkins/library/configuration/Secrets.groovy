@@ -15,16 +15,12 @@ class Secrets implements Serializable {
     @JsonPropertyDescription("Данные авторизации в хранилище конфигурации")
     String storage
 
-    @JsonPropertyDescription("Данные авторизации в информационной базе")
-    String infobaseCredentials
-
     @Override
     @NonCPS
     String toString() {
         return "Secrets{" +
             "storagePath='" + storagePath + '\'' +
             ", storage='" + storage + '\'' +
-            ", infobaseCredentials='" + infobaseCredentials + '\'' +
             '}';
     }
 }
