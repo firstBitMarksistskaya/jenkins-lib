@@ -44,7 +44,8 @@ class SonarScanner implements Serializable {
         if (projectVersion) {
             sonarCommand += " -Dsonar.projectVersion=$projectVersion"
         }
-
+        String sonarAddComm = "build/out/edt-generic-issue.json"
+        
         if (config.stageFlags.edtValidate) {
             steps.unstash("edt-generic-issue")
             sonarCommand += " -Dsonar.externalIssuesReportPaths=$sonarAddComm"
