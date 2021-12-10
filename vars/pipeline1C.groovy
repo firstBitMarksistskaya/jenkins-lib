@@ -19,7 +19,7 @@ void call() {
 
         options {
             buildDiscarder(logRotator(numToKeepStr: '7'))
-            timeout(time: 5, unit: TimeUnit.HOURS)
+            timeout(time: 8, unit: TimeUnit.HOURS)
             timestamps()
         }
 
