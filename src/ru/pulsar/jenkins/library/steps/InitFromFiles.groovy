@@ -6,7 +6,6 @@ import ru.pulsar.jenkins.library.configuration.SourceFormat
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.VRunner
-import ru.pulsar.jenkins.library.utils.PreloadDT
 
 class InitFromFiles implements Serializable {
 
@@ -45,24 +44,14 @@ class InitFromFiles implements Serializable {
         }
 
         String vrunnerPath = VRunner.getVRunnerPath()
+        String vrunnerSettings = config.initInfoBaseOptions.getVrunnerSettings()
 
-        String preloadDTURL = config.initInfoBaseOptions.getPreloadDTURL()
-        if (!preloadDTURL.isEmpty()) {
-
-            String vrunnerSettings = config.initInfoBaseOptions.getVrunnerSettings()
-            PreloadDT.preloadDT(preloadDTURL, vrunnerSettings)
-
-            String command = vrunnerPath + " update-dev --src $srcDir --ibconnection \"/F./build/ib\""
-            if (steps.fileExists(vrunnerSettings)) {
+        String command = vrunnerPath + " update-dev --src $srcDir --ibconnection \"/F./build/ib\""
+        if (steps.fileExists(vrunnerSettings)) {
                 command += " --settings $vrunnerSettings"
-            }
-
-            VRunner.exec(command)
-
-        } else {
-            Logger.println("Выполнение загрузки конфигурации из файлов")
-            def initCommand = "$vrunnerPath init-dev --src $srcDir --ibconnection \"/F./build/ib\""
-            VRunner.exec(initCommand)
         }
+
+        VRunner.exec(command)
+
     }
 }

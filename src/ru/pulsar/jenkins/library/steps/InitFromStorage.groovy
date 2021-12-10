@@ -7,7 +7,7 @@ import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.Secrets
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.Logger
-import ru.pulsar.jenkins.library.utils.PreloadDT
+
 import ru.pulsar.jenkins.library.utils.VRunner
 import ru.pulsar.jenkins.library.utils.VersionParser
 
@@ -60,22 +60,13 @@ class InitFromStorage implements Serializable {
             )
         ]) {
             String vrunnerPath = VRunner.getVRunnerPath()
+            String vrunnerSettings = config.initInfoBaseOptions.getVrunnerSettings()
 
-            String preloadDTURL = config.initInfoBaseOptions.getPreloadDTURL()
-            if (!preloadDTURL.isEmpty()) {
-
-                String vrunnerSettings = config.initInfoBaseOptions.getVrunnerSettings()
-                PreloadDT.preloadDT(preloadDTURL, vrunnerSettings)
-
-                String command = vrunnerPath + " update-dev --storage $storageVersionParameter --ibconnection \"/F./build/ib\""
-                if (steps.fileExists(vrunnerSettings)) {
-                    command += " --settings $vrunnerSettings"
-                }
-                VRunner.exec(command)
-
-            } else {
-                VRunner.exec "$vrunnerPath init-dev --storage $storageVersionParameter --ibconnection \"/F./build/ib\""
+            String command = vrunnerPath + " update-dev --storage $storageVersionParameter --ibconnection \"/F./build/ib\""
+            if (steps.fileExists(vrunnerSettings)) {
+                command += " --settings $vrunnerSettings"
             }
+            VRunner.exec(command)
         }
     }
 
