@@ -23,6 +23,9 @@ class PublishAllure implements Serializable {
 
         safeUnstash('init-allure')
         safeUnstash('bdd-allure')
+        if (config.smokeTestOptions.publishToAllureReport) {
+            safeUnstash(SmokeTest.SMOKE_ALLURE_STASH)
+        }
 
         def env = steps.env();
 
@@ -47,7 +50,7 @@ class PublishAllure implements Serializable {
     private void safeUnstash(String stashName) {
         try {
             steps.unstash(stashName)
-        } catch (Exception ex) {
+        } catch (Exception ignored) {
             Logger.println("Can't unstash $stashName")
         }
     }

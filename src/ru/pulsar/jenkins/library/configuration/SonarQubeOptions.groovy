@@ -13,12 +13,17 @@ class SonarQubeOptions implements Serializable {
     String sonarQubeInstallation;
 
     @JsonPropertyDescription("Использовать sonar-scanner, доступный в PATH")
-    boolean useSonarScannerFromPath
+    Boolean useSonarScannerFromPath
 
     @JsonPropertyDescription(
         "Имя настроенной утилиты sonar-scanner.\nПрименяется, если useSonarScannerFromPath установлено в false."
     )
     String sonarScannerToolName
+
+    @JsonPropertyDescription("""Имя общего модуля (например, ОбновлениеИнформационнойБазыXXX), в котором указана версия библиотеки.
+    Версия должна задаваться в виде присвоения `Описание.Версия = "ваш номер версии";`
+    """)
+    String infoBaseUpdateModuleName
 
     @Override
     @NonCPS
@@ -27,6 +32,7 @@ class SonarQubeOptions implements Serializable {
             "useSonarScannerFromPath=" + useSonarScannerFromPath +
             ", sonarScannerToolName='" + sonarScannerToolName + '\'' +
             ", sonarQubeInstallation='" + sonarQubeInstallation + '\'' +
+            ", infoBaseUpdateModuleName='" + infoBaseUpdateModuleName + '\'' +
             '}';
     }
 }

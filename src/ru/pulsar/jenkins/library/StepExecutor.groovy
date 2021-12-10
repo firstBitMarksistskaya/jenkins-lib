@@ -33,7 +33,7 @@ class StepExecutor implements IStepExecutor {
     }
 
     @Override
-    String readFile(String file, String encoding) {
+    String readFile(String file, String encoding = 'UTF-8') {
         steps.readFile encoding: encoding, file: file
     }
 
@@ -172,6 +172,11 @@ class StepExecutor implements IStepExecutor {
             reportBuildPolicy: 'ALWAYS',
             results: ResultsConfig.convertPaths(results)
         ])
+    }
+
+    @Override
+    def junit(String testResults, boolean allowEmptyResults) {
+        steps.junit testResults: testResults, allowEmptyResults: allowEmptyResults
     }
 
     @Override
