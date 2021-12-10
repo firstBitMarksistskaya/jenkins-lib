@@ -20,7 +20,7 @@ class InitFromFiles implements Serializable {
 
         Logger.printLocation()
 
-        if (!config.infobaseFromFiles()) {
+        if (!config.infoBaseFromFiles()) {
             Logger.println("init infoBase from files is disabled")
             return
         }
