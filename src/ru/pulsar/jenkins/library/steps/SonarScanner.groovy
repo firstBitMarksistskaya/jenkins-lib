@@ -31,7 +31,6 @@ class SonarScanner implements Serializable {
         def extPrefix = "$EdtToDesignerFormatTransformation.EXT_PATH_PREFIX"
         def extSuffix = "$EdtToDesignerFormatTransformation.EXT_PATH_SUFFIX"
         def srcExtDir = config.srcExtDir
-
         if (config.sonarQubeOptions.useSonarScannerFromPath) {
             sonarScannerBinary = "sonar-scanner"
         } else {
@@ -41,17 +40,9 @@ class SonarScanner implements Serializable {
 
         String sonarCommand = "$sonarScannerBinary -Dsonar.branch.name=$env.BRANCH_NAME"
 
-        String sonarAddComm = "build/out/edt-generic-issue.json"
-        String configurationVersion
-        if (config.sourceFormat == SourceFormat.EDT) {
-            configurationVersion = VersionParser.edt(rootFile)
-        } else {
-            configurationVersion = VersionParser.configuration(rootFile)
-        }
-        
-        if (configurationVersion) {
-            sonarCommand += " -Dsonar.projectVersion=$configurationVersion"
-
+        String projectVersion = computeProjectVersion()
+        if (projectVersion) {
+            sonarCommand += " -Dsonar.projectVersion=$projectVersion"
         }
 
         if (config.stageFlags.edtValidate) {
