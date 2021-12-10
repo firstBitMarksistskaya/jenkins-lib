@@ -7,22 +7,22 @@ import com.fasterxml.jackson.annotation.JsonPropertyDescription
 @JsonIgnoreProperties(ignoreUnknown = true)
 class StageFlags implements Serializable {
     @JsonPropertyDescription("Анализ SonarQube включен")
-    boolean sonarqube
+    Boolean sonarqube
 
     @JsonPropertyDescription("Синтаксический контроль включен")
-    boolean syntaxCheck
+    Boolean syntaxCheck
 
     @JsonPropertyDescription("Валидация EDT включена")
-    boolean edtValidate
+    Boolean edtValidate
 
     @JsonPropertyDescription("Дымовые тесты включены")
-    boolean smoke
+    Boolean smoke
 
     @JsonPropertyDescription("Предварительные шаги инициализации включены")
-    boolean initSteps
+    Boolean initSteps
 
     @JsonPropertyDescription("Запуск BDD сценариев включен")
-    boolean bdd
+    Boolean bdd
 
     @Override
     @NonCPS
@@ -37,7 +37,7 @@ class StageFlags implements Serializable {
             '}';
     }
 
-    boolean needInfobase() {
+    boolean needInfoBase() {
         return smoke || syntaxCheck || initSteps || bdd
     }
 }

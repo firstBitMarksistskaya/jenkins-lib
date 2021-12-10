@@ -8,6 +8,7 @@ import java.util.regex.Pattern
 
 class VersionParser implements Serializable {
     final static VERSION_REGEXP = ~/(?i)<version>(.*)<\/version>/
+    final static VERSION_REGEXP_SSL = ~/(?i)Описание.Версия = "(.*)";/
 
     static String configuration(rootFile = 'src/cf/Configuration.xml') {
         return extractVersionFromFile(rootFile, VERSION_REGEXP)
@@ -19,6 +20,10 @@ class VersionParser implements Serializable {
 
     static String storage(versionFile = 'src/cf/VERSION') {
         return extractVersionFromFile(versionFile, VERSION_REGEXP)
+    }
+
+    static String ssl(versionFile) {
+        return extractVersionFromFile(versionFile, VERSION_REGEXP_SSL)
     }
 
     private static String extractVersionFromFile(String filePath, Pattern regexp) {

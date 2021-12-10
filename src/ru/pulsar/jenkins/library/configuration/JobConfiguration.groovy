@@ -22,6 +22,10 @@ class JobConfiguration implements Serializable {
     @JsonPropertyDescription("Включение этапов сборок")
     StageFlags stageFlags;
 
+    @JsonProperty("timeout")
+    @JsonPropertyDescription("Настройка таймаутов для шагов")
+    TimeoutOptions timeoutOptions;
+
     @JsonPropertyDescription("Имя ветки по умолчанию. Значение по умолчанию - main.")
     String defaultBranch
 
@@ -30,7 +34,7 @@ class JobConfiguration implements Serializable {
 
     @JsonProperty("initInfobase")
     @JsonPropertyDescription("Настройки шага инициализации ИБ")
-    InitInfobaseOptions initInfobaseOptions;
+    InitInfoBaseOptions initInfoBaseOptions;
 
     @JsonProperty("bdd")
     @JsonPropertyDescription("Настройки шага запуска BDD сценариев")
@@ -63,26 +67,27 @@ class JobConfiguration implements Serializable {
             "v8version='" + v8version + '\'' +
             ", srcDir='" + srcDir + '\'' +
             ", sourceFormat=" + sourceFormat +
-            ", defaultBranch=" + defaultBranch +
             ", stageFlags=" + stageFlags +
+            ", timeoutOptions=" + timeoutOptions +
+            ", defaultBranch='" + defaultBranch + '\'' +
             ", secrets=" + secrets +
-            ", initInfobaseOptions=" + initInfobaseOptions +
+            ", initInfoBaseOptions=" + initInfoBaseOptions +
             ", bddOptions=" + bddOptions +
             ", sonarQubeOptions=" + sonarQubeOptions +
             ", syntaxCheckOptions=" + syntaxCheckOptions +
             ", smokeTestOptions=" + smokeTestOptions +
             ", resultsTransformOptions=" + resultsTransformOptions +
-            ", logosConfig=" + logosConfig +
+            ", logosConfig='" + logosConfig + '\'' +
             '}';
     }
 
-    boolean infobaseFromFiles(){
+    boolean infoBaseFromFiles() {
         IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
         def env = steps.env();
         String branchName = env.BRANCH_NAME;
-        def initMethod = initInfobaseOptions.initMethod
+        def initMethod = initInfoBaseOptions.initMethod
 
-        return (initMethod == InitInfobaseMethod.FROM_SOURCE) ||
-            (initMethod == InitInfobaseMethod.DEFAULT_BRANCH_FROM_STORAGE && branchName != defaultBranch)
+        return (initMethod == InitInfoBaseMethod.FROM_SOURCE) ||
+            (initMethod == InitInfoBaseMethod.DEFAULT_BRANCH_FROM_STORAGE && branchName != defaultBranch)
     }
 }

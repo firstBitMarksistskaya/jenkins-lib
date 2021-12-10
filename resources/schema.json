@@ -65,6 +65,57 @@
         }
       }
     },
+    "timeout" : {
+      "type" : "object",
+      "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:TimeoutOptions",
+      "description" : "Настройка таймаутов для шагов",
+      "properties" : {
+        "edtToDesignerFormatTransformation" : {
+          "type" : "integer",
+          "description" : "Таймаут шага трансформации исходников из формата EDT в формат Конфигуратора, в минутах.\n    По умолчанию содержит значение 60.\n    "
+        },
+        "createInfoBase" : {
+          "type" : "integer",
+          "description" : "Таймаут шага создания информационной базы, в минутах.\n    По умолчанию содержит значение 60.\n    "
+        },
+        "initInfoBase" : {
+          "type" : "integer",
+          "description" : "Таймаут шага инициализации информационной базы, в минутах.\n    По умолчанию содержит значение 60.\n    "
+        },
+        "zipInfoBase" : {
+          "type" : "integer",
+          "description" : "Таймаут шага архивирования информационной базы, в минутах.\n    По умолчанию содержит значение 60.\n    "
+        },
+        "designerToEdtFormatTransformation" : {
+          "type" : "integer",
+          "description" : "Таймаут шага трансформации исходников из формата Конфигуратора в формат EDT, в минутах.\n    По умолчанию содержит значение 60.\n    "
+        },
+        "edtValidate" : {
+          "type" : "integer",
+          "description" : "Таймаут шага валидации EDT, в минутах.\n    По умолчанию содержит значение 240.\n    "
+        },
+        "resultTransformation" : {
+          "type" : "integer",
+          "description" : "Таймаут шага трансформации результатов EDT, в минутах.\n    По умолчанию содержит значение 10.\n    "
+        },
+        "bdd" : {
+          "type" : "integer",
+          "description" : "Таймаут шага проверки сценариев поведения, в минутах.\n    По умолчанию содержит значение 120.\n    "
+        },
+        "syntaxCheck" : {
+          "type" : "integer",
+          "description" : "Таймаут шага синтаксического контроля, в минутах.\n    По умолчанию содержит значение 240.\n    "
+        },
+        "smoke" : {
+          "type" : "integer",
+          "description" : "Таймаут шага дымовых тестов, в минутах.\n    По умолчанию содержит значение 240.\n    "
+        },
+        "sonarqube" : {
+          "type" : "integer",
+          "description" : "Таймаут шага статического анализа SonarQube, в минутах.\n    По умолчанию содержит значение 90.\n    "
+        }
+      }
+    },
     "initInfobase" : {
       "type" : "object",
       "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:InitInfobaseOptions",
@@ -122,6 +173,10 @@
         "sonarScannerToolName" : {
           "type" : "string",
           "description" : "Имя настроенной утилиты sonar-scanner.\nПрименяется, если useSonarScannerFromPath установлено в false."
+        },
+        "infoBaseUpdateModuleName" : {
+          "type" : "string",
+          "description" : "Имя общего модуля (например, ОбновлениеИнформационнойБазыXXX), в котором указана версия библиотеки.\n    Версия должна задаваться в виде присвоения `Описание.Версия = \"ваш номер версии\";`\n    "
         }
       }
     },

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-class InitInfobaseOptions implements Serializable {
+class InitInfoBaseOptions implements Serializable {
 
     @JsonPropertyDescription("""
     Путь к выгрузке информационной базы в формате DT, которая должна быть загружена в самом начале инициализации.
@@ -19,10 +19,10 @@ class InitInfobaseOptions implements Serializable {
         * fromSource - инициализация информационной базы из исходников конфигурации;
         * defaultBranchFromStorage - инициализация основной ветки из хранилища конфигурации, остальных - из исходников конфигурации.
     По умолчанию содержит значение "fromStorage".""")
-    InitInfobaseMethod initMethod = InitInfobaseMethod.FROM_STORAGE;
+    InitInfoBaseMethod initMethod = InitInfoBaseMethod.FROM_STORAGE;
 
     @JsonPropertyDescription("Запустить миграцию ИБ")
-    boolean runMigration = true
+    Boolean runMigration = true
 
     @JsonPropertyDescription("""Путь к конфигурационному файлу vanessa-runner.
     По умолчанию содержит значение "./tools/vrunner.json".
@@ -39,8 +39,8 @@ class InitInfobaseOptions implements Serializable {
     @NonCPS
     String toString() {
         return "InitInfobaseOptions{" +
-            "preloadDTURL=" + preloadDTURL +
-            "initMethod=" + initMethod +
+            ", preloadDTURL=" + preloadDTURL +
+            ", initMethod=" + initMethod +
             ", runMigration=" + runMigration +
             ", vrunnerSettings=" + vrunnerSettings +
             ", additionalInitializationSteps=" + additionalInitializationSteps +
