@@ -61,10 +61,10 @@ class InitFromStorage implements Serializable {
         ]) {
             String vrunnerPath = VRunner.getVRunnerPath()
 
-            String preloadDTURL = config.initInfobaseOptions.getPreloadDTURL()
+            String preloadDTURL = config.initInfoBaseOptions.getPreloadDTURL()
             if (!preloadDTURL.isEmpty()) {
 
-                String vrunnerSettings = config.initInfobaseOptions.getVrunnerSettings()
+                String vrunnerSettings = config.initInfoBaseOptions.getVrunnerSettings()
                 PreloadDT.preloadDT(preloadDTURL, vrunnerSettings)
 
                 String command = vrunnerPath + " update-dev --storage $storageVersionParameter --ibconnection \"/F./build/ib\""

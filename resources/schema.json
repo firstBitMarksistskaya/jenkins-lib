@@ -118,7 +118,7 @@
     },
     "initInfobase" : {
       "type" : "object",
-      "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:InitInfobaseOptions",
+      "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:InitInfoBaseOptions",
       "description" : "Настройки шага инициализации ИБ",
       "properties" : {
         "initMethod" : {

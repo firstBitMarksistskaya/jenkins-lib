@@ -38,7 +38,7 @@ class InitInfoBaseOptions implements Serializable {
     @Override
     @NonCPS
     String toString() {
-        return "InitInfobaseOptions{" +
+        return "InitInfoBaseOptions{" +
             ", preloadDTURL=" + preloadDTURL +
             ", initMethod=" + initMethod +
             ", runMigration=" + runMigration +
