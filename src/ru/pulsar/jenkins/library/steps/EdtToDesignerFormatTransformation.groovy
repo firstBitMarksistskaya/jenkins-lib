@@ -11,7 +11,7 @@ import ru.pulsar.jenkins.library.utils.Logger
 class EdtToDesignerFormatTransformation implements Serializable {
 
     public static final String EXT_PATH_PREFIX = 'build'
-    public static final String EXT_PATH_SUFFIX = 'ext_'
+    public static final String EXT_PATH_SUFFIX = 'ext-'
     public static final String WORKSPACE = 'build/edt-workspace'
     public static final String CONFIGURATION_DIR = 'build/cfg'
     public static final String CONFIGURATION_ZIP = 'build/cfg.zip'
@@ -63,12 +63,14 @@ class EdtToDesignerFormatTransformation implements Serializable {
             steps.cmd(ringCommand)
             steps.zip(CONFIGURATION_DIR, CONFIGURATION_ZIP)
             steps.stash(CONFIGURATION_ZIP_STASH, CONFIGURATION_ZIP)
-            
+            if (config.initInfoBaseOptions.saveXMLartifacts) {
+                steps.archiveArtifacts(CONFIGURATION_ZIP)
+            } 
             srcExtDir.each{  
-                workspaceExtDir = workspaceDir.replace(extPrefix,"$extPrefix/$extSuffix${it}")
-                projectExtDir = new File("$env.WORKSPACE/${it}").getCanonicalPath()
-                configurationExtRoot = configurationRoot.replace(extPrefix,"$extPrefix/$extSuffix${it}") 
-                configurationExtZip = configurationZip.replace(extPrefix,"$extPrefix/$extSuffix${it}")
+                workspaceExtDir = workspaceDir.replace(extPrefix,"$extPrefix-$extSuffix${it}")
+                projectExtDir = "$env.WORKSPACE/${it}"
+                configurationExtRoot = configurationRoot.replace(extPrefix,"$extPrefix-$extSuffix${it}") 
+                configurationExtZip = configurationZip.replace(extPrefix,"$extPrefix-$extSuffix${it}")
 
                 ringCommandExt = "ring edt workspace export --workspace-location \"$workspaceExtDir\" --project \"$projectExtDir\" --configuration-files \"$configurationExtRoot\""
                 
@@ -79,7 +81,10 @@ class EdtToDesignerFormatTransformation implements Serializable {
                 steps.cmd(ringCommandExt)
                 
                 steps.zip(configurationExtRoot, configurationExtZip)
-                steps.stash("ext_${it}_$CONFIGURATION_ZIP_STASH", configurationExtZip)
+                steps.stash("$extSuffix${it}_$CONFIGURATION_ZIP_STASH", configurationExtZip)
+                if (config.initInfoBaseOptions.saveXMLartifacts) {
+                    steps.archiveArtifacts(configurationExtZip)
+                }
             }  
         }      
     }

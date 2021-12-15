@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-class InitInfobaseOptions implements Serializable {
+class InitInfoBaseOptions implements Serializable {
 
     @JsonPropertyDescription("""
     Способ инициализации информационной базы.
@@ -14,10 +14,13 @@ class InitInfobaseOptions implements Serializable {
         * fromSource - инициализация информационной базы из исходников конфигурации;
         * defaultBranchFromStorage - инициализация основной ветки из хранилища конфигурации, остальных - из исходников конфигурации.
     По умолчанию содержит значение "fromStorage".""")
-    InitInfobaseMethod initMethod = InitInfobaseMethod.FROM_STORAGE;
+    InitInfoBaseMethod initMethod = InitInfoBaseMethod.FROM_STORAGE;
 
     @JsonPropertyDescription("Запустить миграцию ИБ")
-    boolean runMigration = true
+    Boolean runMigration = true
+
+    @JsonPropertyDescription("Сохранить XML выгрузку в артефакты сборки")
+    Boolean saveXMLartifacts = false
 
     @JsonPropertyDescription("""Дополнительные шаги, запускаемые через vrunner.
     В каждой строке передается отдельная команда 
@@ -28,9 +31,10 @@ class InitInfobaseOptions implements Serializable {
     @Override
     @NonCPS
     String toString() {
-        return "InitInfobaseOptions{" +
+        return "InitInfoBaseOptions{" +
             "initMethod=" + initMethod +
             ", runMigration=" + runMigration +
+            ", saveXMLartifacts=" + saveXMLartifacts +
             ", additionalInitializationSteps=" + additionalInitializationSteps +
             '}';
     }

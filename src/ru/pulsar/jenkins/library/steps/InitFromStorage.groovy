@@ -27,7 +27,7 @@ class InitFromStorage implements Serializable {
 
         Logger.printLocation()
 
-        if (config.infobaseFromFiles()) {
+        if (config.infoBaseFromFiles()) {
             Logger.println("init infoBase from storage is disabled")
             return
         }

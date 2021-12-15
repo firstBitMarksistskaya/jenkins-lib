@@ -6,17 +6,28 @@
   "stages": {
     "syntaxCheck": true
   },
+  "timeout": {
+    "zipInfoBase": 123
+  },
   "initInfobase": {
     "runMigration": false,
     "additionalInitializationSteps": [
       "vanessa --settings ./tools/vrunner.first.json"
     ]
   },
+  "sonarqube": {
+    "sonarQubeInstallation": "qa"
+  },
   "syntaxCheck": {
     "checkModes": ["-ThinClient"]
   },
   "resultsTransform": {
     "removeSupport": false
+  },
+  "smoke": {
+    "vrunnerSettings": "./tools/vrunner-smoke.json",
+    "publishToAllureReport": false,
+    "publishToJUnitReport": true
   },
   "logosConfig": "logger.rootLogger=DEBUG"
 }

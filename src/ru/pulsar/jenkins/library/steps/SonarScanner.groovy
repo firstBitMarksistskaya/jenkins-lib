@@ -10,15 +10,9 @@ import ru.pulsar.jenkins.library.utils.VersionParser
 class SonarScanner implements Serializable {
 
     private final JobConfiguration config;
-    private final String rootFile
 
     SonarScanner(JobConfiguration config) {
         this.config = config
-        if (config.sourceFormat == SourceFormat.EDT){
-            this.rootFile = "$config.srcDir/src/Configuration/Configuration.mdo"
-        } else {
-            this.rootFile = "$config.srcDir/Configuration.xml"
-        }
     }
 
     def run() {
@@ -32,9 +26,11 @@ class SonarScanner implements Serializable {
         }
 
         def env = steps.env();
-
+        
         def sonarScannerBinary
-
+        def extPrefix = "$EdtToDesignerFormatTransformation.EXT_PATH_PREFIX"
+        def extSuffix = "$EdtToDesignerFormatTransformation.EXT_PATH_SUFFIX"
+        def srcExtDir = config.srcExtDir
         if (config.sonarQubeOptions.useSonarScannerFromPath) {
             sonarScannerBinary = "sonar-scanner"
         } else {
@@ -44,20 +40,22 @@ class SonarScanner implements Serializable {
 
         String sonarCommand = "$sonarScannerBinary -Dsonar.branch.name=$env.BRANCH_NAME"
 
-        String configurationVersion
-        if (config.sourceFormat == SourceFormat.EDT) {
-            configurationVersion = VersionParser.edt(rootFile)
-        } else {
-            configurationVersion = VersionParser.configuration(rootFile)
+        String projectVersion = computeProjectVersion()
+        if (projectVersion) {
+            sonarCommand += " -Dsonar.projectVersion=$projectVersion"
         }
+        String sonarAddComm = "build/out/edt-generic-issue.json"
         
-        if (configurationVersion) {
-            sonarCommand += " -Dsonar.projectVersion=$configurationVersion"
-        }
-
         if (config.stageFlags.edtValidate) {
             steps.unstash("edt-generic-issue")
-            sonarCommand += " -Dsonar.externalIssuesReportPaths=build/out/edt-generic-issue.json"
+            sonarCommand += " -Dsonar.externalIssuesReportPaths=$sonarAddComm"
+            if (config.sourceFormat == SourceFormat.EDT) {
+                srcExtDir.each{
+                    steps.unstash("edt-generic-issue-${it}")
+                    sonarCommand += "," + sonarAddComm.replace(extPrefix,"$extPrefix-$extSuffix${it}")
+                }
+            }
+
         }
 
         def sonarQubeInstallation = config.sonarQubeOptions.sonarQubeInstallation
@@ -68,5 +66,28 @@ class SonarScanner implements Serializable {
         steps.withSonarQubeEnv(sonarQubeInstallation) {
             steps.cmd(sonarCommand)
         }
+    }
+
+    private String computeProjectVersion() {
+        String projectVersion
+        String nameOfModule = config.sonarQubeOptions.infoBaseUpdateModuleName
+
+        if (!nameOfModule.isEmpty()) {
+            String rootFile
+            if (config.sourceFormat == SourceFormat.EDT) {
+                rootFile = "$config.srcDir/src/CommonModules/$nameOfModule/Module.bsl"
+            } else {
+                rootFile = "$config.srcDir/CommonModules/$nameOfModule/Ext/Module.bsl"
+            }
+            projectVersion = VersionParser.ssl(rootFile)
+        } else if (config.sourceFormat == SourceFormat.EDT) {
+            String rootFile = "$config.srcDir/src/Configuration/Configuration.mdo"
+            projectVersion = VersionParser.edt(rootFile)
+        } else {
+            String rootFile = "$config.srcDir/Configuration.xml"
+            projectVersion = VersionParser.configuration(rootFile)
+        }
+
+        return projectVersion
     }
 }
