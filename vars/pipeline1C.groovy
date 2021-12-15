@@ -20,9 +20,6 @@ void call() {
         options {
             buildDiscarder(logRotator(numToKeepStr: '30'))
             timestamps()
-            if (config.initInfobase.saveXMLartifacts) {
-                copyArtifactPermission('*')
-            }
         }
 
         stages {
