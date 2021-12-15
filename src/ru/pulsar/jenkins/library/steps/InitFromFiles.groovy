@@ -64,16 +64,16 @@ class InitFromFiles implements Serializable {
         VRunner.exec(initCommand)
         String inputExtDir
         if (config.srcExtDir.length != 0) {
-                config.srcExtDir.each {
-                    if (config.sourceFormat == SourceFormat.EDT) {
-                        inputExtDir = srcDir.replace(extPrefix,"$extPrefix-$extSuffix${it}")                        
-                    }else{
-                        inputExtDir = "${it}"
-                    }
-                    Logger.println("Загрузка расширения ${it} в ИБ")
-                    VRunner.exec("$vrunnerPath compileext \"$inputExtDir\" ${it} --ibconnection \"/F./build/ib\"")
+            config.srcExtDir.each {
+                if (config.sourceFormat == SourceFormat.EDT) {
+                    inputExtDir = srcDir.replace(extPrefix,"$extPrefix-$extSuffix${it}")                        
+                }else{
+                    inputExtDir = "${it}"
                 }
+                Logger.println("Загрузка расширения ${it} в ИБ")
+                VRunner.exec("$vrunnerPath compileext \"$inputExtDir\" ${it} --ibconnection \"/F./build/ib\"")
             }
+        }
 
     }
 }

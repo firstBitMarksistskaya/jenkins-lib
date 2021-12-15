@@ -137,6 +137,10 @@
           "type" : "boolean",
           "description" : "Запустить миграцию ИБ"
         },
+        "saveXMLartifacts" : {
+          "type" : "boolean",
+          "description" : "Включить сохранение XML файлов как артефакты сборки\n    Учитывается только при использовании исходников в формате EDT"
+        },
         "additionalInitializationSteps" : {
           "type" : "array",
           "description" : "Дополнительные шаги, запускаемые через vrunner.\n    В каждой строке передается отдельная команда \n    vrunner и ее аргументы (например, \"vanessa --settings ./tools/vrunner.first.json\")\n    ",

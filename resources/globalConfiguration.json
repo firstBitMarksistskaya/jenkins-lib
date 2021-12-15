@@ -32,6 +32,7 @@
   "initInfobase": {
     "initMethod": "fromStorage",
     "runMigration": true,
+    "saveXMLartifacts": false,
     "additionalInitializationSteps": []
   },
   "bdd": {

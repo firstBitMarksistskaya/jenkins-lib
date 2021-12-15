@@ -63,7 +63,9 @@ class EdtToDesignerFormatTransformation implements Serializable {
             steps.cmd(ringCommand)
             steps.zip(CONFIGURATION_DIR, CONFIGURATION_ZIP)
             steps.stash(CONFIGURATION_ZIP_STASH, CONFIGURATION_ZIP)
-            
+            if (config.initInfoBaseOptions.saveXMLartifacts) {
+                steps.archiveArtifacts(CONFIGURATION_ZIP)
+            } 
             srcExtDir.each{  
                 workspaceExtDir = workspaceDir.replace(extPrefix,"$extPrefix-$extSuffix${it}")
                 projectExtDir = "$env.WORKSPACE/${it}"
@@ -80,6 +82,9 @@ class EdtToDesignerFormatTransformation implements Serializable {
                 
                 steps.zip(configurationExtRoot, configurationExtZip)
                 steps.stash("$extSuffix${it}_$CONFIGURATION_ZIP_STASH", configurationExtZip)
+                if (config.initInfoBaseOptions.saveXMLartifacts) {
+                    steps.archiveArtifacts(configurationExtZip)
+                }
             }  
         }      
     }
