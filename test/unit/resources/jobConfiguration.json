@@ -30,5 +30,20 @@
     "publishToAllureReport": false,
     "publishToJUnitReport": true
   },
+  "emailNotification": {
+    "onAlways": true,
+    "alwaysEmailOptions": {
+      "attachLog": true,
+      "directRecipients": [
+        "1@1.com",
+        "2@1.com"
+      ]
+    },
+    "failureEmailOptions": {
+      "recipientProviders": [
+        "developers"
+      ]
+    }
+  },
   "logosConfig": "logger.rootLogger=DEBUG"
 }

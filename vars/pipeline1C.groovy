@@ -236,6 +236,25 @@ void call() {
             always {
                 node('agent') {
                     saveResults config
+                    sendEmail(config, config.emailNotificationOptions.alwaysEmailOptions)
+                }
+            }
+            unstable {
+                node('agent') {
+                    saveResults config
+                    sendEmail(config, config.emailNotificationOptions.unstableEmailOptions)
+                }
+            }
+            success {
+                node('agent') {
+                    saveResults config
+                    sendEmail(config, config.emailNotificationOptions.successEmailOptions)
+                }
+            }
+            failure {
+                node('agent') {
+                    saveResults config
+                    sendEmail(config, config.emailNotificationOptions.failureEmailOptions)
                 }
             }
         }

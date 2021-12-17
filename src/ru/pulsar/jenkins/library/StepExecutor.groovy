@@ -183,4 +183,35 @@ class StepExecutor implements IStepExecutor {
     def installLocalDependencies() {
         steps.installLocalDependencies()
     }
+
+    @Override
+    def emailext(String subject, String body, String to, List recipientProviders, boolean attachLog) {
+        steps.emailext(
+            subject: subject,
+            body: body,
+            to: to,
+            recipientProviders: recipientProviders,
+            attachLog: attachLog,
+        )
+    }
+
+    @Override
+    def developers() {
+        steps.developers()
+    }
+
+    @Override
+    def requestor() {
+        steps.requestor()
+    }
+
+    @Override
+    def brokenBuildSuspects() {
+        steps.brokenBuildSuspects()
+    }
+
+    @Override
+    def brokenTestsSuspects() {
+        steps.brokenTestsSuspects()
+    }
 }

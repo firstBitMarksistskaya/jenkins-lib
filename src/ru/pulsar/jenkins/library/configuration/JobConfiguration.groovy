@@ -59,6 +59,10 @@ class JobConfiguration implements Serializable {
     @JsonPropertyDescription("Настройки трансформации результатов анализа")
     ResultsTransformOptions resultsTransformOptions;
 
+    @JsonProperty("emailNotification")
+    @JsonPropertyDescription("Настройки рассылки результатов сборки")
+    EmailNotificationOptions emailNotificationOptions;
+
     @JsonProperty("logosConfig")
     @JsonPropertyDescription("Конфигурация библиотеки logos. Применяется перед запуском каждой стадии сборки")
     String logosConfig;

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.commons.beanutils.BeanUtilsBean
 import org.apache.commons.beanutils.ConvertUtilsBean
 import ru.pulsar.jenkins.library.IStepExecutor
+import ru.pulsar.jenkins.library.configuration.email.EmailExtConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 
 class ConfigurationReader implements Serializable {
@@ -62,12 +63,39 @@ class ConfigurationReader implements Serializable {
             "sonarQubeOptions",
             "smokeTestOptions",
             "syntaxCheckOptions",
-            "resultsTransformOptions"
+            "resultsTransformOptions",
+            "emailNotificationOptions",
+            "alwaysEmailOptions",
+            "successEmailOptions",
+            "failureEmailOptions",
+            "unstableEmailOptions",
+            "recipientProviders"
         ).toSet()
 
         mergeObjects(baseConfiguration, configurationToMerge, nonMergeableSettings)
-        mergeInitInfoBaseOptions(baseConfiguration.initInfoBaseOptions, configurationToMerge.initInfoBaseOptions);
-        mergeBddOptions(baseConfiguration.bddOptions, configurationToMerge.bddOptions);
+        mergeInitInfoBaseOptions(baseConfiguration.initInfoBaseOptions, configurationToMerge.initInfoBaseOptions)
+        mergeBddOptions(baseConfiguration.bddOptions, configurationToMerge.bddOptions)
+
+        def emailNotificationOptionsToMerge = configurationToMerge.emailNotificationOptions
+        def emailNotificationOptionsBase = baseConfiguration.emailNotificationOptions
+        if (emailNotificationOptionsToMerge != null) {
+            mergeEmailExtConfiguration(
+                emailNotificationOptionsBase.successEmailOptions,
+                emailNotificationOptionsToMerge.successEmailOptions
+            )
+            mergeEmailExtConfiguration(
+                emailNotificationOptionsBase.failureEmailOptions,
+                emailNotificationOptionsToMerge.failureEmailOptions
+            )
+            mergeEmailExtConfiguration(
+                emailNotificationOptionsBase.unstableEmailOptions,
+                emailNotificationOptionsToMerge.unstableEmailOptions
+            )
+            mergeEmailExtConfiguration(
+                emailNotificationOptionsBase.alwaysEmailOptions,
+                emailNotificationOptionsToMerge.alwaysEmailOptions
+            )
+        }
 
         return baseConfiguration;
     }
@@ -84,10 +112,16 @@ class ConfigurationReader implements Serializable {
             }
 
         nonMergeableSettings.forEach({ key ->
+            if (!baseObject.hasProperty(key)) {
+                return
+            }
+            if (objectToMerge == null) {
+                return
+            }
             mergeObjects(
                 baseObject[key],
                 objectToMerge[key],
-                Collections.emptySet()
+                nonMergeableSettings
             )
         })
     }
@@ -106,5 +140,16 @@ class ConfigurationReader implements Serializable {
             return
         }
         baseObject.vrunnerSteps = objectToMerge.vrunnerSteps.clone()
+    }
+
+    @NonCPS
+    private static void mergeEmailExtConfiguration(EmailExtConfiguration baseObject, EmailExtConfiguration objectToMerge) {
+        if (objectToMerge != null && objectToMerge.recipientProviders != null) {
+            baseObject.recipientProviders = objectToMerge.recipientProviders.clone()
+        }
+
+        if (objectToMerge != null && objectToMerge.directRecipients != null) {
+            baseObject.directRecipients = objectToMerge.directRecipients.clone()
+        }
     }
 }

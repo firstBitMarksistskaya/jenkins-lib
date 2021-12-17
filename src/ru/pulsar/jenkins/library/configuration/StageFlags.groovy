@@ -24,6 +24,9 @@ class StageFlags implements Serializable {
     @JsonPropertyDescription("Запуск BDD сценариев включен")
     Boolean bdd
 
+    @JsonPropertyDescription("Выполнять рассылку результатов сборки на email")
+    Boolean email
+
     @Override
     @NonCPS
     String toString() {
@@ -34,6 +37,7 @@ class StageFlags implements Serializable {
             ", smoke=" + smoke +
             ", initSteps=" + initSteps +
             ", bdd=" + bdd +
+            ", email=" + email +
             '}';
     }
 

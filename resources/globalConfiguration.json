@@ -15,7 +15,8 @@
     "bdd": false,
     "syntaxCheck": false,
     "edtValidate": false,
-    "smoke": false
+    "smoke": false,
+    "email": false
   },
   "timeout": {
     "smoke": 240,
@@ -75,6 +76,45 @@
   "resultsTransform": {
     "removeSupport": true,
     "supportLevel": 0
+  },
+  "emailNotification": {
+    "onAlways": false,
+    "onFailure": true,
+    "onUnstable": false,
+    "onSuccess": false,
+    "alwaysEmailOptions": {
+      "attachLog": true,
+      "directRecipients": [],
+      "recipientProviders": [
+        "developers",
+        "requestor"
+      ]
+    },
+    "failureEmailOptions": {
+      "attachLog": true,
+      "directRecipients": [],
+      "recipientProviders": [
+        "developers",
+        "requestor",
+        "brokenBuildSuspects"
+      ]
+    },
+    "successEmailOptions": {
+      "attachLog": false,
+      "directRecipients": [],
+      "recipientProviders": [
+        "developers",
+        "requestor"
+      ]
+    },
+    "unstableEmailOptions": {
+      "attachLog": false,
+      "directRecipients": [],
+      "recipientProviders": [
+        "developers",
+        "requestor"
+      ]
+    }
   },
   "logosConfig": ""
 }

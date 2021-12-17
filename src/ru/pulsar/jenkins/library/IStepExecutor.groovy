@@ -78,4 +78,14 @@ interface IStepExecutor {
     def junit(String testResults, boolean allowEmptyResults)
 
     def installLocalDependencies()
+
+    def emailext(String subject, String body, String to, List recipientProviders, boolean attachLog)
+
+    def developers()
+
+    def requestor()
+
+    def brokenBuildSuspects()
+
+    def brokenTestsSuspects()
 }

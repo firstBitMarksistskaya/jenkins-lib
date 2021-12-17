@@ -66,6 +66,10 @@
         "bdd" : {
           "type" : "boolean",
           "description" : "Запуск BDD сценариев включен"
+        },
+        "email" : {
+          "type" : "boolean",
+          "description" : "Выполнять рассылку результатов сборки на email"
         }
       }
     },
@@ -122,7 +126,7 @@
     },
     "initInfobase" : {
       "type" : "object",
-      "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:InitInfobaseOptions",
+      "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:InitInfoBaseOptions",
       "description" : "Настройки шага инициализации ИБ",
       "properties" : {
         "initMethod" : {
@@ -249,6 +253,59 @@
         "supportLevel" : {
           "type" : "integer",
           "description" : "Настройка фильтрации замечаний по уровню поддержки.\n        0 - удалить файлы на замке;\n        1 - удалить файлы на замке и на поддержке;\n        2 - удалить файлы на замке, на поддержке и снятые с поддержки.\n    "
+        }
+      }
+    },
+    "emailNotification" : {
+      "type" : "object",
+      "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:EmailNotificationOptions",
+      "description" : "Настройки рассылки результатов сборки",
+      "properties" : {
+        "onAlways" : {
+          "type" : "boolean"
+        },
+        "onSuccess" : {
+          "type" : "boolean"
+        },
+        "onFailure" : {
+          "type" : "boolean"
+        },
+        "onUnstable" : {
+          "type" : "boolean"
+        },
+        "alwaysEmailOptions" : {
+          "type" : "object",
+          "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:email:EmailExtConfiguration",
+          "properties" : {
+            "attachLog" : {
+              "type" : "boolean"
+            },
+            "directRecipients" : {
+              "type" : "array",
+              "items" : {
+                "type" : "string"
+              }
+            },
+            "recipientProviders" : {
+              "type" : "array",
+              "items" : {
+                "type" : "string",
+                "enum" : [ "developers", "requestor", "brokenBuildSuspects", "brokenTestsSuspects" ]
+              }
+            }
+          }
+        },
+        "successEmailOptions" : {
+          "type" : "object",
+          "$ref" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:email:EmailExtConfiguration"
+        },
+        "failureEmailOptions" : {
+          "type" : "object",
+          "$ref" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:email:EmailExtConfiguration"
+        },
+        "unstableEmailOptions" : {
+          "type" : "object",
+          "$ref" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:email:EmailExtConfiguration"
         }
       }
     },
