@@ -23,7 +23,7 @@ class PublishAllure implements Serializable {
 
         safeUnstash('init-allure')
         safeUnstash('bdd-allure')
-        if (config.smokeTestOptions.publishToAllureReport) {
+        if (config.stageFlags.smoke && config.smokeTestOptions.publishToAllureReport) {
             safeUnstash(SmokeTest.SMOKE_ALLURE_STASH)
         }
 
