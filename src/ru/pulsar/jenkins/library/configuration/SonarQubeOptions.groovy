@@ -25,6 +25,9 @@ class SonarQubeOptions implements Serializable {
     """)
     String infoBaseUpdateModuleName
 
+    @JsonPropertyDescription("Используется ли Branch-plugin в SonarQube")
+    Boolean useBranchPlugin
+
     @Override
     @NonCPS
     String toString() {

@@ -173,6 +173,10 @@
         "infoBaseUpdateModuleName" : {
           "type" : "string",
           "description" : "Имя общего модуля (например, ОбновлениеИнформационнойБазыXXX), в котором указана версия библиотеки.\n    Версия должна задаваться в виде присвоения `Описание.Версия = \"ваш номер версии\";`\n    "
+        },
+        "useBranchPlugin" : {
+          "type" : "boolean",
+          "description" : "Используется ли Branch-plugin в SonarQube"
         }
       }
     },
