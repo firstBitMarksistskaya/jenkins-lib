@@ -36,6 +36,7 @@ class SonarQubeOptions implements Serializable {
             ", sonarScannerToolName='" + sonarScannerToolName + '\'' +
             ", sonarQubeInstallation='" + sonarQubeInstallation + '\'' +
             ", infoBaseUpdateModuleName='" + infoBaseUpdateModuleName + '\'' +
+            ", useBranchPlugin='" + useBranchPlugin + '\'' +
             '}';
     }
 }
