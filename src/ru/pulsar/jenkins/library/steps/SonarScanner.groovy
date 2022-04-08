@@ -36,8 +36,10 @@ class SonarScanner implements Serializable {
             sonarScannerBinary = "$scannerHome/bin/sonar-scanner"
         }
 
+        String sonarCommand = "$sonarScannerBinary"
+
         if (config.sonarQubeOptions.useBranchPlugin){
-            String sonarCommand = "$sonarScannerBinary -Dsonar.branch.name=$env.BRANCH_NAME"
+            sonarCommand += " -Dsonar.branch.name=$env.BRANCH_NAME"
         }
 
         String projectVersion = computeProjectVersion()
