@@ -6,6 +6,10 @@
       "type" : "string",
       "description" : "Версия платформы 1С:Предприятие в формате 8.3.хх.хххх."
     },
+    "edtVersion" : {
+      "type" : "string",
+      "description" : "Версия модуля 1C:Enterprise Development Tools формате xxxx.x.x:x86_64"
+    },
     "srcDir" : {
       "type" : "string",
       "description" : "Путь к корневому каталогу с исходниками конфигурации, в случае хранения исходников в формате EDT, необходимо указать путь к проекту"
