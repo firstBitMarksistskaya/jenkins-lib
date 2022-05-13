@@ -47,7 +47,12 @@ class EdtValidate implements Serializable {
 
         Logger.println("Выполнение валидации EDT")
 
-        def ringCommand = "ring edt workspace validate --workspace-location \"$workspaceLocation\" --file \"$resultFile\" $projectList"
+        String edtVersion = "edt"
+        if (config.edtVersion != '') {
+            edtVersion += "@" + config.edtVersion
+        }
+
+        def ringCommand = "ring $edtVersion workspace validate --workspace-location \"$workspaceLocation\" --file \"$resultFile\" $projectList"
         def ringOpts = [Constants.DEFAULT_RING_OPTS]
         steps.withEnv(ringOpts) {
             steps.catchError {
