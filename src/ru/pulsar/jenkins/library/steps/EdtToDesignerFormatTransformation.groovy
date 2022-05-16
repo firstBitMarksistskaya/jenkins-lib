@@ -37,18 +37,14 @@ class EdtToDesignerFormatTransformation implements Serializable {
         def projectDir = new File("$env.WORKSPACE/$srcDir").getCanonicalPath()
         def workspaceDir = "$env.WORKSPACE/$WORKSPACE" 
         def configurationRoot = "$env.WORKSPACE/$CONFIGURATION_DIR"
+        def edtVersionForRing = config.edtVersionForRing()
 
         steps.deleteDir(workspaceDir)
         steps.deleteDir(configurationRoot)
 
         Logger.println("Конвертация исходников из формата EDT в формат Конфигуратора")
 
-        String edtVersion = "edt"
-        if (config.edtVersion != '') {
-            edtVersion += "@" + config.edtVersion
-        }
-
-        def ringCommand = "ring $edtVersion workspace export --workspace-location \"$workspaceDir\" --project \"$projectDir\" --configuration-files \"$configurationRoot\""
+        def ringCommand = "ring $edtVersionForRing workspace export --workspace-location \"$workspaceDir\" --project \"$projectDir\" --configuration-files \"$configurationRoot\""
 
         def ringOpts = [Constants.DEFAULT_RING_OPTS]
         steps.withEnv(ringOpts) {

@@ -94,4 +94,16 @@ class JobConfiguration implements Serializable {
         return (initMethod == InitInfoBaseMethod.FROM_SOURCE) ||
             (initMethod == InitInfoBaseMethod.DEFAULT_BRANCH_FROM_STORAGE && branchName != defaultBranch)
     }
+
+    String v8version() {
+        return v8version
+    }
+
+    String edtVersionForRing() {
+        String edtVersionForRing = "edt"
+        if (edtVersion != '') {
+            edtVersionForRing += "@" + edtVersion
+        }
+        return edtVersionForRing
+    }
 }
