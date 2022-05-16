@@ -5,6 +5,7 @@ import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.SourceFormat
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.Constants
+import ru.pulsar.jenkins.library.utils.EDT
 import ru.pulsar.jenkins.library.utils.Logger
 
 class EdtValidate implements Serializable {
@@ -44,7 +45,7 @@ class EdtValidate implements Serializable {
         }
 
         def resultFile = "$env.WORKSPACE/$RESULT_FILE"
-        def edtVersionForRing = config.edtVersionForRing()
+        def edtVersionForRing = EDT.ringModule(config)
 
         Logger.println("Выполнение валидации EDT")
 

@@ -5,6 +5,7 @@ import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.Constants
+import ru.pulsar.jenkins.library.utils.EDT
 import ru.pulsar.jenkins.library.utils.Logger
 
 class DesignerToEdtFormatTransformation implements Serializable {
@@ -34,7 +35,7 @@ class DesignerToEdtFormatTransformation implements Serializable {
 
         def workspaceDir = "$env.WORKSPACE/$WORKSPACE"
         def configurationRoot = new File(env.WORKSPACE, config.srcDir).getAbsolutePath()
-        def edtVersionForRing = config.edtVersionForRing()
+        def edtVersionForRing = EDT.ringModule(config)
 
         steps.deleteDir(workspaceDir)
 

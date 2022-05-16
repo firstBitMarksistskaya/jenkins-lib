@@ -64,7 +64,7 @@ class ConfigurationReaderTest {
   }
 
   @Test
-  void testV8versionMethod() throws IOException {
+  void testV8AgentLabel() throws IOException {
     // given
     String config = IOUtils.resourceToString(
             "jobConfiguration.json",
@@ -76,11 +76,11 @@ class ConfigurationReaderTest {
     JobConfiguration jobConfiguration = ConfigurationReader.create(config);
 
     // then
-    assertThat(jobConfiguration.v8version()).isEqualTo("8.3.14.1944");
+    assertThat(jobConfiguration.v8AgentLabel()).isEqualTo("8.3.14.1944");
   }
 
   @Test
-  void testEdtVersionForRingMethod() throws IOException {
+  void testEdtAgentLabel() throws IOException {
     // given
     String config = IOUtils.resourceToString(
             "jobConfiguration.json",
@@ -92,11 +92,11 @@ class ConfigurationReaderTest {
     JobConfiguration jobConfiguration = ConfigurationReader.create(config);
 
     // then
-    assertThat(jobConfiguration.edtVersionForRing()).isEqualTo("edt@2021.3.4:x86_64");
+    assertThat(jobConfiguration.edtAgentLabel()).isEqualTo("edt@2021.3.4:x86_64");
   }
 
   @Disabled
-  void testinfoBaseFromFilesMethod() throws IOException {
+  void testInfoBaseFromFiles() throws IOException {
     // given
     String config = IOUtils.resourceToString(
             "jobConfiguration.json",

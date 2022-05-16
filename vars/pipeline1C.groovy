@@ -38,8 +38,8 @@ void call() {
                 steps {
                     script {
                         config = jobConfiguration() as JobConfiguration
-                        agent1C = config.v8version()
-                        agentEdt = config.edtVersionForRing()
+                        agent1C = config.v8AgentLabel()
+                        agentEdt = config.edtAgentLabel()
                     }
                 }
             }

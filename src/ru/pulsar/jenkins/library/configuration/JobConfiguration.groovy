@@ -95,11 +95,11 @@ class JobConfiguration implements Serializable {
             (initMethod == InitInfoBaseMethod.DEFAULT_BRANCH_FROM_STORAGE && branchName != defaultBranch)
     }
 
-    String v8version() {
+    String v8AgentLabel() {
         return v8version
     }
 
-    String edtVersionForRing() {
+    String edtAgentLabel() {
         String edtVersionForRing = "edt"
         if (edtVersion != '') {
             edtVersionForRing += "@" + edtVersion
