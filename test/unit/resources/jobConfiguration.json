@@ -31,5 +31,26 @@
     "publishToAllureReport": false,
     "publishToJUnitReport": true
   },
+  "notifications": {
+    "email": {
+      "onAlways": true,
+      "alwaysOptions": {
+        "attachLog": true,
+        "directRecipients": [
+          "1@1.com",
+          "2@1.com"
+        ]
+      },
+      "failureOptions": {
+        "recipientProviders": [
+          "developers"
+        ]
+      }
+    },
+    "telegram": {
+      "onAlways": false,
+      "onFailure": true
+    }
+  },
   "logosConfig": "logger.rootLogger=DEBUG"
 }
