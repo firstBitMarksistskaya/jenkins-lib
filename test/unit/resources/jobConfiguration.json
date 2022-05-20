@@ -17,7 +17,8 @@
     ]
   },
   "sonarqube": {
-    "sonarQubeInstallation": "qa"
+    "sonarQubeInstallation": "qa",
+    "branchAnalysisConfiguration": "auto"
   },
   "syntaxCheck": {
     "checkModes": ["-ThinClient"]

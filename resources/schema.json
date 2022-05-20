@@ -178,9 +178,10 @@
           "type" : "string",
           "description" : "Имя общего модуля (например, ОбновлениеИнформационнойБазыXXX), в котором указана версия библиотеки.\n    Версия должна задаваться в виде присвоения `Описание.Версия = \"ваш номер версии\";`\n    "
         },
-       "useBranchPlugin" : {
-          "type" : "boolean",
-          "description" : "Используется ли Branch-plugin в SonarQube"
+        "branchAnalysisConfiguration" : {
+          "type" : "string",
+          "description" : "Вариант конфигурации branch plugin.\n    Поддерживаемые варианты:\n      * auto - применяется автоконфигурация sonar-scanner силами branchplugin. Так же может применяться для отключения конфигурирования, если branch plugin отсутствует;\n      * fromEnv - применяется ручная конфигурация sonar-scanner на основе переменных среды.\n    Значение по умолчанию: fromEnv.",
+          "enum" : [ "auto", "fromEnv" ]
         },
         "waitForQualityGate" : {
           "type" : "boolean",

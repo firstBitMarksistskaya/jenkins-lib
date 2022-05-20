@@ -1,6 +1,7 @@
 package ru.pulsar.jenkins.library.steps
 
 import ru.pulsar.jenkins.library.IStepExecutor
+import ru.pulsar.jenkins.library.configuration.BranchAnalysisConfiguration
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.SourceFormat
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
@@ -38,7 +39,8 @@ class SonarScanner implements Serializable {
 
         String sonarCommand = "$sonarScannerBinary"
 
-        if (config.sonarQubeOptions.useBranchPlugin) {
+        def branchAnalysisConfiguration = config.sonarQubeOptions.branchAnalysisConfiguration
+        if (branchAnalysisConfiguration == BranchAnalysisConfiguration.FROM_ENV) {
             if (env.CHANGE_ID){
                 sonarCommand += " -Dsonar.pullrequest.key=$env.CHANGE_ID"
                 sonarCommand += " -Dsonar.pullrequest.branch=$env.CHANGE_BRANCH"
@@ -46,6 +48,8 @@ class SonarScanner implements Serializable {
             } else {
                 sonarCommand += " -Dsonar.branch.name=$env.BRANCH_NAME"
             }
+        } else (branchAnalysisConfiguration == BranchAnalysisConfiguration.AUTO) {
+            // no-op
         }
 
         String projectVersion = computeProjectVersion()
