@@ -11,6 +11,9 @@ JobConfiguration config
 @Field
 String agent1C
 
+@Field
+String agentEdt
+
 void call() {
 
     //noinspection GroovyAssignabilityCheck
@@ -35,7 +38,8 @@ void call() {
                 steps {
                     script {
                         config = jobConfiguration() as JobConfiguration
-                        agent1C = config.v8version
+                        agent1C = config.v8AgentLabel()
+                        agentEdt = config.edtAgentLabel()
                     }
                 }
             }
@@ -54,7 +58,7 @@ void call() {
                         stages {
                             stage('Трансформация из формата EDT') {
                                 agent {
-                                    label 'edt'
+                                    label agentEdt
                                 }
                                 when {
                                     beforeAgent true
@@ -114,7 +118,7 @@ void call() {
 
                     stage('Трансформация в формат EDT') {
                         agent {
-                            label 'edt'
+                            label agentEdt
                         }
                         when {
                             beforeAgent true
@@ -139,7 +143,7 @@ void call() {
                         stages {
                             stage('Валидация EDT') {
                                 agent {
-                                    label 'edt'
+                                    label agentEdt
                                 }
                                 steps {
                                     timeout(time: config.timeoutOptions.edtValidate, unit: TimeUnit.MINUTES) {

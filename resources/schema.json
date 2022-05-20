@@ -6,6 +6,10 @@
       "type" : "string",
       "description" : "Версия платформы 1С:Предприятие в формате 8.3.хх.хххх."
     },
+    "edtVersion" : {
+      "type" : "string",
+      "description" : "Версия модуля 1C:Enterprise Development Tools формате xxxx.x.x:x86_64"
+    },
     "srcDir" : {
       "type" : "string",
       "description" : "Путь к корневому каталогу с исходниками конфигурации, в случае хранения исходников в формате EDT, необходимо указать путь к проекту"
@@ -173,6 +177,10 @@
         "infoBaseUpdateModuleName" : {
           "type" : "string",
           "description" : "Имя общего модуля (например, ОбновлениеИнформационнойБазыXXX), в котором указана версия библиотеки.\n    Версия должна задаваться в виде присвоения `Описание.Версия = \"ваш номер версии\";`\n    "
+        },
+       "useBranchPlugin" : {
+          "type" : "boolean",
+          "description" : "Используется ли Branch-plugin в SonarQube"
         },
         "waitForQualityGate" : {
           "type" : "boolean",

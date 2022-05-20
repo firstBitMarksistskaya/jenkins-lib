@@ -1,6 +1,7 @@
 {
   "$schema": "schema.json",
   "v8version": "8.3",
+  "edtVersion": "",
   "srcDir": "src/cf",
   "sourceFormat": "designer",
   "defaultBranch": "main",
@@ -44,6 +45,7 @@
     "useSonarScannerFromPath": true,
     "sonarScannerToolName": "sonar-scanner",
     "infoBaseUpdateModuleName" : "",
+    "useBranchPlugin" : true,
     "waitForQualityGate": false
   },
   "syntaxCheck": {

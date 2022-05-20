@@ -5,6 +5,7 @@ import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.SourceFormat
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.Constants
+import ru.pulsar.jenkins.library.utils.EDT
 import ru.pulsar.jenkins.library.utils.Logger
 
 class EdtValidate implements Serializable {
@@ -40,14 +41,15 @@ class EdtValidate implements Serializable {
             projectList = "--project-name-list $DesignerToEdtFormatTransformation.PROJECT_NAME"
         } else {
             String projectDir = new File("$env.WORKSPACE/$config.srcDir").getCanonicalPath()
-            projectList = "--project-list '$projectDir'"
+            projectList = "--project-list \"$projectDir\""
         }
 
         def resultFile = "$env.WORKSPACE/$RESULT_FILE"
+        def edtVersionForRing = EDT.ringModule(config)
 
         Logger.println("Выполнение валидации EDT")
 
-        def ringCommand = "ring edt workspace validate --workspace-location \"$workspaceLocation\" --file \"$resultFile\" $projectList"
+        def ringCommand = "ring $edtVersionForRing workspace validate --workspace-location \"$workspaceLocation\" --file \"$resultFile\" $projectList"
         def ringOpts = [Constants.DEFAULT_RING_OPTS]
         steps.withEnv(ringOpts) {
             steps.catchError {
