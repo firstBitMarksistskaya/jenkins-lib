@@ -54,8 +54,10 @@ class ConfigurationReaderTest {
     assertThat(jobConfiguration.getSmokeTestOptions().isPublishToAllureReport()).isFalse();
     assertThat(jobConfiguration.getSmokeTestOptions().isPublishToJUnitReport()).isTrue();
 
-    assertThat(jobConfiguration.getInitInfoBaseOptions().getRunMigration()).isFalse();
-    assertThat(jobConfiguration.getInitInfoBaseOptions().getAdditionalInitializationSteps()).contains("vanessa --settings ./tools/vrunner.first.json");
+    InitInfoBaseOptions initInfoBaseOptions = jobConfiguration.getInitInfoBaseOptions();
+    assertThat(initInfoBaseOptions.getRunMigration()).isFalse();
+    assertThat(initInfoBaseOptions.getPreloadDTURL()).isEqualTo("https://build-server:7421/dump.dt");
+    assertThat(initInfoBaseOptions.getAdditionalInitializationSteps()).contains("vanessa --settings ./tools/vrunner.first.json");
 
     assertThat(jobConfiguration.getBddOptions().getVrunnerSteps()).contains("vanessa --settings ./tools/vrunner.json");
 

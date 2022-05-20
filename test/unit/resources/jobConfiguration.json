@@ -11,6 +11,7 @@
     "zipInfoBase": 123
   },
   "initInfobase": {
+    "preloadDTURL": "https://build-server:7421/dump.dt",
     "runMigration": false,
     "additionalInitializationSteps": [
       "vanessa --settings ./tools/vrunner.first.json"

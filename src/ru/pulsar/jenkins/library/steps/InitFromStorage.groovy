@@ -7,6 +7,7 @@ import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.Secrets
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.Logger
+
 import ru.pulsar.jenkins.library.utils.VRunner
 import ru.pulsar.jenkins.library.utils.VersionParser
 
@@ -34,10 +35,12 @@ class InitFromStorage implements Serializable {
 
         steps.installLocalDependencies()
 
-        String storageVersion = VersionParser.storage()
+        steps.createDir('build/out')
+
+        String storageVersion = VersionParser.storage(config.getSrcDir())
         String storageVersionParameter = storageVersion == "" ? "" : "--storage-ver $storageVersion"
 
-        EnvironmentAction env = steps.env();
+        EnvironmentAction env = steps.env()
         String repoSlug = computeRepoSlug(env.GIT_URL)
 
         Secrets secrets = config.secrets
@@ -57,7 +60,13 @@ class InitFromStorage implements Serializable {
             )
         ]) {
             String vrunnerPath = VRunner.getVRunnerPath()
-            VRunner.exec "$vrunnerPath init-dev --storage $storageVersionParameter --ibconnection \"/F./build/ib\""
+            String vrunnerSettings = config.initInfoBaseOptions.getVrunnerSettings()
+
+            String command = vrunnerPath + " update-dev --storage $storageVersionParameter --ibconnection \"/F./build/ib\""
+            if (steps.fileExists(vrunnerSettings)) {
+                command += " --settings $vrunnerSettings"
+            }
+            VRunner.exec(command)
         }
     }
 

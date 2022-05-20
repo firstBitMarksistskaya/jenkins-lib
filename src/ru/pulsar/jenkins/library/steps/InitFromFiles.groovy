@@ -9,7 +9,7 @@ import ru.pulsar.jenkins.library.utils.VRunner
 
 class InitFromFiles implements Serializable {
 
-    private final JobConfiguration config;
+    private final JobConfiguration config
 
     InitFromFiles(JobConfiguration config) {
         this.config = config
@@ -25,25 +25,33 @@ class InitFromFiles implements Serializable {
             return
         }
 
-        steps.installLocalDependencies();
+        steps.installLocalDependencies()
+
+        steps.createDir('build/out')
 
         Logger.println("Распаковка файлов")
 
-        String srcDir;
+        String srcDir
 
         if (config.sourceFormat == SourceFormat.EDT) {
-            def env = steps.env();
+            def env = steps.env()
             srcDir = "$env.WORKSPACE/$EdtToDesignerFormatTransformation.CONFIGURATION_DIR"
 
             steps.unstash(EdtToDesignerFormatTransformation.CONFIGURATION_ZIP_STASH)
             steps.unzip(srcDir, EdtToDesignerFormatTransformation.CONFIGURATION_ZIP)
         } else {
-            srcDir = config.srcDir;
+            srcDir = config.srcDir
         }
 
-        Logger.println("Выполнение загрузки конфигурации из файлов")
-        String vrunnerPath = VRunner.getVRunnerPath();
-        def initCommand = "$vrunnerPath init-dev --src $srcDir --ibconnection \"/F./build/ib\""
-        VRunner.exec(initCommand)
+        String vrunnerPath = VRunner.getVRunnerPath()
+        String vrunnerSettings = config.initInfoBaseOptions.getVrunnerSettings()
+
+        String command = vrunnerPath + " update-dev --src $srcDir --ibconnection \"/F./build/ib\""
+        if (steps.fileExists(vrunnerSettings)) {
+                command += " --settings $vrunnerSettings"
+        }
+
+        VRunner.exec(command)
+
     }
 }

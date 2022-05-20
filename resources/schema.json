@@ -30,11 +30,11 @@
       "properties" : {
         "storagePath" : {
           "type" : "string",
-          "description" : "Путь к хранилищу конфигурации"
+          "description" : "Ид секрета Jenkins, хранящего путь к хранилищу конфигурации"
         },
         "storage" : {
           "type" : "string",
-          "description" : "Данные авторизации в хранилище конфигурации"
+          "description" : "Ид секрета Jenkins, хранящего логин и пароль для хранилища конфигурации"
         }
       }
     },
@@ -133,6 +133,10 @@
         "runMigration" : {
           "type" : "boolean",
           "description" : "Запустить миграцию ИБ"
+        },
+        "vrunnerSettings" : {
+          "type" : "string",
+          "description" : "Путь к конфигурационному файлу vanessa-runner.\n    По умолчанию содержит значение \"./tools/vrunner.json\".\n    "
         },
         "additionalInitializationSteps" : {
           "type" : "array",
