@@ -27,6 +27,11 @@ class SonarQubeOptions implements Serializable {
 
     @JsonPropertyDescription("Используется ли Branch-plugin в SonarQube")
     Boolean useBranchPlugin
+  
+    @JsonPropertyDescription("""Ожидать состояние Quality Gate от SonarQube после загрузки анализа. По умолчанию `false`.
+    Таймаут ожидания состояния равен таймауту шага.
+    """)
+    Boolean waitForQualityGate
 
     @Override
     @NonCPS
@@ -37,6 +42,7 @@ class SonarQubeOptions implements Serializable {
             ", sonarQubeInstallation='" + sonarQubeInstallation + '\'' +
             ", infoBaseUpdateModuleName='" + infoBaseUpdateModuleName + '\'' +
             ", useBranchPlugin='" + useBranchPlugin + '\'' +
+            ", waitForQualityGate='" + waitForQualityGate + '\'' +
             '}';
     }
 }

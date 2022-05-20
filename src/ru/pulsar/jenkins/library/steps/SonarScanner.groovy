@@ -52,6 +52,12 @@ class SonarScanner implements Serializable {
             sonarCommand += " -Dsonar.externalIssuesReportPaths=build/out/edt-generic-issue.json"
         }
 
+        if (config.sonarQubeOptions.waitForQualityGate) {
+            def timeoutInSeconds = config.timeoutOptions.sonarqube * 60
+            sonarCommand += ' -Dsonar.qualitygate.wait=true'
+            sonarCommand += " -Dsonar.qualitygate.timeout=${timeoutInSeconds}"
+        }
+
         def sonarQubeInstallation = config.sonarQubeOptions.sonarQubeInstallation
         if (sonarQubeInstallation == '') {
             sonarQubeInstallation = null

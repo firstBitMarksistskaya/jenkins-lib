@@ -45,7 +45,8 @@
     "useSonarScannerFromPath": true,
     "sonarScannerToolName": "sonar-scanner",
     "infoBaseUpdateModuleName" : "",
-    "useBranchPlugin" : true
+    "useBranchPlugin" : true,
+    "waitForQualityGate": false
   },
   "syntaxCheck": {
     "groupErrorsByMetadata": true,
