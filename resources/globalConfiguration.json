@@ -43,7 +43,8 @@
     "sonarQubeInstallation": "",
     "useSonarScannerFromPath": true,
     "sonarScannerToolName": "sonar-scanner",
-    "infoBaseUpdateModuleName" : ""
+    "infoBaseUpdateModuleName" : "",
+    "waitForQualityGate": false
   },
   "syntaxCheck": {
     "groupErrorsByMetadata": true,

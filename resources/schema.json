@@ -118,7 +118,7 @@
     },
     "initInfobase" : {
       "type" : "object",
-      "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:InitInfobaseOptions",
+      "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:InitInfoBaseOptions",
       "description" : "Настройки шага инициализации ИБ",
       "properties" : {
         "initMethod" : {
@@ -173,6 +173,10 @@
         "infoBaseUpdateModuleName" : {
           "type" : "string",
           "description" : "Имя общего модуля (например, ОбновлениеИнформационнойБазыXXX), в котором указана версия библиотеки.\n    Версия должна задаваться в виде присвоения `Описание.Версия = \"ваш номер версии\";`\n    "
+        },
+        "waitForQualityGate" : {
+          "type" : "boolean",
+          "description" : "Ожидать состояние Quality Gate от SonarQube после загрузки анализа. По умолчанию `false`.\n    Таймаут ожидания состояния равен таймауту шага.\n    "
         }
       }
     },
