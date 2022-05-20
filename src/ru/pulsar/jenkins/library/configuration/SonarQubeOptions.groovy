@@ -28,7 +28,7 @@ class SonarQubeOptions implements Serializable {
     @JsonPropertyDescription("""Ожидать состояние Quality Gate от SonarQube после загрузки анализа. По умолчанию `false`.
     Таймаут ожидания состояния равен таймауту шага.
     """)
-    boolean waitForQualityGate
+    Boolean waitForQualityGate
 
     @Override
     @NonCPS
