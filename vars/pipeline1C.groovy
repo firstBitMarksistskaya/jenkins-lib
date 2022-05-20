@@ -230,6 +230,21 @@ void call() {
                     }
                 }
             }
+
+            stage('Документирование'){
+                parallel {
+                    stage('Swagger') {
+                        agent {
+                            label 'oscript'
+                        }
+                        steps {
+                            script {
+                                swagger config
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         post('post-stage') {
