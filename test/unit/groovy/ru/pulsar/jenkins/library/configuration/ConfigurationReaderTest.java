@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static ru.pulsar.jenkins.library.configuration.BranchAnalysisConfiguration.AUTO;
 
 class ConfigurationReaderTest {
 
@@ -37,6 +38,7 @@ class ConfigurationReaderTest {
     assertThat(jobConfiguration.getSonarQubeOptions().getSonarScannerToolName()).isEqualTo("sonar-scanner");
     assertThat(jobConfiguration.getSonarQubeOptions().getSonarQubeInstallation()).isEqualTo("qa");
     assertThat(jobConfiguration.getSonarQubeOptions().getUseSonarScannerFromPath()).isTrue();
+    assertThat(jobConfiguration.getSonarQubeOptions().getBranchAnalysisConfiguration()).isEqualTo(AUTO);
 
     assertThat(jobConfiguration.getSecrets())
       .hasFieldOrPropertyWithValue("storage", "1234")

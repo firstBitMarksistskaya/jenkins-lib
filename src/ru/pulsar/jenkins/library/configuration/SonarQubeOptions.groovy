@@ -25,8 +25,12 @@ class SonarQubeOptions implements Serializable {
     """)
     String infoBaseUpdateModuleName
 
-    @JsonPropertyDescription("Используется ли Branch-plugin в SonarQube")
-    Boolean useBranchPlugin
+    @JsonPropertyDescription("""Вариант конфигурации branch plugin.
+    Поддерживаемые варианты:
+      * auto - применяется автоконфигурация sonar-scanner силами branchplugin. Так же может применяться для отключения конфигурирования, если branch plugin отсутствует;
+      * fromEnv - применяется ручная конфигурация sonar-scanner на основе переменных среды.
+    Значение по умолчанию: fromEnv.""")
+    BranchAnalysisConfiguration branchAnalysisConfiguration
   
     @JsonPropertyDescription("""Ожидать состояние Quality Gate от SonarQube после загрузки анализа. По умолчанию `false`.
     Таймаут ожидания состояния равен таймауту шага.
@@ -41,7 +45,7 @@ class SonarQubeOptions implements Serializable {
             ", sonarScannerToolName='" + sonarScannerToolName + '\'' +
             ", sonarQubeInstallation='" + sonarQubeInstallation + '\'' +
             ", infoBaseUpdateModuleName='" + infoBaseUpdateModuleName + '\'' +
-            ", useBranchPlugin='" + useBranchPlugin + '\'' +
+            ", branchAnalysisConfiguration='" + branchAnalysisConfiguration + '\'' +
             ", waitForQualityGate='" + waitForQualityGate + '\'' +
             '}';
     }
