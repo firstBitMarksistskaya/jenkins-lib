@@ -2,6 +2,7 @@
 import groovy.transform.Field
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.SourceFormat
+import ru.pulsar.jenkins.library.utils.RepoUtils
 
 import java.util.concurrent.TimeUnit
 
@@ -40,6 +41,7 @@ void call() {
                         config = jobConfiguration() as JobConfiguration
                         agent1C = config.v8AgentLabel()
                         agentEdt = config.edtAgentLabel()
+                        RepoUtils.computeRepoSlug(env.GIT_URL)
                     }
                 }
             }
