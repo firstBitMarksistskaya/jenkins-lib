@@ -7,7 +7,9 @@
   "defaultBranch": "main",
   "secrets": {
     "storagePath": "UNKNOWN_ID",
-    "storage": "UNKNOWN_ID"
+    "storage": "UNKNOWN_ID",
+    "telegramBotToken": "UNKNOWN_ID",
+    "telegramChatId": "UNKNOWN_ID"
   },
   "stages": {
     "initSteps": false,
@@ -15,7 +17,9 @@
     "bdd": false,
     "syntaxCheck": false,
     "edtValidate": false,
-    "smoke": false
+    "smoke": false,
+    "email": false,
+    "telegram": false
   },
   "timeout": {
     "smoke": 240,
@@ -76,6 +80,53 @@
   "resultsTransform": {
     "removeSupport": true,
     "supportLevel": 0
+  },
+  "notifications": {
+    "email": {
+      "onAlways": false,
+      "onFailure": true,
+      "onUnstable": false,
+      "onSuccess": false,
+      "alwaysOptions": {
+        "attachLog": true,
+        "directRecipients": [],
+        "recipientProviders": [
+          "developers",
+          "requestor"
+        ]
+      },
+      "failureOptions": {
+        "attachLog": true,
+        "directRecipients": [],
+        "recipientProviders": [
+          "developers",
+          "requestor",
+          "brokenBuildSuspects"
+        ]
+      },
+      "successOptions": {
+        "attachLog": false,
+        "directRecipients": [],
+        "recipientProviders": [
+          "developers",
+          "requestor"
+        ]
+      },
+      "unstableOptions": {
+        "attachLog": false,
+        "directRecipients": [],
+        "recipientProviders": [
+          "developers",
+          "requestor"
+        ]
+      }
+    },
+    "telegram": {
+      "onAlways": true,
+      "onFailure": false,
+      "onUnstable": false,
+      "onSuccess": false
+    }
   },
   "logosConfig": ""
 }

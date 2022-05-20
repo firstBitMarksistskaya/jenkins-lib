@@ -238,6 +238,7 @@ void call() {
             always {
                 node('agent') {
                     saveResults config
+                    sendNotifications(config)
                 }
             }
         }
