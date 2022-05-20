@@ -41,7 +41,7 @@ class EdtValidate implements Serializable {
             projectList = "--project-name-list $DesignerToEdtFormatTransformation.PROJECT_NAME"
         } else {
             String projectDir = new File("$env.WORKSPACE/$config.srcDir").getCanonicalPath()
-            projectList = "--project-list '$projectDir'"
+            projectList = "--project-list \"$projectDir\""
         }
 
         def resultFile = "$env.WORKSPACE/$RESULT_FILE"
