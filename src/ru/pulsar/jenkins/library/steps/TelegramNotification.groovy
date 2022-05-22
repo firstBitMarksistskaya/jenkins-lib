@@ -224,7 +224,7 @@ class TelegramNotification implements Serializable {
 
     @NonCPS
     private static String escapeStringForMarkdownV2(String incoming) {
-        return incoming.replace('_', '\\-')
+        return incoming.replace('_', '\\_')
             .replace('*', '\\*')
             .replace('[', '\\[')
             .replace(']', '\\]')
