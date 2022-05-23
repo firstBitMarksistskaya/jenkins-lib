@@ -1,7 +1,11 @@
 package ru.pulsar.jenkins.library
 
+import jenkins.plugins.http_request.HttpMode
+import jenkins.plugins.http_request.MimeType
+import jenkins.plugins.http_request.ResponseContentSupplier
 import org.jenkinsci.plugins.pipeline.utility.steps.fs.FileWrapper
 import org.jenkinsci.plugins.workflow.support.actions.EnvironmentAction
+import org.jenkinsci.plugins.workflow.support.steps.build.RunWrapper
 import ru.yandex.qatools.allure.jenkins.config.ResultsConfig
 
 class StepExecutor implements IStepExecutor {
@@ -139,7 +143,7 @@ class StepExecutor implements IStepExecutor {
 
     @Override
     def zip(String dir, String zipFile, String glob = '') {
-        steps.zip dir: dir, zipFile: zipFile, glob: glob
+        steps.zip dir: dir, zipFile: zipFile, glob: glob, overwrite: true
     }
 
     @Override
@@ -153,8 +157,20 @@ class StepExecutor implements IStepExecutor {
     }
 
     @Override
-    def httpRequest(String url, String outputFile, String responseHandle = 'NONE', boolean wrapAsMultipart = false) {
+    ResponseContentSupplier httpRequest(String url, String outputFile, String responseHandle = 'NONE', boolean wrapAsMultipart = false) {
         steps.httpRequest responseHandle: responseHandle, outputFile: outputFile, url: url, wrapAsMultipart: wrapAsMultipart
+    }
+
+    @Override
+    ResponseContentSupplier httpRequest(String url, HttpMode httpMode, MimeType contentType, String requestBody, String validResponseCodes, boolean consoleLogResponseBody) {
+        steps.httpRequest(
+            url: url,
+            httpMode: httpMode,
+            contentType: contentType,
+            requestBody: requestBody,
+            validResponseCodes: validResponseCodes,
+            consoleLogResponseBody: consoleLogResponseBody
+        )
     }
 
     @Override
@@ -182,5 +198,41 @@ class StepExecutor implements IStepExecutor {
     @Override
     def installLocalDependencies() {
         steps.installLocalDependencies()
+    }
+
+    @Override
+    def emailext(String subject, String body, String to, List recipientProviders, boolean attachLog) {
+        steps.emailext(
+            subject: subject,
+            body: body,
+            to: to,
+            recipientProviders: recipientProviders,
+            attachLog: attachLog,
+        )
+    }
+
+    @Override
+    def developers() {
+        steps.developers()
+    }
+
+    @Override
+    def requestor() {
+        steps.requestor()
+    }
+
+    @Override
+    def brokenBuildSuspects() {
+        steps.brokenBuildSuspects()
+    }
+
+    @Override
+    def brokenTestsSuspects() {
+        steps.brokenTestsSuspects()
+    }
+
+    @Override
+    RunWrapper currentBuild() {
+        steps.currentBuild
     }
 }

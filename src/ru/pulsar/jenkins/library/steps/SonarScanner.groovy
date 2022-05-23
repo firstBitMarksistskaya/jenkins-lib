@@ -1,6 +1,7 @@
 package ru.pulsar.jenkins.library.steps
 
 import ru.pulsar.jenkins.library.IStepExecutor
+import ru.pulsar.jenkins.library.configuration.BranchAnalysisConfiguration
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.SourceFormat
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
@@ -36,7 +37,20 @@ class SonarScanner implements Serializable {
             sonarScannerBinary = "$scannerHome/bin/sonar-scanner"
         }
 
-        String sonarCommand = "$sonarScannerBinary -Dsonar.branch.name=$env.BRANCH_NAME"
+        String sonarCommand = "$sonarScannerBinary"
+
+        def branchAnalysisConfiguration = config.sonarQubeOptions.branchAnalysisConfiguration
+        if (branchAnalysisConfiguration == BranchAnalysisConfiguration.FROM_ENV) {
+            if (env.CHANGE_ID){
+                sonarCommand += " -Dsonar.pullrequest.key=$env.CHANGE_ID"
+                sonarCommand += " -Dsonar.pullrequest.branch=$env.CHANGE_BRANCH"
+                sonarCommand += " -Dsonar.pullrequest.base=$env.CHANGE_TARGET"
+            } else {
+                sonarCommand += " -Dsonar.branch.name=$env.BRANCH_NAME"
+            }
+        } else (branchAnalysisConfiguration == BranchAnalysisConfiguration.AUTO) {
+            // no-op
+        }
 
         String projectVersion = computeProjectVersion()
         if (projectVersion) {
@@ -46,6 +60,12 @@ class SonarScanner implements Serializable {
         if (config.stageFlags.edtValidate) {
             steps.unstash("edt-generic-issue")
             sonarCommand += " -Dsonar.externalIssuesReportPaths=build/out/edt-generic-issue.json"
+        }
+
+        if (config.sonarQubeOptions.waitForQualityGate) {
+            def timeoutInSeconds = config.timeoutOptions.sonarqube * 60
+            sonarCommand += ' -Dsonar.qualitygate.wait=true'
+            sonarCommand += " -Dsonar.qualitygate.timeout=${timeoutInSeconds}"
         }
 
         def sonarQubeInstallation = config.sonarQubeOptions.sonarQubeInstallation

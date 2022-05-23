@@ -7,14 +7,13 @@ import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.Secrets
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.Logger
+import ru.pulsar.jenkins.library.utils.RepoUtils
 import ru.pulsar.jenkins.library.utils.VRunner
 import ru.pulsar.jenkins.library.utils.VersionParser
 
 import static ru.pulsar.jenkins.library.configuration.Secrets.UNKNOWN_ID
 
 class InitFromStorage implements Serializable {
-
-    final static REPO_SLUG_REGEXP = ~/(?m)^(?:[^:\/?#\n]+:)?(?:\/+[^\/?#\n]*)?\/?([^?\n]*)/
 
     private final JobConfiguration config
 
@@ -37,8 +36,7 @@ class InitFromStorage implements Serializable {
         String storageVersion = VersionParser.storage()
         String storageVersionParameter = storageVersion == "" ? "" : "--storage-ver $storageVersion"
 
-        EnvironmentAction env = steps.env();
-        String repoSlug = computeRepoSlug(env.GIT_URL)
+        String repoSlug = RepoUtils.getRepoSlug()
 
         Secrets secrets = config.secrets
 
@@ -61,14 +59,4 @@ class InitFromStorage implements Serializable {
         }
     }
 
-    @NonCPS
-    private static String computeRepoSlug(String text) {
-        def matcher = text =~ REPO_SLUG_REGEXP
-        String repoSlug = matcher != null && matcher.getCount() == 1 ? matcher[0][1] : ""
-        if (repoSlug.endsWith(".git")) {
-            repoSlug = repoSlug[0..-5]
-        }
-        repoSlug = repoSlug.replace('/', '_')
-        return repoSlug
-    }
 }

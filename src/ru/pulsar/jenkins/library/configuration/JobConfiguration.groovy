@@ -12,6 +12,9 @@ class JobConfiguration implements Serializable {
     @JsonPropertyDescription("Версия платформы 1С:Предприятие в формате 8.3.хх.хххх.")
     String v8version
 
+    @JsonPropertyDescription("Версия модуля 1C:Enterprise Development Tools формате xxxx.x.x:x86_64")
+    String edtVersion
+
     @JsonPropertyDescription("Путь к корневому каталогу с исходниками конфигурации, в случае хранения исходников в формате EDT, необходимо указать путь к проекту")
     String srcDir
 
@@ -56,6 +59,10 @@ class JobConfiguration implements Serializable {
     @JsonPropertyDescription("Настройки трансформации результатов анализа")
     ResultsTransformOptions resultsTransformOptions;
 
+    @JsonProperty("notifications")
+    @JsonPropertyDescription("Настройки рассылки результатов сборки")
+    NotificationsOptions notificationsOptions;
+
     @JsonProperty("logosConfig")
     @JsonPropertyDescription("Конфигурация библиотеки logos. Применяется перед запуском каждой стадии сборки")
     String logosConfig;
@@ -65,6 +72,7 @@ class JobConfiguration implements Serializable {
     String toString() {
         return "JobConfiguration{" +
             "v8version='" + v8version + '\'' +
+            ", edtVersion='" + edtVersion + '\'' +
             ", srcDir='" + srcDir + '\'' +
             ", sourceFormat=" + sourceFormat +
             ", stageFlags=" + stageFlags +
@@ -77,6 +85,7 @@ class JobConfiguration implements Serializable {
             ", syntaxCheckOptions=" + syntaxCheckOptions +
             ", smokeTestOptions=" + smokeTestOptions +
             ", resultsTransformOptions=" + resultsTransformOptions +
+            ", notificationOptions=" + notificationsOptions +
             ", logosConfig='" + logosConfig + '\'' +
             '}';
     }
@@ -89,5 +98,17 @@ class JobConfiguration implements Serializable {
 
         return (initMethod == InitInfoBaseMethod.FROM_SOURCE) ||
             (initMethod == InitInfoBaseMethod.DEFAULT_BRANCH_FROM_STORAGE && branchName != defaultBranch)
+    }
+
+    String v8AgentLabel() {
+        return v8version
+    }
+
+    String edtAgentLabel() {
+        String edtVersionForRing = "edt"
+        if (edtVersion != '') {
+            edtVersionForRing += "@" + edtVersion
+        }
+        return edtVersionForRing
     }
 }
