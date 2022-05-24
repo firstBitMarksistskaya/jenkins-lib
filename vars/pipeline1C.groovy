@@ -49,9 +49,6 @@ void call() {
             stage('Подготовка') {
                 parallel {
                     stage('Подготовка 1C базы') {
-                        agent {
-                            label agent1C
-                        }
                         when {
                             beforeAgent true
                             expression { config.stageFlags.needInfoBase() }
@@ -73,46 +70,53 @@ void call() {
                                 }
                             }
 
-                            stage('Создание ИБ') {
-                                steps {
-                                    timeout(time: config.timeoutOptions.createInfoBase, unit: TimeUnit.MINUTES) {
-                                        createDir('build/out')
+                            stage('Подготовка 1С базы') {
+                                agent {
+                                    label agent1C
+                                }
 
-                                        script {
-                                            if (config.infoBaseFromFiles()) {
-                                                // Создание базы загрузкой из файлов
-                                                initFromFiles config
-                                            } else {
-                                                // Создание базы загрузкой конфигурации из хранилища
-                                                initFromStorage config
+                                stages {
+                                    stage('Создание ИБ') {
+                                        steps {
+                                            timeout(time: config.timeoutOptions.createInfoBase, unit: TimeUnit.MINUTES) {
+                                                createDir('build/out')
+
+                                                script {
+                                                    if (config.infoBaseFromFiles()) {
+                                                        // Создание базы загрузкой из файлов
+                                                        initFromFiles config
+                                                    } else {
+                                                        // Создание базы загрузкой конфигурации из хранилища
+                                                        initFromStorage config
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    stage('Инициализация ИБ') {
+                                        when {
+                                            beforeAgent true
+                                            expression { config.stageFlags.initSteps }
+                                        }
+                                        steps {
+                                            timeout(time: config.timeoutOptions.initInfoBase, unit: TimeUnit.MINUTES) {
+                                                // Инициализация и первичная миграция
+                                                initInfobase config
+                                            }
+                                        }
+                                    }
+
+                                    stage('Архивация ИБ') {
+                                        steps {
+                                            timeout(time: config.timeoutOptions.zipInfoBase, unit: TimeUnit.MINUTES) {
+                                                printLocation()
+
+                                                zipInfobase()
                                             }
                                         }
                                     }
                                 }
-                            }
-
-                            stage('Инициализация ИБ') {
-                                when {
-                                    beforeAgent true
-                                    expression { config.stageFlags.initSteps }
-                                }
-                                steps {
-                                    timeout(time: config.timeoutOptions.initInfoBase, unit: TimeUnit.MINUTES) {
-                                        // Инициализация и первичная миграция
-                                        initInfobase config
-                                    }
-                                }
-                            }
-
-                            stage('Архивация ИБ') {
-                                steps {
-                                    timeout(time: config.timeoutOptions.zipInfoBase, unit: TimeUnit.MINUTES) {
-                                        printLocation()
-
-                                        zipInfobase()
-                                    }
-                                }
-
                             }
                         }
 
