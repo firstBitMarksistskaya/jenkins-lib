@@ -15,7 +15,7 @@ class DesignerToEdtFormatTransformation implements Serializable {
     public static final String WORKSPACE_ZIP = 'build/edt-workspace.zip'
     public static final String WORKSPACE_ZIP_STASH = 'edt-workspace-zip'
 
-    private final JobConfiguration config;
+    private final JobConfiguration config
 
     DesignerToEdtFormatTransformation(JobConfiguration config) {
         this.config = config
@@ -31,10 +31,10 @@ class DesignerToEdtFormatTransformation implements Serializable {
             return
         }
 
-        def env = steps.env();
+        def env = steps.env()
 
         def workspaceDir = "$env.WORKSPACE/$WORKSPACE"
-        def configurationRoot = new File(env.WORKSPACE, config.srcDir).getAbsolutePath()
+        def configurationRoot = "$env.WORKSPACE/$config.srcDir"
         def edtVersionForRing = EDT.ringModule(config)
 
         steps.deleteDir(workspaceDir)
