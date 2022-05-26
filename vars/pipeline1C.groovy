@@ -2,6 +2,7 @@
 import groovy.transform.Field
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.SourceFormat
+import ru.pulsar.jenkins.library.utils.RepoUtils
 
 import java.util.concurrent.TimeUnit
 
@@ -10,6 +11,9 @@ JobConfiguration config
 
 @Field
 String agent1C
+
+@Field
+String agentEdt
 
 void call() {
 
@@ -35,7 +39,9 @@ void call() {
                 steps {
                     script {
                         config = jobConfiguration() as JobConfiguration
-                        agent1C = config.v8version
+                        agent1C = config.v8AgentLabel()
+                        agentEdt = config.edtAgentLabel()
+                        RepoUtils.computeRepoSlug(env.GIT_URL)
                     }
                 }
             }
@@ -43,9 +49,6 @@ void call() {
             stage('Подготовка') {
                 parallel {
                     stage('Подготовка 1C базы') {
-                        agent {
-                            label agent1C
-                        }
                         when {
                             beforeAgent true
                             expression { config.stageFlags.needInfoBase() }
@@ -54,7 +57,7 @@ void call() {
                         stages {
                             stage('Трансформация из формата EDT') {
                                 agent {
-                                    label 'edt'
+                                    label agentEdt
                                 }
                                 when {
                                     beforeAgent true
@@ -67,46 +70,53 @@ void call() {
                                 }
                             }
 
-                            stage('Создание ИБ') {
-                                steps {
-                                    timeout(time: config.timeoutOptions.createInfoBase, unit: TimeUnit.MINUTES) {
-                                        createDir('build/out')
+                            stage('Подготовка 1С базы') {
+                                agent {
+                                    label agent1C
+                                }
 
-                                        script {
-                                            if (config.infoBaseFromFiles()) {
-                                                // Создание базы загрузкой из файлов
-                                                initFromFiles config
-                                            } else {
-                                                // Создание базы загрузкой конфигурации из хранилища
-                                                initFromStorage config
+                                stages {
+                                    stage('Создание ИБ') {
+                                        steps {
+                                            timeout(time: config.timeoutOptions.createInfoBase, unit: TimeUnit.MINUTES) {
+                                                createDir('build/out')
+
+                                                script {
+                                                    if (config.infoBaseFromFiles()) {
+                                                        // Создание базы загрузкой из файлов
+                                                        initFromFiles config
+                                                    } else {
+                                                        // Создание базы загрузкой конфигурации из хранилища
+                                                        initFromStorage config
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    stage('Инициализация ИБ') {
+                                        when {
+                                            beforeAgent true
+                                            expression { config.stageFlags.initSteps }
+                                        }
+                                        steps {
+                                            timeout(time: config.timeoutOptions.initInfoBase, unit: TimeUnit.MINUTES) {
+                                                // Инициализация и первичная миграция
+                                                initInfobase config
+                                            }
+                                        }
+                                    }
+
+                                    stage('Архивация ИБ') {
+                                        steps {
+                                            timeout(time: config.timeoutOptions.zipInfoBase, unit: TimeUnit.MINUTES) {
+                                                printLocation()
+
+                                                zipInfobase()
                                             }
                                         }
                                     }
                                 }
-                            }
-
-                            stage('Инициализация ИБ') {
-                                when {
-                                    beforeAgent true
-                                    expression { config.stageFlags.initSteps }
-                                }
-                                steps {
-                                    timeout(time: config.timeoutOptions.initInfoBase, unit: TimeUnit.MINUTES) {
-                                        // Инициализация и первичная миграция
-                                        initInfobase config
-                                    }
-                                }
-                            }
-
-                            stage('Архивация ИБ') {
-                                steps {
-                                    timeout(time: config.timeoutOptions.zipInfoBase, unit: TimeUnit.MINUTES) {
-                                        printLocation()
-
-                                        zipInfobase()
-                                    }
-                                }
-
                             }
                         }
 
@@ -114,7 +124,7 @@ void call() {
 
                     stage('Трансформация в формат EDT') {
                         agent {
-                            label 'edt'
+                            label agentEdt
                         }
                         when {
                             beforeAgent true
@@ -139,7 +149,7 @@ void call() {
                         stages {
                             stage('Валидация EDT') {
                                 agent {
-                                    label 'edt'
+                                    label agentEdt
                                 }
                                 steps {
                                     timeout(time: config.timeoutOptions.edtValidate, unit: TimeUnit.MINUTES) {
@@ -232,6 +242,7 @@ void call() {
             always {
                 node('agent') {
                     saveResults config
+                    sendNotifications(config)
                 }
             }
         }
