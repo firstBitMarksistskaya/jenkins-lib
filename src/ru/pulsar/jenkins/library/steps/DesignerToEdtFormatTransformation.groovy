@@ -34,7 +34,7 @@ class DesignerToEdtFormatTransformation implements Serializable {
         def env = steps.env();
 
         def workspaceDir = "$env.WORKSPACE/$WORKSPACE"
-        def configurationRoot = new File(env.WORKSPACE, config.srcDir).getAbsolutePath()
+        def configurationRoot = "$env.WORKSPACE/$config.srcDir"
         def edtVersionForRing = EDT.ringModule(config)
 
         steps.deleteDir(workspaceDir)

@@ -29,7 +29,8 @@ def call(JobConfiguration config) {
     createDir(outPath)
 
     String vrunnerPath = VRunner.getVRunnerPath();
-    String command = "$vrunnerPath syntax-check --ibconnection \"/F./build/ib\""
+    String base = config.baseName()
+    String command = "$vrunnerPath syntax-check --ibconnection \"$base\""
 
     // Временно убрал передачу параметра.
     // См. https://github.com/vanessa-opensource/vanessa-runner/issues/361

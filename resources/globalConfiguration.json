@@ -3,6 +3,7 @@
   "v8version": "8.3",
   "edtVersion": "",
   "srcDir": "src/cf",
+  "basePath": "",
   "sourceFormat": "designer",
   "defaultBranch": "main",
   "secrets": {
@@ -37,7 +38,8 @@
   "initInfobase": {
     "initMethod": "fromStorage",
     "runMigration": true,
-    "additionalInitializationSteps": []
+    "additionalInitializationSteps": [],
+    "vrunnerSettings": "./tools/vrunner.json"
   },
   "bdd": {
     "vrunnerSteps": [

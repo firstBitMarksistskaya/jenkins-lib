@@ -14,6 +14,10 @@
       "type" : "string",
       "description" : "Путь к корневому каталогу с исходниками конфигурации, в случае хранения исходников в формате EDT, необходимо указать путь к проекту"
     },
+    "basePath" : {
+      "type" : "string",
+      "description" : "Путь к базе для выполнения тестов"
+    },
     "sourceFormat" : {
       "type" : "string",
       "description" : "Формат исходников конфигурации",
@@ -156,6 +160,10 @@
           "items" : {
             "type" : "string"
           }
+        },
+        "vrunnerSettings" : {
+          "type" : "string",
+          "description" : "Путь к конфигурационному файлу vanessa-runner.\n    По умолчанию содержит значение \"./tools/vrunner.json\".\n    "
         }
       }
     },

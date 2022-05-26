@@ -41,13 +41,14 @@ class InitInfoBase implements Serializable {
                     executeParameter = '\\' + executeParameter
                 }
                 command += executeParameter;
-                command += ' --ibconnection "/F./build/ib"'
+                String base = config.baseName()
+                command += ' --ibconnection "$base"'
 
                 // Запуск миграции
                 steps.catchError {
                     VRunner.exec(command)
                 }
-            } else {
+            } else {F
                 Logger.println("Шаг миграции ИБ выключен")
             }
 
@@ -57,12 +58,12 @@ class InitInfoBase implements Serializable {
                     files = files.sort new OrderBy( { it.name })
                     files.each {
                         Logger.println("Первичная инициализация файлом ${it.path}")
-                        VRunner.exec("$vrunnerPath vanessa --settings ${it.path} --ibconnection \"/F./build/ib\"")
+                        VRunner.exec("$vrunnerPath vanessa --settings ${it.path} --ibconnection \"${base}\"")
                     }
                 } else {
                     config.initInfoBaseOptions.additionalInitializationSteps.each {
                         Logger.println("Первичная инициализация командой ${it}")
-                        VRunner.exec("$vrunnerPath ${it} --ibconnection \"/F./build/ib\"")
+                        VRunner.exec("$vrunnerPath ${it} --ibconnection \"${base}\"")
                     }
                 }
             }
