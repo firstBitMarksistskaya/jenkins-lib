@@ -1,6 +1,7 @@
 {
   "v8version": "8.3.14.1944",
   "edtVersion": "2021.3.4:x86_64",
+  "basePath" : "/sserver\\base",
   "secrets": {
     "storage": "1234"
   },

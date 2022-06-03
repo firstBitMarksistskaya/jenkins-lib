@@ -1,5 +1,6 @@
 /* groovylint-disable NestedBlockDepth */
 import groovy.transform.Field
+import ru.pulsar.jenkins.library.configuration.InitInfoBaseMethod
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.SourceFormat
 import ru.pulsar.jenkins.library.utils.RepoUtils
@@ -51,7 +52,7 @@ void call() {
                     stage('Подготовка 1C базы') {
                         when {
                             beforeAgent true
-                            expression { config.stageFlags.needInfoBase() }
+                            expression { config.stageFlags.needInfoBase() && config.initInfoBaseOptions.initMethod != InitInfoBaseMethod.NOT_INIT}
                         }
 
                         stages {
@@ -108,6 +109,10 @@ void call() {
                                     }
 
                                     stage('Архивация ИБ') {
+                                        when {
+                                            beforeAgent true
+                                            expression { config.basePath == '' }
+                                        }
                                         steps {
                                             timeout(time: config.timeoutOptions.zipInfoBase, unit: TimeUnit.MINUTES) {
                                                 printLocation()
@@ -181,9 +186,13 @@ void call() {
                         }
                         steps {
                             timeout(time: config.timeoutOptions.bdd, unit: TimeUnit.MINUTES) {
-                                unzipInfobase()
+                                script {
+                                    if (config.basePath == '') {
+                                        unzipInfobase()
+                                    }
 
-                                bdd config
+                                    bdd config
+                                }
                             }
                         }
                     }
@@ -213,9 +222,13 @@ void call() {
                         }
                         steps {
                             timeout(time: config.timeoutOptions.smoke, unit: TimeUnit.MINUTES) {
-                                unzipInfobase()
+                                script {
+                                    if (config.basePath == '') {
+                                        unzipInfobase()
+                                    }
 
-                                smoke config
+                                    smoke config
+                                }
                             }
                         }
                     }

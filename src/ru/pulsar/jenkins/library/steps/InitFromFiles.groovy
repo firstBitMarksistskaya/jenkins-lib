@@ -43,7 +43,13 @@ class InitFromFiles implements Serializable {
 
         Logger.println("Выполнение загрузки конфигурации из файлов")
         String vrunnerPath = VRunner.getVRunnerPath();
-        def initCommand = "$vrunnerPath init-dev --src $srcDir --ibconnection \"/F./build/ib\""
+        String base = config.baseName()
+        def initCommand = "$vrunnerPath init-dev --src $srcDir --ibconnection \"$base\""
+
+        String vrunnerSettings = config.initInfoBaseOptions.vrunnerSettings
+        if (steps.fileExists(vrunnerSettings) && config.basePath != '') {
+            initCommand += " --settings $vrunnerSettings"
+        }
         VRunner.exec(initCommand)
     }
 }

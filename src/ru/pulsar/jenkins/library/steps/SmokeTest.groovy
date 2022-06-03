@@ -38,7 +38,8 @@ class SmokeTest implements Serializable {
         def env = steps.env()
 
         String vrunnerPath = VRunner.getVRunnerPath()
-        String command = "$vrunnerPath xunit --ibconnection \"/F./build/ib\""
+        String base = config.baseName()
+        String command = "$vrunnerPath xunit --ibconnection \"$base\""
 
         String vrunnerSettings = options.vrunnerSettings
         if (steps.fileExists(vrunnerSettings)) {

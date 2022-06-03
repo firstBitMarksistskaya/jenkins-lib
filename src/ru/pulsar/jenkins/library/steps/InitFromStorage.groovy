@@ -55,7 +55,8 @@ class InitFromStorage implements Serializable {
             )
         ]) {
             String vrunnerPath = VRunner.getVRunnerPath()
-            VRunner.exec "$vrunnerPath init-dev --storage $storageVersionParameter --ibconnection \"/F./build/ib\""
+            String base = config.baseName()
+            VRunner.exec "$vrunnerPath init-dev --storage $storageVersionParameter --ibconnection \"$base\""
         }
     }
 
