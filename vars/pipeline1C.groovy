@@ -18,8 +18,9 @@ void call() {
         agent none
 
         options {
-            buildDiscarder(logRotator(numToKeepStr: '30'))
+            buildDiscarder(logRotator(numToKeepStr: '7'))
             timestamps()
+            copyArtifactPermission('*')
         }
 
         stages {
