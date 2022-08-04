@@ -6,6 +6,10 @@
       "type" : "string",
       "description" : "Версия платформы 1С:Предприятие в формате 8.3.хх.хххх."
     },
+    "edtVersion" : {
+      "type" : "string",
+      "description" : "Версия модуля 1C:Enterprise Development Tools формате xxxx.x.x:x86_64"
+    },
     "srcDir" : {
       "type" : "string",
       "description" : "Путь к корневому каталогу с исходниками конфигурации, в случае хранения исходников в формате EDT, необходимо указать путь к проекту"
@@ -38,6 +42,14 @@
         "storage" : {
           "type" : "string",
           "description" : "Данные авторизации в хранилище конфигурации"
+        },
+        "telegramChatId" : {
+          "type" : "string",
+          "description" : "Идентификатор telegram-чата для отправки уведомлений"
+        },
+        "telegramBotToken" : {
+          "type" : "string",
+          "description" : "Токен авторизации telegram-бота для отправки уведомлений"
         }
       }
     },
@@ -69,6 +81,14 @@
         "bdd" : {
           "type" : "boolean",
           "description" : "Запуск BDD сценариев включен"
+        },
+        "email" : {
+          "type" : "boolean",
+          "description" : "Выполнять рассылку результатов сборки на email"
+        },
+        "telegram" : {
+          "type" : "boolean",
+          "description" : "Выполнять рассылку результатов сборки в telegram"
         }
       }
     },
@@ -125,7 +145,7 @@
     },
     "initInfobase" : {
       "type" : "object",
-      "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:InitInfobaseOptions",
+      "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:InitInfoBaseOptions",
       "description" : "Настройки шага инициализации ИБ",
       "properties" : {
         "initMethod" : {
@@ -184,6 +204,15 @@
         "infoBaseUpdateModuleName" : {
           "type" : "string",
           "description" : "Имя общего модуля (например, ОбновлениеИнформационнойБазыXXX), в котором указана версия библиотеки.\n    Версия должна задаваться в виде присвоения `Описание.Версия = \"ваш номер версии\";`\n    "
+        },
+        "branchAnalysisConfiguration" : {
+          "type" : "string",
+          "description" : "Вариант конфигурации branch plugin.\n    Поддерживаемые варианты:\n      * auto - применяется автоконфигурация sonar-scanner силами branchplugin. Так же может применяться для отключения конфигурирования, если branch plugin отсутствует;\n      * fromEnv - применяется ручная конфигурация sonar-scanner на основе переменных среды.\n    Значение по умолчанию: fromEnv.",
+          "enum" : [ "auto", "fromEnv" ]
+        },
+        "waitForQualityGate" : {
+          "type" : "boolean",
+          "description" : "Ожидать состояние Quality Gate от SonarQube после загрузки анализа. По умолчанию `false`.\n    Таймаут ожидания состояния равен таймауту шага.\n    "
         }
       }
     },
@@ -252,6 +281,93 @@
         "supportLevel" : {
           "type" : "integer",
           "description" : "Настройка фильтрации замечаний по уровню поддержки.\n        0 - удалить файлы на замке;\n        1 - удалить файлы на замке и на поддержке;\n        2 - удалить файлы на замке, на поддержке и снятые с поддержки.\n    "
+        }
+      }
+    },
+    "notifications" : {
+      "type" : "object",
+      "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:NotificationsOptions",
+      "description" : "Настройки рассылки результатов сборки",
+      "properties" : {
+        "email" : {
+          "type" : "object",
+          "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:notification:EmailNotificationOptions",
+          "description" : "Настройки рассылки результатов сборки через email",
+          "properties" : {
+            "onAlways" : {
+              "type" : "boolean",
+              "description" : "Отправлять всегда"
+            },
+            "onSuccess" : {
+              "type" : "boolean",
+              "description" : "Отправлять при успешной сборке"
+            },
+            "onFailure" : {
+              "type" : "boolean",
+              "description" : "Отправлять при падении сборки"
+            },
+            "onUnstable" : {
+              "type" : "boolean",
+              "description" : "Отправлять при нестабильной сборке"
+            },
+            "alwaysOptions" : {
+              "type" : "object",
+              "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:notification:email:EmailExtConfiguration",
+              "properties" : {
+                "attachLog" : {
+                  "type" : "boolean"
+                },
+                "directRecipients" : {
+                  "type" : "array",
+                  "items" : {
+                    "type" : "string"
+                  }
+                },
+                "recipientProviders" : {
+                  "type" : "array",
+                  "items" : {
+                    "type" : "string",
+                    "enum" : [ "developers", "requestor", "brokenBuildSuspects", "brokenTestsSuspects" ]
+                  }
+                }
+              }
+            },
+            "successOptions" : {
+              "type" : "object",
+              "$ref" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:notification:email:EmailExtConfiguration"
+            },
+            "failureOptions" : {
+              "type" : "object",
+              "$ref" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:notification:email:EmailExtConfiguration"
+            },
+            "unstableOptions" : {
+              "type" : "object",
+              "$ref" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:notification:email:EmailExtConfiguration"
+            }
+          }
+        },
+        "telegram" : {
+          "type" : "object",
+          "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:notification:TelegramNotificationOptions",
+          "description" : "Настройки рассылки результатов сборки через telegram",
+          "properties" : {
+            "onAlways" : {
+              "type" : "boolean",
+              "description" : "Отправлять всегда"
+            },
+            "onSuccess" : {
+              "type" : "boolean",
+              "description" : "Отправлять при успешной сборке"
+            },
+            "onFailure" : {
+              "type" : "boolean",
+              "description" : "Отправлять при падении сборки"
+            },
+            "onUnstable" : {
+              "type" : "boolean",
+              "description" : "Отправлять при нестабильной сборке"
+            }
+          }
         }
       }
     },
