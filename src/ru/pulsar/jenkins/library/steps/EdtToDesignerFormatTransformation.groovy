@@ -71,7 +71,7 @@ class EdtToDesignerFormatTransformation implements Serializable {
                 workspaceExtDir = workspaceDir.replace(extPrefix,"$extPrefix-$extSuffix${it}")
                 projectExtDir = "$env.WORKSPACE/${it}"
                 configurationExtRoot = configurationRoot.replace(extPrefix,"$extPrefix-$extSuffix${it}") 
-                configurationExtZip = configurationZip.replace(extPrefix,"$extPrefix-$extSuffix${it}")
+                configurationExtZip = CONFIGURATION_ZIP.replace(extPrefix,"$extPrefix-$extSuffix${it}")
 
                 ringCommandExt = "ring edt workspace export --workspace-location \"$workspaceExtDir\" --project \"$projectExtDir\" --configuration-files \"$configurationExtRoot\""
                 
