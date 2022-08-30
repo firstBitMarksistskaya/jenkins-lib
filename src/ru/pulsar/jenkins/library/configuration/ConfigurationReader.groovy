@@ -129,10 +129,10 @@ class ConfigurationReader implements Serializable {
 
     @NonCPS
     private static void mergeSyntaxCheckOptions(SyntaxCheckOptions baseObject, SyntaxCheckOptions objectToMerge) {
-        if (objectToMerge == null || objectToMerge.vrunnerSteps == null) {
+        if (objectToMerge == null || objectToMerge.checkModes == null) {
             return
         }
-        baseObject.vrunnerSteps = objectToMerge.vrunnerSteps.clone()
+        baseObject.checkModes = objectToMerge.checkModes.clone()
     }
 
 
