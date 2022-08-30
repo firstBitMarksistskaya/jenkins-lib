@@ -45,7 +45,7 @@ class ConfigurationReaderTest {
       .hasFieldOrPropertyWithValue("storagePath", "UNKNOWN_ID")
     ;
 
-    assertThat(jobConfiguration.getSyntaxCheckOptions().getCheckModes()).hasSize(1);
+    assertThat(jobConfiguration.getSyntaxCheckOptions().getCheckModes()).hasSize(4);
 
     assertThat(jobConfiguration.getResultsTransformOptions().getRemoveSupport()).isFalse();
     assertThat(jobConfiguration.getResultsTransformOptions().getSupportLevel()).isZero();
