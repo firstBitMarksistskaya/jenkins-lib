@@ -135,7 +135,6 @@ class ConfigurationReader implements Serializable {
         baseObject.checkModes = objectToMerge.checkModes.clone()
     }
 
-
     private static void mergeNotificationsOptions(NotificationsOptions baseObject, NotificationsOptions objectToMerge) {
         if (objectToMerge == null) {
             return
