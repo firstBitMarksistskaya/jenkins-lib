@@ -79,6 +79,7 @@ class ConfigurationReader implements Serializable {
         mergeObjects(baseConfiguration, configurationToMerge, nonMergeableSettings)
         mergeInitInfoBaseOptions(baseConfiguration.initInfoBaseOptions, configurationToMerge.initInfoBaseOptions)
         mergeBddOptions(baseConfiguration.bddOptions, configurationToMerge.bddOptions)
+        mergeSyntaxCheckOptions(baseConfiguration.syntaxCheckOptions, configurationToMerge.syntaxCheckOptions)
         mergeNotificationsOptions(baseConfiguration.notificationsOptions, configurationToMerge.notificationsOptions)
 
         return baseConfiguration;
@@ -120,6 +121,14 @@ class ConfigurationReader implements Serializable {
 
     @NonCPS
     private static void mergeBddOptions(BddOptions baseObject, BddOptions objectToMerge) {
+        if (objectToMerge == null || objectToMerge.vrunnerSteps == null) {
+            return
+        }
+        baseObject.vrunnerSteps = objectToMerge.vrunnerSteps.clone()
+    }
+
+    @NonCPS
+    private static void mergeSyntaxCheckOptions(SyntaxCheckOptions baseObject, SyntaxCheckOptions objectToMerge) {
         if (objectToMerge == null || objectToMerge.vrunnerSteps == null) {
             return
         }
