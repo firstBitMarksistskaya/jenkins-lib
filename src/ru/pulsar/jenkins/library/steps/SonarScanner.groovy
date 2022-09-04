@@ -39,7 +39,7 @@ class SonarScanner implements Serializable {
             sonarScannerBinary = "$scannerHome/bin/sonar-scanner"
         }
         
-        String sonarCommand = " - export SONAR_SCANNER_OPTS=\"-Xmx6g\" " + "$sonarScannerBinary"
+        String sonarCommand = " export SONAR_SCANNER_OPTS=\"-Xmx6g\" " + "$sonarScannerBinary"
 
         def branchAnalysisConfiguration = config.sonarQubeOptions.branchAnalysisConfiguration
         if (branchAnalysisConfiguration == BranchAnalysisConfiguration.FROM_ENV) {
