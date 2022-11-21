@@ -101,7 +101,7 @@ class SmokeTest implements Serializable {
         }
 
         steps.withEnv(logosConfig) {
-            VRunner.exec(command)
+            VRunner.exec(command, true)
         }
 
         if (options.publishToAllureReport) {
