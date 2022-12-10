@@ -21,7 +21,12 @@
     "branchAnalysisConfiguration": "auto"
   },
   "syntaxCheck": {
-    "checkModes": ["-ThinClient"]
+    "checkModes": [
+      "-ThickClient",  
+      "-ThinClient",
+      "-WebClient",
+      "-Server"
+  ]
   },
   "resultsTransform": {
     "removeSupport": false
