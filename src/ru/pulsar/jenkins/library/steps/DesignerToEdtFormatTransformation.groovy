@@ -44,6 +44,9 @@ class DesignerToEdtFormatTransformation implements Serializable {
         def ringCommand = "ring $edtVersionForRing workspace import --configuration-files \"$configurationRoot\" --project-name $PROJECT_NAME --workspace-location \"$workspaceDir\""
 
         def ringOpts = [Constants.DEFAULT_RING_OPTS]
+        if (config.ringMemory != "4g") {
+            ringOpts.replace("-Xmx4g","-Xmx" + config.ringMemory)  
+        }
         steps.withEnv(ringOpts) {
             steps.cmd(ringCommand)
         }

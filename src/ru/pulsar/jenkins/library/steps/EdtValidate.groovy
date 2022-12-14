@@ -59,6 +59,9 @@ class EdtValidate implements Serializable {
 
         def ringCommand = "ring $edtVersionForRing workspace validate --workspace-location \"$workspaceLocation\" --file \"$resultFile\" $projectList"
         def ringOpts = [Constants.DEFAULT_RING_OPTS]
+        if (config.ringMemory != "4g") {
+            ringOpts.replace("-Xmx4g","-Xmx" + config.ringMemory)  
+        }
         steps.withEnv(ringOpts) {
             steps.catchError {
                 steps.cmd(ringCommand)
