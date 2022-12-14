@@ -27,7 +27,7 @@
 
 ## Возможности
 
-1. Все шаги можно запустить на базе docker-образов из https://github.com/firstBitSemenovskaya/onec-docker. См. [памятку по слоям и последовательности сборки](https://github.com/firstBitSemenovskaya/onec-docker/blob/feature/first-bit/Layers.md).
+1. Все шаги можно запустить на базе docker-образов из https://github.com/firstBitMarksistskaya/onec-docker. См. [памятку по слоям и последовательности сборки](https://github.com/firstBitMarksistskaya/onec-docker/blob/feature/first-bit/Layers.md).
 1. Поддержка как формата выгрузки из Конфигуратора, так и формата EDT.
 1. Подготовка информационной базы по версии из хранилища конфигурации, из исходных файлов конфигурации, комбинированный режим (основная ветка - из хранилища, остальные - из исходников).
 1. Запуск ИБ в режиме выполнения обработчиков обновления БСП.
@@ -83,7 +83,7 @@ pipeline1C()
 
 ```json
 {
-    "$schema": "https://raw.githubusercontent.com/firstBitSemenovskaya/jenkins-lib/master/resources/schema.json",
+    "$schema": "https://raw.githubusercontent.com/firstBitMarksistskaya/jenkins-lib/master/resources/schema.json",
     "v8version": "8.3.14.1976",
     "edtVersion": "2021.3.4:x86_64",
     "secrets": {
