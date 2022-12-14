@@ -20,6 +20,9 @@ class JobConfiguration implements Serializable {
 
     @JsonPropertyDescription("Массив путей к исходникам расширенийв формате EDT, (в формате XML - не работает)")
     String[] srcExtDir
+    
+    @JsonPropertyDescription("Объем памяти используемый утилитой ring при конвертации из формата EDT, по умолчанию, 4g")
+    String ringMemory
 
     @JsonPropertyDescription("Формат исходников конфигурации")
     SourceFormat sourceFormat;
@@ -78,6 +81,7 @@ class JobConfiguration implements Serializable {
             ", edtVersion='" + edtVersion + '\'' +
             ", srcDir='" + srcDir + '\'' +
             ", srcExtDir='" + srcExtDir + '\'' +
+            ", ringMemory='" + ringMemory + '\'' +
             ", sourceFormat=" + sourceFormat +
             ", stageFlags=" + stageFlags +
             ", timeoutOptions=" + timeoutOptions +

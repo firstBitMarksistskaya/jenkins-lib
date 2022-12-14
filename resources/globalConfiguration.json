@@ -3,6 +3,8 @@
   "v8version": "8.3",
   "edtVersion": "",
   "srcDir": "src/cf",
+  "srcExtDir": ["'src/ext'"],
+  "ringMemory": "4g",
   "sourceFormat": "designer",
   "defaultBranch": "main",
   "secrets": {

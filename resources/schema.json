@@ -18,8 +18,13 @@
       "type" : "array",
       "description" : "Массив путей к исходникам расширений в формате EDT (в формате XML - не учитывается)",
       "items" : {
-        "type" : "string"
+        "type" : "string",
+        "description" : "Путь к расширению конфигурации относительно корня воркспейса"
       }
+    },
+    "ringMemory": {
+      "type" : "string",
+      "description" : "Объем памяти используемый утилитой ring при конвертации из формата EDT, по умолчанию, 4g"
     },
     "sourceFormat" : {
       "type" : "string",
