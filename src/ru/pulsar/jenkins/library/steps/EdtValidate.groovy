@@ -58,10 +58,11 @@ class EdtValidate implements Serializable {
         Logger.println("Выполнение валидации EDT")
 
         def ringCommand = "ring $edtVersionForRing workspace validate --workspace-location \"$workspaceLocation\" --file \"$resultFile\" $projectList"
-        def ringOpts = [Constants.DEFAULT_RING_OPTS]
+        def ringStr = Constants.DEFAULT_RING_OPTS
         if (config.ringMemory != "4g") {
-            ringOpts.replace("-Xmx4g","-Xmx" + config.ringMemory)  
+            ringStr.replace("-Xmx4g","-Xmx" + config.ringMemory)  
         }
+        def ringOpts = [ringStr]
         steps.withEnv(ringOpts) {
             steps.catchError {
                 steps.cmd(ringCommand)
