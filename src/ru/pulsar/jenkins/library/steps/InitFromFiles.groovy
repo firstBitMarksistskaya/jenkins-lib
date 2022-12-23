@@ -66,7 +66,7 @@ class InitFromFiles implements Serializable {
         if (config.srcExtDir.length != 0) {
             config.srcExtDir.each {
                 if (config.sourceFormat == SourceFormat.EDT) {
-                    inputExtDir = srcDir.replace(extPrefix,"$extPrefix-$extSuffix${it}")                        
+                    inputExtDir = srcDir.replaceAll(extPrefix,"$extPrefix-$extSuffix${it}")                        
                 }else{
                     inputExtDir = "${it}"
                 }

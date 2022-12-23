@@ -60,7 +60,7 @@ class EdtValidate implements Serializable {
         def ringCommand = "ring $edtVersionForRing workspace validate --workspace-location \"$workspaceLocation\" --file \"$resultFile\" $projectList"
         def ringStr = Constants.DEFAULT_RING_OPTS
         if (config.ringMemory != "4g") {
-            ringStr.replace("-Xmx4g","-Xmx" + config.ringMemory)  
+            ringStr.replaceAll("-Xmx4g","-Xmx" + config.ringMemory)  
         }
         def ringOpts = [ringStr]
         steps.withEnv(ringOpts) {
@@ -76,8 +76,8 @@ class EdtValidate implements Serializable {
         if (config.sourceFormat == SourceFormat.EDT) {
             srcExtDir.each{ 
                 projectList = " --project-list $env.WORKSPACE/${it}" 
-                resultFileExt = resultFile.replace(extPrefix,"$extPrefix-$extSuffix${it}")
-                workspaceExtLocation = workspaceLocation.replace(extPrefix,"$extPrefix-$extSuffix${it}")
+                resultFileExt = resultFile.replaceAll(extPrefix,"$extPrefix-$extSuffix${it}")
+                workspaceExtLocation = workspaceLocation.replaceAll(extPrefix,"$extPrefix-$extSuffix${it}")
                 Logger.println("Выполнение валидации EDT расширения ${it}")    
                 ringCommand = "ring $edtVersionForRing workspace validate --workspace-location \"$workspaceExtLocation\" --file \"$resultFileExt\" $projectList"                
                 steps.withEnv(ringOpts) {
@@ -85,9 +85,9 @@ class EdtValidate implements Serializable {
                         steps.cmd(ringCommand)
                     }
                 }           
-                steps.archiveArtifacts(workspaceExtProject.replace(extPrefix,"$extPrefix-$extSuffix${it}") + "/.metadata/.log")
-                steps.archiveArtifacts(resFileExt.replace(extPrefix,"$extPrefix-$extSuffix${it}"))
-                steps.stash("$resStash${it}", resFileExt.replace(extPrefix,"$extPrefix-$extSuffix${it}"))
+                steps.archiveArtifacts(workspaceExtProject.replaceAll(extPrefix,"$extPrefix-$extSuffix${it}") + "/.metadata/.log")
+                steps.archiveArtifacts(resFileExt.replaceAll(extPrefix,"$extPrefix-$extSuffix${it}"))
+                steps.stash("$resStash${it}", resFileExt.replaceAll(extPrefix,"$extPrefix-$extSuffix${it}"))
             } 
         }
 

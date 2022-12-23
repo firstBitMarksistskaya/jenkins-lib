@@ -67,7 +67,7 @@ class SonarScanner implements Serializable {
             if (config.sourceFormat == SourceFormat.EDT) {
                 srcExtDir.each{
                     steps.unstash("edt-generic-issue-${it}")
-                    sonarCommand += "," + sonarAddComm.replace(extPrefix,"$extPrefix-$extSuffix${it}")
+                    sonarCommand += "," + sonarAddComm.replaceAll(extPrefix,"$extPrefix-$extSuffix${it}")
                 }
             }
 
