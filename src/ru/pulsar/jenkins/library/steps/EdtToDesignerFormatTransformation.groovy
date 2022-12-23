@@ -12,7 +12,6 @@ import ru.pulsar.jenkins.library.utils.Logger
 class EdtToDesignerFormatTransformation implements Serializable {
 
     public static final String EXT_PATH_PREFIX = 'build'
-    public static final String EXT_PATH_SUFFIX = 'ext-'
     public static final String WORKSPACE = 'build/edt-workspace'
     public static final String CONFIGURATION_DIR = 'build/cfg'
     public static final String CONFIGURATION_ZIP = 'build/cfg.zip'
@@ -42,17 +41,11 @@ class EdtToDesignerFormatTransformation implements Serializable {
         def workspaceDir = "$env.WORKSPACE/$WORKSPACE" 
         def configurationRoot = "$env.WORKSPACE/$CONFIGURATION_DIR"
         def edtVersionForRing = EDT.ringModule(config)
+        def extPrefix = "$EXT_PATH_PREFIX"
 
         steps.deleteDir(workspaceDir)
         steps.deleteDir(configurationRoot)
 
-        def extPrefix = "$EXT_PATH_PREFIX"
-        def extSuffix = "$EXT_PATH_SUFFIX"
-
-        String workspaceExtDir
-        String projectExtDir
-        String configurationExtRoot
-        String configurationExtZip
         String ringCommandExt
 
         Logger.println("Конвертация исходников из формата EDT в формат Конфигуратора")
@@ -70,24 +63,27 @@ class EdtToDesignerFormatTransformation implements Serializable {
             if (config.initInfoBaseOptions.saveXMLartifacts) {
                 steps.archiveArtifacts(CONFIGURATION_ZIP)
             } 
-            srcExtDir.each{  
-                workspaceExtDir = workspaceDir.replaceAll(extPrefix,"$extPrefix-$extSuffix${it}")
-                projectExtDir = "$env.WORKSPACE/${it}"
-                configurationExtRoot = configurationRoot.replaceAll(extPrefix,"$extPrefix-$extSuffix${it}") 
-                configurationExtZip = CONFIGURATION_ZIP.replaceAll(extPrefix,"$extPrefix-$extSuffix${it}")
+            if (config.srcExtDir.length != 0) {
+                srcExtDir.each{
+                    String workspaceExtDir = "$env.WORKSPACE/$extPrefix-${it}/edt-workspace"
+                    String projectExtDir = new File("$env.WORKSPACE/${it}").getCanonicalPath()
+                    String configurationExtDir = "$extPrefix-${it}/${it}-cfg"
+                    String configurationExtRoot = "$env.WORKSPACE/$extPrefix-${it}/${it}-cfg" 
+                    String configurationExtZip = "$env.WORKSPACE/$extPrefix-${it}/${it}-cfg.zip" 
+                    ringCommandExt = "ring $edtVersionForRing workspace export --workspace-location \"$workspaceExtDir\" --project \"$projectExtDir\" --configuration-files \"$configurationExtRoot\""
+                    
+                    steps.deleteDir(workspaceExtDir)
+                    steps.deleteDir(configurationExtRoot)
 
-                ringCommandExt = "ring $edtVersionForRing workspace export --workspace-location \"$workspaceExtDir\" --project \"$projectExtDir\" --configuration-files \"$configurationExtRoot\""
+                    Logger.println("Конвертация исходников расширения ${it} из формата EDT в формат Конфигуратора")                
+                    steps.cmd(ringCommandExt)
+                    
+                    steps.zip(configurationExtDir, configurationExtZip)
+                    steps.stash("$extPrefix-${it}_$CONFIGURATION_ZIP_STASH", configurationExtZip)
+                    if (config.initInfoBaseOptions.saveXMLartifacts) {
+                        steps.archiveArtifacts(configurationExtZip)
+                    }
                 
-                steps.deleteDir(workspaceExtDir)
-                steps.deleteDir(configurationExtRoot)
-
-                Logger.println("Конвертация исходников расширения ${it} из формата EDT в формат Конфигуратора")                
-                steps.cmd(ringCommandExt)
-                
-                steps.zip(configurationExtRoot, configurationExtZip)
-                steps.stash("$extSuffix${it}_$CONFIGURATION_ZIP_STASH", configurationExtZip)
-                if (config.initInfoBaseOptions.saveXMLartifacts) {
-                    steps.archiveArtifacts(configurationExtZip)
                 }
             }  
         }      

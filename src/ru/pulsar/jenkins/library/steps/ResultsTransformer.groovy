@@ -53,29 +53,5 @@ class ResultsTransformer implements Serializable {
         steps.archiveArtifacts(RESULT_FILE)
         steps.stash(RESULT_STASH, RESULT_FILE)
 
-        if (config.sourceFormat == SourceFormat.EDT) {
-            String edtResStah = EdtValidate.RESULT_STASH
-            String edtValidateExtFile
-            String genericIssueExtFile
-            def exrResultFile = "$RESULT_FILE"
-
-            srcExtDir.each{
-                steps.unstash("$edtResStah${it}")
-                edtValidateExtFile = edtValidateFile.replace(extPrefix,"$extPrefix-$extSuffix${it}")
-                genericIssueExtFile = genericIssueFile.replace(extPrefix,"$extPrefix-$extSuffix${it}")
-                srcDir = "${it}/src"
-                Logger.println("Конвертация результата валидации расширения ${it} EDT в Generic Issue")
-                steps.cmd("stebi convert $edtValidateExtFile $genericIssueExtFile $srcDir")
-
-//               if (config.resultsTransformOptions.removeSupport) {
-//                  def supportLevel = config.resultsTransformOptions.supportLevel
-//                    steps.cmd("stebi transform --remove_support $supportLevel --src $srcDir $genericIssueExtFile")
-//                }
-                
-                steps.archiveArtifacts(exrResultFile.replace(extPrefix,"$extPrefix-$extSuffix${it}"))
-                steps.stash("$RESULT_STASH-${it}", exrResultFile.replace(extPrefix,"$extPrefix-$extSuffix${it}"))
-
-            } 
-        }
     }
 }

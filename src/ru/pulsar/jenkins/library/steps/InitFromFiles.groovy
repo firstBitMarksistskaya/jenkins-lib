@@ -28,17 +28,11 @@ class InitFromFiles implements Serializable {
         steps.installLocalDependencies();
 
         Logger.println("Распаковка файлов")
-        def extPrefix = "$EdtToDesignerFormatTransformation.EXT_PATH_PREFIX"
-        def extSuffix = "$EdtToDesignerFormatTransformation.EXT_PATH_SUFFIX"
         def configurationZipStash = "$EdtToDesignerFormatTransformation.CONFIGURATION_ZIP_STASH"
         def configurationZip = "$EdtToDesignerFormatTransformation.CONFIGURATION_ZIP"        
         String srcDir
                  
-        if (config.sourceFormat == SourceFormat.EDT) {
-            String saveExtDir
-            String configurationExtZipStash
-            String configurationExtZip
-            
+        if (config.sourceFormat == SourceFormat.EDT) {           
             def env = steps.env();
             srcDir = "$env.WORKSPACE/$EdtToDesignerFormatTransformation.CONFIGURATION_DIR"
             steps.unstash(configurationZipStash)
@@ -46,10 +40,9 @@ class InitFromFiles implements Serializable {
             
             if (config.srcExtDir.length != 0) {
                 config.srcExtDir.each {
-                    saveExtDir = srcDir.replace(extPrefix,"$extPrefix-$extSuffix${it}") 
-                    configurationExtZipStash = "$extSuffix${it}_$configurationZipStash"
-                    configurationExtZip = configurationZip.replace(extPrefix,"$extPrefix-$extSuffix${it}")
-                    
+                    String saveExtDir = "$env.WORKSPACE/$EdtToDesignerFormatTransformation.EXT_PATH_PREFIX-${it}/${it}-cfg"
+                    String configurationExtZipStash = "$EdtToDesignerFormatTransformation.EXT_PATH_PREFIX-${it}_$CONFIGURATION_ZIP_STASH"
+                    String configurationExtZip = "$EdtToDesignerFormatTransformation.EXT_PATH_PREFIX-${it}/${it}-cfg.zip"
                     steps.unstash(configurationExtZipStash)
                     steps.unzip(saveExtDir, configurationExtZip)
                 }
@@ -66,7 +59,7 @@ class InitFromFiles implements Serializable {
         if (config.srcExtDir.length != 0) {
             config.srcExtDir.each {
                 if (config.sourceFormat == SourceFormat.EDT) {
-                    inputExtDir = srcDir.replaceAll(extPrefix,"$extPrefix-$extSuffix${it}")                        
+                    inputExtDir = "$env.WORKSPACE/$EdtToDesignerFormatTransformation.EXT_PATH_PREFIX-${it}/${it}-cfg"                       
                 }else{
                     inputExtDir = "${it}"
                 }

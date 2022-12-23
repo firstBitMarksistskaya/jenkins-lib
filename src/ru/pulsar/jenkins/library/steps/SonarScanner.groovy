@@ -64,12 +64,12 @@ class SonarScanner implements Serializable {
         if (config.stageFlags.edtValidate) {
             steps.unstash("edt-generic-issue")
             sonarCommand += " -Dsonar.externalIssuesReportPaths=$sonarAddComm"
-            if (config.sourceFormat == SourceFormat.EDT) {
-                srcExtDir.each{
-                    steps.unstash("edt-generic-issue-${it}")
-                    sonarCommand += "," + sonarAddComm.replaceAll(extPrefix,"$extPrefix-$extSuffix${it}")
-                }
-            }
+            // if (config.sourceFormat == SourceFormat.EDT) {
+            //     srcExtDir.each{
+            //         steps.unstash("edt-generic-issue-${it}")
+            //         sonarCommand += "," + sonarAddComm.replaceAll(extPrefix,"$extPrefix-$extSuffix${it}")
+            //     }
+            // }
 
         }
 
