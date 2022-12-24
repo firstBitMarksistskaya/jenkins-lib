@@ -42,7 +42,7 @@ class InitFromFiles implements Serializable {
             for (String ext : srcExtDir) {
                 String saveExtDir = "$env.WORKSPACE/$EdtToDesignerFormatTransformation.EXT_PATH_PREFIX-$ext/$ext-cfg"
                 String configurationExtZip = "$EdtToDesignerFormatTransformation.EXT_PATH_PREFIX-$ext/$ext-cfg.zip"
-                steps.unstash("$ext-$CONFIGURATION_ZIP_STASH")
+                steps.unstash("$ext-$configurationZipStash")
                 steps.unzip(saveExtDir, configurationExtZip)
             }
             
