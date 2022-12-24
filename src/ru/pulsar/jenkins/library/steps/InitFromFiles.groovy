@@ -39,15 +39,13 @@ class InitFromFiles implements Serializable {
             steps.unstash(configurationZipStash)
             steps.unzip(srcDir, configurationZip)
             
-            if (srcExtDir.length != 0) {
-                srcExtDir.each {
-                    String saveExtDir = "$env.WORKSPACE/$EdtToDesignerFormatTransformation.EXT_PATH_PREFIX-${it}/${it}-cfg"
-                    String configurationExtZipStash = "$EdtToDesignerFormatTransformation.EXT_PATH_PREFIX-${it}_$CONFIGURATION_ZIP_STASH"
-                    String configurationExtZip = "$EdtToDesignerFormatTransformation.EXT_PATH_PREFIX-${it}/${it}-cfg.zip"
-                    steps.unstash(configurationExtZipStash)
-                    steps.unzip(saveExtDir, configurationExtZip)
-                }
+            for (String ext : srcExtDir) {
+                String saveExtDir = "$env.WORKSPACE/$EdtToDesignerFormatTransformation.EXT_PATH_PREFIX-$ext/$ext-cfg"
+                String configurationExtZip = "$EdtToDesignerFormatTransformation.EXT_PATH_PREFIX-$ext/$ext-cfg.zip"
+                steps.unstash("$ext-$CONFIGURATION_ZIP_STASH")
+                steps.unzip(saveExtDir, configurationExtZip)
             }
+            
         } else {
             srcDir = config.srcDir;
         }
@@ -57,16 +55,14 @@ class InitFromFiles implements Serializable {
         def initCommand = "$vrunnerPath init-dev --src $srcDir --ibconnection \"/F./build/ib\""
         VRunner.exec(initCommand)
         String inputExtDir
-        if (srcExtDir.length != 0) {
-            srcExtDir.each {
-                if (config.sourceFormat == SourceFormat.EDT) {
-                    inputExtDir = "$env.WORKSPACE/$EdtToDesignerFormatTransformation.EXT_PATH_PREFIX-${it}/${it}-cfg"                       
-                }else{
-                    inputExtDir = "${it}"
-                }
-                Logger.println("Загрузка расширения ${it} в ИБ")
-                VRunner.exec("$vrunnerPath compileext \"$inputExtDir\" ${it} --ibconnection \"/F./build/ib\"")
+        for (String ext : srcExtDir) { {
+            if (config.sourceFormat == SourceFormat.EDT) {
+                inputExtDir = "$env.WORKSPACE/$EdtToDesignerFormatTransformation.EXT_PATH_PREFIX-$ext/$ext-cfg"                       
+            }else{
+                inputExtDir = "$ext"
             }
+            Logger.println("Загрузка расширения $ext в ИБ")
+            VRunner.exec("$vrunnerPath compileext \"$inputExtDir\" $ext --ibconnection \"/F./build/ib\"")
         }
 
     }

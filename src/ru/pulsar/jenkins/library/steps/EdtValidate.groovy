@@ -38,7 +38,6 @@ class EdtValidate implements Serializable {
         String workspaceExtLocation
         String workspaceExtProject = "$DesignerToEdtFormatTransformation.WORKSPACE"
         String projectList
-        String resultFileExt
         String [] srcExtDir = config.srcExtDir.split(" ")
 
         if (config.sourceFormat == SourceFormat.DESIGNER) {
@@ -49,11 +48,9 @@ class EdtValidate implements Serializable {
         } else {
             String projectDir = new File("$env.WORKSPACE/$config.srcDir").getCanonicalPath()
             projectList = "--project-list \"$projectDir\""
-            if (srcExtDir.length != 0) {
-                srcExtDir.each{
-                    String projectEXTDir = new File("$env.WORKSPACE/${it}").getCanonicalPath() 
-                    projectList += " \"$projectEXTDir\""
-                }
+            for (String ext : srcExtDir) {
+                String projectEXTDir = new File("$env.WORKSPACE/$ext").getCanonicalPath() 
+                projectList += " \"$projectEXTDir\""  
             }
         }
 

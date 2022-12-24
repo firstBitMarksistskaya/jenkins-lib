@@ -63,27 +63,23 @@ class EdtToDesignerFormatTransformation implements Serializable {
             if (config.initInfoBaseOptions.saveXMLartifacts) {
                 steps.archiveArtifacts(CONFIGURATION_ZIP)
             } 
-            if (srcExtDir.length != 0) {
-                srcExtDir.each{
-                    String workspaceExtDir = "$env.WORKSPACE/$extPrefix-${it}/edt-workspace"
-                    String projectExtDir = new File("$env.WORKSPACE/${it}").getCanonicalPath()
-                    String configurationExtDir = "$extPrefix-${it}/${it}-cfg"
-                    String configurationExtRoot = "$env.WORKSPACE/$extPrefix-${it}/${it}-cfg" 
-                    String configurationExtZip = "$env.WORKSPACE/$extPrefix-${it}/${it}-cfg.zip" 
-                    ringCommandExt = "ring $edtVersionForRing workspace export --workspace-location \"$workspaceExtDir\" --project \"$projectExtDir\" --configuration-files \"$configurationExtRoot\""
-                    
-                    steps.deleteDir(workspaceExtDir)
-                    steps.deleteDir(configurationExtRoot)
-
-                    Logger.println("Конвертация исходников расширения ${it} из формата EDT в формат Конфигуратора")                
-                    steps.cmd(ringCommandExt)
-                    
-                    steps.zip(configurationExtDir, configurationExtZip)
-                    steps.stash("$extPrefix-${it}_$CONFIGURATION_ZIP_STASH", configurationExtZip)
-                    if (config.initInfoBaseOptions.saveXMLartifacts) {
-                        steps.archiveArtifacts(configurationExtZip)
-                    }
+            for (String ext : srcExtDir) {
+                String workspaceExtDir = "$env.WORKSPACE/$extPrefix-$ext/edt-workspace"
+                String projectExtDir = new File("$env.WORKSPACE/$ext").getCanonicalPath()
+                String configurationExtDir = "$extPrefix-$ext/$ext-cfg"
+                String configurationExtZip = "$env.WORKSPACE/$extPrefix-$ext/$ext-cfg.zip" 
+                ringCommandExt = "ring $edtVersionForRing workspace export --workspace-location \"$workspaceExtDir\" --project \"$projectExtDir\" --configuration-files \"$configurationExtRoot\""
                 
+                steps.deleteDir(workspaceExtDir)
+                steps.deleteDir("$env.WORKSPACE/$extPrefix-$ext/$ext-cfg")
+
+                Logger.println("Конвертация исходников расширения $ext из формата EDT в формат Конфигуратора")                
+                steps.cmd(ringCommandExt)
+                
+                steps.zip(configurationExtDir, configurationExtZip)
+                steps.stash("$ext-$CONFIGURATION_ZIP_STASH", configurationExtZip)
+                if (config.initInfoBaseOptions.saveXMLartifacts) {
+                    steps.archiveArtifacts(configurationExtZip)
                 }
             }  
         }      
