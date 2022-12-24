@@ -38,7 +38,9 @@ class ResultsTransformer implements Serializable {
         def edtValidateFile = "$env.WORKSPACE/$EdtValidate.RESULT_FILE"
         def genericIssueFile = "$env.WORKSPACE/$RESULT_FILE"
 
-        String srcDir = config.sourceFormat == SourceFormat.DESIGNER ? config.srcDir : Paths.get(config.srcDir, "src")
+        //String srcDir = config.sourceFormat == SourceFormat.DESIGNER ? config.srcDir : Paths.get(config.srcDir, "src")
+        String srcDir = config.srcDir
+        
         steps.cmd("stebi convert -r $edtValidateFile $genericIssueFile $srcDir")
         if (config.sourceFormat == SourceFormat.DESIGNER) {
             
