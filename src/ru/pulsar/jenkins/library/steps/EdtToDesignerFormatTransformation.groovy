@@ -67,6 +67,7 @@ class EdtToDesignerFormatTransformation implements Serializable {
                 String workspaceExtDir = "$env.WORKSPACE/$extPrefix-$ext/edt-workspace"
                 String projectExtDir = new File("$env.WORKSPACE/$ext").getCanonicalPath()
                 String configurationExtDir = "$extPrefix-$ext/$ext-cfg"
+                String configurationExtRoot = "$env.WORKSPACE/$extPrefix-$ext/$ext-cfg"
                 String configurationExtZip = "$env.WORKSPACE/$extPrefix-$ext/$ext-cfg.zip" 
                 ringCommandExt = "ring $edtVersionForRing workspace export --workspace-location \"$workspaceExtDir\" --project \"$projectExtDir\" --configuration-files \"$configurationExtRoot\""
                 
