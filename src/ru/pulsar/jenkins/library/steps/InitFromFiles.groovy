@@ -55,7 +55,7 @@ class InitFromFiles implements Serializable {
         def initCommand = "$vrunnerPath init-dev --src $srcDir --ibconnection \"/F./build/ib\""
         VRunner.exec(initCommand)
         String inputExtDir
-        for (String ext : srcExtDir) { {
+        for (String ext : srcExtDir) {
             if (config.sourceFormat == SourceFormat.EDT) {
                 inputExtDir = "$env.WORKSPACE/$EdtToDesignerFormatTransformation.EXT_PATH_PREFIX-$ext/$ext-cfg"                       
             }else{
