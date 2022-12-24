@@ -30,8 +30,6 @@ class EdtValidate implements Serializable {
         }
 
         def env = steps.env();
-        def extPrefix = "$EdtToDesignerFormatTransformation.EXT_PATH_PREFIX"
-        def resStash = "$RESULT_STASH"
 
         String workspaceLocation = "$env.WORKSPACE/$DesignerToEdtFormatTransformation.WORKSPACE"
         String projectList
