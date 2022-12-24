@@ -30,11 +30,12 @@ class InitFromFiles implements Serializable {
         Logger.println("Распаковка файлов")
         def configurationZipStash = "$EdtToDesignerFormatTransformation.CONFIGURATION_ZIP_STASH"
         def configurationZip = "$EdtToDesignerFormatTransformation.CONFIGURATION_ZIP"        
+        def env = steps.env();
+
         String srcDir
         String [] srcExtDir = config.srcExtDir.split(" ")
 
         if (config.sourceFormat == SourceFormat.EDT) {           
-            def env = steps.env();
             srcDir = "$env.WORKSPACE/$EdtToDesignerFormatTransformation.CONFIGURATION_DIR"
             steps.unstash(configurationZipStash)
             steps.unzip(srcDir, configurationZip)
