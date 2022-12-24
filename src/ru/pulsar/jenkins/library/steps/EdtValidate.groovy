@@ -35,8 +35,6 @@ class EdtValidate implements Serializable {
         def resFileExt = "$RESULT_FILE"
 
         String workspaceLocation = "$env.WORKSPACE/$DesignerToEdtFormatTransformation.WORKSPACE"
-        String workspaceExtLocation
-        String workspaceExtProject = "$DesignerToEdtFormatTransformation.WORKSPACE"
         String projectList
         String [] srcExtDir = config.srcExtDir.split(" ")
 

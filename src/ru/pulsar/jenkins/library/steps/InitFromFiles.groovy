@@ -59,7 +59,7 @@ class InitFromFiles implements Serializable {
             if (config.sourceFormat == SourceFormat.EDT) {
                 inputExtDir = "$env.WORKSPACE/$EdtToDesignerFormatTransformation.EXT_PATH_PREFIX-$ext/$ext-cfg"                       
             }else{
-                inputExtDir = "$ext"
+                inputExtDir = new File("$env.WORKSPACE/$ext").getCanonicalPath()
             }
             Logger.println("Загрузка расширения $ext в ИБ")
             VRunner.exec("$vrunnerPath compileext \"$inputExtDir\" $ext --ibconnection \"/F./build/ib\"")
