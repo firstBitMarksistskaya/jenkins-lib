@@ -18,8 +18,8 @@ class JobConfiguration implements Serializable {
     @JsonPropertyDescription("Путь к корневому каталогу с исходниками конфигурации, в случае хранения исходников в формате EDT, необходимо указать путь к проекту")
     String srcDir
 
-    @JsonPropertyDescription("Массив путей к исходникам расширенийв формате EDT, (в формате XML - не работает)")
-    String[] srcExtDir
+    @JsonPropertyDescription("Строка путей к исходникам расширенийв формате EDT, через пробел")
+    String srcExtDir
     
     @JsonPropertyDescription("Объем памяти используемый утилитой ring при конвертации из формата EDT, по умолчанию, 4g")
     String ringMemory

@@ -30,7 +30,6 @@ class EdtValidate implements Serializable {
         }
 
         def env = steps.env();
-        def srcExtDir = config.srcExtDir
         def extPrefix = "$EdtToDesignerFormatTransformation.EXT_PATH_PREFIX"
         def resStash = "$RESULT_STASH"
         def resFileExt = "$RESULT_FILE"
@@ -40,7 +39,8 @@ class EdtValidate implements Serializable {
         String workspaceExtProject = "$DesignerToEdtFormatTransformation.WORKSPACE"
         String projectList
         String resultFileExt
-        
+        String [] srcExtDir = config.srcExtDir.split(" ")
+
         if (config.sourceFormat == SourceFormat.DESIGNER) {
             steps.unstash(DesignerToEdtFormatTransformation.WORKSPACE_ZIP_STASH)
             steps.unzip(DesignerToEdtFormatTransformation.WORKSPACE, DesignerToEdtFormatTransformation.WORKSPACE_ZIP)
@@ -49,7 +49,7 @@ class EdtValidate implements Serializable {
         } else {
             String projectDir = new File("$env.WORKSPACE/$config.srcDir").getCanonicalPath()
             projectList = "--project-list \"$projectDir\""
-            if (config.srcExtDir.length != 0) {
+            if (srcExtDir.length != 0) {
                 srcExtDir.each{
                     String projectEXTDir = new File("$env.WORKSPACE/${it}").getCanonicalPath() 
                     projectList += " \"$projectEXTDir\""

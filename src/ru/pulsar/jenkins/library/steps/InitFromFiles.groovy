@@ -31,15 +31,16 @@ class InitFromFiles implements Serializable {
         def configurationZipStash = "$EdtToDesignerFormatTransformation.CONFIGURATION_ZIP_STASH"
         def configurationZip = "$EdtToDesignerFormatTransformation.CONFIGURATION_ZIP"        
         String srcDir
-                 
+        String [] srcExtDir = config.srcExtDir.split(" ")
+
         if (config.sourceFormat == SourceFormat.EDT) {           
             def env = steps.env();
             srcDir = "$env.WORKSPACE/$EdtToDesignerFormatTransformation.CONFIGURATION_DIR"
             steps.unstash(configurationZipStash)
             steps.unzip(srcDir, configurationZip)
             
-            if (config.srcExtDir.length != 0) {
-                config.srcExtDir.each {
+            if (srcExtDir.length != 0) {
+                srcExtDir.each {
                     String saveExtDir = "$env.WORKSPACE/$EdtToDesignerFormatTransformation.EXT_PATH_PREFIX-${it}/${it}-cfg"
                     String configurationExtZipStash = "$EdtToDesignerFormatTransformation.EXT_PATH_PREFIX-${it}_$CONFIGURATION_ZIP_STASH"
                     String configurationExtZip = "$EdtToDesignerFormatTransformation.EXT_PATH_PREFIX-${it}/${it}-cfg.zip"
@@ -56,8 +57,8 @@ class InitFromFiles implements Serializable {
         def initCommand = "$vrunnerPath init-dev --src $srcDir --ibconnection \"/F./build/ib\""
         VRunner.exec(initCommand)
         String inputExtDir
-        if (config.srcExtDir.length != 0) {
-            config.srcExtDir.each {
+        if (srcExtDir.length != 0) {
+            srcExtDir.each {
                 if (config.sourceFormat == SourceFormat.EDT) {
                     inputExtDir = "$env.WORKSPACE/$EdtToDesignerFormatTransformation.EXT_PATH_PREFIX-${it}/${it}-cfg"                       
                 }else{

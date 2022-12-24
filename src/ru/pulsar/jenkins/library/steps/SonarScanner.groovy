@@ -29,9 +29,7 @@ class SonarScanner implements Serializable {
         def env = steps.env();
         
         def sonarScannerBinary
-        def extPrefix = "$EdtToDesignerFormatTransformation.EXT_PATH_PREFIX"
-        def extSuffix = "$EdtToDesignerFormatTransformation.EXT_PATH_SUFFIX"
-        def srcExtDir = config.srcExtDir
+
         if (config.sonarQubeOptions.useSonarScannerFromPath) {
             sonarScannerBinary = "sonar-scanner"
         } else {
@@ -64,12 +62,6 @@ class SonarScanner implements Serializable {
         if (config.stageFlags.edtValidate) {
             steps.unstash("edt-generic-issue")
             sonarCommand += " -Dsonar.externalIssuesReportPaths=$sonarAddComm"
-            // if (config.sourceFormat == SourceFormat.EDT) {
-            //     srcExtDir.each{
-            //         steps.unstash("edt-generic-issue-${it}")
-            //         sonarCommand += "," + sonarAddComm.replaceAll(extPrefix,"$extPrefix-$extSuffix${it}")
-            //     }
-            // }
 
         }
 

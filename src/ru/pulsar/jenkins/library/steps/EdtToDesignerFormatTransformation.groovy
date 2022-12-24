@@ -36,7 +36,6 @@ class EdtToDesignerFormatTransformation implements Serializable {
         def env = steps.env();
  
         def srcDir = config.srcDir
-        def srcExtDir = config.srcExtDir
         def projectDir = new File("$env.WORKSPACE/$srcDir").getCanonicalPath()
         def workspaceDir = "$env.WORKSPACE/$WORKSPACE" 
         def configurationRoot = "$env.WORKSPACE/$CONFIGURATION_DIR"
@@ -47,6 +46,7 @@ class EdtToDesignerFormatTransformation implements Serializable {
         steps.deleteDir(configurationRoot)
 
         String ringCommandExt
+        String [] srcExtDir = config.srcExtDir.split(" ")
 
         Logger.println("Конвертация исходников из формата EDT в формат Конфигуратора")
 
@@ -63,7 +63,7 @@ class EdtToDesignerFormatTransformation implements Serializable {
             if (config.initInfoBaseOptions.saveXMLartifacts) {
                 steps.archiveArtifacts(CONFIGURATION_ZIP)
             } 
-            if (config.srcExtDir.length != 0) {
+            if (srcExtDir.length != 0) {
                 srcExtDir.each{
                     String workspaceExtDir = "$env.WORKSPACE/$extPrefix-${it}/edt-workspace"
                     String projectExtDir = new File("$env.WORKSPACE/${it}").getCanonicalPath()
