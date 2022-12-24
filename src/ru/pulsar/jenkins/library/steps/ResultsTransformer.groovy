@@ -47,8 +47,8 @@ class ResultsTransformer implements Serializable {
             steps.cmd("stebi transform --remove_support $supportLevel --src $srcDir $genericIssueFile")
         }
 
-        steps.archiveArtifacts(RESULT_FILE)
-        steps.stash(RESULT_STASH, RESULT_FILE)
+        steps.archiveArtifacts(genericIssueFile)
+        steps.stash(RESULT_STASH, genericIssueFile)
 
     }
 }
