@@ -35,7 +35,6 @@ class ResultsTransformer implements Serializable {
 
         Logger.println("Конвертация результата EDT в Generic Issue")
 
-        
         def edtValidateFile = "$env.WORKSPACE/$EdtValidate.RESULT_FILE"
         def genericIssueFile = "$env.WORKSPACE/$RESULT_FILE"
 
@@ -47,8 +46,7 @@ class ResultsTransformer implements Serializable {
             steps.cmd("stebi transform --remove_support $supportLevel --src $srcDir $genericIssueFile")
         }
 
-        steps.archiveArtifacts(genericIssueFile)
-        steps.stash(RESULT_STASH, genericIssueFile)
-
+        steps.archiveArtifacts(RESULT_FILE)
+        steps.stash(RESULT_STASH, RESULT_FILE)
     }
 }
