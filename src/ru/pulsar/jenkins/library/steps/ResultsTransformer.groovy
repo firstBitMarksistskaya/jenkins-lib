@@ -37,21 +37,20 @@ class ResultsTransformer implements Serializable {
 
         def edtValidateFile = "$env.WORKSPACE/$EdtValidate.RESULT_FILE"
         def genericIssueFile = "$env.WORKSPACE/$RESULT_FILE"
-
+        String [] srcExtDir = config.srcExtDir.split(" ")
         String srcDir = config.sourceFormat == SourceFormat.DESIGNER ? config.srcDir : Paths.get(config.srcDir, "src")
-        
-        steps.cmd("stebi convert -r $edtValidateFile $genericIssueFile $srcDir")
-        if (config.sourceFormat == SourceFormat.DESIGNER) {
-            
-            if (config.resultsTransformOptions.removeSupport) {
-             def supportLevel = config.resultsTransformOptions.supportLevel
-             steps.cmd("stebi transform --remove_support $supportLevel --src $srcDir $genericIssueFile")
+        if (srcExtDir.length > 0) {
+            for (String ext : srcExtDir) {
+                srcDir += (" " + Paths.get(ext, "src"))   
             }
         }
-        File reportFile = new File(genericIssueFile)
-        if (reportFile.exist()) {
-            steps.archiveArtifacts(RESULT_FILE)
-            steps.stash(RESULT_STASH, RESULT_FILE)
+        steps.cmd("stebi convert -r $edtValidateFile $genericIssueFile $srcDir")
+        if (config.resultsTransformOptions.removeSupport) {
+            def supportLevel = config.resultsTransformOptions.supportLevel
+            steps.cmd("stebi transform --remove_support $supportLevel --src $srcDir $genericIssueFile")
         }
+        steps.archiveArtifacts(RESULT_FILE)
+        steps.stash(RESULT_STASH, RESULT_FILE)
+
     }
 }
