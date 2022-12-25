@@ -38,8 +38,7 @@ class ResultsTransformer implements Serializable {
         def edtValidateFile = "$env.WORKSPACE/$EdtValidate.RESULT_FILE"
         def genericIssueFile = "$env.WORKSPACE/$RESULT_FILE"
 
-        //String srcDir = config.sourceFormat == SourceFormat.DESIGNER ? config.srcDir : Paths.get(config.srcDir, "src")
-        String srcDir = config.srcDir
+        String srcDir = config.sourceFormat == SourceFormat.DESIGNER ? config.srcDir : Paths.get(config.srcDir, "src")
         
         steps.cmd("stebi convert -r $edtValidateFile $genericIssueFile $srcDir")
         if (config.sourceFormat == SourceFormat.DESIGNER) {
@@ -49,7 +48,10 @@ class ResultsTransformer implements Serializable {
              steps.cmd("stebi transform --remove_support $supportLevel --src $srcDir $genericIssueFile")
             }
         }
-        steps.archiveArtifacts(RESULT_FILE)
-        steps.stash(RESULT_STASH, RESULT_FILE)
+        File reportFile = new File(genericIssueFile)
+        if (reportFile.exist()) {
+            steps.archiveArtifacts(RESULT_FILE)
+            steps.stash(RESULT_STASH, RESULT_FILE)
+        }
     }
 }
