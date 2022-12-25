@@ -41,13 +41,13 @@ class ResultsTransformer implements Serializable {
         String srcDir = config.sourceFormat == SourceFormat.DESIGNER ? config.srcDir : Paths.get(config.srcDir, "src")
         if (srcExtDir.length > 0) {
             for (String ext : srcExtDir) {
-                srcDir += (" " + Paths.get(ext, "src"))   
+                srcDir += (", " + Paths.get(ext, "src"))   
             }
         }
         steps.cmd("stebi convert -r $edtValidateFile $genericIssueFile $srcDir")
         if (config.resultsTransformOptions.removeSupport) {
             def supportLevel = config.resultsTransformOptions.supportLevel
-            steps.cmd("stebi transform --remove_support $supportLevel --src $srcDir $genericIssueFile")
+            steps.cmd("stebi transform --remove_support $supportLevel --src '$srcDir' $genericIssueFile")
         }
         steps.archiveArtifacts(RESULT_FILE)
         steps.stash(RESULT_STASH, RESULT_FILE)
