@@ -67,6 +67,10 @@
           "type" : "boolean",
           "description" : "Дымовые тесты включены"
         },
+        "yaxunit" : {
+          "type" : "boolean",
+          "description" : "Юнит тесты"
+        },
         "initSteps" : {
           "type" : "boolean",
           "description" : "Предварительные шаги инициализации включены"
@@ -255,6 +259,21 @@
         "publishToJUnitReport" : {
           "type" : "boolean",
           "description" : "Выполнять публикацию результатов в отчет JUnit.\n    По умолчанию включено.\n    "
+        }
+      }
+    },
+    "yaxunit" : {
+      "type" : "object",
+      "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:YaxunitOptions",
+      "description" : "Настройки юнит тестирования",
+      "properties" : {
+        "vrunnerSettings" : {
+          "type" : "string",
+          "description" : "Путь к конфигурационному файлу vanessa-runner.\n    По умолчанию содержит значение \"./tools/vrunner.json\".\n    "
+        },
+        "configPath" : {
+          "type" : "string",
+          "description" : "Путь к конфигурационному файлу для Yaxunit.\n    По умолчанию содержит значение \"./tools/YaxunitConfig.json\".\n    "
         }
       }
     },

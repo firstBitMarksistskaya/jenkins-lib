@@ -18,11 +18,13 @@
     "syntaxCheck": false,
     "edtValidate": false,
     "smoke": false,
+    "yaxunit": false,
     "email": false,
     "telegram": false
   },
   "timeout": {
     "smoke": 240,
+    "yaxunit": 240,
     "bdd": 120,
     "createInfoBase": 60,
     "designerToEdtFormatTransformation": 60,
@@ -76,6 +78,9 @@
     "xddConfigPath": "./tools/xUnitParams.json",
     "publishToAllureReport": false,
     "publishToJUnitReport": true
+  },
+  "yaxunit": {
+    "vrunnerSettings": "./tools/vrunner.json"
   },
   "resultsTransform": {
     "removeSupport": true,
