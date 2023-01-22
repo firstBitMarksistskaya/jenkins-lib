@@ -243,6 +243,23 @@ void call() {
                             }
                         }
                     }
+
+                    stage('Юнит тесты') {
+                        agent {
+                            label agent1C
+                        }
+                        when {
+                            beforeAgent true
+                            expression { config.stageFlags.yaxunit }
+                        }
+                        steps {
+                            timeout(time: config.timeoutOptions.smoke, unit: TimeUnit.MINUTES) {
+                                unzipInfobase()
+
+                                yaxunit config
+                            }
+                        }
+                    }
                 }
             }
 
