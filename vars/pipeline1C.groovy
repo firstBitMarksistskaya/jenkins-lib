@@ -22,7 +22,7 @@ void call() {
         agent none
 
         options {
-            buildDiscarder(logRotator(numToKeepStr: '7'))
+            buildDiscarder(logRotator(numToKeepStr: '30'))
             timestamps()
             copyArtifactPermission('*')
         }
