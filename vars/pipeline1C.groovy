@@ -40,7 +40,7 @@ void call() {
                 }
 
                 steps {
-                    updateGitlabCommitStatus name: 'build', state: 'running'
+                    
                     script {
                         config = jobConfiguration() as JobConfiguration
                         agent1C = config.v8AgentLabel()
