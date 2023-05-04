@@ -20,17 +20,7 @@ void call() {
     //noinspection GroovyAssignabilityCheck
     pipeline {
         agent none
-        post {
-            failure {
-                updateGitlabCommitStatus name: 'build', state: 'failed'
-            }
-            success {
-                updateGitlabCommitStatus name: 'build', state: 'success'
-            }
-            aborted {
-                updateGitlabCommitStatus name: 'build', state: 'canceled'
-            }
-        }
+
         options {
             gitLabConnection('GitLabServer')
             buildDiscarder(logRotator(numToKeepStr: '7'))
@@ -253,12 +243,22 @@ void call() {
         }
 
         post('post-stage') {
+            failure {
+                updateGitlabCommitStatus name: 'build', state: 'failed'
+            }
+            success {
+                updateGitlabCommitStatus name: 'build', state: 'success'
+            }
+            aborted {
+                updateGitlabCommitStatus name: 'build', state: 'canceled'
+            }
             always {
                 node('agent') {
                     saveResults config
                     sendNotifications(config)
                 }
             }
+            
         }
     }
 
