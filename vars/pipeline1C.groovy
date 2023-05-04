@@ -20,16 +20,28 @@ void call() {
     //noinspection GroovyAssignabilityCheck
     pipeline {
         agent none
-
+        post {
+            failure {
+                updateGitlabCommitStatus name: 'build', state: 'failed'
+            }
+            success {
+                updateGitlabCommitStatus name: 'build', state: 'success'
+            }
+            aborted {
+                updateGitlabCommitStatus name: 'build', state: 'canceled'
+            }
+        }
         options {
+            gitLabConnection('GitLabServer')
             buildDiscarder(logRotator(numToKeepStr: '7'))
             timestamps()
             copyArtifactPermission('*')
         }
 
         stages {
-
+            
             stage('pre-stage') {
+                
                 agent {
                     label 'agent'
                 }
@@ -38,6 +50,7 @@ void call() {
                 }
 
                 steps {
+                    updateGitlabCommitStatus name: 'build', state: 'running'
                     script {
                         config = jobConfiguration() as JobConfiguration
                         agent1C = config.v8AgentLabel()
