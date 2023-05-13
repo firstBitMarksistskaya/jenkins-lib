@@ -22,14 +22,16 @@ void call() {
         agent none
 
         options {
-            buildDiscarder(logRotator(numToKeepStr: '30'))
+            gitLabConnection('GitLabServer')
+            buildDiscarder(logRotator(numToKeepStr: '7'))
             timestamps()
             copyArtifactPermission('*')
         }
 
         stages {
-
+            
             stage('pre-stage') {
+                
                 agent {
                     label 'agent'
                 }
@@ -38,6 +40,7 @@ void call() {
                 }
 
                 steps {
+                    
                     script {
                         config = jobConfiguration() as JobConfiguration
                         agent1C = config.v8AgentLabel()
@@ -257,12 +260,22 @@ void call() {
         }
 
         post('post-stage') {
+            failure {
+                updateGitlabCommitStatus name: 'build', state: 'failed'
+            }
+            success {
+                updateGitlabCommitStatus name: 'build', state: 'success'
+            }
+            aborted {
+                updateGitlabCommitStatus name: 'build', state: 'canceled'
+            }
             always {
                 node('agent') {
                     saveResults config
                     sendNotifications(config)
                 }
             }
+            
         }
     }
 
