@@ -92,7 +92,7 @@ class SmokeTest implements Serializable {
         if (!VRunner.configContainsSetting(vrunnerSettings, "testsPath")) {
             String testsPath = "oscript_modules/add/tests/smoke"
             if (!steps.fileExists(testsPath)) {
-                testsPath = "$env.WORKSPACE/tests/smoke"
+                testsPath = '$addRoot/tests/smoke'
                 if (steps.isUnix()) {
                     testsPath = '\\' + testsPath
                 }

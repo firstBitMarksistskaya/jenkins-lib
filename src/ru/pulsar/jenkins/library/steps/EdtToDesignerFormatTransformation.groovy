@@ -34,7 +34,7 @@ class EdtToDesignerFormatTransformation implements Serializable {
         }
 
         def env = steps.env();
- 
+        
         def srcDir = config.srcDir
         def projectDir = new File("$env.WORKSPACE/$srcDir").getCanonicalPath()
         def workspaceDir = "$env.WORKSPACE/$WORKSPACE" 

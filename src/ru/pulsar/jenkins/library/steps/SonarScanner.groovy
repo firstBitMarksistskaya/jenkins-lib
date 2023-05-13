@@ -27,7 +27,7 @@ class SonarScanner implements Serializable {
         }
 
         def env = steps.env();
-        
+
         def sonarScannerBinary
 
         if (config.sonarQubeOptions.useSonarScannerFromPath) {
@@ -36,8 +36,7 @@ class SonarScanner implements Serializable {
             String scannerHome = steps.tool(config.sonarQubeOptions.sonarScannerToolName)
             sonarScannerBinary = "$scannerHome/bin/sonar-scanner"
         }
-        
-        //String sonarCommand = " export SONAR_SCANNER_OPTS=\"-Xmx6g\"  + $sonarScannerBinary"
+
         String sonarCommand = "$sonarScannerBinary"
 
         def branchAnalysisConfiguration = config.sonarQubeOptions.branchAnalysisConfiguration
@@ -57,12 +56,10 @@ class SonarScanner implements Serializable {
         if (projectVersion) {
             sonarCommand += " -Dsonar.projectVersion=$projectVersion"
         }
-        String sonarAddComm = "build/out/edt-generic-issue.json"
-        
+
         if (config.stageFlags.edtValidate) {
             steps.unstash("edt-generic-issue")
-            sonarCommand += " -Dsonar.externalIssuesReportPaths=$sonarAddComm"
-
+            sonarCommand += " -Dsonar.externalIssuesReportPaths=build/out/edt-generic-issue.json"
         }
 
         if (config.sonarQubeOptions.waitForQualityGate) {
