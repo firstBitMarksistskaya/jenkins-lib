@@ -38,7 +38,7 @@ class SmokeTest implements Serializable {
         def env = steps.env()
 
         def srcDir = config.srcDir
-        def workspaceDir = FileUtils.getFilePath("$env.WORKSPACE/$WORKSPACE")
+        def workspaceDir = FileUtils.getFilePath("$env.WORKSPACE")
 
         String vrunnerPath = VRunner.getVRunnerPath()
         String command = "$vrunnerPath xunit --ibconnection \"/F./build/ib\""
