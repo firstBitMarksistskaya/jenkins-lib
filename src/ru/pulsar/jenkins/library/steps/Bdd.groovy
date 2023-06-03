@@ -24,11 +24,22 @@ class Bdd implements Serializable {
             return
         }
 
+        def env = steps.env();
+        def srcDir = config.srcDir
+        def projectDir = new File("$env.WORKSPACE").getCanonicalPath()
+
         List<String> logosConfig = ["LOGOS_CONFIG=$config.logosConfig"]
         steps.withEnv(logosConfig) {
             steps.installLocalDependencies()
             steps.createDir('build/out')
             List<Integer> returnStatuses = []
+
+            def coverageOpts = config.coverageOptions;
+            if (options.coverage) {
+                steps.start("${coverageOpts.dbgsPath} --addr=127.0.0.1 --port=1550")
+                steps.start("${coverageOpts.coverage41CPath} start -i DefAlias -u http://127.0.0.1:1550 -P $projectDir -s $srcDir -o build/out/bdd-coverage.xml")
+            }
+
             config.bddOptions.vrunnerSteps.each {
                 Logger.println("Шаг запуска сценариев командой ${it}")
                 String vrunnerPath = VRunner.getVRunnerPath()
@@ -43,9 +54,17 @@ class Bdd implements Serializable {
             } else {
                 Logger.println("Тестирование сценариев завершилось успешно")
             }
+
+            if (options.coverage) {
+                steps.cmd("${coverageOpts.coverage41CPath} stop -i DefAlias -u http://127.0.0.1:1550")
+            }
         }
 
         steps.stash('bdd-allure', 'build/out/allure/**', true)
         steps.stash('bdd-cucumber', 'build/out/cucumber/**', true)
+        if (options.coverage) {
+            steps.stash('bdd-coverage', 'build/out/bdd-coverage.xml', true)
+        }
+
     }
 }

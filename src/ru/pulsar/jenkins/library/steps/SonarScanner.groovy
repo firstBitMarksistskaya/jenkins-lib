@@ -7,6 +7,7 @@ import ru.pulsar.jenkins.library.configuration.ResultsTransformerType
 import ru.pulsar.jenkins.library.configuration.SourceFormat
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.Logger
+import ru.pulsar.jenkins.library.utils.StringJoiner
 import ru.pulsar.jenkins.library.utils.VersionParser
 
 class SonarScanner implements Serializable {
@@ -66,6 +67,27 @@ class SonarScanner implements Serializable {
             } else {
                 sonarCommand += " -Dsonar.bsl.languageserver.reportPaths=" + ResultsTransformer.RESULT_FILE
             }
+        }
+
+        if (config.stageFlags.bdd && config.bddOptions.coverage
+                || config.stageFlags.smoke && config.smokeTestOptions.coverage) {
+
+            StringJoiner coveragePathsConstructor = new StringJoiner(",")
+
+            if (config.stageFlags.bdd && config.bddOptions.coverage) {
+                steps.unstash("bdd-coverage")
+                coveragePathsConstructor.add("build/out/bdd-coverage.xml")
+            }
+
+            if (config.stageFlags.smoke && config.smokeTestOptions.coverage) {
+                steps.unstash("smoketest-coverage")
+                coveragePathsConstructor.add("build/out/smoketest-coverage.xml")
+            }
+
+            String coveragePaths = coveragePathsConstructor.toString()
+
+            sonarCommand += " -Dsonar.coverageReportPaths=${coveragePaths}"
+
         }
 
         if (config.sonarQubeOptions.waitForQualityGate) {

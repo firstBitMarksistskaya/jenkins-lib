@@ -37,6 +37,9 @@ class SmokeTest implements Serializable {
         def options = config.smokeTestOptions
         def env = steps.env()
 
+        def srcDir = config.srcDir
+        def projectDir = new File("$env.WORKSPACE").getCanonicalPath()
+
         String vrunnerPath = VRunner.getVRunnerPath()
         String command = "$vrunnerPath xunit --ibconnection \"/F./build/ib\""
 
@@ -100,8 +103,18 @@ class SmokeTest implements Serializable {
             command += " $testsPath"
         }
 
+        def coverageOpts = config.coverageOptions;
+        if (options.coverage) {
+            steps.start("${coverageOpts.dbgsPath} --addr=127.0.0.1 --port=1550")
+            steps.start("${coverageOpts.coverage41CPath} start -i DefAlias -u http://127.0.0.1:1550 -P $projectDir -s $srcDir -o build/out/smoketest-coverage.xml")
+        }
+
         steps.withEnv(logosConfig) {
             VRunner.exec(command, true)
+        }
+
+        if (options.coverage) {
+            steps.cmd("${coverageOpts.coverage41CPath} stop -i DefAlias -u http://127.0.0.1:1550")
         }
 
         if (options.publishToAllureReport) {
@@ -112,6 +125,10 @@ class SmokeTest implements Serializable {
         if (options.publishToJUnitReport) {
             steps.junit("$junitReportDir/*.xml", true)
             steps.archiveArtifacts("$junitReportDir/**")
+        }
+
+        if (options.coverage) {
+            steps.stash('smoketest-coverage', 'build/out/smoketest-coverage.xml', true)
         }
 
     }

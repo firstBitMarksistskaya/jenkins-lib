@@ -27,6 +27,9 @@ class SmokeTestOptions implements Serializable {
     """)
     boolean publishToJUnitReport
 
+    @JsonPropertyDescription("Выполнять замер покрытия")
+    Boolean coverage = false
+
     @Override
     @NonCPS
     String toString() {
@@ -35,6 +38,7 @@ class SmokeTestOptions implements Serializable {
             ", xddConfigPath='" + xddConfigPath + '\'' +
             ", publishToAllureReport=" + publishToAllureReport +
             ", publishToJUnitReport=" + publishToJUnitReport +
+            "coverage=" + coverage +
             '}'
     }
 }

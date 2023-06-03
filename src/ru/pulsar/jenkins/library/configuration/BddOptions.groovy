@@ -16,11 +16,15 @@ class BddOptions implements Serializable {
         'vanessa --settings ./tools/vrunner.json'
     ]
 
+    @JsonPropertyDescription("Выполнять замер покрытия")
+    Boolean coverage = false
+
     @Override
     @NonCPS
     String toString() {
         return "BddOptions{" +
             "vrunnerSteps=" + vrunnerSteps +
+            "coverage=" + coverage +
             '}';
     }
 }
