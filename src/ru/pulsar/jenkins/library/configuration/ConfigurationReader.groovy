@@ -64,6 +64,7 @@ class ConfigurationReader implements Serializable {
             "bddOptions",
             "sonarQubeOptions",
             "smokeTestOptions",
+            "coverageOptions",
             "syntaxCheckOptions",
             "resultsTransformOptions",
             "notificationsOptions",
@@ -79,6 +80,7 @@ class ConfigurationReader implements Serializable {
         mergeObjects(baseConfiguration, configurationToMerge, nonMergeableSettings)
         mergeInitInfoBaseOptions(baseConfiguration.initInfoBaseOptions, configurationToMerge.initInfoBaseOptions)
         mergeBddOptions(baseConfiguration.bddOptions, configurationToMerge.bddOptions)
+        mergeCoverageOptions(baseConfiguration.coverageOptions, configurationToMerge.coverageOptions)
         mergeSyntaxCheckOptions(baseConfiguration.syntaxCheckOptions, configurationToMerge.syntaxCheckOptions)
         mergeNotificationsOptions(baseConfiguration.notificationsOptions, configurationToMerge.notificationsOptions)
 
@@ -125,6 +127,22 @@ class ConfigurationReader implements Serializable {
             return
         }
         baseObject.vrunnerSteps = objectToMerge.vrunnerSteps.clone()
+    }
+
+    @NonCPS
+    private static void mergeCoverageOptions(CoverageOptions baseObject, CoverageOptions objectToMerge) {
+
+        if (objectToMerge == null) {
+            return
+        }
+
+        if (objectToMerge.dbgsPath != null) {
+            baseObject.dbgsPath = objectToMerge.dbgsPath
+        }
+        
+        if (objectToMerge.coverage41CPath != null) {
+            baseObject.coverage41CPath = objectToMerge.coverage41CPath
+        }
     }
 
     @NonCPS

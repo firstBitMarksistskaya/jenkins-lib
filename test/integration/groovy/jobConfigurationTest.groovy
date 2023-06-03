@@ -74,5 +74,7 @@ class jobConfigurationTest {
         rule.assertLogContains("v8version='8.3.12.1500'", run)
         rule.assertLogContains("sonarScannerToolName='sonar-scanner'", run)
         rule.assertLogContains("initMethod=FROM_SOURCE", run)
+        rule.assertLogContains("dbgsPath=C:\\Program files\\1cv8\\8.3.12.1500\\bin\\dbgs.exe", run)
+        rule.assertLogContains("coverage41CPath=C:\\coverage\\Coverage41C.exe", run)
     }
 }
