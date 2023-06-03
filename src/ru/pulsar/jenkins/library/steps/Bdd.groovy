@@ -26,6 +26,7 @@ class Bdd implements Serializable {
             return
         }
 
+        def options = config.bddOptions
         def env = steps.env();
         def srcDir = config.srcDir
         FilePath projectDir = FileUtils.getFilePath("$env.WORKSPACE/$srcDir")
