@@ -29,7 +29,7 @@ class Bdd implements Serializable {
         def options = config.bddOptions
         def env = steps.env();
         def srcDir = config.srcDir
-        FilePath projectDir = FileUtils.getFilePath("$env.WORKSPACE/$srcDir")
+        def workspaceDir = FileUtils.getFilePath("$env.WORKSPACE/$WORKSPACE")
 
         List<String> logosConfig = ["LOGOS_CONFIG=$config.logosConfig"]
         steps.withEnv(logosConfig) {
@@ -40,7 +40,7 @@ class Bdd implements Serializable {
             def coverageOpts = config.coverageOptions;
             if (options.coverage) {
                 steps.start("${coverageOpts.dbgsPath} --addr=127.0.0.1 --port=1550")
-                steps.start("${coverageOpts.coverage41CPath} start -i DefAlias -u http://127.0.0.1:1550 -P $projectDir -s $srcDir -o build/out/bdd-coverage.xml")
+                steps.start("${coverageOpts.coverage41CPath} start -i DefAlias -u http://127.0.0.1:1550 -P $workspaceDir -s $srcDir -o build/out/bdd-coverage.xml")
             }
 
             config.bddOptions.vrunnerSteps.each {

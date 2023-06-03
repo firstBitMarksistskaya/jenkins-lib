@@ -38,7 +38,7 @@ class SmokeTest implements Serializable {
         def env = steps.env()
 
         def srcDir = config.srcDir
-        FilePath projectDir = FileUtils.getFilePath("$env.WORKSPACE/$srcDir")
+        def workspaceDir = FileUtils.getFilePath("$env.WORKSPACE/$WORKSPACE")
 
         String vrunnerPath = VRunner.getVRunnerPath()
         String command = "$vrunnerPath xunit --ibconnection \"/F./build/ib\""
@@ -106,7 +106,7 @@ class SmokeTest implements Serializable {
         def coverageOpts = config.coverageOptions;
         if (options.coverage) {
             steps.start("${coverageOpts.dbgsPath} --addr=127.0.0.1 --port=1550")
-            steps.start("${coverageOpts.coverage41CPath} start -i DefAlias -u http://127.0.0.1:1550 -P $projectDir -s $srcDir -o build/out/smoketest-coverage.xml")
+            steps.start("${coverageOpts.coverage41CPath} start -i DefAlias -u http://127.0.0.1:1550 -P $workspaceDir -s $srcDir -o build/out/smoketest-coverage.xml")
         }
 
         steps.withEnv(logosConfig) {
