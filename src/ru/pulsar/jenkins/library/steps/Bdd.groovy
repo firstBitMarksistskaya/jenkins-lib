@@ -29,7 +29,7 @@ class Bdd implements Serializable {
         def options = config.bddOptions
         def env = steps.env();
         def srcDir = config.srcDir
-        def workspaceDir = FileUtils.getFilePath("$env.WORKSPACE/$WORKSPACE")
+        def workspaceDir = FileUtils.getFilePath("$env.WORKSPACE")
 
         List<String> logosConfig = ["LOGOS_CONFIG=$config.logosConfig"]
         steps.withEnv(logosConfig) {
