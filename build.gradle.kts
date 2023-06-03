@@ -89,5 +89,6 @@ sharedLibrary {
         dependency("org.jenkinsci.plugins", "pipeline-model-definition", declarativePluginsVersion)
         dependency("org.jenkinsci.plugins", "pipeline-model-extensions", declarativePluginsVersion)
         dependency("io.jenkins.blueocean", "blueocean-pipeline-api-impl", "1.25.3")
+        dependency("org.springframework.security", "spring-security-core", "5.1.13.RELEASE")
     }
 }
