@@ -38,7 +38,7 @@ class SmokeTestOptions implements Serializable {
             ", xddConfigPath='" + xddConfigPath + '\'' +
             ", publishToAllureReport=" + publishToAllureReport +
             ", publishToJUnitReport=" + publishToJUnitReport +
-            "coverage=" + coverage +
+            ", coverage=" + coverage +
             '}'
     }
 }
