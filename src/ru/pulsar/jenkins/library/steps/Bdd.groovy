@@ -1,8 +1,10 @@
 package ru.pulsar.jenkins.library.steps
 
+import hudson.FilePath
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
+import ru.pulsar.jenkins.library.utils.FileUtils
 import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.VRunner
 
@@ -26,7 +28,7 @@ class Bdd implements Serializable {
 
         def env = steps.env();
         def srcDir = config.srcDir
-        def projectDir = new File("$env.WORKSPACE").getCanonicalPath()
+        FilePath projectDir = FileUtils.getFilePath("$env.WORKSPACE/$srcDir")
 
         List<String> logosConfig = ["LOGOS_CONFIG=$config.logosConfig"]
         steps.withEnv(logosConfig) {
