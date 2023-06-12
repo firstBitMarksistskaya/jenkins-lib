@@ -6,6 +6,7 @@ import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.FileUtils
 import ru.pulsar.jenkins.library.utils.Logger
+import ru.pulsar.jenkins.library.utils.PortPicker
 import ru.pulsar.jenkins.library.utils.StringJoiner
 import ru.pulsar.jenkins.library.utils.VRunner
 
@@ -105,8 +106,7 @@ class SmokeTest implements Serializable {
 
         def coverageOpts = config.coverageOptions;
         if (options.coverage) {
-            ServerSocket s = new ServerSocket(0)
-            steps.start("${coverageOpts.dbgsPath} --addr=127.0.0.1 --port=${s.getLocalPort().toString()}")
+            steps.start("${coverageOpts.dbgsPath} --addr=127.0.0.1 --port=${PortPicker.port()}")
             steps.start("${coverageOpts.coverage41CPath} start -i DefAlias -u http://127.0.0.1:1550 -P $workspaceDir -s $srcDir -o build/out/smoketest-coverage.xml")
         }
 
