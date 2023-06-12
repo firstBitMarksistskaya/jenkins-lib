@@ -20,9 +20,9 @@ class Start implements Serializable {
         int returnValue
 
         if (steps.isUnix()) {
-            returnValue = steps.sh("$script &", returnStatus, encoding)
+            returnStatus = steps.sh("$script &", returnStatus, encoding)
         } else {
-            returnValue = steps.bat("chcp 65001 > nul \nstart $script", returnStatus, encoding)
+            returnStatus = steps.bat("chcp 65001 > nul \nstart $script", returnStatus, encoding)
         }
     }
 }
