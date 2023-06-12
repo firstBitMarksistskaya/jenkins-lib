@@ -39,7 +39,7 @@ class Bdd implements Serializable {
             def coverageOpts = config.coverageOptions;
             if (options.coverage) {
                 ServerSocket s = new ServerSocket(0)
-                steps.start("${coverageOpts.dbgsPath} --addr=127.0.0.1 --port=${s.getLocalPort()}")
+                steps.start("${coverageOpts.dbgsPath} --addr=127.0.0.1 --port=${s.getLocalPort().toString()}")
                 steps.start("${coverageOpts.coverage41CPath} start -i DefAlias -u http://127.0.0.1:1550 -P $workspaceDir -s $srcDir -o build/out/bdd-coverage.xml")
             }
 
