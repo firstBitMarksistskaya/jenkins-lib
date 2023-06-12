@@ -1,6 +1,5 @@
 package ru.pulsar.jenkins.library.steps
 
-import hudson.FilePath
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
@@ -39,7 +38,8 @@ class Bdd implements Serializable {
 
             def coverageOpts = config.coverageOptions;
             if (options.coverage) {
-                steps.start("${coverageOpts.dbgsPath} --addr=127.0.0.1 --port=1550")
+                ServerSocket s = new ServerSocket(0)
+                steps.start("${coverageOpts.dbgsPath} --addr=127.0.0.1 --port=${s.getLocalPort()}")
                 steps.start("${coverageOpts.coverage41CPath} start -i DefAlias -u http://127.0.0.1:1550 -P $workspaceDir -s $srcDir -o build/out/bdd-coverage.xml")
             }
 
