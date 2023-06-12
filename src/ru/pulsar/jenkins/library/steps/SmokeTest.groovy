@@ -106,7 +106,7 @@ class SmokeTest implements Serializable {
 
         def coverageOpts = config.coverageOptions;
         if (options.coverage) {
-            steps.start("${coverageOpts.dbgsPath} --addr=127.0.0.1 --port=${PortPicker.port()}")
+            steps.start("${coverageOpts.dbgsPath} --addr=127.0.0.1 --port=${PortPicker.getPort()}")
             steps.start("${coverageOpts.coverage41CPath} start -i DefAlias -u http://127.0.0.1:1550 -P $workspaceDir -s $srcDir -o build/out/smoketest-coverage.xml")
         }
 
