@@ -5,7 +5,7 @@ import ru.pulsar.jenkins.library.ioc.ContextRegistry
 
 class Start implements Serializable {
 
-    private String script;
+    private String script
     private boolean returnStatus
     private String encoding = 'UTF-8'
 
@@ -14,15 +14,13 @@ class Start implements Serializable {
         this.returnStatus = returnStatus
     };
 
-    int run() {
+    void run() {
         IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
 
-        int returnValue
-
         if (steps.isUnix()) {
-            returnStatus = steps.sh("$script &", returnStatus, encoding)
+            steps.sh("$script &", returnStatus, encoding)
         } else {
-            returnStatus = steps.bat("chcp 65001 > nul \nstart $script", returnStatus, encoding)
+            steps.bat("chcp 65001 > nul \nstart $script", returnStatus, encoding)
         }
     }
 }
