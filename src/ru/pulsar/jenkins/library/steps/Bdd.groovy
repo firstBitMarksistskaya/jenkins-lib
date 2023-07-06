@@ -43,6 +43,7 @@ class Bdd implements Serializable {
             if (options.coverage) {
                 steps.start("${coverageOpts.dbgsPath} --addr=127.0.0.1 --port=$port")
                 steps.start("${coverageOpts.coverage41CPath} start -i DefAlias -u http://127.0.0.1:$port -P $workspaceDir -s $srcDir -o build/out/bdd-coverage.xml")
+                steps.cmd("${coverageOpts.coverage41CPath} check -i DefAlias -u http://127.0.0.1:$port")
             }
 
             config.bddOptions.vrunnerSteps.each {
