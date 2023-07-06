@@ -142,6 +142,10 @@
           "type": "integer",
           "description": "Таймаут шага дымовых тестов, в минутах.\n    По умолчанию содержит значение 240.\n    "
         },
+        "yaxunit": {
+          "type": "integer",
+          "description": "Таймаут шага Юнит тестов, в минутах.\n    По умолчанию содержит значение 240.\n    "
+        },
         "sonarqube": {
           "type": "integer",
           "description": "Таймаут шага статического анализа SonarQube, в минутах.\n    По умолчанию содержит значение 90.\n    "
@@ -305,7 +309,15 @@
         },
         "configPath": {
           "type": "string",
-          "description": "Путь к конфигурационному файлу для Yaxunit.\n    По умолчанию содержит значение \"./tools/YaxunitConfig.json\".\n    "
+          "description": "Путь к конфигурационному файлу YAXUnit.\n    По умолчанию содержит значение \"./tools/yaxunit.json\".\n    "
+        },
+        "publishToAllureReport": {
+          "type": "boolean",
+          "description": "Выполнять публикацию результатов в отчет Allure.\n    По умолчанию выключено.\n    "
+        },
+        "publishToJUnitReport": {
+          "type": "boolean",
+          "description": "Выполнять публикацию результатов в отчет JUnit.\n    По умолчанию включено.\n    "
         }
       }
     },

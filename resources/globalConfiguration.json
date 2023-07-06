@@ -83,7 +83,12 @@
     "publishToJUnitReport": true
   },
   "yaxunit": {
-    "vrunnerSettings": "./tools/vrunner.json"
+    "vrunnerSettings": "./tools/vrunner.json",
+    "cfe": "https://github.com/bia-technologies/yaxunit/releases/download/23.05/YAXUNIT-23.05.cfe",
+    "extensionNames": ["YAXUNIT"],
+    "configPath": "./tools/yaxunit.json",
+    "publishToAllureReport": false,
+    "publishToJUnitReport": true
   },
   "resultsTransform": {
     "removeSupport": true,
