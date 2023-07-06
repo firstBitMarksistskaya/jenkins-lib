@@ -229,7 +229,7 @@ void call() {
                             expression { config.stageFlags.yaxunit }
                         }
                         steps {
-                            timeout(time: config.timeoutOptions.smoke, unit: TimeUnit.MINUTES) {
+                            timeout(time: config.timeoutOptions.yaxunit, unit: TimeUnit.MINUTES) {
                                 unzipInfobase()
 
                                 yaxunit config

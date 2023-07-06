@@ -134,6 +134,10 @@
           "type" : "integer",
           "description" : "Таймаут шага дымовых тестов, в минутах.\n    По умолчанию содержит значение 240.\n    "
         },
+        "yaxunit" : {
+          "type" : "integer",
+          "description" : "Таймаут шага Юнит тестов, в минутах.\n    По умолчанию содержит значение 240.\n    "
+        },
         "sonarqube" : {
           "type" : "integer",
           "description" : "Таймаут шага статического анализа SonarQube, в минутах.\n    По умолчанию содержит значение 90.\n    "
@@ -271,9 +275,28 @@
           "type" : "string",
           "description" : "Путь к конфигурационному файлу vanessa-runner.\n    По умолчанию содержит значение \"./tools/vrunner.json\".\n    "
         },
+        "cfe" : {
+          "type" : "string",
+          "description" : "Ссылка на скачивание YAXUnit.\n    По умолчанию содержит ссылку на официальный релиз версии 23.05.\n    "
+        },
+        "extensionNames" : {
+          "type" : "array",
+          "description" : "Имена расширений с тестами.\n    По умолчанию содержит один элемент - YAXUNIT.\n    ",
+          "items" : {
+            "type" : "string"
+          }
+        },
         "configPath" : {
           "type" : "string",
-          "description" : "Путь к конфигурационному файлу для Yaxunit.\n    По умолчанию содержит значение \"./tools/YaxunitConfig.json\".\n    "
+          "description" : "Путь к конфигурационному файлу YAXUnit.\n    По умолчанию содержит значение \"./tools/yaxunit.json\".\n    "
+        },
+        "publishToAllureReport" : {
+          "type" : "boolean",
+          "description" : "Выполнять публикацию результатов в отчет Allure.\n    По умолчанию выключено.\n    "
+        },
+        "publishToJUnitReport" : {
+          "type" : "boolean",
+          "description" : "Выполнять публикацию результатов в отчет JUnit.\n    По умолчанию включено.\n    "
         }
       }
     },

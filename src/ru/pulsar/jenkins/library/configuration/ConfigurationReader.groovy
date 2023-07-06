@@ -64,7 +64,7 @@ class ConfigurationReader implements Serializable {
             "bddOptions",
             "sonarQubeOptions",
             "smokeTestOptions",
-            "yaxunitoptions",
+            "yaxunitOptions",
             "syntaxCheckOptions",
             "resultsTransformOptions",
             "notificationsOptions",
@@ -80,6 +80,7 @@ class ConfigurationReader implements Serializable {
         mergeObjects(baseConfiguration, configurationToMerge, nonMergeableSettings)
         mergeInitInfoBaseOptions(baseConfiguration.initInfoBaseOptions, configurationToMerge.initInfoBaseOptions)
         mergeBddOptions(baseConfiguration.bddOptions, configurationToMerge.bddOptions)
+        mergeYaxunitOptions(baseConfiguration.yaxunitOptions, configurationToMerge.yaxunitOptions)
         mergeSyntaxCheckOptions(baseConfiguration.syntaxCheckOptions, configurationToMerge.syntaxCheckOptions)
         mergeNotificationsOptions(baseConfiguration.notificationsOptions, configurationToMerge.notificationsOptions)
 
@@ -126,6 +127,14 @@ class ConfigurationReader implements Serializable {
             return
         }
         baseObject.vrunnerSteps = objectToMerge.vrunnerSteps.clone()
+    }
+
+    @NonCPS
+    private static void mergeYaxunitOptions(YaxunitOptions baseObject, YaxunitOptions objectToMerge) {
+        if (objectToMerge == null || objectToMerge.extensionNames == null) {
+            return
+        }
+        baseObject.extensionNames = objectToMerge.extensionNames.clone()
     }
 
     @NonCPS

@@ -40,6 +40,8 @@ dependencies {
 
     integrationTestImplementation("org.slf4j", "slf4j-api", slf4jVersion)
     integrationTestImplementation("org.slf4j", "slf4j-simple", slf4jVersion)
+    integrationTestImplementation("org.springframework.security", "spring-security-core", "5.1.13.RELEASE")
+
 }
 
 tasks.test {
@@ -84,6 +86,8 @@ sharedLibrary {
         dependency("org.6wind.jenkins", "lockable-resources", "2.7")
         dependency("ru.yandex.qatools.allure", "allure-jenkins-plugin", "2.28.1")
         val declarativePluginsVersion = "1.6.0"
+
+
         dependency("org.jenkinsci.plugins", "pipeline-model-api", declarativePluginsVersion)
         dependency("org.jenkinsci.plugins", "pipeline-model-declarative-agent", "1.1.1")
         dependency("org.jenkinsci.plugins", "pipeline-model-definition", declarativePluginsVersion)

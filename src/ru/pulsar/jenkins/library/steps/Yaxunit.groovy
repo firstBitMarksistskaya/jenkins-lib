@@ -8,13 +8,15 @@ import ru.pulsar.jenkins.library.utils.FileUtils
 import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.VRunner
 
-import java.nio.file.Files
-
 class Yaxunit implements Serializable {
 
     private final JobConfiguration config
 
     private final String yaxunitPath = 'build/yaxunit.cfe'
+
+    private final String DEFAULT_YAXUNIT_CONFIGURATION_RESOURCE = 'yaxunit.json'
+
+    public static final String YAXUNIT_ALLURE_STASH = 'yaxunit-allure'
 
     Yaxunit(JobConfiguration config) {
         this.config = config
@@ -39,60 +41,85 @@ class Yaxunit implements Serializable {
         def env = steps.env()
 
         String vrunnerPath = VRunner.getVRunnerPath()
-        String ibConnection = "--ibconnection /F./build/ib"
+        String ibConnection = ' --ibconnection "/F./build/ib"'
 
-        // Скачиваем расширение с гитхаба
+        // Скачиваем расширение
         String pathToYaxunit = "$env.WORKSPACE/$yaxunitPath"
         FilePath localPathToYaxunit = FileUtils.getFilePath(pathToYaxunit)
         Logger.println("Скачивание Yaxunit в $localPathToYaxunit")
-        localPathToYaxunit.copyFrom(new URL('https://github.com/bia-technologies/yaxunit/releases/download/22.11.0/YAXUNIT-22.11.cfe'))
+        localPathToYaxunit.copyFrom(new URL(options.cfe))
 
-        // Устанавливаем расширение
-//        String loadYaxunitCommand = "$vrunnerPath loadext -f $localPathToYaxunit --extension Yaxunit --updatedb $ibConnection"
-        String loadYaxunitCommand = vrunnerPath + ' run --command "Путь=' + pathToYaxunit + ';ЗавершитьРаботуСистемы" --execute $runnerRoot/epf/ЗагрузитьРасширениеВРежимеПредприятия.epf ' + ibConnection
-        // Устанавливаем тесты
-        String loadTestsCommand = "$vrunnerPath  compileext ./src/cfe test --updatedb $ibConnection"
+        // Команда загрузки YAXUnit
+        String loadYaxunitCommand = vrunnerPath + ' run --command "Путь=' + pathToYaxunit + ';ЗавершитьРаботуСистемы;" --execute '
+        String executeParameter = '$runnerRoot/epf/ЗагрузитьРасширениеВРежимеПредприятия.epf'
+        if (steps.isUnix()) {
+            executeParameter = '\\' + executeParameter
+        }
+        loadYaxunitCommand += executeParameter
+        loadYaxunitCommand += ' --ibconnection "/F./build/ib"'
 
-        // Создаем конфиг, т.к. в репо может быть ключ, который не закрывает программу и может повесить конвеер
-        // Также путь к отчету в формате junit указывается в конфиге, т.к. мы не знаем на чем стартует агент,
-        // поэтому собираем сами. Стоит вынести в отдельный класс
-        String junitReport = "build/out/jUnit/yaxunit/yaxunit.xml"
-        FilePath pathToJUnitReport = FileUtils.getFilePath("$env.WORKSPACE/$junitReport")
-        String junitReportDir = FileUtils.getLocalPath(pathToJUnitReport.getParent())
-        String configYaxunit = "test-config.json"
-        FilePath pathToConfig = FileUtils.getFilePath("$env.WORKSPACE/$configYaxunit")
-//        def data = [
-//                'filter' : 'test',
-//                'reportPath' : 'ss'
-//        ]
-//        String data = "{\"filter\": {\"extensions\": [\"test\"]}, \"reportPath\": \"$pathToConfig\"}"
-//        def json = new groovy.json.JsonBuilder()
-//        json "filter" : "jj", "reportPath" : "ii"
-//        def file = new File("$env.WORKSPACE\\$configYaxunit")
-//        file.createNewFile()
-//        file.write(groovy.json.JsonOutput.prettyPrint(json.toString()))
+        // Команда сборки расширений с тестами и их загрузки в ИБ
+        def loadTestExtCommands = []
+        for (String extension in options.extensionNames) {
+            if (extension == "YAXUNIT") {
+                continue
+            }
+            def loadTestExtCommand = "$vrunnerPath compileext ./src/cfe/$extension $extension --updatedb $ibConnection"
+            loadTestExtCommands << loadTestExtCommand
+            Logger.println("Команда сборки расширения: $loadTestExtCommands")
+        }
 
-        // Запускаем тесты
-        String command = "$vrunnerPath run --command RunUnitTests=$pathToConfig $ibConnection"
+        String yaxunitConfigPath = options.configPath
+        File yaxunitConfigFile = new File("$env.WORKSPACE/$yaxunitConfigPath")
+        if (!steps.fileExists(yaxunitConfigPath)) {
+            def defaultYaxunitConfig = steps.libraryResource DEFAULT_YAXUNIT_CONFIGURATION_RESOURCE
+            yaxunitConfigFile.write defaultYaxunitConfig
+        }
+        def yaxunitConfig = yaxunitConfigFile.getCanonicalPath()
 
+        // Команда запуска тестов
+        String command = "$vrunnerPath run --command RunUnitTests=$yaxunitConfig $ibConnection"
+
+        // Переопределяем настройки vrunner
         String vrunnerSettings = options.vrunnerSettings
+        String[] loadTestExtCommandJoined = loadTestExtCommands
         if (steps.fileExists(vrunnerSettings)) {
             String vrunnerSettingsCommand = " --settings $vrunnerSettings"
 
-            command += vrunnerSettingsCommand
             loadYaxunitCommand += vrunnerSettingsCommand
-            loadTestsCommand += vrunnerSettingsCommand
+
+            loadTestExtCommandJoined = loadTestExtCommands.collect { "$it $vrunnerSettingsCommand" }
+            command += vrunnerSettingsCommand
+
         }
 
+        // Выполяем команды
         steps.withEnv(logosConfig) {
             VRunner.exec(loadYaxunitCommand, true)
-            VRunner.exec(loadTestsCommand, true)
+            for (loadTestExtCommand in loadTestExtCommandJoined) {
+                VRunner.exec(loadTestExtCommand, true)
+            }
             VRunner.exec(command, true)
         }
 
         // Сохраняем результаты
-        steps.junit("$junitReportDir/*.xml", true)
-        steps.archiveArtifacts("$junitReportDir/**")
+        String junitReport = "./build/out/yaxunit/junit.xml"
+        FilePath pathToJUnitReport = FileUtils.getFilePath("$env.WORKSPACE/$junitReport")
+        String junitReportDir = FileUtils.getLocalPath(pathToJUnitReport.getParent())
 
+        if (options.publishToJUnitReport) {
+            steps.junit("$junitReportDir/*.xml", true)
+            steps.archiveArtifacts("$junitReportDir/**")
+        }
+
+        if (options.publishToAllureReport) {
+            String allureReport = "./build/out/allure/yaxunit/junit.xml"
+            FilePath pathToAllureReport = FileUtils.getFilePath("$env.WORKSPACE/$allureReport")
+            String allureReportDir = FileUtils.getLocalPath(pathToAllureReport.getParent())
+
+            pathToJUnitReport.copyTo(pathToAllureReport)
+
+            steps.stash(YAXUNIT_ALLURE_STASH, "$allureReportDir/**", true)
+        }
     }
 }
