@@ -12,7 +12,7 @@ class Yaxunit implements Serializable {
 
     private final JobConfiguration config
 
-    private final String yaxunitPath = 'build/yaxunit.cfe'
+    private final String yaxunitPath = 'build/out/yaxunit.cfe'
 
     private final String DEFAULT_YAXUNIT_CONFIGURATION_RESOURCE = 'yaxunit.json'
 
@@ -43,32 +43,38 @@ class Yaxunit implements Serializable {
         String vrunnerPath = VRunner.getVRunnerPath()
         String ibConnection = ' --ibconnection "/F./build/ib"'
 
-        // Скачиваем расширение
+        // Скачиваем YAXUnit
         String pathToYaxunit = "$env.WORKSPACE/$yaxunitPath"
         FilePath localPathToYaxunit = FileUtils.getFilePath(pathToYaxunit)
-        Logger.println("Скачивание Yaxunit в $localPathToYaxunit")
+        Logger.println("Скачивание YAXUnit в $localPathToYaxunit из ${options.cfe}")
         localPathToYaxunit.copyFrom(new URL(options.cfe))
 
-        // Команда загрузки YAXUnit
-        String loadYaxunitCommand = vrunnerPath + ' run --command "Путь=' + pathToYaxunit + ';ЗавершитьРаботуСистемы;" --execute '
-        String executeParameter = '$runnerRoot/epf/ЗагрузитьРасширениеВРежимеПредприятия.epf'
-        if (steps.isUnix()) {
-            executeParameter = '\\' + executeParameter
-        }
-        loadYaxunitCommand += executeParameter
-        loadYaxunitCommand += ' --ibconnection "/F./build/ib"'
+        def extCommands = []
 
-        // Команда сборки расширений с тестами и их загрузки в ИБ
-        def loadTestExtCommands = []
+        // Команда загрузки YAXUnit
+        def loadYaxunitCommand = VRunner.loadExtCommand("yaxunit")
+        extCommands << loadYaxunitCommand
+
+
+        // Команды сборки расширений с тестами и их загрузки в ИБ
         for (String extension in options.extensionNames) {
-            if (extension == "YAXUNIT") {
+            if (extension.toUpperCase() == "YAXUNIT") {
                 continue
             }
-            def loadTestExtCommand = "$vrunnerPath compileext ./src/cfe/$extension $extension --updatedb $ibConnection"
-            loadTestExtCommands << loadTestExtCommand
-            Logger.println("Команда сборки расширения: $loadTestExtCommands")
+            
+            // Команда компиляции в cfe
+            def compileExtCommand = "$vrunnerPath compileexttocfe --src ./src/cfe/$extension --out build/out/${extension}.cfe"
+            extCommands << compileExtCommand
+            Logger.println("Команда сборки расширения: $compileExtCommand")
+
+            // Команда загрузки расширения  в ИБ
+            def loadTestExtCommand = VRunner.loadExtCommand(extension)
+            extCommands << loadTestExtCommand
+            Logger.println("Команда загрузки расширения: $loadTestExtCommand")
+            
         }
 
+        // Готовим конфиг для yaxunit
         String yaxunitConfigPath = options.configPath
         File yaxunitConfigFile = new File("$env.WORKSPACE/$yaxunitConfigPath")
         if (!steps.fileExists(yaxunitConfigPath)) {
@@ -78,28 +84,25 @@ class Yaxunit implements Serializable {
         def yaxunitConfig = yaxunitConfigFile.getCanonicalPath()
 
         // Команда запуска тестов
-        String command = "$vrunnerPath run --command RunUnitTests=$yaxunitConfig $ibConnection"
+        String runTestsCommand = "$vrunnerPath run --command RunUnitTests=$yaxunitConfig $ibConnection"
 
         // Переопределяем настройки vrunner
         String vrunnerSettings = options.vrunnerSettings
-        String[] loadTestExtCommandJoined = loadTestExtCommands
+        String[] extCommandsWithSettings = extCommands
         if (steps.fileExists(vrunnerSettings)) {
-            String vrunnerSettingsCommand = " --settings $vrunnerSettings"
+            String vrunnerSettingsParam = " --settings $vrunnerSettings"
 
-            loadYaxunitCommand += vrunnerSettingsCommand
-
-            loadTestExtCommandJoined = loadTestExtCommands.collect { "$it $vrunnerSettingsCommand" }
-            command += vrunnerSettingsCommand
+            extCommandsWithSettings = extCommands.collect { "$it $vrunnerSettingsParam" }
+            runTestsCommand += vrunnerSettingsParam
 
         }
 
         // Выполяем команды
         steps.withEnv(logosConfig) {
-            VRunner.exec(loadYaxunitCommand, true)
-            for (loadTestExtCommand in loadTestExtCommandJoined) {
-                VRunner.exec(loadTestExtCommand, true)
+            for (extCommand in extCommandsWithSettings) {
+                VRunner.exec(extCommand, true)
             }
-            VRunner.exec(command, true)
+            VRunner.exec(runTestsCommand, true)
         }
 
         // Сохраняем результаты
