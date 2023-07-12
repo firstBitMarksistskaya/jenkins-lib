@@ -38,6 +38,8 @@ dependencies {
     integrationTestImplementation("org.spockframework", "spock-core", spockVersion)
     integrationTestImplementation("org.codehaus.groovy", "groovy-all", groovyVersion)
 
+    integrationTestImplementation("org.springframework.security", "spring-security-core", "5.1.13.RELEASE")
+
     integrationTestImplementation("org.slf4j", "slf4j-api", slf4jVersion)
     integrationTestImplementation("org.slf4j", "slf4j-simple", slf4jVersion)
 }
