@@ -6,6 +6,21 @@ plugins {
     jacoco
     id("com.mkobit.jenkins.pipelines.shared-library") version "0.10.1"
     id("com.github.ben-manes.versions") version "0.28.0"
+    id("org.jenkins-ci.jpi") version "0.38.0" apply false
+}
+
+tasks {
+
+    register<org.jenkinsci.gradle.plugins.jpi.TestDependenciesTask>("resolveIntegrationTestDependencies") {
+        into {
+            val javaConvention = project.convention.getPlugin<JavaPluginConvention>()
+            File("${javaConvention.sourceSets.integrationTest.get().output.resourcesDir}/test-dependencies")
+        }
+        configuration = configurations.integrationTestRuntimeClasspath.get()
+    }
+    processIntegrationTestResources {
+        dependsOn("resolveIntegrationTestDependencies")
+    }
 }
 
 java {
