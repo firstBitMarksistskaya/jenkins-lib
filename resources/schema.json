@@ -69,7 +69,7 @@
         },
         "yaxunit": {
           "type": "boolean",
-          "description": "Юнит тесты"
+          "description" : "Запуск YAXUnit тестов включен"
         },
         "initSteps": {
           "type": "boolean",
@@ -144,7 +144,7 @@
         },
         "yaxunit": {
           "type": "integer",
-          "description": "Таймаут шага Юнит тестов, в минутах.\n    По умолчанию содержит значение 240.\n    "
+          "description" : "Таймаут шага YAXUnit тестов, в минутах.\n    По умолчанию содержит значение 240.\n    "
         },
         "sonarqube": {
           "type": "integer",
@@ -301,7 +301,7 @@
     "yaxunit": {
       "type": "object",
       "id": "urn:jsonschema:ru:pulsar:jenkins:library:configuration:YaxunitOptions",
-      "description": "Настройки юнит тестирования",
+      "description" : "Настройки YAXUnit",
       "properties": {
         "vrunnerSettings": {
           "type": "string",

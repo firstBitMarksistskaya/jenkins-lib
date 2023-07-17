@@ -244,7 +244,7 @@ void call() {
                         }
                     }
 
-                    stage('Юнит тесты') {
+                    stage('YAXUnit тесты') {
                         agent {
                             label agent1C
                         }
