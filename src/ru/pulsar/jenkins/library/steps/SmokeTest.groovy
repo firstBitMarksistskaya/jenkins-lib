@@ -1,18 +1,20 @@
 package ru.pulsar.jenkins.library.steps
 
 import hudson.FilePath
+import org.apache.commons.lang.RandomStringUtils
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.FileUtils
 import ru.pulsar.jenkins.library.utils.Logger
-import ru.pulsar.jenkins.library.utils.PortPicker
 import ru.pulsar.jenkins.library.utils.StringJoiner
 import ru.pulsar.jenkins.library.utils.VRunner
 
 class SmokeTest implements Serializable {
 
-    public static final String SMOKE_ALLURE_STASH = 'smoke-allure'
+    public static final String ALLURE_STASH = 'smoke-allure'
+    public static final String COVERAGE_STASH_NAME = 'smoke-coverage'
+    public static final String COVERAGE_STASH_PATH = 'build/out/smoke-coverage.xml'
 
     private final JobConfiguration config
 
@@ -104,25 +106,31 @@ class SmokeTest implements Serializable {
             command += " $testsPath"
         }
 
-        def coverageOpts = config.coverageOptions;
-        def port = PortPicker.getPort();
-        port = 1550;
+        def coverageOpts = config.coverageOptions
+        def port = options.dbgsPort
+        def lockableResource = RandomStringUtils.random(9, true, false)
         if (options.coverage) {
-            steps.start("${coverageOpts.dbgsPath} --addr=127.0.0.1 --port=$port")
-            steps.start("${coverageOpts.coverage41CPath} start -i DefAlias -u http://127.0.0.1:$port -P $workspaceDir -s $srcDir -o build/out/smoketest-coverage.xml")
-            steps.cmd("${coverageOpts.coverage41CPath} check -i DefAlias -u http://127.0.0.1:$port")
+            lockableResource = "${env.NODE_NAME}_$port"
         }
 
-        steps.withEnv(logosConfig) {
-            VRunner.exec(command, true)
-        }
+        steps.lock(null, 1, lockableResource) {
+            if (options.coverage) {
+                steps.start("${coverageOpts.dbgsPath} --addr=127.0.0.1 --port=$port")
+                steps.start("${coverageOpts.coverage41CPath} start -i DefAlias -u http://127.0.0.1:$port -P $workspaceDir -s $srcDir -o $COVERAGE_STASH_PATH")
+                steps.cmd("${coverageOpts.coverage41CPath} check -i DefAlias -u http://127.0.0.1:$port")
+            }
 
-        if (options.coverage) {
-            steps.cmd("${coverageOpts.coverage41CPath} stop -i DefAlias -u http://127.0.0.1:$port")
+            steps.withEnv(logosConfig) {
+                VRunner.exec(command, true)
+            }
+
+            if (options.coverage) {
+                steps.cmd("${coverageOpts.coverage41CPath} stop -i DefAlias -u http://127.0.0.1:$port")
+            }
         }
 
         if (options.publishToAllureReport) {
-            steps.stash(SMOKE_ALLURE_STASH, "$allureReportDir/**", true)
+            steps.stash(ALLURE_STASH, "$allureReportDir/**", true)
             steps.archiveArtifacts("$allureReportDir/**")
         }
 
@@ -132,7 +140,7 @@ class SmokeTest implements Serializable {
         }
 
         if (options.coverage) {
-            steps.stash('smoketest-coverage', 'build/out/smoketest-coverage.xml', true)
+            steps.stash(COVERAGE_STASH_NAME, COVERAGE_STASH_PATH, true)
         }
 
     }

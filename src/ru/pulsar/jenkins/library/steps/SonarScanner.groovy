@@ -75,13 +75,13 @@ class SonarScanner implements Serializable {
             StringJoiner coveragePathsConstructor = new StringJoiner(",")
 
             if (config.stageFlags.bdd && config.bddOptions.coverage) {
-                steps.unstash("bdd-coverage")
-                coveragePathsConstructor.add("build/out/bdd-coverage.xml")
+                steps.unstash(Bdd.COVERAGE_STASH_NAME)
+                coveragePathsConstructor.add(Bdd.COVERAGE_STASH_PATH)
             }
 
             if (config.stageFlags.smoke && config.smokeTestOptions.coverage) {
-                steps.unstash("smoketest-coverage")
-                coveragePathsConstructor.add("build/out/smoketest-coverage.xml")
+                steps.unstash(SmokeTest.COVERAGE_STASH_NAME)
+                coveragePathsConstructor.add(SmokeTest.COVERAGE_STASH_PATH)
             }
 
             String coveragePaths = coveragePathsConstructor.toString()

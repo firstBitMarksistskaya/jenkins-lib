@@ -19,12 +19,16 @@ class BddOptions implements Serializable {
     @JsonPropertyDescription("Выполнять замер покрытия")
     Boolean coverage = false
 
+    @JsonPropertyDescription("Порт, на котором будет запущен сервер отладки для замера покрытия")
+    Boolean dbgsPort = 1550
+
     @Override
     @NonCPS
     String toString() {
         return "BddOptions{" +
             "vrunnerSteps=" + vrunnerSteps +
             "coverage=" + coverage +
-            '}';
+            "dbgsPort=" + dbgsPort +
+            '}'
     }
 }
