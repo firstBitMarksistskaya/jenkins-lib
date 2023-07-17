@@ -45,7 +45,7 @@ class Bdd implements Serializable {
                 lockable_resource = "${env.NODE_NAME}_$port"
             }
 
-            steps.lock(lockable_resource, 1, null) {
+            steps.lock(null, 1, lockable_resource) {
                 if (options.coverage) {
                     steps.start("${coverageOpts.dbgsPath} --addr=127.0.0.1 --port=$port")
                     steps.start("${coverageOpts.coverage41CPath} start -i DefAlias -u http://127.0.0.1:$port -P $workspaceDir -s $srcDir -o build/out/bdd-coverage.xml")
