@@ -5,12 +5,12 @@ import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.FileUtils
 import ru.pulsar.jenkins.library.utils.Logger
-import ru.pulsar.jenkins.library.utils.PortPicker
+import org.apache.commons.lang.RandomStringUtils
 import ru.pulsar.jenkins.library.utils.VRunner
 
 class Bdd implements Serializable {
 
-    private final JobConfiguration config;
+    private final JobConfiguration config
 
     Bdd(JobConfiguration config) {
         this.config = config
@@ -27,7 +27,7 @@ class Bdd implements Serializable {
         }
 
         def options = config.bddOptions
-        def env = steps.env();
+        def env = steps.env()
         def srcDir = config.srcDir
         def workspaceDir = FileUtils.getFilePath("$env.WORKSPACE")
 
@@ -37,26 +37,35 @@ class Bdd implements Serializable {
 
             steps.createDir('build/out')
 
-            def coverageOpts = config.coverageOptions;
-            def port = PortPicker.getPort();
-            port = 1550;
+            def coverageOpts = config.coverageOptions
+            def port = coverageOpts.dbgsPort
+            def lockable_resource = RandomStringUtils.random(9, true, false)
+
             if (options.coverage) {
-                steps.start("${coverageOpts.dbgsPath} --addr=127.0.0.1 --port=$port")
-                steps.start("${coverageOpts.coverage41CPath} start -i DefAlias -u http://127.0.0.1:$port -P $workspaceDir -s $srcDir -o build/out/bdd-coverage.xml")
-                steps.cmd("${coverageOpts.coverage41CPath} check -i DefAlias -u http://127.0.0.1:$port")
+                lockable_resource = "${env.NODE_NAME}_$port"
             }
 
-            steps.catchError {
-                options.vrunnerSteps.each {
-                    Logger.println("Шаг запуска сценариев командой ${it}")
-                    String vrunnerPath = VRunner.getVRunnerPath();
-                    VRunner.exec("$vrunnerPath ${it} --ibconnection \"/F./build/ib\"")
+            steps.lock("label", 1, lockable_resource) {
+                if (options.coverage) {
+                    steps.start("${coverageOpts.dbgsPath} --addr=127.0.0.1 --port=$port")
+                    steps.start("${coverageOpts.coverage41CPath} start -i DefAlias -u http://127.0.0.1:$port -P $workspaceDir -s $srcDir -o build/out/bdd-coverage.xml")
+                    steps.cmd("${coverageOpts.coverage41CPath} check -i DefAlias -u http://127.0.0.1:$port")
                 }
 
-            }
+                steps.catchError {
+                    options.vrunnerSteps.each {
+                        Logger.println("Шаг запуска сценариев командой ${it}")
+                        String vrunnerPath = VRunner.getVRunnerPath()
+                        VRunner.exec("$vrunnerPath ${it} --ibconnection \"/F./build/ib\"")
+                    }
+                }
 
-            if (options.coverage) {
-                steps.cmd("${coverageOpts.coverage41CPath} stop -i DefAlias -u http://127.0.0.1:$port")
+                if (options.coverage) {
+                    steps.cmd("${coverageOpts.coverage41CPath} stop -i DefAlias -u http://127.0.0.1:$port")
+                }
+
+                return 0
+
             }
         }
 

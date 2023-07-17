@@ -132,6 +132,13 @@ class StepExecutor implements IStepExecutor {
     }
 
     @Override
+    def lock(String label, int quantity, String resource, Closure body) {
+        steps.lock(label, quantity, resource) {
+            body()
+        }
+    }
+
+    @Override
     def archiveArtifacts(String path) {
         steps.archiveArtifacts path
     }
