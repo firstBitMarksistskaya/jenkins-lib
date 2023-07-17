@@ -12,6 +12,10 @@ class Bdd implements Serializable {
 
     private final JobConfiguration config
 
+    public static final String ALLURE_STASH = 'bdd-allure'
+    public static final String COVERAGE_STASH_NAME = 'bdd-coverage'
+    public static final String COVERAGE_STASH_PATH = 'build/out/bdd-coverage.xml'
+
     Bdd(JobConfiguration config) {
         this.config = config
     }
@@ -38,17 +42,17 @@ class Bdd implements Serializable {
             List<Integer> returnStatuses = []
 
             def coverageOpts = config.coverageOptions
-            def port = coverageOpts.dbgsPort
-            def lockable_resource = RandomStringUtils.random(9, true, false)
+            def port = options.dbgsPort
+            def lockableResource = RandomStringUtils.random(9, true, false)
 
             if (options.coverage) {
-                lockable_resource = "${env.NODE_NAME}_$port"
+                lockableResource = "${env.NODE_NAME}_$port"
             }
 
-            steps.lock(null, 1, lockable_resource) {
+            steps.lock(null, 1, lockableResource) {
                 if (options.coverage) {
                     steps.start("${coverageOpts.dbgsPath} --addr=127.0.0.1 --port=$port")
-                    steps.start("${coverageOpts.coverage41CPath} start -i DefAlias -u http://127.0.0.1:$port -P $workspaceDir -s $srcDir -o build/out/bdd-coverage.xml")
+                    steps.start("${coverageOpts.coverage41CPath} start -i DefAlias -u http://127.0.0.1:$port -P $workspaceDir -s $srcDir -o $COVERAGE_STASH_PATH")
                     steps.cmd("${coverageOpts.coverage41CPath} check -i DefAlias -u http://127.0.0.1:$port")
                 }
 
@@ -70,16 +74,13 @@ class Bdd implements Serializable {
                 if (options.coverage) {
                     steps.cmd("${coverageOpts.coverage41CPath} stop -i DefAlias -u http://127.0.0.1:$port")
                 }
-
-                return 0
-
             }
         }
 
-        steps.stash('bdd-allure', 'build/out/allure/**', true)
+        steps.stash(ALLURE_STASH, 'build/out/allure/**', true)
         steps.stash('bdd-cucumber', 'build/out/cucumber/**', true)
         if (options.coverage) {
-            steps.stash('bdd-coverage', 'build/out/bdd-coverage.xml', true)
+            steps.stash(COVERAGE_STASH_NAME, COVERAGE_STASH_PATH, true)
         }
 
     }
