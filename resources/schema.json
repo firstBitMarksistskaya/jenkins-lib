@@ -69,7 +69,7 @@
         },
         "yaxunit" : {
           "type" : "boolean",
-          "description" : "Юнит тесты"
+          "description" : "Запуск YAXUnit тестов включен"
         },
         "initSteps" : {
           "type" : "boolean",
@@ -136,7 +136,7 @@
         },
         "yaxunit" : {
           "type" : "integer",
-          "description" : "Таймаут шага Юнит тестов, в минутах.\n    По умолчанию содержит значение 240.\n    "
+          "description" : "Таймаут шага YAXUnit тестов, в минутах.\n    По умолчанию содержит значение 240.\n    "
         },
         "sonarqube" : {
           "type" : "integer",
@@ -269,22 +269,11 @@
     "yaxunit" : {
       "type" : "object",
       "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:YaxunitOptions",
-      "description" : "Настройки юнит тестирования",
+      "description" : "Настройки YAXUnit",
       "properties" : {
         "vrunnerSettings" : {
           "type" : "string",
           "description" : "Путь к конфигурационному файлу vanessa-runner.\n    По умолчанию содержит значение \"./tools/vrunner.json\".\n    "
-        },
-        "cfe" : {
-          "type" : "string",
-          "description" : "Ссылка на скачивание YAXUnit.\n    По умолчанию содержит ссылку на официальный релиз версии 23.05.\n    "
-        },
-        "extensionNames" : {
-          "type" : "array",
-          "description" : "Имена расширений с тестами.\n    По умолчанию содержит один элемент - YAXUNIT.\n    ",
-          "items" : {
-            "type" : "string"
-          }
         },
         "configPath" : {
           "type" : "string",
@@ -297,6 +286,22 @@
         "publishToJUnitReport" : {
           "type" : "boolean",
           "description" : "Выполнять публикацию результатов в отчет JUnit.\n    По умолчанию включено.\n    "
+        },
+        "extensions" : {
+          "type" : "array",
+          "description" : "Расширения с тестами.\n    Массив объектов с полями name и src, где\n        name - имя расширения\n        src - путь к расширению (к cfe или к исходникам)\n    По умолчанию содержит один элемент - YAXUNIT версии 23.05.\n    ",
+          "items" : {
+            "type" : "object",
+            "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:Extension",
+            "properties" : {
+              "name" : {
+                "type" : "string"
+              },
+              "src" : {
+                "type" : "string"
+              }
+            }
+          }
         }
       }
     },

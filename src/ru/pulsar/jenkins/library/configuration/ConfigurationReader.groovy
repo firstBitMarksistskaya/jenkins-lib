@@ -65,6 +65,7 @@ class ConfigurationReader implements Serializable {
             "sonarQubeOptions",
             "smokeTestOptions",
             "yaxunitOptions",
+            "extensions",
             "syntaxCheckOptions",
             "resultsTransformOptions",
             "notificationsOptions",
@@ -131,10 +132,10 @@ class ConfigurationReader implements Serializable {
 
     @NonCPS
     private static void mergeYaxunitOptions(YaxunitOptions baseObject, YaxunitOptions objectToMerge) {
-        if (objectToMerge == null || objectToMerge.extensionNames == null) {
+        if (objectToMerge == null || objectToMerge.extensions == null) {
             return
         }
-        baseObject.extensionNames = objectToMerge.extensionNames.clone()
+        baseObject.extensions = objectToMerge.extensions.clone()
     }
 
     @NonCPS

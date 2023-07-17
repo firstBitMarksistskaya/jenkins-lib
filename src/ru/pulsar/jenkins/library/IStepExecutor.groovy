@@ -25,6 +25,8 @@ interface IStepExecutor {
 
     String readFile(String file, String encoding)
 
+    void writeFile(String file, String text, String encoding)
+
     boolean fileExists(String file)
 
     void echo(message)
