@@ -12,6 +12,11 @@ class CoverageOptions implements Serializable {
     ''')
     String dbgsPath
 
+    @JsonPropertyDescription('''Порт сервера отладки.
+    По умолчанию равен 1550.
+    ''')
+    int dbgsPort = 1550
+
     @JsonPropertyDescription('''Путь к исполняемому файлу Coverage41C
     По умолчанию равен Coverage41C.
     ''')
@@ -22,8 +27,9 @@ class CoverageOptions implements Serializable {
     String toString() {
         return "coverageOptions{" +
                 "dbgsPath=" + dbgsPath +
+                "dbgsPort=" + dbgsPort +
                 ", coverage41CPath=" + coverage41CPath +
-                '}';
+                '}'
     }
 
 }
