@@ -15,7 +15,7 @@ class SmokeTestOptions implements Serializable {
     @JsonPropertyDescription("""Путь к конфигурационному файлу для xddTestRunner.
     По умолчанию содержит значение "./tools/xUnitParams.json".
     """)
-    String xddConfigPath;
+    String xddConfigPath
 
     @JsonPropertyDescription("""Выполнять публикацию результатов в отчет Allure.
     По умолчанию выключено.
@@ -30,6 +30,9 @@ class SmokeTestOptions implements Serializable {
     @JsonPropertyDescription("Выполнять замер покрытия")
     Boolean coverage = false
 
+    @JsonPropertyDescription("Порт, на котором будет запущен сервер отладки для замера покрытия")
+    Boolean dbgsPort = 1650
+
     @Override
     @NonCPS
     String toString() {
@@ -39,6 +42,7 @@ class SmokeTestOptions implements Serializable {
             ", publishToAllureReport=" + publishToAllureReport +
             ", publishToJUnitReport=" + publishToJUnitReport +
             ", coverage=" + coverage +
+            ", dbgsPort=" + dbgsPort +
             '}'
     }
 }

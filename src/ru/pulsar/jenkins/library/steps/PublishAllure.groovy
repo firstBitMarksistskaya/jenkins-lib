@@ -31,10 +31,10 @@ class PublishAllure implements Serializable {
             safeUnstash('init-allure')
         }
         if (config.stageFlags.bdd) {
-            safeUnstash('bdd-allure')
+            safeUnstash(Bdd.ALLURE_STASH)
         }
         if (config.stageFlags.smoke && config.smokeTestOptions.publishToAllureReport) {
-            safeUnstash(SmokeTest.SMOKE_ALLURE_STASH)
+            safeUnstash(SmokeTest.ALLURE_STASH)
         }
 
         def env = steps.env();
