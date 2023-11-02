@@ -92,7 +92,7 @@ pipeline1C()
     },
     "stages": {
         "sonarqube": true,
-        "edtValidation": true,
+        "edtValidate": true,
         "syntaxCheck": true
     }
 }
