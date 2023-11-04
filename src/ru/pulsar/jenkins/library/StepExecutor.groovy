@@ -62,6 +62,11 @@ class StepExecutor implements IStepExecutor {
     }
 
     @Override
+    void start(String script, boolean returnStatus = false) {
+        steps.start(script, returnStatus)
+    }
+
+    @Override
     void tool(String toolName) {
         steps.tool toolName
     }
@@ -122,6 +127,13 @@ class StepExecutor implements IStepExecutor {
     @Override
     def withEnv(List<String> strings, Closure body) {
         steps.withEnv(strings) {
+            body()
+        }
+    }
+
+    @Override
+    def lock(String label, int quantity, String resource, Closure body) {
+        steps.lock(label: label, quantity: quantity, resource: resource) {
             body()
         }
     }

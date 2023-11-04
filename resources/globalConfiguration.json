@@ -42,7 +42,8 @@
   "bdd": {
     "vrunnerSteps": [
       "vanessa --settings ./tools/vrunner.json"
-    ]
+    ],
+    "coverage": false
   },
   "sonarqube": {
     "sonarQubeInstallation": "",
@@ -75,7 +76,12 @@
     "vrunnerSettings": "./tools/vrunner.json",
     "xddConfigPath": "./tools/xUnitParams.json",
     "publishToAllureReport": false,
-    "publishToJUnitReport": true
+    "publishToJUnitReport": true,
+    "coverage": false
+  },
+  "coverage": {
+    "dbgsPath": "/opt/1cv8/current/dbgs",
+    "coverage41CPath": "Coverage41C"
   },
   "resultsTransform": {
     "removeSupport": true,

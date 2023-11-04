@@ -6,6 +6,7 @@ import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.SourceFormat
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.Logger
+import ru.pulsar.jenkins.library.utils.StringJoiner
 import ru.pulsar.jenkins.library.utils.VersionParser
 
 class SonarScanner implements Serializable {
@@ -60,6 +61,27 @@ class SonarScanner implements Serializable {
         if (config.stageFlags.edtValidate) {
             steps.unstash("edt-generic-issue")
             sonarCommand += " -Dsonar.externalIssuesReportPaths=build/out/edt-generic-issue.json"
+        }
+
+        if (config.stageFlags.bdd && config.bddOptions.coverage
+                || config.stageFlags.smoke && config.smokeTestOptions.coverage) {
+
+            StringJoiner coveragePathsConstructor = new StringJoiner(",")
+
+            if (config.stageFlags.bdd && config.bddOptions.coverage) {
+                steps.unstash(Bdd.COVERAGE_STASH_NAME)
+                coveragePathsConstructor.add(Bdd.COVERAGE_STASH_PATH)
+            }
+
+            if (config.stageFlags.smoke && config.smokeTestOptions.coverage) {
+                steps.unstash(SmokeTest.COVERAGE_STASH_NAME)
+                coveragePathsConstructor.add(SmokeTest.COVERAGE_STASH_PATH)
+            }
+
+            String coveragePaths = coveragePathsConstructor.toString()
+
+            sonarCommand += " -Dsonar.coverageReportPaths=${coveragePaths}"
+
         }
 
         if (config.sonarQubeOptions.waitForQualityGate) {

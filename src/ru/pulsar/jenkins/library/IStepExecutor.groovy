@@ -33,6 +33,8 @@ interface IStepExecutor {
 
     int cmd(String script)
 
+    void start(String script, boolean returnStatus)
+
     void tool(String toolName)
 
     def withCredentials(List bindings, Closure body)
@@ -54,6 +56,8 @@ interface IStepExecutor {
     void deleteDir(String path)
 
     def withEnv(List<String> strings, Closure body)
+
+    def lock(String label, int quantity, String resource, Closure<Object> objectClosure)
 
     def archiveArtifacts(String path)
 

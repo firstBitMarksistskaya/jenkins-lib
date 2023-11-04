@@ -55,6 +55,10 @@ class JobConfiguration implements Serializable {
     @JsonPropertyDescription("Настройки дымового тестирования")
     SmokeTestOptions smokeTestOptions;
 
+    @JsonProperty("coverage")
+    @JsonPropertyDescription("Настройки замеров покрытия")
+    CoverageOptions coverageOptions;
+
     @JsonProperty("resultsTransform")
     @JsonPropertyDescription("Настройки трансформации результатов анализа")
     ResultsTransformOptions resultsTransformOptions;
@@ -84,6 +88,7 @@ class JobConfiguration implements Serializable {
             ", sonarQubeOptions=" + sonarQubeOptions +
             ", syntaxCheckOptions=" + syntaxCheckOptions +
             ", smokeTestOptions=" + smokeTestOptions +
+            ", coverageOptions=" + coverageOptions +
             ", resultsTransformOptions=" + resultsTransformOptions +
             ", notificationOptions=" + notificationsOptions +
             ", logosConfig='" + logosConfig + '\'' +

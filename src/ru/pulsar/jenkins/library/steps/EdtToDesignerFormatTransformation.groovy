@@ -1,12 +1,13 @@
 package ru.pulsar.jenkins.library.steps
 
-
+import hudson.FilePath
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.SourceFormat
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.Constants
 import ru.pulsar.jenkins.library.utils.EDT
+import ru.pulsar.jenkins.library.utils.FileUtils
 import ru.pulsar.jenkins.library.utils.Logger
 
 class EdtToDesignerFormatTransformation implements Serializable {
@@ -35,9 +36,9 @@ class EdtToDesignerFormatTransformation implements Serializable {
         def env = steps.env();
 
         def srcDir = config.srcDir
-        def projectDir = new File("$env.WORKSPACE/$srcDir").getCanonicalPath()
-        def workspaceDir = "$env.WORKSPACE/$WORKSPACE" 
-        def configurationRoot = "$env.WORKSPACE/$CONFIGURATION_DIR"
+        FilePath projectDir = FileUtils.getFilePath("$env.WORKSPACE/$srcDir")
+        def workspaceDir = FileUtils.getFilePath("$env.WORKSPACE/$WORKSPACE")
+        def configurationRoot = FileUtils.getFilePath("$env.WORKSPACE/$CONFIGURATION_DIR")
         def edtVersionForRing = EDT.ringModule(config)
 
         steps.deleteDir(workspaceDir)
