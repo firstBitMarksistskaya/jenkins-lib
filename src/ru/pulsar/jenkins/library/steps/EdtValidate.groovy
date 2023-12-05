@@ -6,6 +6,7 @@ import ru.pulsar.jenkins.library.configuration.SourceFormat
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.Constants
 import ru.pulsar.jenkins.library.utils.EDT
+import ru.pulsar.jenkins.library.utils.FileUtils
 import ru.pulsar.jenkins.library.utils.Logger
 
 class EdtValidate implements Serializable {
@@ -40,7 +41,8 @@ class EdtValidate implements Serializable {
 
             projectList = "--project-name-list $DesignerToEdtFormatTransformation.PROJECT_NAME"
         } else {
-            String projectDir = new File("$env.WORKSPACE/$config.srcDir").getCanonicalPath()
+            def srcDir = config.srcDir
+            def projectDir = FileUtils.getFilePath("$env.WORKSPACE/$srcDir")
             projectList = "--project-list \"$projectDir\""
         }
 

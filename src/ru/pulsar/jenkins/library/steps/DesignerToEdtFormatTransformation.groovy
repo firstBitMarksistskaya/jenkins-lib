@@ -6,6 +6,7 @@ import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.Constants
 import ru.pulsar.jenkins.library.utils.EDT
+import ru.pulsar.jenkins.library.utils.FileUtils
 import ru.pulsar.jenkins.library.utils.Logger
 
 class DesignerToEdtFormatTransformation implements Serializable {
@@ -33,10 +34,11 @@ class DesignerToEdtFormatTransformation implements Serializable {
 
         def env = steps.env();
 
-        def workspaceDir = "$env.WORKSPACE/$WORKSPACE"
-        def configurationRoot = new File(env.WORKSPACE, config.srcDir).getAbsolutePath()
+        def workspaceDir = FileUtils.getFilePath("$env.WORKSPACE/$WORKSPACE")
+        def srcDir = config.srcDir
+        def configurationRoot = FileUtils.getFilePath("$env.WORKSPACE/$srcDir")
         def edtVersionForRing = EDT.ringModule(config)
-
+        
         steps.deleteDir(workspaceDir)
 
         Logger.println("Конвертация исходников из формата конфигуратора в формат EDT")
