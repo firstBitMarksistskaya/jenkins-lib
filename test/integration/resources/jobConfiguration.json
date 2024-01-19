@@ -1,6 +1,11 @@
 {
   "v8version": "8.3.12.1500",
   "initInfobase": {
-    "initMethod": "fromSource"
+    "initMethod": "fromSource",
+    "extensions": [{
+      "name": "Тест",
+      "initMethod": "fromSource",
+      "path": "/src/cfe/тест"
+    }]
   }
 }
