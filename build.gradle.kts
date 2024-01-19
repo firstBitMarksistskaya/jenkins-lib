@@ -48,7 +48,7 @@ dependencies {
 
     testImplementation("org.slf4j", "slf4j-api", slf4jVersion)
     testImplementation("org.slf4j", "slf4j-simple", slf4jVersion)
-
+    
     // integration-tests
     integrationTestImplementation("org.spockframework", "spock-core", spockVersion)
     integrationTestImplementation("org.codehaus.groovy", "groovy-all", groovyVersion)
