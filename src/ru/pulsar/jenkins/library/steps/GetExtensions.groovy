@@ -41,6 +41,9 @@ class GetExtensions implements Serializable {
         if (config.sourceFormat == SourceFormat.EDT) {
             sourceDirName = "$env.WORKSPACE/$EdtToDesignerFormatTransformation.EXTENSION_DIR"
         }
+        else {
+            sourceDirName = "$env.WORKSPACE"
+        }
         extractConvertedExtensions(sourceDirName, steps)
 
         config.initInfoBaseOptions.extensions.each {
