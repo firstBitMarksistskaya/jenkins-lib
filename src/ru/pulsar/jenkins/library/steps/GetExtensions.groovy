@@ -43,8 +43,6 @@ class GetExtensions implements Serializable {
         }
         extractConvertedExtensions(sourceDirName, steps)
 
-        steps.createDir("${env.WORKSPACE}/${EXTENSIONS_OUT_DIR}")
-
         config.initInfoBaseOptions.extensions.each {
             if (it.initMethod == InitMethod.SOURCE) {
                 Logger.println("Сборка расширения ${it.name} из исходников")
@@ -58,6 +56,9 @@ class GetExtensions implements Serializable {
     }
 
     private void buildExtension(Extension extension, String srcDir, String vrunnerPath, IStepExecutor steps) {
+        // ТУТ ГРЯЗНЫЙ ХАК
+        VRunner.exec("mkdir -p $EXTENSIONS_OUT_DIR")
+        // ТУТ КОНЕЦ ГРЯЗНОГО ХАКА
 
         def compileExtCommand = "$vrunnerPath compileexttocfe --src ${srcDir} --out $EXTENSIONS_OUT_DIR/${extension.name}.cfe"
         List<String> logosConfig = ["LOGOS_CONFIG=$config.logosConfig"]
