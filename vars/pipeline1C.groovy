@@ -79,6 +79,7 @@ void call() {
                                     stage('Создание ИБ') {
                                         steps {
                                             timeout(time: config.timeoutOptions.createInfoBase, unit: TimeUnit.MINUTES) {
+                                                createDir('build/out')
 
                                                 script {
                                                     if (config.infoBaseFromFiles()) {
