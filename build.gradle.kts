@@ -9,6 +9,10 @@ plugins {
     id("org.jenkins-ci.jpi") version "0.38.0" apply false
 }
 
+repositories {
+    mavenCentral()
+}
+
 tasks {
 
     register<org.jenkinsci.gradle.plugins.jpi.TestDependenciesTask>("resolveIntegrationTestDependencies") {
