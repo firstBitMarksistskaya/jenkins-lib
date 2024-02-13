@@ -110,5 +110,6 @@ sharedLibrary {
         dependency("org.jenkinsci.plugins", "pipeline-model-definition", declarativePluginsVersion)
         dependency("org.jenkinsci.plugins", "pipeline-model-extensions", declarativePluginsVersion)
         dependency("io.jenkins.blueocean", "blueocean-pipeline-api-impl", "1.25.3")
+        dependency("sp.sd", "file-operations", "214.v2e7dc7f25757")
     }
 }
