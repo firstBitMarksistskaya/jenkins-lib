@@ -41,8 +41,8 @@ class EdtToDesignerFormatTransformation implements Serializable {
         def configurationRoot = FileUtils.getFilePath("$env.WORKSPACE/$CONFIGURATION_DIR")
         def edtVersionForRing = EDT.ringModule(config)
 
-        steps.deleteDir(workspaceDir)
-        steps.deleteDir(configurationRoot)
+        steps.deleteDir(workspaceDir.getRemote())
+        steps.deleteDir(configurationRoot.getRemote())
 
         Logger.println("Конвертация исходников из формата EDT в формат Конфигуратора")
 
