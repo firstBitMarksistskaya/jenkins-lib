@@ -3,7 +3,7 @@ package ru.pulsar.jenkins.library.steps
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.SourceFormat
-import ru.pulsar.jenkins.library.configuration.InitMethod
+import ru.pulsar.jenkins.library.configuration.InitExtentionMethod
 import ru.pulsar.jenkins.library.configuration.InitInfoBaseOptions.Extension
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.Logger
@@ -44,7 +44,7 @@ class GetExtensions implements Serializable {
         extractConvertedExtensions(sourceDirName, steps)
 
         config.initInfoBaseOptions.extensions.each {
-            if (it.initMethod == InitMethod.SOURCE) {
+            if (it.initMethod == InitExtentionMethod.SOURCE) {
                 Logger.println("Сборка расширения ${it.name} из исходников")
                 String srcDir = getSrcDir(it, sourceDirName)
                 buildExtension(it, srcDir, vrunnerPath, steps)
