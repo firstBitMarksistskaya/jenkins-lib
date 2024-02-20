@@ -31,7 +31,7 @@ class InitInfoBaseOptions implements Serializable {
     @JsonIgnoreProperties(ignoreUnknown = true)
     static class Extension implements Serializable {
         @JsonPropertyDescription("Имя расширения, используемое при его загрузке в конфигурацию.")
-        String name;
+        String name = "extention";
 
         @JsonPropertyDescription("""
         Способ инициализации расширения.
@@ -39,14 +39,14 @@ class InitInfoBaseOptions implements Serializable {
             * fromSource - инициализация расширения из исходников;
             * fromInternet - скачивание скомпилированного cfe по ссылке.
         """)
-        InitMethod initMethod;
+        InitExtentionMethod initMethod = InitExtentionMethod.SOURCE;
 
         @JsonPropertyDescription("""
         Хранит в себе путь к расширению.
             * В случае если выбран initMethod <fromSource> - указывается путь к исходникам расширения.
             * В случае если выбран initMethod <fromInternet> - указывается ссылка на cfe-файл
         """)
-        String path;
+        String path = "src/cfe/extention";
     }
 
     @Override

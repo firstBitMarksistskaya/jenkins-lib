@@ -101,12 +101,7 @@ class JobConfiguration implements Serializable {
     }
 
     boolean needLoadExtensions() {
-        IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
-        def env = steps.env();
-        String branchName = env.BRANCH_NAME;
-        def extensions = initInfoBaseOptions.extensions
-
-        return extensions.length != 0
+        return initInfoBaseOptions.extensions.length != 0
     }
 
     String v8AgentLabel() {
