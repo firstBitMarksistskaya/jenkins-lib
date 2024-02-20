@@ -1,5 +1,6 @@
 package ru.pulsar.jenkins.library
 
+import hudson.FilePath
 import jenkins.plugins.http_request.HttpMode
 import jenkins.plugins.http_request.MimeType
 import jenkins.plugins.http_request.ResponseContentSupplier
@@ -52,6 +53,8 @@ interface IStepExecutor {
     void deleteDir()
 
     void deleteDir(String path)
+
+    void deleteDir(FilePath path)
 
     def withEnv(List<String> strings, Closure body)
 

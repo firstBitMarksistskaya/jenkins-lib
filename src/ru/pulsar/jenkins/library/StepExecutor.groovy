@@ -1,5 +1,6 @@
 package ru.pulsar.jenkins.library
 
+import hudson.FilePath
 import jenkins.plugins.http_request.HttpMode
 import jenkins.plugins.http_request.MimeType
 import jenkins.plugins.http_request.ResponseContentSupplier
@@ -115,6 +116,13 @@ class StepExecutor implements IStepExecutor {
     @Override
     void deleteDir(String path) {
         steps.dir(path) {
+            steps.deleteDir()
+        }
+    }
+
+    @Override
+    void deleteDir(FilePath path) {
+        steps.dir(path.getRemote()) {
             steps.deleteDir()
         }
     }
