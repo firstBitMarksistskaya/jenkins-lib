@@ -118,7 +118,7 @@ class ConfigurationReader implements Serializable {
             return
         }
         mergeInitInfoBaseAdditionalInitializationSteps(baseObject, objectToMerge)
-        mergeInitInfoBaseExtintions(baseObject, objectToMerge)
+        mergeInitInfoBaseExtensions(baseObject, objectToMerge)
     }
 
     @NonCPS
@@ -131,7 +131,7 @@ class ConfigurationReader implements Serializable {
 
 
     @NonCPS
-    private static void mergeInitInfoBaseExtintions(InitInfoBaseOptions baseObject, InitInfoBaseOptions objectToMerge) {
+    private static void mergeInitInfoBaseExtensions(InitInfoBaseOptions baseObject, InitInfoBaseOptions objectToMerge) {
         if (objectToMerge.extensions == null) {
             return
         }
