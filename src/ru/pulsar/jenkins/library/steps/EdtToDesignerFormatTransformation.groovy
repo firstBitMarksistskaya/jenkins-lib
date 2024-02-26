@@ -4,7 +4,7 @@ package ru.pulsar.jenkins.library.steps
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.SourceFormat
-import ru.pulsar.jenkins.library.configuration.InitExtentionMethod
+import ru.pulsar.jenkins.library.configuration.InitExtensionMethod
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.EDT
 import ru.pulsar.jenkins.library.utils.FileUtils
@@ -73,7 +73,7 @@ class EdtToDesignerFormatTransformation implements Serializable {
 
         config.initInfoBaseOptions.extensions.each {
 
-            if (it.initMethod != InitExtentionMethod.SOURCE) {
+            if (it.initMethod != InitExtensionMethod.SOURCE) {
                 return
             }
 

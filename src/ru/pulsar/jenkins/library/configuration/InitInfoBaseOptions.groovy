@@ -39,7 +39,7 @@ class InitInfoBaseOptions implements Serializable {
             * fromSource - инициализация расширения из исходников;
             * fromInternet - скачивание скомпилированного cfe по ссылке.
         """)
-        InitExtentionMethod initMethod = InitExtentionMethod.SOURCE;
+        InitExtensionMethod initMethod = InitExtensionMethod.SOURCE;
 
         @JsonPropertyDescription("""
         Хранит в себе путь к расширению.
