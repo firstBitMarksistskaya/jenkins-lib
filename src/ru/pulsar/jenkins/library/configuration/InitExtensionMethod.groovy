@@ -2,7 +2,7 @@ package ru.pulsar.jenkins.library.configuration
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-enum InitExtentionMethod {
+enum InitExtensionMethod {
     @JsonProperty("fromSource")
     SOURCE,
 
