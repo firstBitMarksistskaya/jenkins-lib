@@ -12,9 +12,9 @@ interface IStepExecutor {
 
     boolean isUnix()
     
-    int sh(String script, boolean returnStatus, String encoding)
+    def sh(String script, boolean returnStatus, boolean returnStdout, String encoding)
     
-    int bat(String script, boolean returnStatus, String encoding)
+    def bat(String script, boolean returnStatus, boolean returnStdout, String encoding)
 
     String libraryResource(String path)
 
@@ -30,9 +30,11 @@ interface IStepExecutor {
 
     void echo(message)
 
-    int cmd(String script, boolean returnStatus)
+    def cmd(String script, boolean returnStatus, boolean returnStdout)
 
-    int cmd(String script)
+    def cmd(String script, boolean returnStatus)
+
+    def cmd(String script)
 
     void tool(String toolName)
 
