@@ -34,7 +34,7 @@ class DesignerToEdtFormatTransformation implements Serializable {
 
         def env = steps.env();
 
-        String workspaceDir = FileUtils.getFilePath("$env.WORKSPACE/$WORKSPACE").getRemote()
+        def workspaceDir = FileUtils.getFilePath("$env.WORKSPACE/$WORKSPACE")
         def srcDir = config.srcDir
         def configurationRoot = FileUtils.getFilePath("$env.WORKSPACE/$srcDir")
         def edtVersionForRing = EDT.ringModule(config)
@@ -47,10 +47,7 @@ class DesignerToEdtFormatTransformation implements Serializable {
 
         def ringOpts = [Constants.DEFAULT_RING_OPTS]
         steps.withEnv(ringOpts) {
-            String ringMessage = steps.cmd(ringCommand, false, true)
-            if (ringMessage.contains("error")) {
-                steps.error(ringMessage)
-            }
+            steps.ringCommand(ringCommand)
         }
 
         steps.zip(WORKSPACE, WORKSPACE_ZIP)

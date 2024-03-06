@@ -63,6 +63,11 @@ class StepExecutor implements IStepExecutor {
     }
 
     @Override
+    def ringCommand(String script) {
+        return steps.ringCommand(script)
+    }
+
+    @Override
     void tool(String toolName) {
         steps.tool toolName
     }

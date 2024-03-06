@@ -36,6 +36,8 @@ interface IStepExecutor {
 
     def cmd(String script)
 
+    def ringCommand(String script)
+
     void tool(String toolName)
 
     def withCredentials(List bindings, Closure body)
