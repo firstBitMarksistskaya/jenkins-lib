@@ -55,7 +55,7 @@ class EdtValidate implements Serializable {
         def ringOpts = [Constants.DEFAULT_RING_OPTS]
         steps.withEnv(ringOpts) {
             steps.catchError {
-                steps.cmd(ringCommand)
+                steps.ringCommand(ringCommand)
             }
         }
 

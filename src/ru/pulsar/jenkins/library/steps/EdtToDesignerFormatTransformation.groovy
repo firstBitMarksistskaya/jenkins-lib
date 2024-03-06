@@ -50,7 +50,7 @@ class EdtToDesignerFormatTransformation implements Serializable {
 
         def ringOpts = [Constants.DEFAULT_RING_OPTS]
         steps.withEnv(ringOpts) {
-            steps.cmd(ringCommand)
+            steps.ringCommand(ringCommand)
         }
 
         steps.zip(CONFIGURATION_DIR, CONFIGURATION_ZIP)
