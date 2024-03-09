@@ -2,5 +2,17 @@
   "v8version": "8.3.12.1500",
   "initInfobase": {
     "initMethod": "fromSource"
+  },
+  "yaxunit": {
+    "extensions": [
+      {
+        "name": "YAXUNIT",
+        "src": "https://github.com/bia-technologies/yaxunit/releases/download/23.05/YAXUNIT-23.05.cfe"
+      },
+      {
+        "name": "custom_units",
+        "src": "./src/cfe/custom_units"
+      }
+    ]
   }
 }

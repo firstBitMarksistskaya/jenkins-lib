@@ -18,11 +18,13 @@
     "syntaxCheck": false,
     "edtValidate": false,
     "smoke": false,
+    "yaxunit": false,
     "email": false,
     "telegram": false
   },
   "timeout": {
     "smoke": 240,
+    "yaxunit": 240,
     "bdd": 120,
     "createInfoBase": 60,
     "designerToEdtFormatTransformation": 60,
@@ -74,6 +76,18 @@
   "smoke": {
     "vrunnerSettings": "./tools/vrunner.json",
     "xddConfigPath": "./tools/xUnitParams.json",
+    "publishToAllureReport": false,
+    "publishToJUnitReport": true
+  },
+  "yaxunit": {
+    "vrunnerSettings": "./tools/vrunner.json",
+    "extensions": [
+      {
+        "name":"YAXUNIT",
+        "src": "https://github.com/bia-technologies/yaxunit/releases/download/23.05/YAXUNIT-23.05.cfe"
+      }
+    ],
+    "configPath": "./tools/yaxunit.json",
     "publishToAllureReport": false,
     "publishToJUnitReport": true
   },

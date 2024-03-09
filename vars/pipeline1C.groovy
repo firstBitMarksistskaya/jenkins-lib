@@ -219,6 +219,23 @@ void call() {
                             }
                         }
                     }
+
+                    stage('YAXUnit тесты') {
+                        agent {
+                            label agent1C
+                        }
+                        when {
+                            beforeAgent true
+                            expression { config.stageFlags.yaxunit }
+                        }
+                        steps {
+                            timeout(time: config.timeoutOptions.yaxunit, unit: TimeUnit.MINUTES) {
+                                unzipInfobase()
+
+                                yaxunit config
+                            }
+                        }
+                    }
                 }
             }
 

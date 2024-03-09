@@ -67,6 +67,10 @@
           "type" : "boolean",
           "description" : "Дымовые тесты включены"
         },
+        "yaxunit" : {
+          "type" : "boolean",
+          "description" : "Запуск YAXUnit тестов включен"
+        },
         "initSteps" : {
           "type" : "boolean",
           "description" : "Предварительные шаги инициализации включены"
@@ -129,6 +133,10 @@
         "smoke" : {
           "type" : "integer",
           "description" : "Таймаут шага дымовых тестов, в минутах.\n    По умолчанию содержит значение 240.\n    "
+        },
+        "yaxunit" : {
+          "type" : "integer",
+          "description" : "Таймаут шага YAXUnit тестов, в минутах.\n    По умолчанию содержит значение 240.\n    "
         },
         "sonarqube" : {
           "type" : "integer",
@@ -255,6 +263,45 @@
         "publishToJUnitReport" : {
           "type" : "boolean",
           "description" : "Выполнять публикацию результатов в отчет JUnit.\n    По умолчанию включено.\n    "
+        }
+      }
+    },
+    "yaxunit" : {
+      "type" : "object",
+      "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:YaxunitOptions",
+      "description" : "Настройки YAXUnit",
+      "properties" : {
+        "vrunnerSettings" : {
+          "type" : "string",
+          "description" : "Путь к конфигурационному файлу vanessa-runner.\n    По умолчанию содержит значение \"./tools/vrunner.json\".\n    "
+        },
+        "configPath" : {
+          "type" : "string",
+          "description" : "Путь к конфигурационному файлу YAXUnit.\n    По умолчанию содержит значение \"./tools/yaxunit.json\".\n    "
+        },
+        "publishToAllureReport" : {
+          "type" : "boolean",
+          "description" : "Выполнять публикацию результатов в отчет Allure.\n    По умолчанию выключено.\n    "
+        },
+        "publishToJUnitReport" : {
+          "type" : "boolean",
+          "description" : "Выполнять публикацию результатов в отчет JUnit.\n    По умолчанию включено.\n    "
+        },
+        "extensions" : {
+          "type" : "array",
+          "description" : "Расширения с тестами.\n    Массив объектов с полями name и src, где\n        name - имя расширения\n        src - путь к расширению (к cfe или к исходникам)\n    По умолчанию содержит один элемент - YAXUNIT версии 23.05.\n    ",
+          "items" : {
+            "type" : "object",
+            "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:Extension",
+            "properties" : {
+              "name" : {
+                "type" : "string"
+              },
+              "src" : {
+                "type" : "string"
+              }
+            }
+          }
         }
       }
     },
