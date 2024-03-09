@@ -23,13 +23,13 @@ class StepExecutor implements IStepExecutor {
     }
 
     @Override
-    int sh(String script, boolean returnStatus, String encoding) {
-        steps.sh script: script, returnStatus: returnStatus, encoding: encoding
+    def sh(String script, boolean returnStatus, boolean returnStdout, String encoding) {
+        steps.sh script: script, returnStatus: returnStatus, returnStdout: returnStdout, encoding: encoding
     }
 
     @Override
-    int bat(String script, boolean returnStatus, String encoding) {
-        steps.bat script: script, returnStatus: returnStatus, encoding: encoding
+    def bat(String script, boolean returnStatus, boolean returnStdout, String encoding) {
+        steps.bat script: script, returnStatus: returnStatus, returnStdout: returnStdout, encoding: encoding
     }
 
     @Override
@@ -58,8 +58,13 @@ class StepExecutor implements IStepExecutor {
     }
 
     @Override
-    int cmd(String script, boolean returnStatus = false) {
-        return steps.cmd(script, returnStatus)
+    def cmd(String script, boolean returnStatus = false, boolean returnStdout = false) {
+        return steps.cmd(script, returnStatus, returnStdout)
+    }
+
+    @Override
+    def ringCommand(String script) {
+        return steps.ringCommand(script)
     }
 
     @Override

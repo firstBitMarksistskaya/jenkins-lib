@@ -29,14 +29,17 @@ class CmdTest {
     final String script = "echo hello";
     Cmd cmd = new Cmd(script);
 
+    when(steps.bat(anyString(), anyBoolean(), anyBoolean(), anyString())).thenReturn(0);
+    when(steps.sh(anyString(), anyBoolean(), anyBoolean(), anyString())).thenReturn(0);
+
     // when
-    int run = cmd.run();
+    Object run = cmd.run();
 
     // then
     verify(steps).isUnix();
     assertThat(steps).satisfiesAnyOf(
-      steps -> verify(steps).bat(contains(script), eq(false), anyString()),
-      steps -> verify(steps).sh(contains(script), eq(false), anyString())
+      steps -> verify(steps).bat(contains(script), eq(false), eq(false), anyString()),
+      steps -> verify(steps).sh(contains(script), eq(false), eq(false), anyString())
     );
 
     assertThat(run).isEqualTo(0);
@@ -49,8 +52,8 @@ class CmdTest {
     Cmd cmd = new Cmd(script);
 
     String thrownText = "failed";
-    when(steps.bat(anyString(), anyBoolean(), anyString())).thenThrow(new Error(thrownText));
-    when(steps.sh(anyString(), anyBoolean(), anyString())).thenThrow(new Error(thrownText));
+    when(steps.bat(anyString(), anyBoolean(), anyBoolean(), anyString())).thenThrow(new Error(thrownText));
+    when(steps.sh(anyString(), anyBoolean(), anyBoolean(), anyString())).thenThrow(new Error(thrownText));
 
     // when
     Throwable thrown = catchThrowable(cmd::run);
@@ -59,8 +62,8 @@ class CmdTest {
     // then
     verify(steps).isUnix();
     assertThat(steps).satisfiesAnyOf(
-      steps -> verify(steps).bat(contains(script), eq(false), anyString()),
-      steps -> verify(steps).sh(contains(script), eq(false), anyString())
+      steps -> verify(steps).bat(contains(script), eq(false), eq(false), anyString()),
+      steps -> verify(steps).sh(contains(script), eq(false), eq(false), anyString())
     );
   }
 
@@ -70,17 +73,17 @@ class CmdTest {
     final String script = "false";
     Cmd cmd = new Cmd(script, true);
 
-    when(steps.bat(anyString(), anyBoolean(), anyString())).thenReturn(1);
-    when(steps.sh(anyString(), anyBoolean(), anyString())).thenReturn(1);
+    when(steps.bat(anyString(), anyBoolean(), anyBoolean(), anyString())).thenReturn(1);
+    when(steps.sh(anyString(), anyBoolean(), anyBoolean(), anyString())).thenReturn(1);
 
     // when
-    int run = cmd.run();
+    Object run = cmd.run();
 
     // then
     verify(steps).isUnix();
     assertThat(steps).satisfiesAnyOf(
-      steps -> verify(steps).bat(contains(script), eq(true), anyString()),
-      steps -> verify(steps).sh(contains(script), eq(true), anyString())
+      steps -> verify(steps).bat(contains(script), eq(true), eq(false), anyString()),
+      steps -> verify(steps).sh(contains(script), eq(true), eq(false), anyString())
     );
 
     assertThat(run).isEqualTo(1);

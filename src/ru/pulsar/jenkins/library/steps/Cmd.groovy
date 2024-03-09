@@ -7,22 +7,28 @@ class Cmd implements Serializable {
 
     private String script;
     private boolean returnStatus
+    private boolean returnStdout
     private String encoding = 'UTF-8'
 
-    Cmd(String script, boolean returnStatus = false) {
+    Cmd(String script, boolean returnStatus = false, boolean returnStdout = false) {
         this.script = script
         this.returnStatus = returnStatus
+        this.returnStdout = returnStdout
     };
 
-    int run() {
+    def run() {
         IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
 
-        int returnValue
+        def returnValue
+
+        if (returnStatus & returnStdout) {
+            steps.error("returnStatus and returnStdout are not supported at the same time")
+        }
 
         if (steps.isUnix()) {
-            returnValue = steps.sh("$script", returnStatus, encoding)
+            returnValue = steps.sh("$script", returnStatus, returnStdout, encoding)
         } else {
-            returnValue = steps.bat("chcp 65001 > nul \n$script", returnStatus, encoding)
+            returnValue = steps.bat("chcp 65001 > nul \n$script", returnStatus, returnStdout, encoding)
         }
         
         return returnValue

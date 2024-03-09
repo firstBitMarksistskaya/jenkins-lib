@@ -4,7 +4,6 @@ package ru.pulsar.jenkins.library.steps
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
-import ru.pulsar.jenkins.library.utils.Constants
 import ru.pulsar.jenkins.library.utils.EDT
 import ru.pulsar.jenkins.library.utils.FileUtils
 import ru.pulsar.jenkins.library.utils.Logger
@@ -45,10 +44,7 @@ class DesignerToEdtFormatTransformation implements Serializable {
 
         def ringCommand = "ring $edtVersionForRing workspace import --configuration-files \"$configurationRoot\" --project-name $PROJECT_NAME --workspace-location \"$workspaceDir\""
 
-        def ringOpts = [Constants.DEFAULT_RING_OPTS]
-        steps.withEnv(ringOpts) {
-            steps.cmd(ringCommand)
-        }
+        steps.ringCommand(ringCommand)
 
         steps.zip(WORKSPACE, WORKSPACE_ZIP)
         steps.stash(WORKSPACE_ZIP_STASH, WORKSPACE_ZIP)

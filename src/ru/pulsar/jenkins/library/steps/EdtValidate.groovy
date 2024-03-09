@@ -4,7 +4,6 @@ import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.SourceFormat
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
-import ru.pulsar.jenkins.library.utils.Constants
 import ru.pulsar.jenkins.library.utils.EDT
 import ru.pulsar.jenkins.library.utils.FileUtils
 import ru.pulsar.jenkins.library.utils.Logger
@@ -52,11 +51,8 @@ class EdtValidate implements Serializable {
         Logger.println("Выполнение валидации EDT")
 
         def ringCommand = "ring $edtVersionForRing workspace validate --workspace-location \"$workspaceLocation\" --file \"$resultFile\" $projectList"
-        def ringOpts = [Constants.DEFAULT_RING_OPTS]
-        steps.withEnv(ringOpts) {
-            steps.catchError {
-                steps.cmd(ringCommand)
-            }
+        steps.catchError {
+            steps.ringCommand(ringCommand)
         }
 
         steps.archiveArtifacts("$DesignerToEdtFormatTransformation.WORKSPACE/.metadata/.log")
