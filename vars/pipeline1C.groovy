@@ -76,7 +76,7 @@ void call() {
                                 }
 
                                 stages {
-                                    stage('Сборка из исходников'){
+                                    stage('Сборка расширений из исходников') {
                                         when {
                                             expression { config.needLoadExtensions() }
                                         }
