@@ -85,10 +85,7 @@ class EdtToDesignerFormatTransformation implements Serializable {
 
             def ringCommand = "ring $edtVersionForRing workspace export --workspace-location \"$currentExtensionWorkspaceDir\" --project \"$projectDir\" --configuration-files \"$extensionRoot/${it.name}\""
 
-            def ringOpts = [Constants.DEFAULT_RING_OPTS]
-            steps.withEnv(ringOpts) {
-                steps.cmd(ringCommand)
-            }
+            steps.ringCommand(ringCommand)
         }
         steps.zip(EXTENSION_DIR, EXTENSION_ZIP)
         steps.stash(EXTENSION_ZIP_STASH, EXTENSION_ZIP)
