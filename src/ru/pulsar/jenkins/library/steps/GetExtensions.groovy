@@ -99,7 +99,7 @@ class GetExtensions implements Serializable {
 
     private void extractConvertedExtensions(String sourceDirName, IStepExecutor steps) {
         if (config.sourceFormat == SourceFormat.EDT) {
-            // распакуем расширения
+            // usntash and unzip the edt to designer format transformation
             steps.unstash(EdtToDesignerFormatTransformation.EXTENSION_ZIP_STASH)
             steps.unzip(sourceDirName, EdtToDesignerFormatTransformation.EXTENSION_ZIP)
         }
@@ -115,8 +115,7 @@ class GetExtensions implements Serializable {
     }
 
     private static String getAbsolutePath(String path, def env) {
-        // Если путь начинается с / или начинается с \\, или начинается с "Буквы диска" и ":"(Прим C:) то это абсолютный путь
-        if (path.startsWith("/") || path.startsWith("\\\\") || path.matches("^[A-Za-z]:.*")) {
+        if (path.startsWith("/") || path.startsWith("\\") || path.matches("^[A-Za-z]:.*")) {
             return path
         } else {
             return "${env.WORKSPACE}/${path}"
