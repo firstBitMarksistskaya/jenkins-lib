@@ -48,7 +48,7 @@ class GetExtensions implements Serializable {
                 String srcDir = getSrcDir(it, sourceDirName)
                 buildExtension(it, srcDir, vrunnerPath, steps)
             } else if (it.initMethod == InitExtensionMethod.FILE){
-                Logger.println("Загрузка расширения ${it.name} из интернета по ссылке ${it.path}")
+                Logger.println("Загрузка расширения ${it.name} из ${it.path}")
                 loadExtension(it, env)
             } else {
                 Logger.println("Неизвестный метод инициализации расширения ${it.name}")
@@ -77,7 +77,8 @@ class GetExtensions implements Serializable {
             localPathToExtension.copyFrom(new URL(extension.path))
         } else {
             // If the path is a local file, copy the file
-            FilePath localFilePath = FileUtils.getFilePath(extension.path)
+            String localPath = extension.path.startsWith(".") ? "$env.WORKSPACE/${extension.path.substring(1)}" : extension.path
+            FilePath localFilePath = FileUtils.getFilePath(localPath)
             localPathToExtension.copyFrom(localFilePath.toURI().toURL())
         }
     }
