@@ -37,14 +37,14 @@ class InitInfoBaseOptions implements Serializable {
         Способ инициализации расширения.
         Поддерживается два варианта:
             * fromSource - инициализация расширения из исходников;
-            * fromInternet - скачивание скомпилированного cfe по ссылке.
+            * fromFile - скачивание скомпилированного cfe по ссылке.
         """)
         InitExtensionMethod initMethod = InitExtensionMethod.SOURCE;
 
         @JsonPropertyDescription("""
         Хранит в себе путь к расширению.
             * В случае если выбран initMethod <fromSource> - указывается путь к исходникам расширения.
-            * В случае если выбран initMethod <fromInternet> - указывается ссылка на cfe-файл
+            * В случае если выбран initMethod <fromFile> - указывается путь к cfe-файлу
         """)
         String path = "src/cfe/extension";
     }
