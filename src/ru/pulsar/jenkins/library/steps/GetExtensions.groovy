@@ -37,8 +37,7 @@ class GetExtensions implements Serializable {
         String sourceDirName = ""
         if (config.sourceFormat == SourceFormat.EDT) {
             sourceDirName = "$env.WORKSPACE/$EdtToDesignerFormatTransformation.EXTENSION_DIR"
-        }
-        else {
+        } else {
             sourceDirName = "$env.WORKSPACE"
         }
         extractConvertedExtensions(sourceDirName, steps)
@@ -48,9 +47,11 @@ class GetExtensions implements Serializable {
                 Logger.println("Сборка расширения ${it.name} из исходников")
                 String srcDir = getSrcDir(it, sourceDirName)
                 buildExtension(it, srcDir, vrunnerPath, steps)
-            } else {
+            } elseif (it.initMethod == InitExtensionMethod.FILE){
                 Logger.println("Загрузка расширения ${it.name} из интернета по ссылке ${it.path}")
                 loadExtension(it, env)
+            } else {
+                Logger.println("Неизвестный метод инициализации расширения ${it.name}")
             }
         }
     }
@@ -70,7 +71,15 @@ class GetExtensions implements Serializable {
     private void loadExtension(Extension extension, def env) {
         String pathToExtension = "$env.WORKSPACE/${EXTENSIONS_OUT_DIR}/${extension.name}.cfe"
         FilePath localPathToExtension = FileUtils.getFilePath(pathToExtension)
-        localPathToExtension.copyFrom(new URL(extension.path))
+
+        if (extension.path.startsWith("http")) {
+            // If the path is a URL, download the file
+            localPathToExtension.copyFrom(new URL(extension.path))
+        } else {
+            // If the path is a local file, copy the file
+            FilePath localFilePath = FileUtils.getFilePath(extension.path)
+            localPathToExtension.copyFrom(localFilePath.toURI().toURL())
+        }
     }
 
 

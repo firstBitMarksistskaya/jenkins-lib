@@ -6,7 +6,7 @@ enum InitExtensionMethod {
     @JsonProperty("fromSource")
     SOURCE,
 
-    @JsonProperty("fromInternet")
-    INTERNET
+    @JsonProperty("fromFile")
+    FILE
 
 }

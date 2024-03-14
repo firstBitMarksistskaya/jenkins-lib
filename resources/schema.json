@@ -179,12 +179,12 @@
               },
               "initMethod": {
                 "type": "string",
-                "description": "\n    Способ инициализации расширения.\n    Поддерживается два варианта:\n        * fromSource - инициализация расширения из исходников;\n        * fromInternet - скачивание скомпилированного cfe по ссылке.",
-                "enum": ["fromSource", "fromInternet"]
+                "description": "\n    Способ инициализации расширения.\n    Поддерживается два варианта:\n        * fromSource - инициализация расширения из исходников;\n        * fromFile - использование скомпилированного cfe.",
+                "enum": ["fromSource", "fromFile"]
               },
               "path": {
                 "type": "string",
-                "description": "Хранит в себе путь к расширению.\n        * В случае если выбран initMethod <fromSource> - указывается путь к исходникам расширения.\n        * В случае если выбран initMethod <fromInternet> - указывается ссылка на cfe-файл"
+                "description": "Хранит в себе путь к расширению.\n        * В случае если выбран initMethod <fromSource> - указывается путь к исходникам расширения.\n        * В случае если выбран initMethod <fromFile> - указывается путь к cfe-файлу"
               }
             }
           }
