@@ -31,7 +31,7 @@ class InitInfoBaseOptions implements Serializable {
     @JsonIgnoreProperties(ignoreUnknown = true)
     static class Extension implements Serializable {
         @JsonPropertyDescription("Имя расширения, используемое при его загрузке в конфигурацию.")
-        String name = "extention";
+        String name = "extension";
 
         @JsonPropertyDescription("""
         Способ инициализации расширения.
