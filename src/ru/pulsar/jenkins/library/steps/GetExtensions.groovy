@@ -78,8 +78,8 @@ class GetExtensions implements Serializable {
             localPathToExtension.copyFrom(new URL(extension.path))
         } else {
             // If the path is a local file, copy the file
-            String localPath = extension.path.startsWith("./") ? "$env.WORKSPACE/${extension.path.substring(1)}" : extension.path
-            FilePath localFilePath = FileUtils.getFilePath(localPath)
+            // String localPath = extension.path.startsWith("./") ? "$env.WORKSPACE/${extension.path.substring(1)}" : extension.path
+            FilePath localFilePath = FileUtils.getFilePath(extension.path)
             localPathToExtension.copyFrom(localFilePath)
         }
     }
