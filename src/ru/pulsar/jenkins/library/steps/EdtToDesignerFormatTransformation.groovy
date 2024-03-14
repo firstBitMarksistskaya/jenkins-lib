@@ -50,7 +50,7 @@ class EdtToDesignerFormatTransformation implements Serializable {
         String extensionRoot = FileUtils.getFilePath("$env.WORKSPACE/$EXTENSION_DIR").getRemote()
         def edtVersionForRing = EDT.ringModule(config)
 
-        steps.deleteDir(workspaceDir.getRemote())
+        steps.deleteDir(workspaceDir)
         steps.deleteDir(configurationRoot.getRemote())
 
         transformConfiguration(steps, projectDir, projectWorkspaceDir, configurationRoot, edtVersionForRing)
