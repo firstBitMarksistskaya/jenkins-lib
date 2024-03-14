@@ -51,7 +51,7 @@ class EdtToDesignerFormatTransformation implements Serializable {
         def edtVersionForRing = EDT.ringModule(config)
 
         steps.deleteDir(workspaceDir)
-        steps.deleteDir(configurationRoot.getRemote())
+        steps.deleteDir(configurationRoot)
 
         transformConfiguration(steps, projectDir, projectWorkspaceDir, configurationRoot, edtVersionForRing)
         transformExtensions(steps, workspaceDir, extensionRoot, edtVersionForRing)
