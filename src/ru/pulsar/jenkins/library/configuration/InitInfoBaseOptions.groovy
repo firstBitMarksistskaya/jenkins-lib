@@ -46,7 +46,7 @@ class InitInfoBaseOptions implements Serializable {
             * В случае если выбран initMethod <fromSource> - указывается путь к исходникам расширения.
             * В случае если выбран initMethod <fromInternet> - указывается ссылка на cfe-файл
         """)
-        String path = "src/cfe/extention";
+        String path = "src/cfe/extension";
     }
 
     @Override
