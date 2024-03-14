@@ -72,7 +72,7 @@ class GetExtensions implements Serializable {
         String pathToExtension = "$env.WORKSPACE/${EXTENSIONS_OUT_DIR}/${extension.name}.cfe"
         FilePath localPathToExtension = FileUtils.getFilePath(pathToExtension)
 
-        if (extension.path.startsWith("http")) {
+        if (isValidUrl(extension.path)) {
             // If the path is a URL, download the file
             localPathToExtension.copyFrom(new URL(extension.path))
         } else {
@@ -101,6 +101,15 @@ class GetExtensions implements Serializable {
             // распакуем расширения
             steps.unstash(EdtToDesignerFormatTransformation.EXTENSION_ZIP_STASH)
             steps.unzip(sourceDirName, EdtToDesignerFormatTransformation.EXTENSION_ZIP)
+        }
+    }
+
+    private static boolean isValidUrl(String url) {
+        try {
+            new URL(url)
+            return true
+        } catch (MalformedURLException e) {
+            return false
         }
     }
 }
