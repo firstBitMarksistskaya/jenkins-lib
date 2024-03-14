@@ -78,8 +78,8 @@ class GetExtensions implements Serializable {
             localPathToExtension.copyFrom(new URL(extension.path))
         } else {
             // If the path is a local file, copy the file
-            // String localPath = extension.path.startsWith("./") ? "$env.WORKSPACE/${extension.path.substring(1)}" : extension.path
-            FilePath localFilePath = FileUtils.getFilePath(extension.path)
+            String localPath = getAbsolutePath(extension.path)
+            FilePath localFilePath = FileUtils.getFilePath(localPath)
             localPathToExtension.copyFrom(localFilePath)
         }
     }
@@ -111,6 +111,15 @@ class GetExtensions implements Serializable {
             return true
         } catch (MalformedURLException e) {
             return false
+        }
+    }
+
+    private static String getAbsolutePath(String path) {
+        // Если путь начинается с / или начинается с \\, или начинается с "Буквы диска" и ":"(Прим C:) то это абсолютный путь
+        if (path.startsWith("/") || path.startsWith("\\\\") || path.matches("^[A-Za-z]:.*")) {
+            return path
+        } else {
+            return "${env.WORKSPACE}/${path}"
         }
     }
 }
