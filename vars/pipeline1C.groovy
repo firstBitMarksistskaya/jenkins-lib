@@ -76,10 +76,22 @@ void call() {
                                 }
 
                                 stages {
+                                    stage('Сборка расширений из исходников') {
+                                        when {
+                                            expression { config.needLoadExtensions() }
+                                        }
+                                        steps {
+                                            timeout(time: config.timeoutOptions.getBinaries, unit: TimeUnit.MINUTES) {
+                                                createDir('build/out/cfe')
+                                                // Соберем или загрузим cfe из исходников и положим их в папку build/out/cfe
+                                                getExtensions config
+                                            }
+                                        }
+                                    }
                                     stage('Создание ИБ') {
                                         steps {
                                             timeout(time: config.timeoutOptions.createInfoBase, unit: TimeUnit.MINUTES) {
-                                                createDir('build/out')
+                                                createDir('build/out/')
 
                                                 script {
                                                     if (config.infoBaseFromFiles()) {
@@ -103,6 +115,18 @@ void call() {
                                             timeout(time: config.timeoutOptions.initInfoBase, unit: TimeUnit.MINUTES) {
                                                 // Инициализация и первичная миграция
                                                 initInfobase config
+                                            }
+                                        }
+                                    }
+
+                                    stage('Загрузка расширений в конфигурацию'){
+                                        when {
+                                            beforeAgent true
+                                            expression { config.needLoadExtensions() }
+                                        }
+                                        steps {
+                                            timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
+                                                loadExtensions config
                                             }
                                         }
                                     }

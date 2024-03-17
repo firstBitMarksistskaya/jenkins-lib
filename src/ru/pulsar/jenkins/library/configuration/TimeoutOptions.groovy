@@ -11,6 +11,11 @@ class TimeoutOptions implements Serializable {
     ''')
     Integer edtToDesignerFormatTransformation
 
+    @JsonPropertyDescription('''Таймаут шага получения бинарников, в минутах.
+    По умолчанию содержит значение 60.
+    ''')
+    Integer getBinaries
+
     @JsonPropertyDescription('''Таймаут шага создания информационной базы, в минутах.
     По умолчанию содержит значение 60.
     ''')
@@ -20,6 +25,11 @@ class TimeoutOptions implements Serializable {
     По умолчанию содержит значение 60.
     ''')
     Integer initInfoBase
+
+    @JsonPropertyDescription('''Таймаут шага загрузки расширений в базу, в минутах.
+    По умолчанию содержит значение 60.
+    ''')
+    Integer loadExtensions
 
     @JsonPropertyDescription('''Таймаут шага архивирования информационной базы, в минутах.
     По умолчанию содержит значение 60.
