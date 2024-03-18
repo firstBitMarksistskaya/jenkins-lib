@@ -11,7 +11,7 @@ import ru.pulsar.jenkins.library.utils.FileUtils
 
 class LoadExtensions implements Serializable {
 
-    private final JobConfiguration config;
+    private final JobConfiguration config
 
     LoadExtensions(JobConfiguration config) {
         this.config = config
@@ -22,10 +22,10 @@ class LoadExtensions implements Serializable {
 
         Logger.printLocation()
 
-        def env = steps.env();
+        def env = steps.env()
         String cfeDir = "$env.WORKSPACE/$GetExtensions.EXTENSIONS_OUT_DIR"
 
-        String vrunnerPath = VRunner.getVRunnerPath();
+        String vrunnerPath = VRunner.getVRunnerPath()
                
         config.initInfoBaseOptions.extensions.each {
             Logger.println("Установим расширение ${it.name}")
@@ -46,6 +46,11 @@ class LoadExtensions implements Serializable {
         }
         loadCommand += executeParameter
         loadCommand += ' --ibconnection "/F./build/ib"'
+
+        String vrunnerSettings = config.initInfoBaseOptions.vrunnerSettings
+        if (steps.fileExists(vrunnerSettings)) {
+            loadCommand += " --settings $vrunnerSettings"
+        }
 
         List<String> logosConfig = ["LOGOS_CONFIG=$config.logosConfig"]
         steps.withEnv(logosConfig) {

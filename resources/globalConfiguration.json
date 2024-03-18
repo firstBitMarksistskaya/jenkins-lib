@@ -42,7 +42,8 @@
     "initMethod": "fromStorage",
     "runMigration": true,
     "additionalInitializationSteps": [],
-    "extensions": []
+    "extensions": [],
+    "vrunnerSettings": "./tools/vrunner.json"
   },
   "bdd": {
     "vrunnerSteps": [
