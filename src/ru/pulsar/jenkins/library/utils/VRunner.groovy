@@ -1,6 +1,5 @@
 package ru.pulsar.jenkins.library.utils
 
-import hudson.FilePath
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 
@@ -40,25 +39,4 @@ class VRunner {
         return fileContent.contains("\"$settingName\"")
     }
 
-    static String loadExtCommand(String name) {
-
-        IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
-
-        def env = steps.env()
-        def vrunnerPath = getVRunnerPath()
-
-        String pathToExt = "$env.WORKSPACE/build/out/${name}.cfe"
-        FilePath localPathToExt = FileUtils.getFilePath(pathToExt)
-
-        // Команда загрузки расширения
-        String loadCommand = vrunnerPath + ' run --command "Путь=' + localPathToExt + ';ЗавершитьРаботуСистемы;" --execute '
-        String executeParameter = '$runnerRoot/epf/ЗагрузитьРасширениеВРежимеПредприятия.epf'
-        if (steps.isUnix()) {
-            executeParameter = '\\' + executeParameter
-        }
-        loadCommand += executeParameter
-        loadCommand += ' --ibconnection "/F./build/ib"'
-
-        return loadCommand
-    }
 }

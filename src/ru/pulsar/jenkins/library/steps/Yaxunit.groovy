@@ -2,7 +2,7 @@ package ru.pulsar.jenkins.library.steps
 
 import hudson.FilePath
 import ru.pulsar.jenkins.library.IStepExecutor
-import ru.pulsar.jenkins.library.configuration.Extension
+
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.FileUtils
@@ -42,34 +42,6 @@ class Yaxunit implements Serializable {
         String vrunnerPath = VRunner.getVRunnerPath()
         String ibConnection = ' --ibconnection "/F./build/ib"'
 
-        def extCommands = []
-
-        // Команда загрузки YAXUnit
-        def loadYaxunitCommand = VRunner.loadExtCommand("yaxunit")
-        extCommands << loadYaxunitCommand
-
-        // Команды сборки расширений с тестами и их загрузки в ИБ
-        for (Extension extension in options.extensions) {
-            if (extension.src.endsWith('cfe')) {
-                // Скачиваем расширение
-                String pathToExtension = "$env.WORKSPACE/build/out/${extension.name}.cfe"
-                FilePath localPathToExtension = FileUtils.getFilePath(pathToExtension)
-                Logger.println("Скачивание расширения $extension.name в $localPathToExtension из ${extension.src}")
-                localPathToExtension.copyFrom(new URL(extension.src))
-            } else {
-                // Команда компиляции в cfe
-                def compileExtCommand = "$vrunnerPath compileexttocfe --src $extension.src --out build/out/${extension.name}.cfe"
-                extCommands << compileExtCommand
-                Logger.println("Команда сборки расширения: $compileExtCommand")
-            }
-
-            // Команда загрузки расширения  в ИБ
-            def loadTestExtCommand = VRunner.loadExtCommand(extension.name)
-            extCommands << loadTestExtCommand
-            Logger.println("Команда загрузки расширения: $loadTestExtCommand")
-            
-        }
-
         // Готовим конфиг для yaxunit
         String yaxunitConfigPath = options.configPath
         if (!steps.fileExists(yaxunitConfigPath)) {
@@ -83,20 +55,15 @@ class Yaxunit implements Serializable {
 
         // Переопределяем настройки vrunner
         String vrunnerSettings = options.vrunnerSettings
-        String[] extCommandsWithSettings = extCommands
         if (steps.fileExists(vrunnerSettings)) {
             String vrunnerSettingsParam = " --settings $vrunnerSettings"
 
-            extCommandsWithSettings = extCommands.collect { "$it $vrunnerSettingsParam" }
             runTestsCommand += vrunnerSettingsParam
 
         }
 
         // Выполяем команды
         steps.withEnv(logosConfig) {
-            for (extCommand in extCommandsWithSettings) {
-                VRunner.exec(extCommand, true)
-            }
             VRunner.exec(runTestsCommand, true)
         }
 

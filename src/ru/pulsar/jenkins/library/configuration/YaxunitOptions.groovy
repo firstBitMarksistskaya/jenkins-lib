@@ -2,7 +2,6 @@ package ru.pulsar.jenkins.library.configuration
 
 import com.cloudbees.groovy.cps.NonCPS
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -12,15 +11,6 @@ class YaxunitOptions implements Serializable {
     По умолчанию содержит значение "./tools/vrunner.json".
     """)
     String vrunnerSettings = "./tools/vrunner.json"
-
-    @JsonProperty("extensions")
-    @JsonPropertyDescription("""Расширения с тестами.
-    Массив объектов с полями name и src, где
-        name - имя расширения
-        src - путь к расширению (к cfe или к исходникам)
-    По умолчанию содержит один элемент - YAXUNIT версии 23.05.
-    """)
-    Extension[] extensions
 
     @JsonPropertyDescription("""Путь к конфигурационному файлу YAXUnit.
     По умолчанию содержит значение "./tools/yaxunit.json".
@@ -40,10 +30,11 @@ class YaxunitOptions implements Serializable {
     @Override
     @NonCPS
     String toString() {
-        return "YaxunitTestOptions{" +
+        return "YaxunitOptions{" +
             "vrunnerSettings='" + vrunnerSettings + '\'' +
-            ", extensions='" + extensions +
             ", configPath='" + configPath +
+            ", publishToAllureReport='" + publishToAllureReport +
+            ", publishToJUnitReport='" + publishToJUnitReport +
             '}'
     }
 }
