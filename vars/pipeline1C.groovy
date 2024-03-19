@@ -204,6 +204,10 @@ void call() {
                             expression { config.stageFlags.bdd }
                         }
                         stages {
+                            stage('Распаковка ИБ') {
+                                unzipInfobase()
+                            }
+
                             stage('Загрузка расширений в конфигурацию') {
                                 when {
                                     beforeAgent true
@@ -219,8 +223,6 @@ void call() {
                             stage('Выполнение BDD сценариев') {
                                 steps {
                                     timeout(time: config.timeoutOptions.bdd, unit: TimeUnit.MINUTES) {
-                                        unzipInfobase()
-
                                         bdd config
                                     }
                                 }
@@ -252,6 +254,10 @@ void call() {
                             expression { config.stageFlags.smoke }
                         }
                         stages {
+                            stage('Распаковка ИБ') {
+                                unzipInfobase()
+                            }
+
                             stage('Загрузка расширений в конфигурацию') {
                                 when {
                                     beforeAgent true
@@ -267,8 +273,6 @@ void call() {
                             stage('Выполнение дымовых тестов') {
                                 steps {
                                     timeout(time: config.timeoutOptions.smoke, unit: TimeUnit.MINUTES) {
-                                        unzipInfobase()
-
                                         smoke config
                                     }
                                 }
@@ -285,6 +289,10 @@ void call() {
                             expression { config.stageFlags.yaxunit }
                         }
                         stages {
+                            stage('Распаковка ИБ') {
+                                unzipInfobase()
+                            }
+
                             stage('Загрузка расширений в конфигурацию') {
                                 when {
                                     beforeAgent true
@@ -300,8 +308,6 @@ void call() {
                             stage('Выполнение YAXUnit тестов') {
                                 steps {
                                     timeout(time: config.timeoutOptions.yaxunit, unit: TimeUnit.MINUTES) {
-                                        unzipInfobase()
-
                                         yaxunit config
                                     }
                                 }
