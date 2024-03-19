@@ -63,7 +63,7 @@ class LoadExtensions implements Serializable {
         loadCommand += ' --ibconnection "/F./build/ib"'
 
         String vrunnerSettings = getVrunnerSettings(this.config, this.stageName)
-        if (steps.fileExists(vrunnerSettings)) {
+        if (vrunnerSettings && steps.fileExists(vrunnerSettings)) {
             loadCommand += " --settings $vrunnerSettings"
         }
 
