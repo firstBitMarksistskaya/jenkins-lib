@@ -33,7 +33,7 @@ class PublishAllure implements Serializable {
         if (config.stageFlags.bdd) {
             safeUnstash('bdd-allure')
         }
-        if (config.stageFlags.yaxunit) {
+        if (config.stageFlags.yaxunit && config.yaxunitOptions.publishToAllureReport) {
             safeUnstash(Yaxunit.YAXUNIT_ALLURE_STASH)
         }
         if (config.stageFlags.smoke && config.smokeTestOptions.publishToAllureReport) {

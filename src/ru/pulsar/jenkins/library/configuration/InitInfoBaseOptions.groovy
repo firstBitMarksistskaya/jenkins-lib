@@ -28,11 +28,6 @@ class InitInfoBaseOptions implements Serializable {
     @JsonPropertyDescription("Массив расширений для загрузки в конфигурацию.")
     Extension[] extensions
 
-    @JsonPropertyDescription("""Путь к конфигурационному файлу vanessa-runner.
-    По умолчанию содержит значение "./tools/vrunner.json".
-    """)
-    String vrunnerSettings
-
     @JsonIgnoreProperties(ignoreUnknown = true)
     static class Extension implements Serializable {
         @JsonPropertyDescription("Имя расширения, используемое при его загрузке в конфигурацию.")
@@ -47,11 +42,18 @@ class InitInfoBaseOptions implements Serializable {
         InitExtensionMethod initMethod = InitExtensionMethod.SOURCE
 
         @JsonPropertyDescription("""
-        Хранит в себе путь к расширению.
+        Путь к расширению.
             * В случае если выбран initMethod <fromSource> - указывается путь к исходникам расширения.
             * В случае если выбран initMethod <fromFile> - указывается путь к cfe-файлу
         """)
         String path = "src/cfe/extension"
+
+        @JsonPropertyDescription("""
+        Шаги, на которых необходимо использовать расширение
+            * Если не заполнено, то расширение будет подключено при инициализации базы и останется в базе на всех последующих шагах.
+            * Если заполнено, то расширение будет подключено только на соответствующих шагах.
+        """)
+        String[] stages = ["initInfoBase"]
     }
 
     @Override

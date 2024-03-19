@@ -12,9 +12,11 @@ import ru.pulsar.jenkins.library.utils.FileUtils
 class LoadExtensions implements Serializable {
 
     private final JobConfiguration config
+    private final String stageName
 
-    LoadExtensions(JobConfiguration config) {
+    LoadExtensions(JobConfiguration config, String stageName = "") {
         this.config = config
+        this.stageName = stageName
     }
 
     def run() {
@@ -22,12 +24,25 @@ class LoadExtensions implements Serializable {
 
         Logger.printLocation()
 
+
+        Extension[] filteredExtensions
+        extensions = this.config.initInfoBaseOptions.extensions
+
+        if (this.stageName) {
+            filteredExtensions = extensions.findAll { extension ->
+                extension.stages.contains(this.stageName)
+            }
+        }
+        else {
+            filteredExtensions = extensions.findAll { extension -> extension.stages.empty || extension.stages.contains("initInfoBase") }
+        }
+
         def env = steps.env()
         String cfeDir = "$env.WORKSPACE/$GetExtensions.EXTENSIONS_OUT_DIR"
 
         String vrunnerPath = VRunner.getVRunnerPath()
-               
-        config.initInfoBaseOptions.extensions.each {
+
+        filteredExtensions.each {
             Logger.println("Установим расширение ${it.name}")
             loadExtension(it, vrunnerPath, steps, cfeDir)
         }
@@ -47,7 +62,7 @@ class LoadExtensions implements Serializable {
         loadCommand += executeParameter
         loadCommand += ' --ibconnection "/F./build/ib"'
 
-        String vrunnerSettings = config.initInfoBaseOptions.vrunnerSettings
+        String vrunnerSettings = getVrunnerSettings(this.config, stageName)
         if (steps.fileExists(vrunnerSettings)) {
             loadCommand += " --settings $vrunnerSettings"
         }
@@ -55,6 +70,19 @@ class LoadExtensions implements Serializable {
         List<String> logosConfig = ["LOGOS_CONFIG=$config.logosConfig"]
         steps.withEnv(logosConfig) {
             VRunner.exec(loadCommand)
+        }
+    }
+
+    private static String getVrunnerSettings(JobConfiguration jobConfiguration, String stageName) {
+
+        String optionsName = "${stageName.toLowerCase()}Options"
+
+        def optionsInstance = jobConfiguration."$optionsName"
+
+        if (optionsInstance) {
+            return optionsInstance."vrunnerSettings"
+        } else {
+            return ""
         }
     }
 }

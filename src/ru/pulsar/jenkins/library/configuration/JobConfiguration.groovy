@@ -105,8 +105,14 @@ class JobConfiguration implements Serializable {
             (initMethod == InitInfoBaseMethod.DEFAULT_BRANCH_FROM_STORAGE && branchName != defaultBranch)
     }
 
-    boolean needLoadExtensions() {
-        return initInfoBaseOptions.extensions.length != 0
+    boolean needLoadExtensions(String stageName = "") {
+        if (stageName.isEmpty()) {
+            return initInfoBaseOptions.extensions.length != 0
+        } else {
+            return initInfoBaseOptions.extensions.any { extension ->
+                extension.stages.contains(stageName)
+            }
+        }
     }
 
     String v8AgentLabel() {
