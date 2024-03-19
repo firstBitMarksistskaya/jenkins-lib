@@ -26,7 +26,7 @@ class LoadExtensions implements Serializable {
 
 
         Extension[] filteredExtensions
-        extensions = this.config.initInfoBaseOptions.extensions
+        def extensions = this.config.initInfoBaseOptions.extensions
 
         if (this.stageName) {
             filteredExtensions = extensions.findAll { extension ->
