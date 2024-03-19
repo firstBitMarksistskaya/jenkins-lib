@@ -211,7 +211,7 @@ void call() {
                                 }
                                 steps {
                                     timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
-                                        loadExtensions config 'bdd'
+                                        loadExtensions config, 'bdd'
                                     }
                                 }
                             }
@@ -259,7 +259,7 @@ void call() {
                                 }
                                 steps {
                                     timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
-                                        loadExtensions config 'smoke'
+                                        loadExtensions config, 'smoke'
                                     }
                                 }
                             }
@@ -292,7 +292,7 @@ void call() {
                                 }
                                 steps {
                                     timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
-                                        loadExtensions config 'yaxunit'
+                                        loadExtensions config, 'yaxunit'
                                     }
                                 }
                             }
