@@ -203,7 +203,7 @@ void call() {
                             beforeAgent true
                             expression { config.stageFlags.bdd }
                         }
-                        steps {
+                        stages {
                             stage('Загрузка расширений в конфигурацию') {
                                 when {
                                     beforeAgent true
@@ -251,7 +251,7 @@ void call() {
                             beforeAgent true
                             expression { config.stageFlags.smoke }
                         }
-                        steps {
+                        stages {
                             stage('Загрузка расширений в конфигурацию') {
                                 when {
                                     beforeAgent true
@@ -284,7 +284,7 @@ void call() {
                             beforeAgent true
                             expression { config.stageFlags.yaxunit }
                         }
-                        steps {
+                        stages {
                             stage('Загрузка расширений в конфигурацию') {
                                 when {
                                     beforeAgent true
