@@ -196,32 +196,33 @@ void call() {
                     }
 
                     stage('BDD сценарии') {
-
-                        stage('Загрузка расширений в конфигурацию'){
-                            when {
-                                beforeAgent true
-                                expression { config.needLoadExtensions('bdd') }
-                            }
-                            steps {
-                                timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
-                                    loadExtensions config 'bdd'
+                        agent {
+                            label agent1C
+                        }
+                        when {
+                            beforeAgent true
+                            expression { config.stageFlags.bdd }
+                        }
+                        steps {
+                            stage('Загрузка расширений в конфигурацию') {
+                                when {
+                                    beforeAgent true
+                                    expression { config.needLoadExtensions('bdd') }
+                                }
+                                steps {
+                                    timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
+                                        loadExtensions config 'bdd'
+                                    }
                                 }
                             }
-                        }
 
-                        stage('Выполнение BDD сценариев') {
-                            agent {
-                                label agent1C
-                            }
-                            when {
-                                beforeAgent true
-                                expression { config.stageFlags.bdd }
-                            }
-                            steps {
-                                timeout(time: config.timeoutOptions.bdd, unit: TimeUnit.MINUTES) {
-                                    unzipInfobase()
+                            stage('Выполнение BDD сценариев') {
+                                steps {
+                                    timeout(time: config.timeoutOptions.bdd, unit: TimeUnit.MINUTES) {
+                                        unzipInfobase()
 
-                                    bdd config
+                                        bdd config
+                                    }
                                 }
                             }
                         }
@@ -243,65 +244,66 @@ void call() {
                     }
 
                     stage('Дымовые тесты') {
-
-                        stage('Загрузка расширений в конфигурацию') {
-                            when {
-                                beforeAgent true
-                                expression { config.needLoadExtensions('smoke') }
-                            }
-                            steps {
-                                timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
-                                    loadExtensions config 'smoke'
+                        agent {
+                            label agent1C
+                        }
+                        when {
+                            beforeAgent true
+                            expression { config.stageFlags.smoke }
+                        }
+                        steps {
+                            stage('Загрузка расширений в конфигурацию') {
+                                when {
+                                    beforeAgent true
+                                    expression { config.needLoadExtensions('smoke') }
+                                }
+                                steps {
+                                    timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
+                                        loadExtensions config 'smoke'
+                                    }
                                 }
                             }
-                        }
 
-                        stage('Выполнение дымовых тестов') {
-                            agent {
-                                label agent1C
-                            }
-                            when {
-                                beforeAgent true
-                                expression { config.stageFlags.smoke }
-                            }
-                            steps {
-                                timeout(time: config.timeoutOptions.smoke, unit: TimeUnit.MINUTES) {
-                                    unzipInfobase()
+                            stage('Выполнение дымовых тестов') {
+                                steps {
+                                    timeout(time: config.timeoutOptions.smoke, unit: TimeUnit.MINUTES) {
+                                        unzipInfobase()
 
-                                    smoke config
+                                        smoke config
+                                    }
                                 }
                             }
                         }
                     }
 
                     stage('YAXUnit тесты') {
-
-                        stage('Загрузка расширений в конфигурацию') {
-                            when {
-                                beforeAgent true
-                                expression { config.needLoadExtensions('yaxunit') }
-                            }
-                            steps {
-                                timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
-                                    loadExtensions config 'yaxunit'
+                        agent {
+                            label agent1C
+                        }
+                        when {
+                            beforeAgent true
+                            expression { config.stageFlags.yaxunit }
+                        }
+                        steps {
+                            stage('Загрузка расширений в конфигурацию') {
+                                when {
+                                    beforeAgent true
+                                    expression { config.needLoadExtensions('yaxunit') }
+                                }
+                                steps {
+                                    timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
+                                        loadExtensions config 'yaxunit'
+                                    }
                                 }
                             }
-                        }
 
-                        stage('Выполнение YAXUnit тестов') {
+                            stage('Выполнение YAXUnit тестов') {
+                                steps {
+                                    timeout(time: config.timeoutOptions.yaxunit, unit: TimeUnit.MINUTES) {
+                                        unzipInfobase()
 
-                            agent {
-                                label agent1C
-                            }
-                            when {
-                                beforeAgent true
-                                expression { config.stageFlags.yaxunit }
-                            }
-                            steps {
-                                timeout(time: config.timeoutOptions.yaxunit, unit: TimeUnit.MINUTES) {
-                                    unzipInfobase()
-
-                                    yaxunit config
+                                        yaxunit config
+                                    }
                                 }
                             }
                         }
