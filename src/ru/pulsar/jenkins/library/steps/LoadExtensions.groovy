@@ -62,7 +62,7 @@ class LoadExtensions implements Serializable {
         loadCommand += executeParameter
         loadCommand += ' --ibconnection "/F./build/ib"'
 
-        String vrunnerSettings = getVrunnerSettings()
+        String vrunnerSettings = getVrunnerSettings(this.config, this.stageName)
         if (steps.fileExists(vrunnerSettings)) {
             loadCommand += " --settings $vrunnerSettings"
         }
@@ -73,15 +73,15 @@ class LoadExtensions implements Serializable {
         }
     }
 
-    private static String getVrunnerSettings() {
+    private static String getVrunnerSettings(JobConfiguration config, String stageName) {
 
-        if (!this.stageName) {
+        if (!stageName) {
             return ""
         }
 
-        String optionsName = "${this.stageName.toLowerCase()}Options"
+        String optionsName = "${stageName.toLowerCase()}Options"
 
-        def optionsInstance = this.config."$optionsName"
+        def optionsInstance = config."$optionsName"
 
         if (optionsInstance) {
             return optionsInstance."vrunnerSettings"
