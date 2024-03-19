@@ -205,7 +205,9 @@ void call() {
                         }
                         stages {
                             stage('Распаковка ИБ') {
-                                unzipInfobase()
+                                steps {
+                                    unzipInfobase()
+                                }
                             }
 
                             stage('Загрузка расширений в конфигурацию') {
@@ -255,7 +257,9 @@ void call() {
                         }
                         stages {
                             stage('Распаковка ИБ') {
-                                unzipInfobase()
+                                steps {
+                                    unzipInfobase()
+                                }
                             }
 
                             stage('Загрузка расширений в конфигурацию') {
@@ -290,7 +294,9 @@ void call() {
                         }
                         stages {
                             stage('Распаковка ИБ') {
-                                unzipInfobase()
+                                steps {
+                                    unzipInfobase()
+                                }
                             }
 
                             stage('Загрузка расширений в конфигурацию') {
