@@ -1,436 +1,437 @@
 {
-  "type": "object",
-  "id": "urn:jsonschema:ru:pulsar:jenkins:library:configuration:JobConfiguration",
-  "properties": {
-    "v8version": {
-      "type": "string",
-      "description": "Версия платформы 1С:Предприятие в формате 8.3.хх.хххх."
+  "type" : "object",
+  "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:JobConfiguration",
+  "properties" : {
+    "v8version" : {
+      "type" : "string",
+      "description" : "Версия платформы 1С:Предприятие в формате 8.3.хх.хххх."
     },
-    "edtVersion": {
-      "type": "string",
-      "description": "Версия модуля 1C:Enterprise Development Tools формате xxxx.x.x:x86_64"
+    "edtVersion" : {
+      "type" : "string",
+      "description" : "Версия модуля 1C:Enterprise Development Tools формате xxxx.x.x:x86_64"
     },
-    "srcDir": {
-      "type": "string",
-      "description": "Путь к корневому каталогу с исходниками конфигурации, в случае хранения исходников в формате EDT, необходимо указать путь к проекту"
+    "srcDir" : {
+      "type" : "string",
+      "description" : "Путь к корневому каталогу с исходниками конфигурации, в случае хранения исходников в формате EDT, необходимо указать путь к проекту"
     },
-    "sourceFormat": {
-      "type": "string",
-      "description": "Формат исходников конфигурации",
-      "enum": ["edt", "designer"]
+    "sourceFormat" : {
+      "type" : "string",
+      "description" : "Формат исходников конфигурации",
+      "enum" : [ "edt", "designer" ]
     },
-    "defaultBranch": {
-      "type": "string",
-      "description": "Имя ветки по умолчанию. Значение по умолчанию - main."
+    "defaultBranch" : {
+      "type" : "string",
+      "description" : "Имя ветки по умолчанию. Значение по умолчанию - main."
     },
-    "secrets": {
-      "type": "object",
-      "id": "urn:jsonschema:ru:pulsar:jenkins:library:configuration:Secrets",
-      "description": "Идентификаторы сохраненных секретов",
-      "properties": {
-        "storagePath": {
-          "type": "string",
-          "description": "Путь к хранилищу конфигурации"
+    "secrets" : {
+      "type" : "object",
+      "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:Secrets",
+      "description" : "Идентификаторы сохраненных секретов",
+      "properties" : {
+        "storagePath" : {
+          "type" : "string",
+          "description" : "Путь к хранилищу конфигурации"
         },
-        "storage": {
-          "type": "string",
-          "description": "Данные авторизации в хранилище конфигурации"
+        "storage" : {
+          "type" : "string",
+          "description" : "Данные авторизации в хранилище конфигурации"
         },
-        "telegramChatId": {
-          "type": "string",
-          "description": "Идентификатор telegram-чата для отправки уведомлений"
+        "telegramChatId" : {
+          "type" : "string",
+          "description" : "Идентификатор telegram-чата для отправки уведомлений"
         },
-        "telegramBotToken": {
-          "type": "string",
-          "description": "Токен авторизации telegram-бота для отправки уведомлений"
+        "telegramBotToken" : {
+          "type" : "string",
+          "description" : "Токен авторизации telegram-бота для отправки уведомлений"
         }
       }
     },
-    "stages": {
-      "type": "object",
-      "id": "urn:jsonschema:ru:pulsar:jenkins:library:configuration:StageFlags",
-      "description": "Включение этапов сборок",
-      "properties": {
-        "sonarqube": {
-          "type": "boolean",
-          "description": "Анализ SonarQube включен"
+    "stages" : {
+      "type" : "object",
+      "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:StageFlags",
+      "description" : "Включение этапов сборок",
+      "properties" : {
+        "sonarqube" : {
+          "type" : "boolean",
+          "description" : "Анализ SonarQube включен"
         },
-        "syntaxCheck": {
-          "type": "boolean",
-          "description": "Синтаксический контроль включен"
+        "syntaxCheck" : {
+          "type" : "boolean",
+          "description" : "Синтаксический контроль включен"
         },
-        "edtValidate": {
-          "type": "boolean",
-          "description": "Валидация EDT включена"
+        "edtValidate" : {
+          "type" : "boolean",
+          "description" : "Валидация EDT включена"
         },
-        "smoke": {
-          "type": "boolean",
-          "description": "Дымовые тесты включены"
+        "smoke" : {
+          "type" : "boolean",
+          "description" : "Дымовые тесты включены"
         },
-        "yaxunit": {
-          "type": "boolean",
+        "yaxunit" : {
+          "type" : "boolean",
           "description" : "Запуск YAXUnit тестов включен"
         },
-        "initSteps": {
-          "type": "boolean",
-          "description": "Предварительные шаги инициализации включены"
+        "initSteps" : {
+          "type" : "boolean",
+          "description" : "Предварительные шаги инициализации включены"
         },
-        "bdd": {
-          "type": "boolean",
-          "description": "Запуск BDD сценариев включен"
+        "bdd" : {
+          "type" : "boolean",
+          "description" : "Запуск BDD сценариев включен"
         },
-        "email": {
-          "type": "boolean",
-          "description": "Выполнять рассылку результатов сборки на email"
+        "email" : {
+          "type" : "boolean",
+          "description" : "Выполнять рассылку результатов сборки на email"
         },
-        "telegram": {
-          "type": "boolean",
-          "description": "Выполнять рассылку результатов сборки в telegram"
+        "telegram" : {
+          "type" : "boolean",
+          "description" : "Выполнять рассылку результатов сборки в telegram"
         }
       }
     },
-    "timeout": {
-      "type": "object",
-      "id": "urn:jsonschema:ru:pulsar:jenkins:library:configuration:TimeoutOptions",
-      "description": "Настройка таймаутов для шагов",
-      "properties": {
-        "edtToDesignerFormatTransformation": {
-          "type": "integer",
-          "description": "Таймаут шага трансформации исходников из формата EDT в формат Конфигуратора, в минутах.\n    По умолчанию содержит значение 60.\n    "
+    "timeout" : {
+      "type" : "object",
+      "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:TimeoutOptions",
+      "description" : "Настройка таймаутов для шагов",
+      "properties" : {
+        "edtToDesignerFormatTransformation" : {
+          "type" : "integer",
+          "description" : "Таймаут шага трансформации исходников из формата EDT в формат Конфигуратора, в минутах.\n    По умолчанию содержит значение 60.\n    "
         },
-        "getBinaries": {
-          "type": "integer",
-          "description": "Таймаут шага получения бинарников, в минутах.\n    По умолчанию содержит значение 60.\n    "
+        "getBinaries" : {
+          "type" : "integer",
+          "description" : "Таймаут шага получения бинарников, в минутах.\n    По умолчанию содержит значение 60.\n    "
         },
-        "createInfoBase": {
-          "type": "integer",
-          "description": "Таймаут шага создания информационной базы, в минутах.\n    По умолчанию содержит значение 60.\n    "
+        "createInfoBase" : {
+          "type" : "integer",
+          "description" : "Таймаут шага создания информационной базы, в минутах.\n    По умолчанию содержит значение 60.\n    "
         },
-        "initInfoBase": {
-          "type": "integer",
-          "description": "Таймаут шага инициализации информационной базы, в минутах.\n    По умолчанию содержит значение 60.\n    "
+        "initInfoBase" : {
+          "type" : "integer",
+          "description" : "Таймаут шага инициализации информационной базы, в минутах.\n    По умолчанию содержит значение 60.\n    "
         },
-        "loadExtensions": {
-          "type": "integer",
-          "description": "Таймаут шага загрузки расширений в базу, в минутах.\n    По умолчанию содержит значение 60.\n    "
+        "loadExtensions" : {
+          "type" : "integer",
+          "description" : "Таймаут шага загрузки расширений в базу, в минутах.\n    По умолчанию содержит значение 60.\n    "
         },
-        "zipInfoBase": {
-          "type": "integer",
-          "description": "Таймаут шага архивирования информационной базы, в минутах.\n    По умолчанию содержит значение 60.\n    "
+        "zipInfoBase" : {
+          "type" : "integer",
+          "description" : "Таймаут шага архивирования информационной базы, в минутах.\n    По умолчанию содержит значение 60.\n    "
         },
-        "designerToEdtFormatTransformation": {
-          "type": "integer",
-          "description": "Таймаут шага трансформации исходников из формата Конфигуратора в формат EDT, в минутах.\n    По умолчанию содержит значение 60.\n    "
+        "designerToEdtFormatTransformation" : {
+          "type" : "integer",
+          "description" : "Таймаут шага трансформации исходников из формата Конфигуратора в формат EDT, в минутах.\n    По умолчанию содержит значение 60.\n    "
         },
-        "edtValidate": {
-          "type": "integer",
-          "description": "Таймаут шага валидации EDT, в минутах.\n    По умолчанию содержит значение 240.\n    "
+        "edtValidate" : {
+          "type" : "integer",
+          "description" : "Таймаут шага валидации EDT, в минутах.\n    По умолчанию содержит значение 240.\n    "
         },
-        "resultTransformation": {
-          "type": "integer",
-          "description": "Таймаут шага трансформации результатов EDT, в минутах.\n    По умолчанию содержит значение 10.\n    "
+        "resultTransformation" : {
+          "type" : "integer",
+          "description" : "Таймаут шага трансформации результатов EDT, в минутах.\n    По умолчанию содержит значение 10.\n    "
         },
-        "bdd": {
-          "type": "integer",
-          "description": "Таймаут шага проверки сценариев поведения, в минутах.\n    По умолчанию содержит значение 120.\n    "
+        "bdd" : {
+          "type" : "integer",
+          "description" : "Таймаут шага проверки сценариев поведения, в минутах.\n    По умолчанию содержит значение 120.\n    "
         },
-        "syntaxCheck": {
-          "type": "integer",
-          "description": "Таймаут шага синтаксического контроля, в минутах.\n    По умолчанию содержит значение 240.\n    "
+        "syntaxCheck" : {
+          "type" : "integer",
+          "description" : "Таймаут шага синтаксического контроля, в минутах.\n    По умолчанию содержит значение 240.\n    "
         },
-        "smoke": {
-          "type": "integer",
-          "description": "Таймаут шага дымовых тестов, в минутах.\n    По умолчанию содержит значение 240.\n    "
+        "smoke" : {
+          "type" : "integer",
+          "description" : "Таймаут шага дымовых тестов, в минутах.\n    По умолчанию содержит значение 240.\n    "
         },
-        "yaxunit": {
-          "type": "integer",
+        "yaxunit" : {
+          "type" : "integer",
           "description" : "Таймаут шага YAXUnit тестов, в минутах.\n    По умолчанию содержит значение 240.\n    "
         },
-        "sonarqube": {
-          "type": "integer",
-          "description": "Таймаут шага статического анализа SonarQube, в минутах.\n    По умолчанию содержит значение 90.\n    "
+        "sonarqube" : {
+          "type" : "integer",
+          "description" : "Таймаут шага статического анализа SonarQube, в минутах.\n    По умолчанию содержит значение 90.\n    "
         }
       }
     },
-    "initInfobase": {
-      "type": "object",
-      "id": "urn:jsonschema:ru:pulsar:jenkins:library:configuration:InitInfoBaseOptions",
-      "description": "Настройки шага инициализации ИБ",
-      "properties": {
-        "initMethod": {
-          "type": "string",
-          "description": "\n    Способ инициализации информационной базы.\n    Поддерживается три варианта:\n        * fromStorage - инициализация информационной базы из хранилища конфигурации;\n        * fromSource - инициализация информационной базы из исходников конфигурации;\n        * defaultBranchFromStorage - инициализация основной ветки из хранилища конфигурации, остальных - из исходников конфигурации.\n    По умолчанию содержит значение \"fromStorage\".",
-          "enum": ["fromStorage", "fromSource", "defaultBranchFromStorage"]
+    "initInfobase" : {
+      "type" : "object",
+      "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:InitInfoBaseOptions",
+      "description" : "Настройки шага инициализации ИБ",
+      "properties" : {
+        "initMethod" : {
+          "type" : "string",
+          "description" : "\n    Способ инициализации информационной базы.\n    Поддерживается три варианта:\n        * fromStorage - инициализация информационной базы из хранилища конфигурации;\n        * fromSource - инициализация информационной базы из исходников конфигурации;\n        * defaultBranchFromStorage - инициализация основной ветки из хранилища конфигурации, остальных - из исходников конфигурации.\n    По умолчанию содержит значение \"fromStorage\".",
+          "enum" : [ "fromStorage", "fromSource", "defaultBranchFromStorage" ]
         },
-        "runMigration": {
-          "type": "boolean",
-          "description": "Запустить миграцию ИБ"
+        "runMigration" : {
+          "type" : "boolean",
+          "description" : "Запустить миграцию ИБ"
         },
-        "additionalInitializationSteps": {
-          "type": "array",
-          "description": "Дополнительные шаги, запускаемые через vrunner.\n    В каждой строке передается отдельная команда \n    vrunner и ее аргументы (например, \"vanessa --settings ./tools/vrunner.first.json\")\n    ",
-          "items": {
-            "type": "string"
+        "additionalInitializationSteps" : {
+          "type" : "array",
+          "description" : "Дополнительные шаги, запускаемые через vrunner.\n    В каждой строке передается отдельная команда \n    vrunner и ее аргументы (например, \"vanessa --settings ./tools/vrunner.first.json\")\n    ",
+          "items" : {
+            "type" : "string"
           }
         },
-        "extensions": {
-          "type": "array",
-          "description": "Массив расширений для загрузки в конфигурацию.",
-          "items": {
-            "type": "object",
-            "id": "urn:jsonschema:ru:pulsar:jenkins:library:configuration:InitInfoBaseOptions:extensions:exception",
-            "description": "Информация о расширении для загрузки",
-            "properties": {
-              "name": {
-                "type": "string",
-                "description": "Имя расширения с которым оно грузится в конфигурацию"
+        "extensions" : {
+          "type" : "array",
+          "description" : "Массив расширений для загрузки в конфигурацию.",
+          "items" : {
+            "type" : "object",
+            "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:InitInfoBaseOptions:Extension",
+            "properties" : {
+              "name" : {
+                "type" : "string",
+                "description" : "Имя расширения, используемое при его загрузке в конфигурацию."
               },
-              "initMethod": {
-                "type": "string",
-                "description": "\n    Способ инициализации расширения.\n    Поддерживается два варианта:\n        * fromSource - инициализация расширения из исходников;\n        * fromFile - использование скомпилированного cfe.",
-                "enum": ["fromSource", "fromFile"]
+              "initMethod" : {
+                "type" : "string",
+                "description" : "\n        Способ инициализации расширения.\n        Поддерживается два варианта:\n            * fromSource - инициализация расширения из исходников;\n            * fromFile - скачивание скомпилированного cfe по ссылке.\n        ",
+                "enum" : [ "fromSource", "fromFile" ]
               },
-              "path": {
-                "type": "string",
-                "description": "Хранит в себе путь к расширению.\n        * В случае если выбран initMethod <fromSource> - указывается путь к исходникам расширения.\n        * В случае если выбран initMethod <fromFile> - указывается путь к cfe-файлу"
+              "path" : {
+                "type" : "string",
+                "description" : "\n        Путь к расширению.\n            * В случае если выбран initMethod <fromSource> - указывается путь к исходникам расширения.\n            * В случае если выбран initMethod <fromFile> - указывается путь к cfe-файлу\n        "
+              },
+              "stages" : {
+                "type" : "array",
+                "description" : "\n        Шаги, на которых необходимо использовать расширение\n            * Если не заполнено, то расширение будет подключено при инициализации базы и останется в базе на всех последующих шагах.\n            * Если заполнено, то расширение будет подключено только на соответствующих шагах.\n        ",
+                "items" : {
+                  "type" : "string"
+                }
               }
             }
           }
         }
       }
     },
-    "bdd": {
-      "type": "object",
-      "id": "urn:jsonschema:ru:pulsar:jenkins:library:configuration:BddOptions",
-      "description": "Настройки шага запуска BDD сценариев",
-      "properties": {
-        "vrunnerSteps": {
-          "type": "array",
-          "description": "Шаги, запускаемые через vrunner.\n    В каждой строке передается отдельная команда \n    vrunner и ее аргументы (например, \"vanessa --settings ./tools/vrunner.json\").\n    По умолчанию содержит одну команду \"vanessa --settings ./tools/vrunner.json\".\n    ",
-          "items": {
-            "type": "string"
+    "bdd" : {
+      "type" : "object",
+      "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:BddOptions",
+      "description" : "Настройки шага запуска BDD сценариев",
+      "properties" : {
+        "vrunnerSteps" : {
+          "type" : "array",
+          "description" : "Шаги, запускаемые через vrunner.\n    В каждой строке передается отдельная команда \n    vrunner и ее аргументы (например, \"vanessa --settings ./tools/vrunner.json\").\n    По умолчанию содержит одну команду \"vanessa --settings ./tools/vrunner.json\".\n    ",
+          "items" : {
+            "type" : "string"
           }
         }
       }
     },
-    "sonarqube": {
-      "type": "object",
-      "id": "urn:jsonschema:ru:pulsar:jenkins:library:configuration:SonarQubeOptions",
-      "description": "Настройки анализа SonarQube",
-      "properties": {
-        "sonarQubeInstallation": {
-          "type": "string",
-          "description": "Имя настроенного SonarQube-сервера (SonarQube installations).\nЕсли настроен только один сервер, то может быть оставлено пустым."
+    "sonarqube" : {
+      "type" : "object",
+      "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:SonarQubeOptions",
+      "description" : "Настройки анализа SonarQube",
+      "properties" : {
+        "sonarQubeInstallation" : {
+          "type" : "string",
+          "description" : "Имя настроенного SonarQube-сервера (SonarQube installations).\nЕсли настроен только один сервер, то может быть оставлено пустым."
         },
-        "useSonarScannerFromPath": {
-          "type": "boolean",
-          "description": "Использовать sonar-scanner, доступный в PATH"
+        "useSonarScannerFromPath" : {
+          "type" : "boolean",
+          "description" : "Использовать sonar-scanner, доступный в PATH"
         },
-        "sonarScannerToolName": {
-          "type": "string",
-          "description": "Имя настроенной утилиты sonar-scanner.\nПрименяется, если useSonarScannerFromPath установлено в false."
+        "sonarScannerToolName" : {
+          "type" : "string",
+          "description" : "Имя настроенной утилиты sonar-scanner.\nПрименяется, если useSonarScannerFromPath установлено в false."
         },
-        "infoBaseUpdateModuleName": {
-          "type": "string",
-          "description": "Имя общего модуля (например, ОбновлениеИнформационнойБазыXXX), в котором указана версия библиотеки.\n    Версия должна задаваться в виде присвоения `Описание.Версия = \"ваш номер версии\";`\n    "
+        "infoBaseUpdateModuleName" : {
+          "type" : "string",
+          "description" : "Имя общего модуля (например, ОбновлениеИнформационнойБазыXXX), в котором указана версия библиотеки.\n    Версия должна задаваться в виде присвоения `Описание.Версия = \"ваш номер версии\";`\n    "
         },
-        "branchAnalysisConfiguration": {
-          "type": "string",
-          "description": "Вариант конфигурации branch plugin.\n    Поддерживаемые варианты:\n      * auto - применяется автоконфигурация sonar-scanner силами branchplugin. Так же может применяться для отключения конфигурирования, если branch plugin отсутствует;\n      * fromEnv - применяется ручная конфигурация sonar-scanner на основе переменных среды.\n    Значение по умолчанию: fromEnv.",
-          "enum": ["auto", "fromEnv"]
+        "branchAnalysisConfiguration" : {
+          "type" : "string",
+          "description" : "Вариант конфигурации branch plugin.\n    Поддерживаемые варианты:\n      * auto - применяется автоконфигурация sonar-scanner силами branchplugin. Так же может применяться для отключения конфигурирования, если branch plugin отсутствует;\n      * fromEnv - применяется ручная конфигурация sonar-scanner на основе переменных среды.\n    Значение по умолчанию: fromEnv.",
+          "enum" : [ "auto", "fromEnv" ]
         },
-        "waitForQualityGate": {
-          "type": "boolean",
-          "description": "Ожидать состояние Quality Gate от SonarQube после загрузки анализа. По умолчанию `false`.\n    Таймаут ожидания состояния равен таймауту шага.\n    "
+        "waitForQualityGate" : {
+          "type" : "boolean",
+          "description" : "Ожидать состояние Quality Gate от SonarQube после загрузки анализа. По умолчанию `false`.\n    Таймаут ожидания состояния равен таймауту шага.\n    "
         }
       }
     },
-    "syntaxCheck": {
-      "type": "object",
-      "id": "urn:jsonschema:ru:pulsar:jenkins:library:configuration:SyntaxCheckOptions",
-      "description": "Настройки синтаксического контроля",
-      "properties": {
-        "pathToJUnitReport": {
-          "type": "string",
-          "description": "Путь к файлу отчета jUnit\n    По умолчанию содержит значение \"./build/out/jUnit/syntax.xml\"\n    "
+    "syntaxCheck" : {
+      "type" : "object",
+      "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:SyntaxCheckOptions",
+      "description" : "Настройки синтаксического контроля",
+      "properties" : {
+        "pathToJUnitReport" : {
+          "type" : "string",
+          "description" : "Путь к файлу отчета jUnit\n    По умолчанию содержит значение \"./build/out/jUnit/syntax.xml\"\n    "
         },
-        "groupErrorsByMetadata": {
-          "type": "boolean",
-          "description": "Группировать выявленные ошибки по объектам метаданных.\n    По умолчанию включено.\n    "
+        "groupErrorsByMetadata" : {
+          "type" : "boolean",
+          "description" : "Группировать выявленные ошибки по объектам метаданных.\n    По умолчанию включено.\n    "
         },
-        "checkModes": {
-          "type": "array",
-          "description": "Режимы проверки конфигурации",
-          "items": {
-            "type": "string"
+        "checkModes" : {
+          "type" : "array",
+          "description" : "Режимы проверки конфигурации",
+          "items" : {
+            "type" : "string"
           }
         },
-        "exceptionFile": {
-          "type": "string",
-          "description": "Путь к файлу с указанием пропускаемых ошибок.\n    Формат файла: в каждой строке файла указан текст пропускаемого исключения или его часть\n    Кодировка: UTF-8\n    "
+        "exceptionFile" : {
+          "type" : "string",
+          "description" : "Путь к файлу с указанием пропускаемых ошибок.\n    Формат файла: в каждой строке файла указан текст пропускаемого исключения или его часть\n    Кодировка: UTF-8\n    "
         },
-        "vrunnerSettings": {
-          "type": "string",
-          "description": "Путь к конфигурационному файлу vanessa-runner.\n    По умолчанию содержит значение \"./tools/vrunner.json\".\n    "
+        "vrunnerSettings" : {
+          "type" : "string",
+          "description" : "Путь к конфигурационному файлу vanessa-runner.\n    По умолчанию содержит значение \"./tools/vrunner.json\".\n    "
         }
       }
     },
-    "smoke": {
-      "type": "object",
-      "id": "urn:jsonschema:ru:pulsar:jenkins:library:configuration:SmokeTestOptions",
-      "description": "Настройки дымового тестирования",
-      "properties": {
-        "vrunnerSettings": {
-          "type": "string",
-          "description": "Путь к конфигурационному файлу vanessa-runner.\n    По умолчанию содержит значение \"./tools/vrunner.json\".\n    "
+    "smoke" : {
+      "type" : "object",
+      "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:SmokeTestOptions",
+      "description" : "Настройки дымового тестирования",
+      "properties" : {
+        "vrunnerSettings" : {
+          "type" : "string",
+          "description" : "Путь к конфигурационному файлу vanessa-runner.\n    По умолчанию содержит значение \"./tools/vrunner.json\".\n    "
         },
-        "xddConfigPath": {
-          "type": "string",
-          "description": "Путь к конфигурационному файлу для xddTestRunner.\n    По умолчанию содержит значение \"./tools/xUnitParams.json\".\n    "
+        "xddConfigPath" : {
+          "type" : "string",
+          "description" : "Путь к конфигурационному файлу для xddTestRunner.\n    По умолчанию содержит значение \"./tools/xUnitParams.json\".\n    "
         },
-        "publishToAllureReport": {
-          "type": "boolean",
-          "description": "Выполнять публикацию результатов в отчет Allure.\n    По умолчанию выключено.\n    "
+        "publishToAllureReport" : {
+          "type" : "boolean",
+          "description" : "Выполнять публикацию результатов в отчет Allure.\n    По умолчанию выключено.\n    "
         },
-        "publishToJUnitReport": {
-          "type": "boolean",
-          "description": "Выполнять публикацию результатов в отчет JUnit.\n    По умолчанию включено.\n    "
+        "publishToJUnitReport" : {
+          "type" : "boolean",
+          "description" : "Выполнять публикацию результатов в отчет JUnit.\n    По умолчанию включено.\n    "
         }
       }
     },
-    "yaxunit": {
-      "type": "object",
-      "id": "urn:jsonschema:ru:pulsar:jenkins:library:configuration:YaxunitOptions",
+    "yaxunit" : {
+      "type" : "object",
+      "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:YaxunitOptions",
       "description" : "Настройки YAXUnit",
-      "properties": {
-        "vrunnerSettings": {
-          "type": "string",
-          "description": "Путь к конфигурационному файлу vanessa-runner.\n    По умолчанию содержит значение \"./tools/vrunner.json\".\n    "
+      "properties" : {
+        "vrunnerSettings" : {
+          "type" : "string",
+          "description" : "Путь к конфигурационному файлу vanessa-runner.\n    По умолчанию содержит значение \"./tools/vrunner.json\".\n    "
         },
-        "configPath": {
-          "type": "string",
-          "description": "Путь к конфигурационному файлу YAXUnit.\n    По умолчанию содержит значение \"./tools/yaxunit.json\".\n    "
+        "configPath" : {
+          "type" : "string",
+          "description" : "Путь к конфигурационному файлу YAXUnit.\n    По умолчанию содержит значение \"./tools/yaxunit.json\".\n    "
         },
-        "publishToAllureReport": {
-          "type": "boolean",
-          "description": "Выполнять публикацию результатов в отчет Allure.\n    По умолчанию выключено.\n    "
+        "publishToAllureReport" : {
+          "type" : "boolean",
+          "description" : "Выполнять публикацию результатов в отчет Allure.\n    По умолчанию выключено.\n    "
         },
-        "publishToJUnitReport": {
-          "type": "boolean",
-          "description": "Выполнять публикацию результатов в отчет JUnit.\n    По умолчанию включено.\n    "
+        "publishToJUnitReport" : {
+          "type" : "boolean",
+          "description" : "Выполнять публикацию результатов в отчет JUnit.\n    По умолчанию включено.\n    "
         }
       }
     },
-    "resultsTransform": {
-      "type": "object",
-      "id": "urn:jsonschema:ru:pulsar:jenkins:library:configuration:ResultsTransformOptions",
-      "description": "Настройки трансформации результатов анализа",
-      "properties": {
-        "removeSupport": {
-          "type": "boolean",
-          "description": "Фильтровать замечания по уровню поддержки модуля. По умолчанию включено."
+    "resultsTransform" : {
+      "type" : "object",
+      "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:ResultsTransformOptions",
+      "description" : "Настройки трансформации результатов анализа",
+      "properties" : {
+        "removeSupport" : {
+          "type" : "boolean",
+          "description" : "Фильтровать замечания по уровню поддержки модуля. По умолчанию включено."
         },
-        "supportLevel": {
-          "type": "integer",
-          "description": "Настройка фильтрации замечаний по уровню поддержки.\n        0 - удалить файлы на замке;\n        1 - удалить файлы на замке и на поддержке;\n        2 - удалить файлы на замке, на поддержке и снятые с поддержки.\n    "
+        "supportLevel" : {
+          "type" : "integer",
+          "description" : "Настройка фильтрации замечаний по уровню поддержки.\n        0 - удалить файлы на замке;\n        1 - удалить файлы на замке и на поддержке;\n        2 - удалить файлы на замке, на поддержке и снятые с поддержки.\n    "
         }
       }
     },
-    "notifications": {
-      "type": "object",
-      "id": "urn:jsonschema:ru:pulsar:jenkins:library:configuration:NotificationsOptions",
-      "description": "Настройки рассылки результатов сборки",
-      "properties": {
-        "email": {
-          "type": "object",
-          "id": "urn:jsonschema:ru:pulsar:jenkins:library:configuration:notification:EmailNotificationOptions",
-          "description": "Настройки рассылки результатов сборки через email",
-          "properties": {
-            "onAlways": {
-              "type": "boolean",
-              "description": "Отправлять всегда"
+    "notifications" : {
+      "type" : "object",
+      "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:NotificationsOptions",
+      "description" : "Настройки рассылки результатов сборки",
+      "properties" : {
+        "email" : {
+          "type" : "object",
+          "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:notification:EmailNotificationOptions",
+          "description" : "Настройки рассылки результатов сборки через email",
+          "properties" : {
+            "onAlways" : {
+              "type" : "boolean",
+              "description" : "Отправлять всегда"
             },
-            "onSuccess": {
-              "type": "boolean",
-              "description": "Отправлять при успешной сборке"
+            "onSuccess" : {
+              "type" : "boolean",
+              "description" : "Отправлять при успешной сборке"
             },
-            "onFailure": {
-              "type": "boolean",
-              "description": "Отправлять при падении сборки"
+            "onFailure" : {
+              "type" : "boolean",
+              "description" : "Отправлять при падении сборки"
             },
-            "onUnstable": {
-              "type": "boolean",
-              "description": "Отправлять при нестабильной сборке"
+            "onUnstable" : {
+              "type" : "boolean",
+              "description" : "Отправлять при нестабильной сборке"
             },
-            "alwaysOptions": {
-              "type": "object",
-              "id": "urn:jsonschema:ru:pulsar:jenkins:library:configuration:notification:email:EmailExtConfiguration",
-              "properties": {
-                "attachLog": {
-                  "type": "boolean"
+            "alwaysOptions" : {
+              "type" : "object",
+              "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:notification:email:EmailExtConfiguration",
+              "properties" : {
+                "attachLog" : {
+                  "type" : "boolean"
                 },
-                "directRecipients": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
+                "directRecipients" : {
+                  "type" : "array",
+                  "items" : {
+                    "type" : "string"
                   }
                 },
-                "recipientProviders": {
-                  "type": "array",
-                  "items": {
-                    "type": "string",
-                    "enum": [
-                      "developers",
-                      "requestor",
-                      "brokenBuildSuspects",
-                      "brokenTestsSuspects"
-                    ]
+                "recipientProviders" : {
+                  "type" : "array",
+                  "items" : {
+                    "type" : "string",
+                    "enum" : [ "developers", "requestor", "brokenBuildSuspects", "brokenTestsSuspects" ]
                   }
                 }
               }
             },
-            "successOptions": {
-              "type": "object",
-              "$ref": "urn:jsonschema:ru:pulsar:jenkins:library:configuration:notification:email:EmailExtConfiguration"
+            "successOptions" : {
+              "type" : "object",
+              "$ref" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:notification:email:EmailExtConfiguration"
             },
-            "failureOptions": {
-              "type": "object",
-              "$ref": "urn:jsonschema:ru:pulsar:jenkins:library:configuration:notification:email:EmailExtConfiguration"
+            "failureOptions" : {
+              "type" : "object",
+              "$ref" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:notification:email:EmailExtConfiguration"
             },
-            "unstableOptions": {
-              "type": "object",
-              "$ref": "urn:jsonschema:ru:pulsar:jenkins:library:configuration:notification:email:EmailExtConfiguration"
+            "unstableOptions" : {
+              "type" : "object",
+              "$ref" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:notification:email:EmailExtConfiguration"
             }
           }
         },
-        "telegram": {
-          "type": "object",
-          "id": "urn:jsonschema:ru:pulsar:jenkins:library:configuration:notification:TelegramNotificationOptions",
-          "description": "Настройки рассылки результатов сборки через telegram",
-          "properties": {
-            "onAlways": {
-              "type": "boolean",
-              "description": "Отправлять всегда"
+        "telegram" : {
+          "type" : "object",
+          "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:notification:TelegramNotificationOptions",
+          "description" : "Настройки рассылки результатов сборки через telegram",
+          "properties" : {
+            "onAlways" : {
+              "type" : "boolean",
+              "description" : "Отправлять всегда"
             },
-            "onSuccess": {
-              "type": "boolean",
-              "description": "Отправлять при успешной сборке"
+            "onSuccess" : {
+              "type" : "boolean",
+              "description" : "Отправлять при успешной сборке"
             },
-            "onFailure": {
-              "type": "boolean",
-              "description": "Отправлять при падении сборки"
+            "onFailure" : {
+              "type" : "boolean",
+              "description" : "Отправлять при падении сборки"
             },
-            "onUnstable": {
-              "type": "boolean",
-              "description": "Отправлять при нестабильной сборке"
+            "onUnstable" : {
+              "type" : "boolean",
+              "description" : "Отправлять при нестабильной сборке"
             }
           }
         }
       }
     },
-    "logosConfig": {
-      "type": "string",
-      "description": "Конфигурация библиотеки logos. Применяется перед запуском каждой стадии сборки"
+    "logosConfig" : {
+      "type" : "string",
+      "description" : "Конфигурация библиотеки logos. Применяется перед запуском каждой стадии сборки"
     }
   }
 }

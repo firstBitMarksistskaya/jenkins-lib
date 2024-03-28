@@ -14,9 +14,15 @@ class LoadExtensions implements Serializable {
     private final JobConfiguration config
     private final String stageName
 
+    private Extension[] extensionsFiltered
+
     LoadExtensions(JobConfiguration config, String stageName = "") {
         this.config = config
         this.stageName = stageName
+    }
+
+    Extension[] getExtensionsFiltered() {
+        return extensionsFiltered
     }
 
     def run() {
@@ -24,17 +30,15 @@ class LoadExtensions implements Serializable {
 
         Logger.printLocation()
 
-
-        Extension[] filteredExtensions
         def extensions = this.config.initInfoBaseOptions.extensions
 
         if (this.stageName) {
-            filteredExtensions = extensions.findAll { extension ->
+            this.extensionsFiltered = extensions.findAll { extension ->
                 extension.stages.contains(this.stageName)
             }
         }
         else {
-            filteredExtensions = extensions.findAll { extension -> extension.stages.empty || extension.stages.contains("initInfoBase") }
+            this.extensionsFiltered = extensions.findAll { extension -> extension.stages.empty || extension.stages.contains("initInfoBase") }
         }
 
         def env = steps.env()
@@ -42,7 +46,7 @@ class LoadExtensions implements Serializable {
 
         String vrunnerPath = VRunner.getVRunnerPath()
 
-        filteredExtensions.each {
+        this.extensionsFiltered.each {
             Logger.println("Установим расширение ${it.name}")
             loadExtension(it, vrunnerPath, steps, cfeDir)
         }
@@ -62,7 +66,7 @@ class LoadExtensions implements Serializable {
         loadCommand += executeParameter
         loadCommand += ' --ibconnection "/F./build/ib"'
 
-        String vrunnerSettings = getVrunnerSettings(this.config, this.stageName)
+        String vrunnerSettings = getVrunnerSettingsForStage(this.config, this.stageName)
         if (vrunnerSettings && steps.fileExists(vrunnerSettings)) {
             loadCommand += " --settings $vrunnerSettings"
         }
@@ -73,7 +77,7 @@ class LoadExtensions implements Serializable {
         }
     }
 
-    private static String getVrunnerSettings(JobConfiguration config, String stageName) {
+    private static String getVrunnerSettingsForStage(JobConfiguration config, String stageName) {
 
         if (!stageName) {
             return ""

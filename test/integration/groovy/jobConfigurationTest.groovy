@@ -47,7 +47,7 @@ class jobConfigurationTest {
             'jobConfiguration.json',
             StandardCharsets.UTF_8,
             this.getClass().getClassLoader()
-        );
+        )
 
         def writeFile = """
             writeFile text: \"\"\"$file\"\"\", file: 'jobConfiguration.json'
@@ -74,6 +74,5 @@ class jobConfigurationTest {
         rule.assertLogContains("v8version='8.3.12.1500'", run)
         rule.assertLogContains("sonarScannerToolName='sonar-scanner'", run)
         rule.assertLogContains("initMethod=FROM_SOURCE", run)
-        rule.assertLogContains("custom_units", run)
     }
 }

@@ -48,7 +48,7 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", junitVersion)
 
     testImplementation("org.assertj", "assertj-core", "3.15.0")
-    testImplementation("org.mockito", "mockito-core", "3.3.3")
+    testImplementation("org.mockito", "mockito-core", "5.11.0")
 
     testImplementation("org.slf4j", "slf4j-api", slf4jVersion)
     testImplementation("org.slf4j", "slf4j-simple", slf4jVersion)
