@@ -28,6 +28,8 @@ public class TestUtils {
       );
     });
 
+    when(steps.env()).thenAnswer(invocation -> new EnvUtils());
+
     when(steps.readFile(anyString(), anyString())).thenAnswer(invocation -> {
       String file = invocation.getArgument(0);
       String encoding = invocation.getArgument(1);

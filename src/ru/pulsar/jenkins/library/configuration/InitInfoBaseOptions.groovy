@@ -14,7 +14,7 @@ class InitInfoBaseOptions implements Serializable {
         * fromSource - инициализация информационной базы из исходников конфигурации;
         * defaultBranchFromStorage - инициализация основной ветки из хранилища конфигурации, остальных - из исходников конфигурации.
     По умолчанию содержит значение "fromStorage".""")
-    InitInfoBaseMethod initMethod = InitInfoBaseMethod.FROM_STORAGE;
+    InitInfoBaseMethod initMethod = InitInfoBaseMethod.FROM_STORAGE
 
     @JsonPropertyDescription("Запустить миграцию ИБ")
     Boolean runMigration = true
@@ -26,12 +26,12 @@ class InitInfoBaseOptions implements Serializable {
     String[] additionalInitializationSteps
 
     @JsonPropertyDescription("Массив расширений для загрузки в конфигурацию.")
-    Extension[] extensions;
+    Extension[] extensions
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     static class Extension implements Serializable {
         @JsonPropertyDescription("Имя расширения, используемое при его загрузке в конфигурацию.")
-        String name = "extension";
+        String name = "extension"
 
         @JsonPropertyDescription("""
         Способ инициализации расширения.
@@ -39,14 +39,21 @@ class InitInfoBaseOptions implements Serializable {
             * fromSource - инициализация расширения из исходников;
             * fromFile - скачивание скомпилированного cfe по ссылке.
         """)
-        InitExtensionMethod initMethod = InitExtensionMethod.SOURCE;
+        InitExtensionMethod initMethod = InitExtensionMethod.SOURCE
 
         @JsonPropertyDescription("""
-        Хранит в себе путь к расширению.
+        Путь к расширению.
             * В случае если выбран initMethod <fromSource> - указывается путь к исходникам расширения.
             * В случае если выбран initMethod <fromFile> - указывается путь к cfe-файлу
         """)
-        String path = "src/cfe/extension";
+        String path = "src/cfe/extension"
+
+        @JsonPropertyDescription("""
+        Шаги, на которых необходимо использовать расширение
+            * Если не заполнено, то расширение будет подключено при инициализации базы и останется в базе на всех последующих шагах.
+            * Если заполнено, то расширение будет подключено только на соответствующих шагах.
+        """)
+        String[] stages = ["initInfoBase"]
     }
 
     @Override
@@ -57,6 +64,6 @@ class InitInfoBaseOptions implements Serializable {
             ", runMigration=" + runMigration +
             ", additionalInitializationSteps=" + additionalInitializationSteps +
             ", extensions=" + extensions +
-            '}';
+                '}'
     }
 }

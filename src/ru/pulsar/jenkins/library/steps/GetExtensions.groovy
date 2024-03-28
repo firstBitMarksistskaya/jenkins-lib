@@ -13,6 +13,7 @@ import ru.pulsar.jenkins.library.utils.FileUtils
 
 class GetExtensions implements Serializable {
 
+    public static final String EXTENSIONS_STASH = 'extensions'
     public static final String EXTENSIONS_OUT_DIR = 'build/out/cfe'
 
     private final JobConfiguration config;
@@ -58,6 +59,9 @@ class GetExtensions implements Serializable {
                 Logger.println("Неизвестный метод инициализации расширения ${it.name}")
             }
         }
+
+        steps.stash(EXTENSIONS_STASH, "$EXTENSIONS_OUT_DIR/**", true)
+
     }
 
     private void buildExtension(Extension extension, String srcDir, String vrunnerPath, IStepExecutor steps) {

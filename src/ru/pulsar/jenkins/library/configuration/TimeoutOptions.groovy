@@ -66,6 +66,11 @@ class TimeoutOptions implements Serializable {
     ''')
     Integer smoke
 
+    @JsonPropertyDescription('''Таймаут шага YAXUnit тестов, в минутах.
+    По умолчанию содержит значение 240.
+    ''')
+    Integer yaxunit
+
     @JsonPropertyDescription('''Таймаут шага статического анализа SonarQube, в минутах.
     По умолчанию содержит значение 90.
     ''')

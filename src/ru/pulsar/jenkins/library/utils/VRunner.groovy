@@ -11,13 +11,13 @@ class VRunner {
 
         IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
 
-        String vrunnerBinary = steps.isUnix() ? "vrunner" : "vrunner.bat";
-        String vrunnerPath = "oscript_modules/bin/$vrunnerBinary";
+        String vrunnerBinary = steps.isUnix() ? "vrunner" : "vrunner.bat"
+        String vrunnerPath = "oscript_modules/bin/$vrunnerBinary"
         if (!steps.fileExists(vrunnerPath)) {
-            vrunnerPath = vrunnerBinary;
+            vrunnerPath = vrunnerBinary
         }
 
-        return vrunnerPath;
+        return vrunnerPath
     }
 
     static int exec(String command, boolean returnStatus = false) {
@@ -38,4 +38,5 @@ class VRunner {
         String fileContent = steps.readFile(configPath)
         return fileContent.contains("\"$settingName\"")
     }
+
 }

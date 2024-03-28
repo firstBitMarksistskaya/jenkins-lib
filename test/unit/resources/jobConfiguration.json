@@ -14,6 +14,20 @@
     "runMigration": false,
     "additionalInitializationSteps": [
       "vanessa --settings ./tools/vrunner.first.json"
+    ],
+    "extensions": [
+      {
+      "name": "YAXUnit",
+      "initMethod": "fromSource",
+      "path": "./src/cfe/YAXUnit",
+      "stages": ["yaxunit"]
+      },
+      {
+        "name": "BDD",
+        "initMethod": "fromSource",
+        "path": "./src/cfe/bdd",
+        "stages": ["bdd"]
+      }
     ]
   },
   "sonarqube": {

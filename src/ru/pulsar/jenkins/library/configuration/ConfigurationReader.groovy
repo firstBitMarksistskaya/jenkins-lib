@@ -65,6 +65,7 @@ class ConfigurationReader implements Serializable {
             "bddOptions",
             "sonarQubeOptions",
             "smokeTestOptions",
+            "yaxunitOptions",
             "syntaxCheckOptions",
             "resultsTransformOptions",
             "notificationsOptions",

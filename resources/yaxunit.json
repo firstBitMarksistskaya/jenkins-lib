@@ -1,0 +1,26 @@
+{
+  "reportPath": "./build/out/yaxunit/junit.xml",
+  "closeAfterTests": true,
+  "filter": {
+    "extensions": [
+      "YAXUNIT"
+    ],
+    "modules": null,
+    "suites": null,
+    "tags": null,
+    "contexts": null,
+    "paths": null,
+    "tests": null
+  },
+  "settings": {
+    "ВТранзакции": true
+  },
+  "reportFormat": "jUnit",
+  "showReport": false,
+  "logging": {
+    "file": "./build/out/yaxunit/log.txt",
+    "enable": false,
+    "level": "debug"
+  },
+  "exitCode": "./build/out/yaxunit/result.txt"
+}

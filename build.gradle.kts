@@ -48,7 +48,7 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", junitVersion)
 
     testImplementation("org.assertj", "assertj-core", "3.15.0")
-    testImplementation("org.mockito", "mockito-core", "3.3.3")
+    testImplementation("org.mockito", "mockito-core", "5.11.0")
 
     testImplementation("org.slf4j", "slf4j-api", slf4jVersion)
     testImplementation("org.slf4j", "slf4j-simple", slf4jVersion)
@@ -61,6 +61,7 @@ dependencies {
 
     integrationTestImplementation("org.slf4j", "slf4j-api", slf4jVersion)
     integrationTestImplementation("org.slf4j", "slf4j-simple", slf4jVersion)
+
 }
 
 tasks.test {
@@ -105,6 +106,8 @@ sharedLibrary {
         dependency("org.6wind.jenkins", "lockable-resources", "2.7")
         dependency("ru.yandex.qatools.allure", "allure-jenkins-plugin", "2.28.1")
         val declarativePluginsVersion = "1.6.0"
+
+
         dependency("org.jenkinsci.plugins", "pipeline-model-api", declarativePluginsVersion)
         dependency("org.jenkinsci.plugins", "pipeline-model-declarative-agent", "1.1.1")
         dependency("org.jenkinsci.plugins", "pipeline-model-definition", declarativePluginsVersion)

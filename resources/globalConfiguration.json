@@ -18,11 +18,13 @@
     "syntaxCheck": false,
     "edtValidate": false,
     "smoke": false,
+    "yaxunit": false,
     "email": false,
     "telegram": false
   },
   "timeout": {
     "smoke": 240,
+    "yaxunit": 240,
     "bdd": 120,
     "getBinaries": 60,
     "createInfoBase": 60,
@@ -77,6 +79,12 @@
   "smoke": {
     "vrunnerSettings": "./tools/vrunner.json",
     "xddConfigPath": "./tools/xUnitParams.json",
+    "publishToAllureReport": false,
+    "publishToJUnitReport": true
+  },
+  "yaxunit": {
+    "vrunnerSettings": "./tools/vrunner.json",
+    "configPath": "./tools/yaxunit.json",
     "publishToAllureReport": false,
     "publishToJUnitReport": true
   },

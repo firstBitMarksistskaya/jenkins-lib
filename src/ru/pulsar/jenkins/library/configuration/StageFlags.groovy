@@ -18,6 +18,9 @@ class StageFlags implements Serializable {
     @JsonPropertyDescription("Дымовые тесты включены")
     Boolean smoke
 
+    @JsonPropertyDescription("Запуск YAXUnit тестов включен")
+    Boolean yaxunit
+
     @JsonPropertyDescription("Предварительные шаги инициализации включены")
     Boolean initSteps
 
@@ -46,6 +49,6 @@ class StageFlags implements Serializable {
     }
 
     boolean needInfoBase() {
-        return smoke || syntaxCheck || initSteps || bdd
+        return smoke || syntaxCheck || initSteps || bdd || yaxunit
     }
 }
