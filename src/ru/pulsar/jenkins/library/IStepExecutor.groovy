@@ -70,6 +70,8 @@ interface IStepExecutor {
 
     def unstash(String name)
 
+    def unstable(String message)
+
     def zip(String dir, String zipFile)
 
     def zip(String dir, String zipFile, String glob)
