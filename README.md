@@ -67,7 +67,7 @@ pipeline1C()
 
 ## Внешний вид пайплайна в интерфейсе Blue Ocean
 
-![image](https://github.com/firstBitMarksistskaya/jenkins-lib/assets/80944823/e34a0112-2fe5-4116-92ac-8fcca08bba43)
+![image](https://github.com/firstBitMarksistskaya/jenkins-lib/assets/80944823/a8d5bdff-3267-4744-a613-8c3d445b767f)
 
 ## Конфигурирование
 
