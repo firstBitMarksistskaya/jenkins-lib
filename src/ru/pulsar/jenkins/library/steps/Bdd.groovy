@@ -6,8 +6,6 @@ import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.VRunner
 
-import java.lang.reflect.Array
-
 class Bdd implements Serializable {
 
     private final JobConfiguration config
@@ -29,13 +27,13 @@ class Bdd implements Serializable {
         List<String> logosConfig = ["LOGOS_CONFIG=$config.logosConfig"]
         steps.withEnv(logosConfig) {
             steps.installLocalDependencies()
-
             steps.createDir('build/out')
-            List returnStatuses = []
+            List<Integer> returnStatuses = []
             config.bddOptions.vrunnerSteps.each {
                 Logger.println("Шаг запуска сценариев командой ${it}")
                 String vrunnerPath = VRunner.getVRunnerPath()
-                returnStatuses.add(VRunner.exec("$vrunnerPath ${it} --ibconnection \"/F./build/ib\"", true) as Integer)
+                Integer bddReturnStatus = VRunner.exec("$vrunnerPath ${it} --ibconnection \"/F./build/ib\"", true)
+                returnStatuses.add(bddReturnStatus)
             }
 
             if (Collections.max(returnStatuses) > 2) {
