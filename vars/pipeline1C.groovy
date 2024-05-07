@@ -106,6 +106,18 @@ void call() {
                                         }
                                     }
 
+                                    stage('Загрузка расширений в конфигурацию'){
+                                        when {
+                                            beforeAgent true
+                                            expression { config.needLoadExtensions() }
+                                        }
+                                        steps {
+                                            timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
+                                                loadExtensions config
+                                            }
+                                        }
+                                    }
+
                                     stage('Инициализация ИБ') {
                                         when {
                                             beforeAgent true
@@ -119,17 +131,6 @@ void call() {
                                         }
                                     }
 
-                                    stage('Загрузка расширений в конфигурацию'){
-                                        when {
-                                            beforeAgent true
-                                            expression { config.needLoadExtensions() }
-                                        }
-                                        steps {
-                                            timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
-                                                loadExtensions config
-                                            }
-                                        }
-                                    }
 
                                     stage('Архивация ИБ') {
                                         steps {
