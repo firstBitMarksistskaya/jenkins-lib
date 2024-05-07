@@ -38,7 +38,7 @@ class LoadExtensions implements Serializable {
             }
         }
         else {
-            this.extensionsFiltered = extensions.findAll { extension -> extension.stages.empty || extension.stages.contains("initInfoBase") }
+            this.extensionsFiltered = extensions.findAll { extension -> extension.stages.length == 0 || extension.stages.contains("initInfoBase") }
         }
 
         def env = steps.env()

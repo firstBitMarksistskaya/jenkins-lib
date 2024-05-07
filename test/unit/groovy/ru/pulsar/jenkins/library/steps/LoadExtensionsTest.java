@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import ru.pulsar.jenkins.library.configuration.ConfigurationReader;
+import ru.pulsar.jenkins.library.configuration.InitInfoBaseOptions;
 import ru.pulsar.jenkins.library.configuration.JobConfiguration;
 import ru.pulsar.jenkins.library.utils.FileUtils;
 import ru.pulsar.jenkins.library.utils.TestUtils;
@@ -34,20 +35,32 @@ class LoadExtensionsTest {
                     .thenReturn(new FilePath(new File("/")));
 
             // given
-            // файл содержит 2 расширения для двух стейджей
+            // файл содержит 4 расширения для разных стейджей
             String config = IOUtils.resourceToString(
                     "jobConfiguration.json",
                     StandardCharsets.UTF_8,
                     this.getClass().getClassLoader()
             );
             JobConfiguration jobConfiguration = ConfigurationReader.create(config);
-            LoadExtensions loadExtensions = new LoadExtensions(jobConfiguration, "yaxunit");
 
             // when
+            LoadExtensions loadExtensions = new LoadExtensions(jobConfiguration);
             loadExtensions.run();
 
             // then
-            assertThat(loadExtensions.getExtensionsFiltered().length).isEqualTo(1);
+            InitInfoBaseOptions.Extension[] extensions = loadExtensions.getExtensionsFiltered();
+            assertThat(extensions.length).isEqualTo(2);
+            assertThat(extensions[0].getName()).isEqualTo("mods");
+            assertThat(extensions[1].getName()).isEqualTo("mods2");
+
+            // when
+            LoadExtensions loadExtensionsWithStage = new LoadExtensions(jobConfiguration, "yaxunit");
+            loadExtensionsWithStage.run();
+
+            // then
+            extensions = loadExtensionsWithStage.getExtensionsFiltered();
+            assertThat(extensions.length).isEqualTo(1);
+            assertThat(extensions[0].getName()).isEqualTo("YAXUnit");
         }
     }
 }

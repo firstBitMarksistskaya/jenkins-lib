@@ -27,6 +27,17 @@
         "initMethod": "fromSource",
         "path": "./src/cfe/bdd",
         "stages": ["bdd"]
+      },
+      {
+        "name": "mods",
+        "initMethod": "fromSource",
+        "path": "./src/cfe/mods"
+      },
+      {
+        "name": "mods2",
+        "initMethod": "fromSource",
+        "path": "./src/cfe/mods2",
+        "stages": ["initInfoBase"]
       }
     ]
   },
