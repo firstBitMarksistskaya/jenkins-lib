@@ -47,7 +47,7 @@ class jobConfigurationTest {
             'jobConfiguration.json',
             StandardCharsets.UTF_8,
             this.getClass().getClassLoader()
-        );
+        )
 
         def writeFile = """
             writeFile text: \"\"\"$file\"\"\", file: 'jobConfiguration.json'
