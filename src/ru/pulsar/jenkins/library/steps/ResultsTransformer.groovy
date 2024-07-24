@@ -1,6 +1,7 @@
 package ru.pulsar.jenkins.library.steps
 
 import ru.pulsar.jenkins.library.IStepExecutor
+import ru.pulsar.jenkins.library.configuration.GenericIssueFormat
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.ResultsTransformerType
 import ru.pulsar.jenkins.library.configuration.SourceFormat
@@ -44,7 +45,10 @@ class ResultsTransformer implements Serializable {
             Logger.println("Конвертация результата EDT в Generic Issue с помощью stebi")
 
             def genericIssueFile = "$env.WORKSPACE/$RESULT_FILE"
-            def genericIssuesFormat = config.resultsTransformOptions.genericIssueFormat.toValue()
+            def genericIssuesFormat = "Generic_Issue"
+            if (config.resultsTransformOptions.genericIssueFormat == GenericIssueFormat.GENERIC_ISSUE_10_3) {
+                genericIssuesFormat = "Generic_Issue_10_3"
+            }
 
             steps.cmd("stebi convert --Format $genericIssuesFormat -r $edtValidateFile $genericIssueFile $srcDir")
 
