@@ -61,8 +61,8 @@ class ResultsTransformer implements Serializable {
 
             Logger.println("Конвертация результата EDT в Issues с помощью edt-ripper")
 
-            steps.cmd("edt-ripper parse $edtValidateFile $srcDir $env.WORKSPACE/$RESULT_FILE")
-            steps.cmd("edt-ripper publish $env.WORKSPACE/build/out/edt-rules.json")
+            steps.cmd("edt-ripper parse $edtValidateFile $srcDir $DesignerToEdtFormatTransformation.PROJECT_NAME $env.WORKSPACE/$RESULT_FILE")
+            steps.cmd("edt-ripper publish $env.WORKSPACE/$RESULT_FILE")
 
         }
 
