@@ -46,11 +46,11 @@ class ResultsTransformer implements Serializable {
             def genericIssueFile = "$env.WORKSPACE/$RESULT_FILE"
             def genericIssuesFormat = config.resultsTransformOptions.genericIssueFormat
 
-            steps.cmd("stebi convert --format $genericIssuesFormat -r $edtValidateFile $genericIssueFile $srcDir")
+            steps.cmd("stebi convert --Format $genericIssuesFormat -r $edtValidateFile $genericIssueFile $srcDir")
 
             if (config.resultsTransformOptions.removeSupport) {
                 def supportLevel = config.resultsTransformOptions.supportLevel
-                steps.cmd("stebi transform --format $genericIssuesFormat --remove_support $supportLevel --src $srcDir $genericIssueFile")
+                steps.cmd("stebi transform --Format $genericIssuesFormat --remove_support $supportLevel --src $srcDir $genericIssueFile")
         }
 
         } else {

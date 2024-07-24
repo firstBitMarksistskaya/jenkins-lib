@@ -27,7 +27,6 @@ class ResultsTransformOptions implements Serializable {
     Для SonarQube 10.3+ необходимо использовать Generic_Issue_10_3.
     По умолчанию Generic_Issue
     """)
-
     GenericIssueFormat genericIssueFormat = GenericIssueFormat.GENERIC_ISSUE
 
     @Override

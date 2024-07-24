@@ -9,4 +9,13 @@ enum GenericIssueFormat {
     @JsonProperty("Generic_Issue_10_3")
     GENERIC_ISSUE_10_3
 
+    @Override
+    String toString() {
+        switch(this) {
+            case GENERIC_ISSUE: return "Generic_Issue"
+            case GENERIC_ISSUE_10_3: return "Generic_Issue_10_3"
+            default: throw new IllegalArgumentException()
+        }
+    }
+
 }
