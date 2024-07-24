@@ -47,8 +47,11 @@ class ConfigurationReaderTest {
 
     assertThat(jobConfiguration.getSyntaxCheckOptions().getCheckModes()).hasSize(4);
 
-    assertThat(jobConfiguration.getResultsTransformOptions().getRemoveSupport()).isFalse();
-    assertThat(jobConfiguration.getResultsTransformOptions().getSupportLevel()).isZero();
+    ResultsTransformOptions resultsTransformOptions = jobConfiguration.getResultsTransformOptions();
+    assertThat(resultsTransformOptions.getTransformer()).isEqualTo(ResultsTransformerType.STEBI);
+    assertThat(resultsTransformOptions.getGenericIssueFormat()).isEqualTo(GenericIssueFormat.GENERIC_ISSUE_10_3);
+    assertThat(resultsTransformOptions.getRemoveSupport()).isFalse();
+    assertThat(resultsTransformOptions.getSupportLevel()).isZero();
 
     assertThat(jobConfiguration.getSmokeTestOptions().getVrunnerSettings()).contains("./tools/vrunner-smoke.json");
     assertThat(jobConfiguration.getSmokeTestOptions().isPublishToAllureReport()).isFalse();

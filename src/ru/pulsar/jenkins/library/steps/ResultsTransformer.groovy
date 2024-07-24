@@ -44,7 +44,7 @@ class ResultsTransformer implements Serializable {
             Logger.println("Конвертация результата EDT в Generic Issue с помощью stebi")
 
             def genericIssueFile = "$env.WORKSPACE/$RESULT_FILE"
-            def genericIssuesFormat = config.resultsTransformOptions.genericIssueFormat.toString()
+            def genericIssuesFormat = config.resultsTransformOptions.genericIssueFormat.toValue()
 
             steps.cmd("stebi convert --Format $genericIssuesFormat -r $edtValidateFile $genericIssueFile $srcDir")
 

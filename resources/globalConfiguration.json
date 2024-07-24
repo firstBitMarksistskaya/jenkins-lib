@@ -89,6 +89,8 @@
     "publishToJUnitReport": true
   },
   "resultsTransform": {
+    "transformer": "stebi",
+    "genericIssueFormat": "Generic_Issue",
     "removeSupport": true,
     "supportLevel": 0
   },
