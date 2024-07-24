@@ -1,5 +1,6 @@
 package ru.pulsar.jenkins.library.configuration
 
+import com.cloudbees.groovy.cps.NonCPS
 import com.fasterxml.jackson.annotation.JsonProperty
 
 enum GenericIssueFormat {
@@ -10,6 +11,7 @@ enum GenericIssueFormat {
     GENERIC_ISSUE_10_3
 
     @Override
+    @NonCPS
     String toString() {
         switch(this) {
             case GENERIC_ISSUE: return "Generic_Issue"
