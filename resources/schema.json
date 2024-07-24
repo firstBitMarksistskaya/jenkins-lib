@@ -332,13 +332,23 @@
       "id" : "urn:jsonschema:ru:pulsar:jenkins:library:configuration:ResultsTransformOptions",
       "description" : "Настройки трансформации результатов анализа",
       "properties" : {
+        "transformer" : {
+          "type" : "string",
+          "description" : "Способ преобразования замечаний.\n    Поддерживается stebi и edt-ripper\n    По умолчанию содержит значение \"stebi\".\n    ",
+          "enum" : [ "stebi", "edt-ripper" ]
+        },
         "removeSupport" : {
           "type" : "boolean",
-          "description" : "Фильтровать замечания по уровню поддержки модуля. По умолчанию включено."
+          "description" : "Фильтровать замечания по уровню поддержки модуля. Только для stebi. По умолчанию включено."
         },
         "supportLevel" : {
           "type" : "integer",
-          "description" : "Настройка фильтрации замечаний по уровню поддержки.\n        0 - удалить файлы на замке;\n        1 - удалить файлы на замке и на поддержке;\n        2 - удалить файлы на замке, на поддержке и снятые с поддержки.\n    "
+          "description" : "Настройка фильтрации замечаний по уровню поддержки. Только для stebi.\n        0 - удалить файлы на замке;\n        1 - удалить файлы на замке и на поддержке;\n        2 - удалить файлы на замке, на поддержке и снятые с поддержки.\n    "
+        },
+        "genericIssueFormat" : {
+          "type" : "string",
+          "description" : "Формат отчета generic issue. Только для stebi.\n    Для SonarQube 10.3+ необходимо использовать Generic_Issue_10_3.\n    По умолчанию Generic_Issue\n    ",
+          "enum" : [ "Generic_Issue", "Generic_Issue_10_3" ]
         }
       }
     },
