@@ -6,6 +6,7 @@ import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.ResultsTransformerType
 import ru.pulsar.jenkins.library.configuration.SourceFormat
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
+import ru.pulsar.jenkins.library.utils.FileUtils
 import ru.pulsar.jenkins.library.utils.Logger
 
 import java.nio.file.Paths
@@ -38,7 +39,7 @@ class ResultsTransformer implements Serializable {
         ResultsTransformerType transformerType = config.resultsTransformOptions.transformer
 
         def edtValidateFile = "$env.WORKSPACE/$EdtValidate.RESULT_FILE"
-        String srcDir = config.sourceFormat == SourceFormat.DESIGNER ? config.srcDir : Paths.get(config.srcDir, "src")
+        def srcDir = FileUtils.getFilePath("$env.WORKSPACE/$config.srcDir")
 
         if (transformerType == ResultsTransformerType.STEBI) {
 
@@ -61,7 +62,20 @@ class ResultsTransformer implements Serializable {
 
             Logger.println("Конвертация результата EDT в Issues с помощью edt-ripper")
 
-            steps.cmd("edt-ripper parse $edtValidateFile $srcDir $DesignerToEdtFormatTransformation.PROJECT_NAME $env.WORKSPACE/$RESULT_FILE")
+            def workspace
+
+            if (config.sourceFormat == SourceFormat.DESIGNER) {
+
+                steps.unstash(DesignerToEdtFormatTransformation.WORKSPACE_ZIP_STASH)
+                steps.unzip(DesignerToEdtFormatTransformation.WORKSPACE, DesignerToEdtFormatTransformation.WORKSPACE_ZIP)
+
+                workspace = DesignerToEdtFormatTransformation.WORKSPACE
+
+            } else {
+                workspace = FileUtils.getFilePath("$env.WORKSPACE/$srcDir")
+            }
+
+            steps.cmd("edt-ripper parse $edtValidateFile $workspace $DesignerToEdtFormatTransformation.PROJECT_NAME $env.WORKSPACE/$RESULT_FILE")
             steps.cmd("edt-ripper publish $env.WORKSPACE/$RESULT_FILE")
 
         }
