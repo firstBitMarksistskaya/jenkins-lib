@@ -76,7 +76,7 @@ class ResultsTransformer implements Serializable {
             }
 
             steps.cmd("edt-ripper parse $edtValidateFile $workspace $DesignerToEdtFormatTransformation.PROJECT_NAME $env.WORKSPACE/$RESULT_FILE")
-            steps.cmd("edt-ripper publish $env.WORKSPACE/$RESULT_FILE")
+            //steps.cmd("edt-ripper publish $env.WORKSPACE/$RESULT_FILE")
 
         }
 
