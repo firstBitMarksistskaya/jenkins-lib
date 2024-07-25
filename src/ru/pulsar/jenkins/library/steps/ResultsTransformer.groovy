@@ -69,14 +69,13 @@ class ResultsTransformer implements Serializable {
                 steps.unstash(DesignerToEdtFormatTransformation.WORKSPACE_ZIP_STASH)
                 steps.unzip(DesignerToEdtFormatTransformation.WORKSPACE, DesignerToEdtFormatTransformation.WORKSPACE_ZIP)
 
-                workspace = DesignerToEdtFormatTransformation.WORKSPACE
+                workspace = FileUtils.getFilePath("$env.WORKSPACE/$DesignerToEdtFormatTransformation.WORKSPACE")
 
             } else {
                 workspace = FileUtils.getFilePath("$env.WORKSPACE/$srcDir")
             }
 
             steps.cmd("edt-ripper parse $edtValidateFile $workspace $DesignerToEdtFormatTransformation.PROJECT_NAME $env.WORKSPACE/$RESULT_FILE")
-            //steps.cmd("edt-ripper publish $env.WORKSPACE/$RESULT_FILE")
 
         }
 
