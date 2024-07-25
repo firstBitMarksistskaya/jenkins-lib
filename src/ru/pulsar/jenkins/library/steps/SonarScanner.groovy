@@ -60,6 +60,14 @@ class SonarScanner implements Serializable {
 
         if (config.stageFlags.edtValidate) {
             steps.unstash(ResultsTransformer.RESULT_STASH)
+
+            if (config.sourceFormat == SourceFormat.DESIGNER) {
+
+                steps.unstash(DesignerToEdtFormatTransformation.WORKSPACE_ZIP_STASH)
+                steps.unzip(DesignerToEdtFormatTransformation.WORKSPACE, DesignerToEdtFormatTransformation.WORKSPACE_ZIP)
+
+            }
+
             if (config.resultsTransformOptions.transformer == ResultsTransformerType.STEBI) {
                 sonarCommand += " -Dsonar.externalIssuesReportPaths=" + ResultsTransformer.RESULT_FILE
             } else {
