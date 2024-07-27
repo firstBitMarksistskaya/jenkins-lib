@@ -13,7 +13,7 @@ class EdtValidate implements Serializable {
     public static final String RESULT_STASH = 'edt-validate'
     public static final String RESULT_FILE = 'build/out/edt-validate.out'
 
-    private final JobConfiguration config;
+    private final JobConfiguration config
 
     EdtValidate(JobConfiguration config) {
         this.config = config
@@ -29,16 +29,18 @@ class EdtValidate implements Serializable {
             return
         }
 
-        def env = steps.env();
+        def env = steps.env()
 
         String workspaceLocation = "$env.WORKSPACE/$DesignerToEdtFormatTransformation.WORKSPACE"
-        String projectList;
+        String projectList
 
         if (config.sourceFormat == SourceFormat.DESIGNER) {
             steps.unstash(DesignerToEdtFormatTransformation.WORKSPACE_ZIP_STASH)
             steps.unzip(DesignerToEdtFormatTransformation.WORKSPACE, DesignerToEdtFormatTransformation.WORKSPACE_ZIP)
 
-            projectList = "--project-name-list $DesignerToEdtFormatTransformation.PROJECT_NAME"
+            def projectName = config.srcDir.split(File.separator).last()
+
+            projectList = "--project-name-list $projectName"
         } else {
             def srcDir = config.srcDir
             def projectDir = FileUtils.getFilePath("$env.WORKSPACE/$srcDir")
