@@ -62,20 +62,18 @@ class ResultsTransformer implements Serializable {
 
             Logger.println("Конвертация результата EDT в Issues с помощью edt-ripper")
 
-            def workspace
-
             if (config.sourceFormat == SourceFormat.DESIGNER) {
 
                 steps.unstash(DesignerToEdtFormatTransformation.WORKSPACE_ZIP_STASH)
                 steps.unzip(DesignerToEdtFormatTransformation.WORKSPACE, DesignerToEdtFormatTransformation.WORKSPACE_ZIP)
 
-                workspace = FileUtils.getFilePath("$DesignerToEdtFormatTransformation.WORKSPACE")
-
-            } else {
-                workspace = srcDir
             }
 
-            steps.cmd("edt-ripper parse $edtValidateFile $workspace $DesignerToEdtFormatTransformation.PROJECT_NAME $env.WORKSPACE/$RESULT_FILE")
+            def splitDir = config.srcDir.split(File.separator)
+            def projectName = splitDir.last()
+            def srcDirExceptLast = splitDir.dropRight(1).join(File.separator)
+
+            steps.cmd("edt-ripper parse $edtValidateFile $srcDirExceptLast $projectName $env.WORKSPACE/$RESULT_FILE")
 
         }
 
