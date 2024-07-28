@@ -19,6 +19,7 @@
 
 ## Ограничения
 
+1. Хранение исходников в корне репозитория или в каталоге первого уровня (например, в `src`) не рекомендуется.
 1. Для шага подготовки требуется любой агент с меткой `agent`.
 1. Для запуска шага анализа SonarQube требуется агент с меткой `sonar`.
 1. Для запуска шагов, работающих с EDT (валидация, трансформация формата исходников) требуется агент с меткой `edt` (если используется несколько версий EDT необходимо к метке добавить версию, например `edt@2021.3.4:x86_64`) и агент с меткой `oscript`, на котором глобально установлена библиотека [stebi](https://github.com/Stepa86/stebi) версии 1.11.1 и выше или [edt-ripper](https://github.com/bia-technologies/edt_ripper).
@@ -211,7 +212,7 @@ pipeline1C()
   * Если ваши тесты размещены в отдельных расширениях, скопируйте файл `./resources/yaxunit.json` из текущей библиотеки в свой репозиторий (`./tools/yaxunit.json`) и перечислите в нем имена ваших расширений.
   * Если используется собственный файл `tools/yaxunit.json`, то значение параметра reportPath в нем должно быть равно `./build/out/yaxunit/junit.xml`
 
-## Настройка шага resultsTransform
+## Настройка трансформации результатов в шаге edtValidate
 
   * Если валидация EDT выполнялась через `stebi`, необходимо в `sonar-project.properties` указать `sonar.externalIssuesReportPaths=build/out/edt-issues.json`
   * Если валидация EDT выполнялась через `edt-ripper`, необходимо в `sonar-project.properties` указать `sonar.bsl.languageserver.reportPaths=build/out/edt-issues.json`
