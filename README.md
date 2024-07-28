@@ -211,8 +211,3 @@ pipeline1C()
   * Добавить расширение `YAXUnit` и дополнительные расширения с тестами можно в `jobConfiguration.json` -> `initInfobase` -> `extensions`. Они будут загружены при инициализации ИБ.
   * Если ваши тесты размещены в отдельных расширениях, скопируйте файл `./resources/yaxunit.json` из текущей библиотеки в свой репозиторий (`./tools/yaxunit.json`) и перечислите в нем имена ваших расширений.
   * Если используется собственный файл `tools/yaxunit.json`, то значение параметра reportPath в нем должно быть равно `./build/out/yaxunit/junit.xml`
-
-## Настройка трансформации результатов в шаге edtValidate
-
-  * Если валидация EDT выполнялась через `stebi`, необходимо в `sonar-project.properties` указать `sonar.externalIssuesReportPaths=build/out/edt-issues.json`
-  * Если валидация EDT выполнялась через `edt-ripper`, необходимо в `sonar-project.properties` указать `sonar.bsl.languageserver.reportPaths=build/out/edt-issues.json`
