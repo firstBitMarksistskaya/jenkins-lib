@@ -3,6 +3,7 @@ package ru.pulsar.jenkins.library.configuration
 import com.cloudbees.groovy.cps.NonCPS
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
+import ru.pulsar.jenkins.library.configuration.sonarqube.GenericIssueFormat
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 class ResultsTransformOptions implements Serializable {

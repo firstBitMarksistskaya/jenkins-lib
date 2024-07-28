@@ -157,7 +157,6 @@ pipeline1C()
   * Применяется расчет аргументов командной строки для работы [`branch plugin`](https://github.com/mc1arke/sonarqube-community-branch-plugin) или коммерческих версий SonarQube (`sonarqube` -> `branchAnalysisConfiguration`).
   * Если разработка ведется с использованием подсистемы [БСП "Обновление версии ИБ"](https://its.1c.ru/db/bsp315doc#content:4:1:issogl1_обновление_версии_иб), то в значение параметра `sonar.projectVersion=$configurationVersion` утилиты `sonar-scanner` можно передавать версию из созданного общего модуля. Для этого необходимо заполнить параметр (`sonarqube` -> `infoBaseUpdateModuleName`). Если параметр не заполнен, версия передается из корня конфигурации.
   * По умолчанию шаг анализа не дожидается окончания фонового задания на сервере SonarQube и не анализирует результат прохождения Порога качества (`sonarqube` -> `waitForQualityGate`).
-  * Если валидация EDT выполнялась через stebi, путь к результирующему файлу в формате `generic issues` необходимо передать утилите `sonar-scanner` как значение параметра `sonar.externalIssuesReportPaths`. При использовании `edt-ripper` необходимо передать путь к файлу в качестве значения параметра `sonar.bsl.languageserver.reportPaths`
 * Рассылка уведомлений:
   * Электронная почта:
     * Для отправки используется плагин [`email-ext`](https://plugins.jenkins.io/email-ext). Шаблоны сообщений конфигурируются в настройках плагина. 
@@ -211,3 +210,8 @@ pipeline1C()
   * Добавить расширение `YAXUnit` и дополнительные расширения с тестами можно в `jobConfiguration.json` -> `initInfobase` -> `extensions`. Они будут загружены при инициализации ИБ.
   * Если ваши тесты размещены в отдельных расширениях, скопируйте файл `./resources/yaxunit.json` из текущей библиотеки в свой репозиторий (`./tools/yaxunit.json`) и перечислите в нем имена ваших расширений.
   * Если используется собственный файл `tools/yaxunit.json`, то значение параметра reportPath в нем должно быть равно `./build/out/yaxunit/junit.xml`
+
+## Настройка шага resultsTransform
+
+  * Если валидация EDT выполнялась через `stebi`, необходимо в `sonar-project.properties` указать `sonar.externalIssuesReportPaths=build/out/edt-issues.json`
+  * Если валидация EDT выполнялась через `edt-ripper`, необходимо в `sonar-project.properties` указать `sonar.bsl.languageserver.reportPaths=build/out/edt-issues.json`
