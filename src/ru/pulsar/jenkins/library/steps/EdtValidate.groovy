@@ -38,7 +38,10 @@ class EdtValidate implements Serializable {
             steps.unstash(DesignerToEdtFormatTransformation.WORKSPACE_ZIP_STASH)
             steps.unzip(DesignerToEdtFormatTransformation.WORKSPACE, DesignerToEdtFormatTransformation.WORKSPACE_ZIP)
 
-            def projectName = config.srcDir.split(File.separator).last()
+            def srcDir = config.srcDir
+            def configurationRoot = FileUtils.getFilePath("$env.WORKSPACE/$srcDir")
+
+            def projectName = configurationRoot.getName()
 
             projectList = "--project-name-list $projectName"
         } else {

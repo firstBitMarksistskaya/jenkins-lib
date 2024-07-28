@@ -63,9 +63,10 @@ class ResultsTransformer implements Serializable {
 
             }
 
-            def splitDir = config.srcDir.split(File.separator)
-            def projectName = splitDir.last()
-            def srcDirExceptLast = splitDir.dropRight(1).join(File.separator)
+            srcDir = FileUtils.getFilePath("$env.WORKSPACE/$config.srcDir")
+
+            def projectName = srcDir.getName()
+            def srcDirExceptLast = srcDir.getParent()
 
             steps.cmd("edt-ripper parse $edtValidateFile $srcDirExceptLast $projectName $env.WORKSPACE/$RESULT_FILE")
 
