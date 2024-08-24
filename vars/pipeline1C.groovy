@@ -94,6 +94,7 @@ void call() {
                                                 createDir('build/out/')
 
                                                 script {
+                                                    createInfobase config
                                                     if (config.infoBaseFromFiles()) {
                                                         // Создание базы загрузкой из файлов
                                                         initFromFiles config

@@ -26,7 +26,6 @@ class InitFromFiles implements Serializable {
             return
         }
 
-        steps.installLocalDependencies();
 
         Logger.println("Распаковка файлов")
 
@@ -41,9 +40,6 @@ class InitFromFiles implements Serializable {
         } else {
             srcDir = config.srcDir;
         }
-
-        def createInfobase = new CreateInfobase(config)
-        createInfobase.run()
 
         Logger.println("Выполнение загрузки конфигурации из файлов")
         String vrunnerPath = VRunner.getVRunnerPath();

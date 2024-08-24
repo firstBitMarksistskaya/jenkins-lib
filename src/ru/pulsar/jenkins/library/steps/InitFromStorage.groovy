@@ -32,7 +32,6 @@ class InitFromStorage implements Serializable {
             return
         }
 
-        steps.installLocalDependencies()
 
         String storageVersion = VersionParser.storage()
         String storageVersionParameter = storageVersion == "" ? "" : "--storage-ver $storageVersion"
@@ -43,9 +42,6 @@ class InitFromStorage implements Serializable {
 
         String storageCredentials = secrets.storage == UNKNOWN_ID ? repoSlug + "_STORAGE_USER" : secrets.storage
         String storagePath = secrets.storagePath == UNKNOWN_ID ? repoSlug + "_STORAGE_PATH" : secrets.storagePath
-
-        def createInfobase = new CreateInfobase(config)
-        createInfobase.run()
 
         steps.withCredentials([
             steps.usernamePassword(
