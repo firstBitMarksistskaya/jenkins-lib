@@ -52,7 +52,7 @@ class InitFromFiles implements Serializable {
         def options = config.initInfoBaseOptions
 
         String vrunnerSettings = options.vrunnerSettings
-        if (vrunnerSettings && steps.fileExists(vrunnerSettings)) {
+        if (vrunnerSettings != '' && steps.fileExists(vrunnerSettings)) {
             command += " --settings $vrunnerSettings"
         }
 

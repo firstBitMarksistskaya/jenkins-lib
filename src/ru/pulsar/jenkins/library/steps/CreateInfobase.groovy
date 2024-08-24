@@ -59,7 +59,7 @@ class CreateInfobase implements Serializable {
             def options = config.initInfoBaseOptions
 
             String vrunnerSettings = options.vrunnerSettings
-            if (vrunnerSettings && steps.fileExists(vrunnerSettings)) {
+            if (vrunnerSettings != '' && steps.fileExists(vrunnerSettings)) {
                 updateDbCommand += " --settings $vrunnerSettings"
             }
             VRunner.exec(updateDbCommand)
