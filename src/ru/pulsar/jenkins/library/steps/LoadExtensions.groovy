@@ -83,7 +83,7 @@ class LoadExtensions implements Serializable {
             return ""
         }
 
-        String optionsName = "${stageName.toLowerCase()}Options"
+        String optionsName = "${stageName}Options"
 
         def optionsInstance = config."$optionsName"
 
