@@ -113,7 +113,7 @@ void call() {
                                         }
                                         steps {
                                             timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
-                                                loadExtensions config
+                                                loadExtensions config, 'initInfoBase'
                                             }
                                         }
                                     }
