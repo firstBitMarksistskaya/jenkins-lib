@@ -73,8 +73,8 @@ class StepExecutor implements IStepExecutor {
     }
 
     @Override
-    void start(String script, boolean returnStatus = false) {
-        steps.start(script, returnStatus)
+    void start(String script) {
+        steps.start(script)
     }
 
     @Override
