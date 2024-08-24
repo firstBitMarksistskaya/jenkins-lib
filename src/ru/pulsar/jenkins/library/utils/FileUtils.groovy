@@ -41,4 +41,36 @@ class FileUtils {
             .replaceAll('\\\\', '/')
             .toString()
     }
+
+    static void loadFile(String filePathFrom, def env, String filePathTo) {
+
+        FilePath localPathToFile = getFilePath(filePathTo)
+
+        if (isValidUrl(filePathFrom)) {
+            // If the path is a URL, download the file
+            localPathToFile.copyFrom(new URL(filePathFrom))
+        } else {
+            // If the path is a local file, copy the file
+            String localPath = getAbsolutePath(filePathFrom, env)
+            FilePath localFilePath = getFilePath(localPath)
+            localPathToFile.copyFrom(localFilePath)
+        }
+    }
+
+    private static boolean isValidUrl(String url) {
+        try {
+            new URL(url)
+            return true
+        } catch (MalformedURLException e) {
+            return false
+        }
+    }
+
+    private static String getAbsolutePath(String path, def env) {
+        if (path.startsWith("/") || path.startsWith("\\") || path.matches("^[A-Za-z]:.*")) {
+            return path
+        } else {
+            return "${env.WORKSPACE}/${path}"
+        }
+    }
 }

@@ -11,6 +11,7 @@ plugins {
 
 repositories {
     mavenCentral()
+    maven(url = "https://repo.jenkins-ci.org/releases/")
 }
 
 tasks {

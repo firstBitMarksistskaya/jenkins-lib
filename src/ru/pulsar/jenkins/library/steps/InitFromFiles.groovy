@@ -6,6 +6,7 @@ import ru.pulsar.jenkins.library.configuration.SourceFormat
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.VRunner
+import ru.pulsar.jenkins.library.steps.CreateInfobase
 
 class InitFromFiles implements Serializable {
 
@@ -41,9 +42,20 @@ class InitFromFiles implements Serializable {
             srcDir = config.srcDir;
         }
 
+        def createInfobase = new CreateInfobase(config)
+        createInfobase.run()
+
         Logger.println("Выполнение загрузки конфигурации из файлов")
         String vrunnerPath = VRunner.getVRunnerPath();
-        def initCommand = "$vrunnerPath init-dev --src $srcDir --ibconnection \"/F./build/ib\""
-        VRunner.exec(initCommand)
+        def command = "$vrunnerPath update-dev --src $srcDir --ibconnection \"/F./build/ib\""
+
+        def options = config.initInfoBaseOptions
+
+        String vrunnerSettings = options.vrunnerSettings
+        if (vrunnerSettings && steps.fileExists(vrunnerSettings)) {
+            command += " --settings $vrunnerSettings"
+        }
+
+        VRunner.exec(command)
     }
 }

@@ -42,6 +42,8 @@
     "initMethod": "fromStorage",
     "runMigration": true,
     "additionalInitializationSteps": [],
+    "baseDBPath": "",
+    "vrunnerSettings": "",
     "extensions": []
   },
   "bdd": {

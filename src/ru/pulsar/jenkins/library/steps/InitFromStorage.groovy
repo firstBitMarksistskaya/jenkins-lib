@@ -10,6 +10,7 @@ import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.RepoUtils
 import ru.pulsar.jenkins.library.utils.VRunner
 import ru.pulsar.jenkins.library.utils.VersionParser
+import ru.pulsar.jenkins.library.steps.CreateInfobase
 
 import static ru.pulsar.jenkins.library.configuration.Secrets.UNKNOWN_ID
 
@@ -43,6 +44,9 @@ class InitFromStorage implements Serializable {
         String storageCredentials = secrets.storage == UNKNOWN_ID ? repoSlug + "_STORAGE_USER" : secrets.storage
         String storagePath = secrets.storagePath == UNKNOWN_ID ? repoSlug + "_STORAGE_PATH" : secrets.storagePath
 
+        def createInfobase = new CreateInfobase(config)
+        createInfobase.run()
+
         steps.withCredentials([
             steps.usernamePassword(
                 storageCredentials,
@@ -54,8 +58,18 @@ class InitFromStorage implements Serializable {
                 'RUNNER_STORAGE_NAME'
             )
         ]) {
+            Logger.println("Выполнение загрузки конфигурации из хранилища")
             String vrunnerPath = VRunner.getVRunnerPath()
-            VRunner.exec "$vrunnerPath init-dev --storage $storageVersionParameter --ibconnection \"/F./build/ib\""
+            def command = "$vrunnerPath update-dev --storage $storageVersionParameter --ibconnection \"/F./build/ib\""
+
+            def options = config.initInfoBaseOptions
+
+            String vrunnerSettings = options.vrunnerSettings
+            if (vrunnerSettings && steps.fileExists(vrunnerSettings)) {
+                command += " --settings $vrunnerSettings"
+            }
+
+            VRunner.exec(command)
         }
     }
 
