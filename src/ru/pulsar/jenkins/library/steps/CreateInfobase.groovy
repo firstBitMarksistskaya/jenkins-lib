@@ -28,7 +28,7 @@ class CreateInfobase implements Serializable {
         String baseDBPath = config.initInfoBaseOptions.baseDBPath
         if (baseDBPath == '') {
             // Не указан путь к базе данных, создадим пустую базу данных.
-            createBase('', steps)
+            createBase()
         } else if (baseDBPath.endsWith('.1CD')) {
             // Это файл базы данных 1С, просто скопируем его.
             String pathToInfobase = "$env.WORKSPACE/build/ib/1Cv8.1CD"
@@ -37,14 +37,14 @@ class CreateInfobase implements Serializable {
             // Это файл дампа БД, скопируем его и создадим БД.
             String pathToDt = "$env.WORKSPACE/build/tmp/dump.dt"
             FileUtils.loadFile(baseDBPath, env, pathToDt)
-            createBase('build/tmp/dump.dt', steps)
+            createBase('build/tmp/dump.dt')
         } else {
             Logger.println("Неизвестный формат базы данных. Поддерживаются только .1CD и .dt")
         }
 
     }
 
-    private void createBase(String dtPath = '', def steps) {
+    private void createBase(String dtPath = '') {
         Logger.println("Создание информационной базы")
         String vrunnerPath = VRunner.getVRunnerPath();
         def initCommand = "$vrunnerPath init-dev  --ibconnection \"/F./build/ib\""
@@ -54,15 +54,6 @@ class CreateInfobase implements Serializable {
             // Загрузка из dt в vrunner 2.2.2 не работает корректно, потому инициировать через init-dev не получится.
             def loadDtCommand = "$vrunnerPath restore --ibconnection \"/F./build/ib\" $dtPath"
             VRunner.exec(loadDtCommand)
-
-            def updateDbCommand = "$vrunnerPath  updatedb --ibconnection \"/F./build/ib\""
-            def options = config.initInfoBaseOptions
-
-            String vrunnerSettings = options.vrunnerSettings
-            if (vrunnerSettings != '' && steps.fileExists(vrunnerSettings)) {
-                updateDbCommand += " --settings $vrunnerSettings"
-            }
-            VRunner.exec(updateDbCommand)
         }
     }
 }
