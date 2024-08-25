@@ -31,7 +31,7 @@ class SmokeTestOptions implements Serializable {
     Boolean coverage = false
 
     @JsonPropertyDescription("Порт, на котором будет запущен сервер отладки для замера покрытия")
-    int dbgsPort = 1650
+    int dbgsPort = 1550
 
     @Override
     @NonCPS

@@ -270,7 +270,24 @@
         },
         "xddConfigPath" : {
           "type" : "string",
-          "description" : "Путь к конфигурационному файлу для xddTestRunner.\n    По умолчанию содержит значение \"./tools/xUnitParams.json\".\n    "
+          "description" : "Путь к конфигурационному файлу YAXUnit.\n    По умолчанию содержит значение \"./tools/yaxunit.json\".\n    "
+        },
+        "publishToAllureReport" : {
+          "type" : "boolean",
+          "description" : "Выполнять публикацию результатов в отчет Allure.\n    По умолчанию выключено.\n    "
+        },
+        "publishToJUnitReport" : {
+          "type" : "boolean",
+          "description" : "Выполнять публикацию результатов в отчет JUnit.\n    По умолчанию включено.\n    "
+        },
+        "coverage" : {
+          "type" : "boolean",
+          "description" : "Выполнять замер покрытия"
+        },
+        "dbgsPort" : {
+          "type" : "integer",
+          "description" : "Порт, на котором будет запущен сервер отладки для замера покрытия"
+        }
         }
       },
       "description" : "Настройки дымового тестирования"
