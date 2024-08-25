@@ -98,19 +98,27 @@ class SonarScanner implements Serializable {
 
         }
 
-        if (config.stageFlags.bdd && config.bddOptions.coverage
-                || config.stageFlags.smoke && config.smokeTestOptions.coverage) {
+        def stageFlags = config.stageFlags
+
+        if (stageFlags.bdd && config.bddOptions.coverage
+                || stageFlags.smoke && config.smokeTestOptions.coverage
+                || stageFlags.yaxunit && config.yaxunitOptions.coverage) {
 
             StringJoiner coveragePathsConstructor = new StringJoiner(",")
 
-            if (config.stageFlags.bdd && config.bddOptions.coverage) {
+            if (stageFlags.bdd && config.bddOptions.coverage) {
                 steps.unstash(Bdd.COVERAGE_STASH_NAME)
                 coveragePathsConstructor.add(Bdd.COVERAGE_STASH_PATH)
             }
 
-            if (config.stageFlags.smoke && config.smokeTestOptions.coverage) {
+            if (stageFlags.smoke && config.smokeTestOptions.coverage) {
                 steps.unstash(SmokeTest.COVERAGE_STASH_NAME)
                 coveragePathsConstructor.add(SmokeTest.COVERAGE_STASH_PATH)
+            }
+
+            if (stageFlags.yaxunit && config.yaxunitOptions.coverage) {
+                steps.unstash(Yaxunit.COVERAGE_STASH_NAME)
+                coveragePathsConstructor.add(Yaxunit.COVERAGE_STASH_PATH)
             }
 
             String coveragePaths = coveragePathsConstructor.toString()
