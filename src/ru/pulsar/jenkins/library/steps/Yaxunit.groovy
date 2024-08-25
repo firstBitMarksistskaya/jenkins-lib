@@ -42,6 +42,9 @@ class Yaxunit implements Serializable {
         def options = config.yaxunitOptions
         def env = steps.env()
 
+        def srcDir = config.srcDir
+        def workspaceDir = FileUtils.getFilePath("$env.WORKSPACE")
+
         String vrunnerPath = VRunner.getVRunnerPath()
         String ibConnection = ' --ibconnection "/F./build/ib"'
 
