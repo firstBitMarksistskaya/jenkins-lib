@@ -92,9 +92,15 @@ void call() {
                                         steps {
                                             timeout(time: config.timeoutOptions.createInfoBase, unit: TimeUnit.MINUTES) {
                                                 createDir('build/out/')
-
-                                                script {
                                                     createInfobase config
+                                            }
+                                        }
+                                    }
+
+                                    stage('Загрузка исходников') {
+                                        steps {
+                                            timeout(time: config.timeoutOptions.loadSources, unit: TimeUnit.MINUTES) {
+                                                script {
                                                     if (config.infoBaseFromFiles()) {
                                                         // Создание базы загрузкой из файлов
                                                         initFromFiles config

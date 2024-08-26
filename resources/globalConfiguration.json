@@ -28,6 +28,7 @@
     "bdd": 120,
     "getBinaries": 60,
     "createInfoBase": 60,
+    "loadSources": 60,
     "designerToEdtFormatTransformation": 60,
     "edtToDesignerFormatTransformation": 60,
     "edtValidate": 240,
