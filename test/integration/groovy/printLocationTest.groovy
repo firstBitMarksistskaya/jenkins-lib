@@ -35,7 +35,7 @@ class printLocationTest {
         final WorkflowJob workflowJob = rule.createProject(WorkflowJob, 'project')
         workflowJob.definition = flow
 
-        rule.assertLogContains('Running on node master', rule.buildAndAssertSuccess(workflowJob))
+        rule.assertLogContains('Running on node built-in', rule.buildAndAssertSuccess(workflowJob))
     }
 
 }
