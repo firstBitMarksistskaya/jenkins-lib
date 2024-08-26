@@ -97,7 +97,7 @@ void call() {
                                         }
                                     }
 
-                                    stage('Загрузка исходников') {
+                                    stage('Загрузка конфигурации') {
                                         steps {
                                             timeout(time: config.timeoutOptions.loadSources, unit: TimeUnit.MINUTES) {
                                                 script {
