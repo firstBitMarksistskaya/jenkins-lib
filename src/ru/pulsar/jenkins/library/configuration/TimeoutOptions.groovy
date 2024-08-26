@@ -24,7 +24,7 @@ class TimeoutOptions implements Serializable {
     @JsonPropertyDescription('''Таймаут шага загрузки конфигурации в базу, в минутах.
     По умолчанию содержит значение 60.
     ''')
-    Integer loadSources
+    Integer loadConfiguration
 
     @JsonPropertyDescription('''Таймаут шага инициализации информационной базы, в минутах.
     По умолчанию содержит значение 60.

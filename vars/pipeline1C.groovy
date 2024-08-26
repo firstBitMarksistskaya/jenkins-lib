@@ -99,7 +99,7 @@ void call() {
 
                                     stage('Загрузка конфигурации') {
                                         steps {
-                                            timeout(time: config.timeoutOptions.loadSources, unit: TimeUnit.MINUTES) {
+                                            timeout(time: config.timeoutOptions.loadConfiguration, unit: TimeUnit.MINUTES) {
                                                 script {
                                                     if (config.infoBaseFromFiles()) {
                                                         // Создание базы загрузкой из файлов
