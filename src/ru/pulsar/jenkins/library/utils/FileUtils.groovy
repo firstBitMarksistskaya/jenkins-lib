@@ -59,9 +59,9 @@ class FileUtils {
 
     private static boolean isValidUrl(String url) {
         try {
-            new URL(url)
+            new URL(url).toURI()
             return true
-        } catch (MalformedURLException e) {
+        } catch (MalformedURLException | URISyntaxException e) {
             return false
         }
     }
