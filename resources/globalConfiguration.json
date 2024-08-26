@@ -43,7 +43,7 @@
     "initMethod": "fromStorage",
     "runMigration": true,
     "additionalInitializationSteps": [],
-    "baseDBPath": "",
+    "templateDBPath": "",
     "vrunnerSettings": "",
     "extensions": []
   },

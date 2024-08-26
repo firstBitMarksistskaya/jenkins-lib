@@ -35,7 +35,7 @@ class InitInfoBaseOptions implements Serializable {
                 * По умолчанию не заполнен;
                 * Указывается путь к файлу *.dt или *.1CD.
     """)
-    String baseDBPath
+    String templateDBPath
 
     @JsonPropertyDescription("Массив расширений для загрузки в конфигурацию.")
     Extension[] extensions
@@ -75,7 +75,7 @@ class InitInfoBaseOptions implements Serializable {
             "initMethod=" + initMethod +
             ", runMigration=" + runMigration +
             ", vrunnerSettings=" + vrunnerSettings +
-            ", baseDBPath=" + baseDBPath +
+            ", templateDBPath=" + templateDBPath +
             ", additionalInitializationSteps=" + additionalInitializationSteps +
             ", extensions=" + extensions +
                 '}'

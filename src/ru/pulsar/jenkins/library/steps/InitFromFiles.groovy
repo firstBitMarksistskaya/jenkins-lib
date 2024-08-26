@@ -6,7 +6,6 @@ import ru.pulsar.jenkins.library.configuration.SourceFormat
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.VRunner
-import ru.pulsar.jenkins.library.steps.CreateInfobase
 
 class InitFromFiles implements Serializable {
 

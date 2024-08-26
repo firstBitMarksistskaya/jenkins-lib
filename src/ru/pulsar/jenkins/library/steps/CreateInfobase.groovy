@@ -5,7 +5,6 @@ import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.VRunner
-import hudson.FilePath
 import ru.pulsar.jenkins.library.utils.FileUtils
 
 class CreateInfobase implements Serializable {
@@ -25,18 +24,18 @@ class CreateInfobase implements Serializable {
 
         steps.installLocalDependencies();
 
-        String baseDBPath = config.initInfoBaseOptions.baseDBPath
-        if (baseDBPath == '') {
+        String templateDBPath = config.initInfoBaseOptions.templateDBPath
+        if (templateDBPath == '') {
             // Не указан путь к базе данных, создадим пустую базу данных.
             createBase()
-        } else if (baseDBPath.endsWith('.1CD')) {
+        } else if (templateDBPath.endsWith('.1CD')) {
             // Это файл базы данных 1С, просто скопируем его.
             String pathToInfobase = "$env.WORKSPACE/build/ib/1Cv8.1CD"
-            FileUtils.loadFile(baseDBPath, env, pathToInfobase)
-        } else if (baseDBPath.endsWith('.dt')) {
+            FileUtils.loadFile(templateDBPath, env, pathToInfobase)
+        } else if (templateDBPath.endsWith('.dt')) {
             // Это файл дампа БД, скопируем его и создадим БД.
             String pathToDt = "$env.WORKSPACE/build/tmp/dump.dt"
-            FileUtils.loadFile(baseDBPath, env, pathToDt)
+            FileUtils.loadFile(templateDBPath, env, pathToDt)
             createBase('build/tmp/dump.dt')
         } else {
             Logger.println("Неизвестный формат базы данных. Поддерживаются только .1CD и .dt")

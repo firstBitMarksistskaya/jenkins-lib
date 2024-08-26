@@ -10,7 +10,6 @@ import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.RepoUtils
 import ru.pulsar.jenkins.library.utils.VRunner
 import ru.pulsar.jenkins.library.utils.VersionParser
-import ru.pulsar.jenkins.library.steps.CreateInfobase
 
 import static ru.pulsar.jenkins.library.configuration.Secrets.UNKNOWN_ID
 
