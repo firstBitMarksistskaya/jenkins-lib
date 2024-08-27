@@ -9,7 +9,7 @@ import ru.pulsar.jenkins.library.utils.VRunner
 
 class InitInfoBase implements Serializable {
 
-    private final JobConfiguration config;
+    private final JobConfiguration config
 
     InitInfoBase(JobConfiguration config) {
         this.config = config
@@ -30,7 +30,15 @@ class InitInfoBase implements Serializable {
         List<String> logosConfig = ["LOGOS_CONFIG=$config.logosConfig"]
         steps.withEnv(logosConfig) {
 
-            String vrunnerPath = VRunner.getVRunnerPath();
+            String vrunnerPath = VRunner.getVRunnerPath()
+
+            // Нужны ли настройки vrunner
+            def options = config.initInfoBaseOptions
+            String settingsIncrement = ''
+            String vrunnerSettings = options.vrunnerSettings
+            if (options.templateDBLoaded() && steps.fileExists(vrunnerSettings)) {
+                settingsIncrement = " --settings $vrunnerSettings"
+            }
 
             if (config.initInfoBaseOptions.runMigration) {
                 Logger.println("Запуск миграции ИБ")
@@ -40,16 +48,10 @@ class InitInfoBase implements Serializable {
                 if (steps.isUnix()) {
                     executeParameter = '\\' + executeParameter
                 }
-                command += executeParameter;
+                command += executeParameter
                 command += ' --ibconnection "/F./build/ib"'
 
-                def options = config.initInfoBaseOptions
-
-                String vrunnerSettings = options.vrunnerSettings
-                if (vrunnerSettings != '' && steps.fileExists(vrunnerSettings)) {
-                    command += " --settings $vrunnerSettings"
-                }
-
+                command += settingsIncrement
                 // Запуск миграции
                 steps.catchError {
                     VRunner.exec(command)
@@ -69,7 +71,7 @@ class InitInfoBase implements Serializable {
                 } else {
                     config.initInfoBaseOptions.additionalInitializationSteps.each {
                         Logger.println("Первичная инициализация командой ${it}")
-                        VRunner.exec("$vrunnerPath ${it} --ibconnection \"/F./build/ib\"")
+                        VRunner.exec("$vrunnerPath ${it} --ibconnection \"/F./build/ib\"${settingsIncrement}")
                     }
                 }
             }

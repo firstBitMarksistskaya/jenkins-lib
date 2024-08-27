@@ -44,7 +44,7 @@
     "runMigration": true,
     "additionalInitializationSteps": [],
     "templateDBPath": "",
-    "vrunnerSettings": "",
+    "vrunnerSettings": "./tools/vrunner.json",
     "extensions": []
   },
   "bdd": {
