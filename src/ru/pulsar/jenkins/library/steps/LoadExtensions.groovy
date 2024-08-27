@@ -88,6 +88,15 @@ class LoadExtensions implements Serializable {
         def optionsInstance = config."$optionsName"
 
         if (optionsInstance) {
+            try {
+                // Для InitInfoBaseOptions необходимо возвращать путь к файлу настроек vrunner только если база загружается из архива
+                if (!optionsInstance.templateDBLoaded()) {
+                    return ""
+                }
+            } catch (MissingMethodException e) {
+                // Метод templateDBLoaded вполне может отсутствовать, и это не является ошибкой
+            }
+
             return optionsInstance."vrunnerSettings"
         } else {
             return ""
