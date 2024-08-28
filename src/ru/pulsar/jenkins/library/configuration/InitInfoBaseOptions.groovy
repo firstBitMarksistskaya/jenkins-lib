@@ -26,12 +26,13 @@ class InitInfoBaseOptions implements Serializable {
     String[] additionalInitializationSteps
 
     @JsonPropertyDescription("""Путь к конфигурационному файлу vanessa-runner.
-    По умолчанию не заполнено, требуется, если на этапе подготовки база загружается из архива.
+    По умолчанию содержит значение "./tools/vrunner.json"
+    Требуется, если на этапе подготовки база загружается из эталона. 
     """)
     String vrunnerSettings
 
     @JsonPropertyDescription("""
-    Путь к конфигурационному файлу эталонной базы данных.
+    Путь к файлу эталонной базы данных.
                 * По умолчанию не заполнен;
                 * Указывается путь к файлу *.dt или *.1CD.
     """)
