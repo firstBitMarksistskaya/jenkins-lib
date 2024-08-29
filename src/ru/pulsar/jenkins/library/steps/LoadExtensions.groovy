@@ -83,23 +83,18 @@ class LoadExtensions implements Serializable {
             return ""
         }
 
-        String optionsName = "${stageName}Options"
+        String optionsPropertyName = "${stageName}Options"
+        def optionsInstance = config."$optionsPropertyName"
 
-        def optionsInstance = config."$optionsName"
-
-        if (optionsInstance) {
-            try {
-                // Для InitInfoBaseOptions необходимо возвращать путь к файлу настроек vrunner только если база загружается из архива
-                if (!optionsInstance.templateDBLoaded()) {
-                    return ""
-                }
-            } catch (MissingMethodException e) {
-                // Метод templateDBLoaded вполне может отсутствовать, и это не является ошибкой
-            }
-
-            return optionsInstance."vrunnerSettings"
-        } else {
+        if (!optionsInstance) {
             return ""
         }
+
+        // For InitInfoBaseOptions, return the vrunner settings path only if the database is loaded from an archive
+        if (optionsInstance instanceof InitInfoBaseOptions && !optionsInstance.templateDBLoaded()) {
+            return ""
+        }
+
+        return optionsInstance."vrunnerSettings"
     }
 }
