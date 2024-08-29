@@ -179,7 +179,7 @@
         },
         "vrunnerSettings" : {
           "type" : "string",
-          "description" : "Путь к конфигурационному файлу vanessa-runner.\n    По умолчанию содержит значение \"./tools/vrunner.json\"\n    Требуется, если на этапе подготовки база загружается из эталона. \n    "
+          "description" : "Путь к конфигурационному файлу vanessa-runner.\n    По умолчанию содержит значение \"./tools/vrunner.json\"\n    Используется, если на этапе подготовки база загружается из эталона. \n    "
         },
         "templateDBPath" : {
           "type" : "string",

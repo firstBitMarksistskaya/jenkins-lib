@@ -27,7 +27,7 @@ class InitInfoBaseOptions implements Serializable {
 
     @JsonPropertyDescription("""Путь к конфигурационному файлу vanessa-runner.
     По умолчанию содержит значение "./tools/vrunner.json"
-    Требуется, если на этапе подготовки база загружается из эталона. 
+    Используется, если на этапе подготовки база загружается из эталона. 
     """)
     String vrunnerSettings
 
