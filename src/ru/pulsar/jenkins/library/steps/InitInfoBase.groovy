@@ -36,11 +36,11 @@ class InitInfoBase implements Serializable {
             def options = config.initInfoBaseOptions
             String settingsIncrement = ''
             String vrunnerSettings = options.vrunnerSettings
-            if (options.templateDBLoaded() && steps.fileExists(vrunnerSettings)) {
+            if (config.templateDBLoaded() && steps.fileExists(vrunnerSettings)) {
                 settingsIncrement = " --settings $vrunnerSettings"
             }
 
-            if (config.initInfoBaseOptions.runMigration) {
+            if (options.runMigration) {
                 Logger.println("Запуск миграции ИБ")
 
                 String command = vrunnerPath + ' run --command "ЗапуститьОбновлениеИнформационнойБазы;ЗавершитьРаботуСистемы;" --execute '
@@ -61,7 +61,7 @@ class InitInfoBase implements Serializable {
             }
 
             steps.catchError {
-                if (config.initInfoBaseOptions.additionalInitializationSteps.length == 0) {
+                if (options.additionalInitializationSteps.length == 0) {
                     FileWrapper[] files = steps.findFiles("tools/vrunner.init*.json")
                     files = files.sort new OrderBy( { it.name })
                     files.each {
@@ -69,7 +69,7 @@ class InitInfoBase implements Serializable {
                         VRunner.exec("$vrunnerPath vanessa --settings ${it.path} --ibconnection \"/F./build/ib\"")
                     }
                 } else {
-                    config.initInfoBaseOptions.additionalInitializationSteps.each {
+                    options.additionalInitializationSteps.each {
                         Logger.println("Первичная инициализация командой ${it}")
                         VRunner.exec("$vrunnerPath ${it} --ibconnection \"/F./build/ib\"${settingsIncrement}")
                     }

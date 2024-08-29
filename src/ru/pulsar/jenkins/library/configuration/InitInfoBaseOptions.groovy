@@ -81,8 +81,4 @@ class InitInfoBaseOptions implements Serializable {
             ", extensions=" + extensions +
                 '}'
     }
-
-    boolean templateDBLoaded() {
-        return templateDBPath != null && !templateDBPath.isEmpty()
-    }
 }

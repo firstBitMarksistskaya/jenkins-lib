@@ -91,10 +91,10 @@ class LoadExtensions implements Serializable {
         }
 
         // For InitInfoBaseOptions, return the vrunner settings path only if the database is loaded from an archive
-        if (optionsInstance instanceof InitInfoBaseOptions && !optionsInstance.templateDBLoaded()) {
+        if (optionsInstance instanceof InitInfoBaseOptions && !config.templateDBLoaded()) {
             return ""
         }
 
-        return optionsInstance."vrunnerSettings"
+        return optionsInstance.vrunnerSettings
     }
 }
