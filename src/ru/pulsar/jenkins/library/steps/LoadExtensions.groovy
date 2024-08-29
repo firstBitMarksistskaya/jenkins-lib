@@ -2,6 +2,7 @@ package ru.pulsar.jenkins.library.steps
 
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
+import ru.pulsar.jenkins.library.configuration.InitInfoBaseOptions
 import ru.pulsar.jenkins.library.configuration.InitInfoBaseOptions.Extension
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.Logger
