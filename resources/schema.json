@@ -346,7 +346,7 @@
       "properties" : {
         "transformer" : {
           "type" : "string",
-          "description" : "Способ преобразования замечаний.\n    Поддерживается stebi и edt-ripper\n    По умолчанию содержит значение \"stebi\".\n    ",
+          "description" : "Способ преобразования замечаний.\n    Поддерживается stebi и edt-ripper.\n    По умолчанию содержит значение \"stebi\".\n    ",
           "enum" : [ "stebi", "edt-ripper" ]
         },
         "removeSupport" : {
@@ -359,7 +359,7 @@
         },
         "genericIssueFormat" : {
           "type" : "string",
-          "description" : "Формат отчета generic issue. Только для stebi.\n    Для SonarQube 10.3+ необходимо использовать Generic_Issue_10_3.\n    По умолчанию Generic_Issue_10_3\n    ",
+          "description" : "Формат отчета generic issue. Только для stebi.\n    Для SonarQube старее 10.3 необходимо использовать Generic_Issue.\n    По умолчанию Generic_Issue_10_3\n    ",
           "enum" : [ "Generic_Issue", "Generic_Issue_10_3" ]
         }
       }

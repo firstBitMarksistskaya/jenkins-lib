@@ -9,7 +9,7 @@ import ru.pulsar.jenkins.library.configuration.sonarqube.GenericIssueFormat
 class ResultsTransformOptions implements Serializable {
 
     @JsonPropertyDescription("""Способ преобразования замечаний.
-    Поддерживается stebi и edt-ripper
+    Поддерживается stebi и edt-ripper.
     По умолчанию содержит значение "stebi".
     """)
     ResultsTransformerType transformer = ResultsTransformerType.STEBI
@@ -25,7 +25,7 @@ class ResultsTransformOptions implements Serializable {
     Integer supportLevel
 
     @JsonPropertyDescription("""Формат отчета generic issue. Только для stebi.
-    Для SonarQube 10.3+ необходимо использовать Generic_Issue_10_3.
+    Для SonarQube версии ниже 10.3 необходимо использовать Generic_Issue.
     По умолчанию Generic_Issue_10_3
     """)
     GenericIssueFormat genericIssueFormat = GenericIssueFormat.GENERIC_ISSUE_10_3
