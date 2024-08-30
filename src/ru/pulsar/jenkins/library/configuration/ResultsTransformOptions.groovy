@@ -26,9 +26,9 @@ class ResultsTransformOptions implements Serializable {
 
     @JsonPropertyDescription("""Формат отчета generic issue. Только для stebi.
     Для SonarQube 10.3+ необходимо использовать Generic_Issue_10_3.
-    По умолчанию Generic_Issue
+    По умолчанию Generic_Issue_10_3
     """)
-    GenericIssueFormat genericIssueFormat = GenericIssueFormat.GENERIC_ISSUE
+    GenericIssueFormat genericIssueFormat = GenericIssueFormat.GENERIC_ISSUE_10_3
 
     @Override
     @NonCPS

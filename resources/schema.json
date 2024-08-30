@@ -359,7 +359,7 @@
         },
         "genericIssueFormat" : {
           "type" : "string",
-          "description" : "Формат отчета generic issue. Только для stebi.\n    Для SonarQube 10.3+ необходимо использовать Generic_Issue_10_3.\n    По умолчанию Generic_Issue\n    ",
+          "description" : "Формат отчета generic issue. Только для stebi.\n    Для SonarQube 10.3+ необходимо использовать Generic_Issue_10_3.\n    По умолчанию Generic_Issue_10_3\n    ",
           "enum" : [ "Generic_Issue", "Generic_Issue_10_3" ]
         }
       }

@@ -93,7 +93,7 @@
   },
   "resultsTransform": {
     "transformer": "stebi",
-    "genericIssueFormat": "Generic_Issue",
+    "genericIssueFormat": "Generic_Issue_10_3",
     "removeSupport": true,
     "supportLevel": 0
   },
