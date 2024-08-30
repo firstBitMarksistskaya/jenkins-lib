@@ -54,7 +54,8 @@ class GetExtensions implements Serializable {
                 buildExtension(it, srcDir, vrunnerPath, steps)
             } else if (it.initMethod == InitExtensionMethod.FILE){
                 Logger.println("Загрузка расширения ${it.name} из ${it.path}")
-                loadExtension(it, env)
+                String pathToExtension = "$pathToExtensionDir/${it.name}.cfe"
+                FileUtils.loadFile(it.path, env, pathToExtension)
             } else {
                 Logger.println("Неизвестный метод инициализации расширения ${it.name}")
             }
@@ -73,22 +74,6 @@ class GetExtensions implements Serializable {
         }
     }
 
-    private void loadExtension(Extension extension, def env) {
-        String pathToExtension = "$env.WORKSPACE/${EXTENSIONS_OUT_DIR}/${extension.name}.cfe"
-        FilePath localPathToExtension = FileUtils.getFilePath(pathToExtension)
-
-        if (isValidUrl(extension.path)) {
-            // If the path is a URL, download the file
-            localPathToExtension.copyFrom(new URL(extension.path))
-        } else {
-            // If the path is a local file, copy the file
-            String localPath = getAbsolutePath(extension.path, env)
-            FilePath localFilePath = FileUtils.getFilePath(localPath)
-            localPathToExtension.copyFrom(localFilePath)
-        }
-    }
-
-
     private String initVRunnerPath() {
         return VRunner.getVRunnerPath()
     }
@@ -106,23 +91,6 @@ class GetExtensions implements Serializable {
             // usntash and unzip the edt to designer format transformation
             steps.unstash(EdtToDesignerFormatTransformation.EXTENSION_ZIP_STASH)
             steps.unzip(sourceDirName, EdtToDesignerFormatTransformation.EXTENSION_ZIP)
-        }
-    }
-
-    private static boolean isValidUrl(String url) {
-        try {
-            new URL(url)
-            return true
-        } catch (MalformedURLException e) {
-            return false
-        }
-    }
-
-    private static String getAbsolutePath(String path, def env) {
-        if (path.startsWith("/") || path.startsWith("\\") || path.matches("^[A-Za-z]:.*")) {
-            return path
-        } else {
-            return "${env.WORKSPACE}/${path}"
         }
     }
 }

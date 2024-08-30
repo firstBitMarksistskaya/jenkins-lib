@@ -54,6 +54,8 @@ dependencies {
     testImplementation("org.slf4j", "slf4j-simple", slf4jVersion)
     
     // integration-tests
+    integrationTestImplementation("org.jenkins-ci.main", "jenkins-test-harness", "2254.vcff7a_d4969e5")
+
     integrationTestImplementation("org.spockframework", "spock-core", spockVersion)
     integrationTestImplementation("org.codehaus.groovy", "groovy-all", groovyVersion)
 
