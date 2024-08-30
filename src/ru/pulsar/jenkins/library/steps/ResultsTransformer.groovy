@@ -8,6 +8,8 @@ import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.FileUtils
 import ru.pulsar.jenkins.library.utils.Logger
 
+import java.nio.file.Paths
+
 class ResultsTransformer implements Serializable {
 
     public static final String RESULT_STASH = 'edt-issues'
@@ -36,7 +38,13 @@ class ResultsTransformer implements Serializable {
         ResultsTransformerType transformerType = config.resultsTransformOptions.transformer
 
         def edtValidateFile = "$env.WORKSPACE/$EdtValidate.RESULT_FILE"
-        def srcDir = FileUtils.getFilePath("$env.WORKSPACE/$config.srcDir")
+        def srcDir
+        if (config.sourceFormat == SourceFormat.DESIGNER) {
+            srcDir = FileUtils.getFilePath("$env.WORKSPACE/$config.srcDir")
+        } else {
+            def src = Paths.get(config.srcDir, "src")
+            srcDir = FileUtils.getFilePath("$env.WORKSPACE/$src")
+        }
 
         if (transformerType == ResultsTransformerType.STEBI) {
 
