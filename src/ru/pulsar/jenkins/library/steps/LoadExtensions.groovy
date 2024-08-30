@@ -2,6 +2,7 @@ package ru.pulsar.jenkins.library.steps
 
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
+import ru.pulsar.jenkins.library.configuration.InitInfoBaseOptions
 import ru.pulsar.jenkins.library.configuration.InitInfoBaseOptions.Extension
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.Logger
@@ -83,14 +84,18 @@ class LoadExtensions implements Serializable {
             return ""
         }
 
-        String optionsName = "${stageName.toLowerCase()}Options"
+        String optionsPropertyName = "${stageName}Options"
+        def optionsInstance = config."$optionsPropertyName"
 
-        def optionsInstance = config."$optionsName"
-
-        if (optionsInstance) {
-            return optionsInstance."vrunnerSettings"
-        } else {
+        if (!optionsInstance) {
             return ""
         }
+
+        // For InitInfoBaseOptions, return the vrunner settings path only if the database is loaded from an archive
+        if (optionsInstance instanceof InitInfoBaseOptions && !config.templateDBLoaded()) {
+            return ""
+        }
+
+        return optionsInstance.vrunnerSettings
     }
 }

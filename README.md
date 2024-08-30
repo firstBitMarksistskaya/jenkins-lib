@@ -198,7 +198,7 @@ pipeline1C()
             "name": "ИмяРасширения1",
             "initMethod": "fromSource",
             "path": "путь/до/исходников/расширения",
-            "stages": ['bdd', 'yaxunit']
+            "stages": ["bdd", "yaxunit"]
         },
         {
             "name": "ИмяРасширения2",
@@ -206,6 +206,26 @@ pipeline1C()
             "path": "https://example.com/path/to/extension.cfe"
         }
     ]
+}
+```
+## Загрузка эталонной базы
+
+Реализована возможность загрузки эталонной базы на этапе инициализации информационной базы. Для этого необходимо указать в конфигурационном файле параметр `initInfobase` -> `templateDBPath`:
+
+```json
+"initInfobase": {
+    "templateDBPath": "путь/до/файла/базы.dt"
+}
+```
+
+* Поддерживается загрузка файлов формата `.dt` и `.1CD`.
+* Путь к файлу базы может быть как локальным, так и удаленным (URL).
+* После загрузки базы для инициализации будет использоваться файл настроек `vanessa-runner` (включая логин и пароль от ИБ), указанный в параметре `initInfobase` -> `vrunnerSettings`. По умолчанию используется файл `tools/vrunner.json`.
+
+```json
+"initInfobase": {
+    "templateDBPath": "путь/до/файла/базы.dt",
+    "vrunnerSettings": "tools/vrunner.json"
 }
 ```
 
