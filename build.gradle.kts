@@ -43,6 +43,10 @@ dependencies {
     // jackson
     implementation("com.fasterxml.jackson.module", "jackson-module-jsonSchema", jacksonVersion)
 
+    // jsonschema-generator
+    implementation("com.github.victools", "jsonschema-generator", "4.36.0")
+    implementation("com.github.victools", "jsonschema-module-jackson", "4.36.0")
+
     // unit-tests
     testImplementation("org.junit.jupiter", "junit-jupiter-api", junitVersion)
     testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", junitVersion)

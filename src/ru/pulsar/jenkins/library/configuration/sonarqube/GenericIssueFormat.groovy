@@ -1,7 +1,6 @@
 package ru.pulsar.jenkins.library.configuration.sonarqube
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.annotation.JsonValue
 
 enum GenericIssueFormat {
     @JsonProperty("Generic_Issue")
@@ -15,7 +14,6 @@ enum GenericIssueFormat {
     private GenericIssueFormat(String value) {
         this.value = value
     }
-
 
     String getValue() {
         return value

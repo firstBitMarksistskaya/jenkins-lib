@@ -50,7 +50,7 @@ class ConfigurationReaderTest {
 
     ResultsTransformOptions resultsTransformOptions = jobConfiguration.getResultsTransformOptions();
     assertThat(resultsTransformOptions.getTransformer()).isEqualTo(ResultsTransformerType.STEBI);
-    assertThat(resultsTransformOptions.getGenericIssueFormat()).isEqualTo(GenericIssueFormat.GENERIC_ISSUE_10_3);
+    assertThat(resultsTransformOptions.getGenericIssueFormat()).isEqualTo(GenericIssueFormat.GENERIC_ISSUE);
     assertThat(resultsTransformOptions.getRemoveSupport()).isFalse();
     assertThat(resultsTransformOptions.getSupportLevel()).isZero();
 

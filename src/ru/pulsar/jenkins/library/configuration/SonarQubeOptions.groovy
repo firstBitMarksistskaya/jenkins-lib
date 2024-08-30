@@ -2,6 +2,7 @@ package ru.pulsar.jenkins.library.configuration
 
 import com.cloudbees.groovy.cps.NonCPS
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -10,7 +11,7 @@ class SonarQubeOptions implements Serializable {
     @JsonPropertyDescription(
         "Имя настроенного SonarQube-сервера (SonarQube installations).\nЕсли настроен только один сервер, то может быть оставлено пустым."
     )
-    String sonarQubeInstallation;
+    String sonarQubeInstallation
 
     @JsonPropertyDescription("Использовать sonar-scanner, доступный в PATH")
     Boolean useSonarScannerFromPath
@@ -30,6 +31,7 @@ class SonarQubeOptions implements Serializable {
       * auto - применяется автоконфигурация sonar-scanner силами branchplugin. Так же может применяться для отключения конфигурирования, если branch plugin отсутствует;
       * fromEnv - применяется ручная конфигурация sonar-scanner на основе переменных среды.
     Значение по умолчанию: fromEnv.""")
+    @JsonProperty(defaultValue = "auto")
     BranchAnalysisConfiguration branchAnalysisConfiguration
   
     @JsonPropertyDescription("""Ожидать состояние Quality Gate от SonarQube после загрузки анализа. По умолчанию `false`.
@@ -47,6 +49,6 @@ class SonarQubeOptions implements Serializable {
             ", infoBaseUpdateModuleName='" + infoBaseUpdateModuleName + '\'' +
             ", branchAnalysisConfiguration='" + branchAnalysisConfiguration + '\'' +
             ", waitForQualityGate='" + waitForQualityGate + '\'' +
-            '}';
+            '}'
     }
 }

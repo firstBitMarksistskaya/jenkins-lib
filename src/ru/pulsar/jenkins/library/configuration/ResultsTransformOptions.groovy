@@ -3,6 +3,7 @@ package ru.pulsar.jenkins.library.configuration
 import com.cloudbees.groovy.cps.NonCPS
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
+import com.fasterxml.jackson.annotation.JsonProperty
 import ru.pulsar.jenkins.library.configuration.sonarqube.GenericIssueFormat
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -12,6 +13,7 @@ class ResultsTransformOptions implements Serializable {
     Поддерживается stebi и edt-ripper.
     По умолчанию содержит значение "stebi".
     """)
+    @JsonProperty(defaultValue = "stebi")
     ResultsTransformerType transformer = ResultsTransformerType.STEBI
 
     @JsonPropertyDescription("Фильтровать замечания по уровню поддержки модуля. Только для stebi. По умолчанию включено.")
@@ -28,7 +30,8 @@ class ResultsTransformOptions implements Serializable {
     Для SonarQube версии ниже 10.3 необходимо использовать Generic_Issue.
     По умолчанию Generic_Issue_10_3
     """)
-    GenericIssueFormat genericIssueFormat = GenericIssueFormat.GENERIC_ISSUE_10_3
+    @JsonProperty(defaultValue = "Generic_Issue_10_3")
+    GenericIssueFormat genericIssueFormat
 
     @Override
     @NonCPS
