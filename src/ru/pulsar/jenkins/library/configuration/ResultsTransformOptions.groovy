@@ -14,7 +14,7 @@ class ResultsTransformOptions implements Serializable {
     По умолчанию содержит значение "stebi".
     """)
     @JsonProperty(defaultValue = "stebi")
-    ResultsTransformerType transformer = ResultsTransformerType.STEBI
+    ResultsTransformerType transformer
 
     @JsonPropertyDescription("Фильтровать замечания по уровню поддержки модуля. Только для stebi. По умолчанию включено.")
     Boolean removeSupport = true
