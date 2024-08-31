@@ -46,8 +46,8 @@ dependencies {
     implementation("com.github.victools", "jsonschema-module-jackson", jsonschemaVersion)
 
     // unit-tests
-    testImplementation("org.junit.jupiter", "junit-jupiter-api", junitVersion)
     testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", junitVersion)
+    testImplementation("org.junit.jupiter", "junit-jupiter-api", junitVersion)
 
     testImplementation("org.assertj", "assertj-core", "3.26.3")
     testImplementation("org.mockito", "mockito-core", "5.13.0")
@@ -76,7 +76,7 @@ tasks.test {
     }
 
     reports {
-        html.isEnabled = true
+        html.required.set(true)
     }
 }
 
@@ -87,8 +87,8 @@ tasks.check {
 
 tasks.jacocoTestReport {
     reports {
-        xml.isEnabled = true
-        xml.destination = File("$buildDir/reports/jacoco/test/jacoco.xml")
+        xml.required.set(true)
+        xml.outputLocation.set(File("$buildDir/reports/jacoco/test/jacoco.xml"))
     }
 }
 
