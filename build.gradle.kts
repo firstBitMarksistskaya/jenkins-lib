@@ -35,17 +35,14 @@ val junitVersion = "5.6.1"
 val spockVersion = "1.3-groovy-2.4"
 val groovyVersion = "2.4.19"
 val slf4jVersion = "1.8.0-beta4"
-var jacksonVersion = "2.9.8"
+val jsonschemaVersion = "4.36.0"
 
 dependencies {
     implementation("org.codehaus.groovy", "groovy-all", groovyVersion)
 
-    // jackson
-    implementation("com.fasterxml.jackson.module", "jackson-module-jsonSchema", jacksonVersion)
-
     // jsonschema-generator
-    implementation("com.github.victools", "jsonschema-generator", "4.36.0")
-    implementation("com.github.victools", "jsonschema-module-jackson", "4.36.0")
+    implementation("com.github.victools", "jsonschema-generator", jsonschemaVersion)
+    implementation("com.github.victools", "jsonschema-module-jackson", jsonschemaVersion)
 
     // unit-tests
     testImplementation("org.junit.jupiter", "junit-jupiter-api", junitVersion)

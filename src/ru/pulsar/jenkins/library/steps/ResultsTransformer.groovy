@@ -58,18 +58,11 @@ class ResultsTransformer implements Serializable {
             if (config.resultsTransformOptions.removeSupport) {
                 def supportLevel = config.resultsTransformOptions.supportLevel
                 steps.cmd("stebi transform --Format $genericIssuesFormat --remove_support $supportLevel --src $srcDir $genericIssueFile")
-        }
+            }
 
         } else {
 
             Logger.println("Конвертация результата EDT в Issues с помощью edt-ripper")
-
-            if (config.sourceFormat == SourceFormat.DESIGNER) {
-
-                steps.unstash(DesignerToEdtFormatTransformation.WORKSPACE_ZIP_STASH)
-                steps.unzip(DesignerToEdtFormatTransformation.WORKSPACE, DesignerToEdtFormatTransformation.WORKSPACE_ZIP)
-
-            }
 
             srcDir = FileUtils.getFilePath("$env.WORKSPACE/$config.srcDir")
 
