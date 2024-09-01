@@ -7,7 +7,7 @@ import ru.pulsar.jenkins.library.utils.Logger
 
 class CoverageCleanup implements Serializable {
 
-    private final JobConfiguration config;
+    private final JobConfiguration config
 
     private String encoding = 'UTF-8'
 
@@ -21,11 +21,11 @@ class CoverageCleanup implements Serializable {
         Logger.printLocation()
 
         if (steps.isUnix()) {
-            def command = "pkill Coverage41C && pkill dbgs"
-            steps.sh(command, false, false, encoding)
+            def command = "pkill Coverage41C ; pkill dbgs"
+            steps.sh(command, true, false, encoding)
         } else {
             def command = "taskkill /IM Coverage41C /F & taskkill /IM dbgs /F"
-            steps.sh(command, false, false, encoding)
+            steps.sh(command, true, false, encoding)
         }
     }
 }
