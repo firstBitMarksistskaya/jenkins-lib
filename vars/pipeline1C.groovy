@@ -325,6 +325,11 @@ void call() {
                                         yaxunit config
                                     }
                                 }
+                                post('yaxunit-coverage-cleanup') {
+                                    always {
+                                        coverageCleanup config
+                                    }
+                                }
                             }
                         }
                     }
