@@ -86,8 +86,13 @@ class Yaxunit implements Serializable {
                 def newDbgsPids = getPIDs("dbgs")
                 def newCoverage41CPids = getPIDs("Coverage41C")
 
-                env.YAXUNIT_DBGS_PIDS = (newDbgsPids - currentDbgsPids).join(" ")
-                env.YAXUNIT_COVERAGE41C_PIDS = (newCoverage41CPids - currentCoverage41CPids).join(" ")
+                newDbgsPids.removeAll(currentDbgsPids)
+                newCoverage41CPids.removeAll(currentCoverage41CPids)
+
+                env.YAXUNIT_DBGS_PIDS = newDbgsPids.join(" ")
+                steps.echo("YAXUNIT_DBGS_PIDS = $env.YAXUNIT_DBGS_PIDS")
+                env.YAXUNIT_COVERAGE41C_PIDS = newCoverage41CPids.join(" ")
+                steps.echo("YAXUNIT_COVERAGE41C_PIDS = $env.YAXUNIT_COVERAGE41C_PIDS")
 
             }
 
@@ -137,6 +142,6 @@ class Yaxunit implements Serializable {
         } else {
             pids = steps.bat("chcp 65001 > nul \nfor /f \"tokens=2\" %a in ('tasklist ^| findstr $name') do @echo %a", false, true, 'UTF-8')
         }
-        return pids.split('\n').collect{it as String}
+        return pids.split('\n')
     }
 }
