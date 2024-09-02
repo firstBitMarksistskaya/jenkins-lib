@@ -142,6 +142,6 @@ class Yaxunit implements Serializable {
         } else {
             pids = steps.bat("chcp 65001 > nul \nfor /f \"tokens=2\" %a in ('tasklist ^| findstr $name') do @echo %a", false, true, 'UTF-8')
         }
-        return pids.split('\n')
+        return pids.split('\n').toList()
     }
 }
