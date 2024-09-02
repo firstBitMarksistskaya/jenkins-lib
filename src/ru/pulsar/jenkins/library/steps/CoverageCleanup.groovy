@@ -20,11 +20,19 @@ class CoverageCleanup implements Serializable {
 
         Logger.printLocation()
 
+        String dbgsPIDS = env.YAXUNIT_DBGS_PIDS
+        String coverage41CPIDS = env.YAXUNIT_COVERAGE41C_PIDS
+
+        def combined = dbgsPIDS + " " + coverage41CPIDS
+
         if (steps.isUnix()) {
-            def command = "pkill Coverage41C ; pkill dbgs"
+            def command = "pkill $combined"
             steps.sh(command, true, false, encoding)
         } else {
-            def command = "taskkill /IM Coverage41C /F & taskkill /IM dbgs /F"
+            def winCommand = combined.split(" ")
+                    .each { it -> "/PID $it" }
+                    .join(" ")
+            def command = "taskkill $winCommand /F"
             steps.sh(command, true, false, encoding)
         }
     }

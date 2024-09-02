@@ -320,13 +320,17 @@ void call() {
                             }
 
                             stage('Выполнение YAXUnit тестов') {
+                                environment {
+                                    YAXUNIT_DBGS_PIDS = ""
+                                    YAXUNIT_COVERAGE41C_PIDS = ""
+                                }
                                 steps {
                                     timeout(time: config.timeoutOptions.yaxunit, unit: TimeUnit.MINUTES) {
                                         yaxunit config
                                     }
                                 }
-                                post('yaxunit-coverage-cleanup') {
-                                    always {
+                                post {
+                                    cleanup {
                                         coverageCleanup config
                                     }
                                 }

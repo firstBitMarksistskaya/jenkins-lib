@@ -14,7 +14,7 @@ class Yaxunit implements Serializable {
 
     private final JobConfiguration config
 
-    private final String DEFAULT_YAXUNIT_CONFIGURATION_RESOURCE = 'yaxunit.json'
+    private static final String DEFAULT_YAXUNIT_CONFIGURATION_RESOURCE = 'yaxunit.json'
 
     public static final String YAXUNIT_ALLURE_STASH = 'yaxunit-allure'
     public static final String COVERAGE_STASH_NAME = 'yaxunit-coverage'
@@ -71,6 +71,8 @@ class Yaxunit implements Serializable {
         def coverageOpts = config.coverageOptions
         def port = options.dbgsPort
         def lockableResource = RandomStringUtils.random(9, true, false)
+        def currentDbgsPids = getPIDs("dbgs")
+        def currentCoverage41CPids = getPIDs("Coverage41C")
         if (options.coverage) {
             lockableResource = "${env.NODE_NAME}_$port"
         }
@@ -80,6 +82,13 @@ class Yaxunit implements Serializable {
                 steps.start("${coverageOpts.dbgsPath} --addr=127.0.0.1 --port=$port")
                 steps.start("${coverageOpts.coverage41CPath} start -i DefAlias -u http://127.0.0.1:$port -P $workspaceDir -s $srcDir -o $COVERAGE_STASH_PATH")
                 steps.cmd("${coverageOpts.coverage41CPath} check -i DefAlias -u http://127.0.0.1:$port")
+
+                def newDbgsPids = getPIDs("dbgs")
+                def newCoverage41CPids = getPIDs("Coverage41C")
+
+                env.YAXUNIT_DBGS_PIDS = (newDbgsPids - currentDbgsPids).join(" ")
+                env.YAXUNIT_COVERAGE41C_PIDS = (newCoverage41CPids - currentCoverage41CPids).join(" ")
+
             }
 
             // Выполняем команды
@@ -115,5 +124,19 @@ class Yaxunit implements Serializable {
         if (options.coverage) {
             steps.stash(COVERAGE_STASH_NAME, COVERAGE_STASH_PATH, true)
         }
+    }
+
+    private static ArrayList<String> getPIDs(String name) {
+
+        IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
+
+        String pids
+
+        if (steps.isUnix()) {
+            pids = steps.sh("pidof $name", false, true, 'UTF-8')
+        } else {
+            pids = steps.bat("chcp 65001 > nul \nfor /f \"tokens=2\" %a in ('tasklist ^| findstr $name') do @echo %a", false, true, 'UTF-8')
+        }
+        return pids.split('\n').collect{it as String}
     }
 }
