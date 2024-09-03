@@ -19,6 +19,7 @@ class Yaxunit implements Serializable {
     public static final String YAXUNIT_ALLURE_STASH = 'yaxunit-allure'
     public static final String COVERAGE_STASH_NAME = 'yaxunit-coverage'
     public static final String COVERAGE_STASH_PATH = 'build/out/yaxunit-coverage.xml'
+    public static final String COVERAGE_PIDS_PATH = 'build/yaxunit-pids'
 
     Yaxunit(JobConfiguration config) {
         this.config = config
@@ -89,10 +90,12 @@ class Yaxunit implements Serializable {
                 newDbgsPids.removeAll(currentDbgsPids)
                 newCoverage41CPids.removeAll(currentCoverage41CPids)
 
-                env.YAXUNIT_DBGS_PIDS = newDbgsPids.join(" ")
-                steps.echo("YAXUNIT_DBGS_PIDS = $env.YAXUNIT_DBGS_PIDS")
-                env.YAXUNIT_COVERAGE41C_PIDS = newCoverage41CPids.join(" ")
-                steps.echo("YAXUNIT_COVERAGE41C_PIDS = $env.YAXUNIT_COVERAGE41C_PIDS")
+                newDbgsPids.addAll(newCoverage41CPids)
+                def pids = newDbgsPids.join(" ")
+
+                steps.writeFile(COVERAGE_PIDS_PATH, pids, 'UTF-8')
+
+                Logger.println("Coverage PIDs for cleanup: $pids")
 
             }
 

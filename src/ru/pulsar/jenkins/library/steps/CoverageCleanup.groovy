@@ -8,11 +8,13 @@ import ru.pulsar.jenkins.library.utils.Logger
 class CoverageCleanup implements Serializable {
 
     private final JobConfiguration config
+    private final String stageName
 
     private String encoding = 'UTF-8'
 
-    CoverageCleanup(JobConfiguration config) {
+    CoverageCleanup(JobConfiguration config, String stageName = "") {
         this.config = config
+        this.stageName = stageName
     }
 
     def run() {
@@ -20,21 +22,28 @@ class CoverageCleanup implements Serializable {
 
         Logger.printLocation()
 
-        def env = steps.env();
-        String dbgsPIDS = env.YAXUNIT_DBGS_PIDS // space-delimited string
-        String coverage41CPIDS = env.YAXUNIT_COVERAGE41C_PIDS // space-delimited string
+        String pidsFilePath = ""
+        if (stageName == 'yaxunit') {
+            pidsFilePath = Yaxunit.COVERAGE_PIDS_PATH
+        }
 
-        def combined = (dbgsPIDS + " " + coverage41CPIDS).trim()
+        def pids = ""
+        if (steps.fileExists(pidsFilePath)) {
+            pids = steps.readFile(pidsFilePath)
+        }
 
-        if (combined.isEmpty()) {
+        if (pids.isEmpty()) {
+            Logger.println("Нет запущенных процессов dbgs и Coverage41C")
             return
         }
 
+        Logger.println("Завершение процессов dbgs и Coverage41C с pid: $pids")
+
         if (steps.isUnix()) {
-            def command = "kill $combined"
+            def command = "kill $pids"
             steps.sh(command, true, false, encoding)
         } else {
-            def winCommand = combined.split(" ")
+            def winCommand = pids.split(" ")
                     .each { it -> "/PID $it" }
                     .join(" ")
             def command = "taskkill $winCommand /F"
