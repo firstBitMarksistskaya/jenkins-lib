@@ -40,6 +40,8 @@ interface IStepExecutor {
 
     def ringCommand(String script)
 
+    void start(String script)
+
     void tool(String toolName)
 
     def withCredentials(List bindings, Closure body)
@@ -63,6 +65,8 @@ interface IStepExecutor {
     void deleteDir(FilePath path)
 
     def withEnv(List<String> strings, Closure body)
+
+    def lock(String label, int quantity, String resource, Closure<Object> objectClosure)
 
     def archiveArtifacts(String path)
 

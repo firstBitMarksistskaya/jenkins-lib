@@ -6,11 +6,12 @@ import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.SourceFormat
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.Logger
+import ru.pulsar.jenkins.library.utils.StringJoiner
 import ru.pulsar.jenkins.library.utils.VersionParser
 
 class SonarScanner implements Serializable {
 
-    private final JobConfiguration config;
+    private final JobConfiguration config
 
     SonarScanner(JobConfiguration config) {
         this.config = config
@@ -26,7 +27,7 @@ class SonarScanner implements Serializable {
             return
         }
 
-        def env = steps.env();
+        def env = steps.env()
 
         def sonarScannerBinary
 
@@ -60,6 +61,35 @@ class SonarScanner implements Serializable {
         if (config.stageFlags.edtValidate) {
             steps.unstash("edt-generic-issue")
             sonarCommand += " -Dsonar.externalIssuesReportPaths=build/out/edt-generic-issue.json"
+        }
+
+        def stageFlags = config.stageFlags
+
+        if (stageFlags.bdd && config.bddOptions.coverage
+                || stageFlags.smoke && config.smokeTestOptions.coverage
+                || stageFlags.yaxunit && config.yaxunitOptions.coverage) {
+
+            StringJoiner coveragePathsConstructor = new StringJoiner(",")
+
+            if (stageFlags.bdd && config.bddOptions.coverage) {
+                steps.unstash(Bdd.COVERAGE_STASH_NAME)
+                coveragePathsConstructor.add(Bdd.COVERAGE_STASH_PATH)
+            }
+
+            if (stageFlags.smoke && config.smokeTestOptions.coverage) {
+                steps.unstash(SmokeTest.COVERAGE_STASH_NAME)
+                coveragePathsConstructor.add(SmokeTest.COVERAGE_STASH_PATH)
+            }
+
+            if (stageFlags.yaxunit && config.yaxunitOptions.coverage) {
+                steps.unstash(Yaxunit.COVERAGE_STASH_NAME)
+                coveragePathsConstructor.add(Yaxunit.COVERAGE_STASH_PATH)
+            }
+
+            String coveragePaths = coveragePathsConstructor.toString()
+
+            sonarCommand += " -Dsonar.coverageReportPaths=${coveragePaths}"
+
         }
 
         if (config.sonarQubeOptions.waitForQualityGate) {

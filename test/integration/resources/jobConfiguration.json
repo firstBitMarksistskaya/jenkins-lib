@@ -9,5 +9,10 @@
     }]
   },
   "yaxunit": {
+    "initMethod": "fromSource"
+  },
+  "coverage": {
+    "dbgsPath": "C:\\\\Program files\\\\1cv8\\\\8.3.12.1500\\\\bin\\\\dbgs.exe",
+    "coverage41CPath": "C:\\\\coverage\\\\Coverage41C.exe"
   }
 }
