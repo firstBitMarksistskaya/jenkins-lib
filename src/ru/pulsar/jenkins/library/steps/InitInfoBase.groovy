@@ -9,7 +9,7 @@ import ru.pulsar.jenkins.library.utils.VRunner
 
 class InitInfoBase implements Serializable {
 
-    private final JobConfiguration config;
+    private final JobConfiguration config
 
     InitInfoBase(JobConfiguration config) {
         this.config = config
@@ -30,9 +30,17 @@ class InitInfoBase implements Serializable {
         List<String> logosConfig = ["LOGOS_CONFIG=$config.logosConfig"]
         steps.withEnv(logosConfig) {
 
-            String vrunnerPath = VRunner.getVRunnerPath();
+            String vrunnerPath = VRunner.getVRunnerPath()
 
-            if (config.initInfoBaseOptions.runMigration) {
+            // Нужны ли настройки vrunner
+            def options = config.initInfoBaseOptions
+            String settingsIncrement = ''
+            String vrunnerSettings = options.vrunnerSettings
+            if (config.templateDBLoaded() && steps.fileExists(vrunnerSettings)) {
+                settingsIncrement = " --settings $vrunnerSettings"
+            }
+
+            if (options.runMigration) {
                 Logger.println("Запуск миграции ИБ")
 
                 String command = vrunnerPath + ' run --command "ЗапуститьОбновлениеИнформационнойБазы;ЗавершитьРаботуСистемы;" --execute '
@@ -40,9 +48,10 @@ class InitInfoBase implements Serializable {
                 if (steps.isUnix()) {
                     executeParameter = '\\' + executeParameter
                 }
-                command += executeParameter;
+                command += executeParameter
                 command += ' --ibconnection "/F./build/ib"'
 
+                command += settingsIncrement
                 // Запуск миграции
                 steps.catchError {
                     VRunner.exec(command)
@@ -52,7 +61,7 @@ class InitInfoBase implements Serializable {
             }
 
             steps.catchError {
-                if (config.initInfoBaseOptions.additionalInitializationSteps.length == 0) {
+                if (options.additionalInitializationSteps.length == 0) {
                     FileWrapper[] files = steps.findFiles("tools/vrunner.init*.json")
                     files = files.sort new OrderBy( { it.name })
                     files.each {
@@ -60,9 +69,9 @@ class InitInfoBase implements Serializable {
                         VRunner.exec("$vrunnerPath vanessa --settings ${it.path} --ibconnection \"/F./build/ib\"")
                     }
                 } else {
-                    config.initInfoBaseOptions.additionalInitializationSteps.each {
+                    options.additionalInitializationSteps.each {
                         Logger.println("Первичная инициализация командой ${it}")
-                        VRunner.exec("$vrunnerPath ${it} --ibconnection \"/F./build/ib\"")
+                        VRunner.exec("$vrunnerPath ${it} --ibconnection \"/F./build/ib\"${settingsIncrement}")
                     }
                 }
             }

@@ -115,6 +115,10 @@ class JobConfiguration implements Serializable {
         }
     }
 
+    boolean templateDBLoaded() {
+        return initInfoBaseOptions.templateDBPath != null && !initInfoBaseOptions.templateDBPath.isEmpty()
+    }
+
     String v8AgentLabel() {
         return v8version
     }

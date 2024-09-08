@@ -92,7 +92,14 @@ void call() {
                                         steps {
                                             timeout(time: config.timeoutOptions.createInfoBase, unit: TimeUnit.MINUTES) {
                                                 createDir('build/out/')
+                                                    createInfobase config
+                                            }
+                                        }
+                                    }
 
+                                    stage('Загрузка конфигурации') {
+                                        steps {
+                                            timeout(time: config.timeoutOptions.loadConfiguration, unit: TimeUnit.MINUTES) {
                                                 script {
                                                     if (config.infoBaseFromFiles()) {
                                                         // Создание базы загрузкой из файлов
@@ -113,7 +120,7 @@ void call() {
                                         }
                                         steps {
                                             timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
-                                                loadExtensions config
+                                                loadExtensions config, 'initInfoBase'
                                             }
                                         }
                                     }

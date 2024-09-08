@@ -31,7 +31,6 @@ class InitFromStorage implements Serializable {
             return
         }
 
-        steps.installLocalDependencies()
 
         String storageVersion = VersionParser.storage()
         String storageVersionParameter = storageVersion == "" ? "" : "--storage-ver $storageVersion"
@@ -54,8 +53,18 @@ class InitFromStorage implements Serializable {
                 'RUNNER_STORAGE_NAME'
             )
         ]) {
+            Logger.println("Выполнение загрузки конфигурации из хранилища")
             String vrunnerPath = VRunner.getVRunnerPath()
-            VRunner.exec "$vrunnerPath init-dev --storage $storageVersionParameter --ibconnection \"/F./build/ib\""
+            def command = "$vrunnerPath update-dev --storage $storageVersionParameter --ibconnection \"/F./build/ib\""
+
+            def options = config.initInfoBaseOptions
+
+            String vrunnerSettings = options.vrunnerSettings
+            if (config.templateDBLoaded() && steps.fileExists(vrunnerSettings)) {
+                command += " --settings $vrunnerSettings"
+            }
+
+            VRunner.exec(command)
         }
     }
 
