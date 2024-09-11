@@ -4,6 +4,7 @@ import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import ru.pulsar.jenkins.library.configuration.sonarqube.GenericIssueFormat;
 import ru.pulsar.jenkins.library.utils.TestUtils;
 
 import java.io.IOException;
@@ -47,8 +48,11 @@ class ConfigurationReaderTest {
 
     assertThat(jobConfiguration.getSyntaxCheckOptions().getCheckModes()).hasSize(4);
 
-    assertThat(jobConfiguration.getResultsTransformOptions().getRemoveSupport()).isFalse();
-    assertThat(jobConfiguration.getResultsTransformOptions().getSupportLevel()).isZero();
+    ResultsTransformOptions resultsTransformOptions = jobConfiguration.getResultsTransformOptions();
+    assertThat(resultsTransformOptions.getTransformer()).isEqualTo(ResultsTransformerType.STEBI);
+    assertThat(resultsTransformOptions.getGenericIssueFormat()).isEqualTo(GenericIssueFormat.GENERIC_ISSUE);
+    assertThat(resultsTransformOptions.getRemoveSupport()).isFalse();
+    assertThat(resultsTransformOptions.getSupportLevel()).isZero();
 
     assertThat(jobConfiguration.getSmokeTestOptions().getVrunnerSettings()).contains("./tools/vrunner-smoke.json");
     assertThat(jobConfiguration.getSmokeTestOptions().isPublishToAllureReport()).isFalse();

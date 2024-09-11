@@ -54,6 +54,8 @@
   ]
   },
   "resultsTransform": {
+    "transformer": "stebi",
+    "genericIssueFormat": "Generic_Issue",
     "removeSupport": false
   },
   "smoke": {

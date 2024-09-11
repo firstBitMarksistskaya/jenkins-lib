@@ -19,57 +19,58 @@ class JobConfiguration implements Serializable {
     String srcDir
 
     @JsonPropertyDescription("Формат исходников конфигурации")
-    SourceFormat sourceFormat;
+    @JsonProperty(defaultValue = "designer")
+    SourceFormat sourceFormat
 
     @JsonProperty("stages")
     @JsonPropertyDescription("Включение этапов сборок")
-    StageFlags stageFlags;
+    StageFlags stageFlags
 
     @JsonProperty("timeout")
     @JsonPropertyDescription("Настройка таймаутов для шагов")
-    TimeoutOptions timeoutOptions;
+    TimeoutOptions timeoutOptions
 
     @JsonPropertyDescription("Имя ветки по умолчанию. Значение по умолчанию - main.")
     String defaultBranch
 
     @JsonPropertyDescription("Идентификаторы сохраненных секретов")
-    Secrets secrets;
+    Secrets secrets
 
     @JsonProperty("initInfobase")
     @JsonPropertyDescription("Настройки шага инициализации ИБ")
-    InitInfoBaseOptions initInfoBaseOptions;
+    InitInfoBaseOptions initInfoBaseOptions
 
     @JsonProperty("bdd")
     @JsonPropertyDescription("Настройки шага запуска BDD сценариев")
-    BddOptions bddOptions;
+    BddOptions bddOptions
 
     @JsonProperty("sonarqube")
     @JsonPropertyDescription("Настройки анализа SonarQube")
-    SonarQubeOptions sonarQubeOptions;
+    SonarQubeOptions sonarQubeOptions
 
     @JsonProperty("syntaxCheck")
     @JsonPropertyDescription("Настройки синтаксического контроля")
-    SyntaxCheckOptions syntaxCheckOptions;
+    SyntaxCheckOptions syntaxCheckOptions
 
     @JsonProperty("smoke")
     @JsonPropertyDescription("Настройки дымового тестирования")
-    SmokeTestOptions smokeTestOptions;
+    SmokeTestOptions smokeTestOptions
 
     @JsonProperty("yaxunit")
     @JsonPropertyDescription("Настройки YAXUnit")
-    YaxunitOptions yaxunitOptions;
+    YaxunitOptions yaxunitOptions
 
     @JsonProperty("resultsTransform")
     @JsonPropertyDescription("Настройки трансформации результатов анализа")
-    ResultsTransformOptions resultsTransformOptions;
+    ResultsTransformOptions resultsTransformOptions
 
     @JsonProperty("notifications")
     @JsonPropertyDescription("Настройки рассылки результатов сборки")
-    NotificationsOptions notificationsOptions;
+    NotificationsOptions notificationsOptions
 
     @JsonProperty("logosConfig")
     @JsonPropertyDescription("Конфигурация библиотеки logos. Применяется перед запуском каждой стадии сборки")
-    String logosConfig;
+    String logosConfig
 
     @Override
     @NonCPS
@@ -92,13 +93,13 @@ class JobConfiguration implements Serializable {
             ", resultsTransformOptions=" + resultsTransformOptions +
             ", notificationOptions=" + notificationsOptions +
             ", logosConfig='" + logosConfig + '\'' +
-            '}';
+            '}'
     }
 
     boolean infoBaseFromFiles() {
         IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
-        def env = steps.env();
-        String branchName = env.BRANCH_NAME;
+        def env = steps.env()
+        String branchName = env.BRANCH_NAME
         def initMethod = initInfoBaseOptions.initMethod
 
         return (initMethod == InitInfoBaseMethod.FROM_SOURCE) ||

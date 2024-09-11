@@ -10,12 +10,11 @@ import ru.pulsar.jenkins.library.utils.Logger
 
 class DesignerToEdtFormatTransformation implements Serializable {
 
-    public static final String PROJECT_NAME = 'temp'
     public static final String WORKSPACE = 'build/edt-workspace'
     public static final String WORKSPACE_ZIP = 'build/edt-workspace.zip'
     public static final String WORKSPACE_ZIP_STASH = 'edt-workspace-zip'
 
-    private final JobConfiguration config;
+    private final JobConfiguration config
 
     DesignerToEdtFormatTransformation(JobConfiguration config) {
         this.config = config
@@ -31,18 +30,19 @@ class DesignerToEdtFormatTransformation implements Serializable {
             return
         }
 
-        def env = steps.env();
+        def env = steps.env()
 
         def workspaceDir = FileUtils.getFilePath("$env.WORKSPACE/$WORKSPACE")
         def srcDir = config.srcDir
         def configurationRoot = FileUtils.getFilePath("$env.WORKSPACE/$srcDir")
+        def projectName = configurationRoot.getName()
         def edtVersionForRing = EDT.ringModule(config)
         
         steps.deleteDir(workspaceDir)
 
         Logger.println("Конвертация исходников из формата конфигуратора в формат EDT")
 
-        def ringCommand = "ring $edtVersionForRing workspace import --configuration-files \"$configurationRoot\" --project-name $PROJECT_NAME --workspace-location \"$workspaceDir\""
+        def ringCommand = "ring $edtVersionForRing workspace import --configuration-files \"$configurationRoot\" --project-name $projectName --workspace-location \"$workspaceDir\""
 
         steps.ringCommand(ringCommand)
 
