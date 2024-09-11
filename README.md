@@ -160,6 +160,7 @@ pipeline1C()
   * Применяется расчет аргументов командной строки для работы [`branch plugin`](https://github.com/mc1arke/sonarqube-community-branch-plugin) или коммерческих версий SonarQube (`sonarqube` -> `branchAnalysisConfiguration`).
   * Если разработка ведется с использованием подсистемы [БСП "Обновление версии ИБ"](https://its.1c.ru/db/bsp315doc#content:4:1:issogl1_обновление_версии_иб), то в значение параметра `sonar.projectVersion=$configurationVersion` утилиты `sonar-scanner` можно передавать версию из созданного общего модуля. Для этого необходимо заполнить параметр (`sonarqube` -> `infoBaseUpdateModuleName`). Если параметр не заполнен, версия передается из корня конфигурации.
   * По умолчанию шаг анализа не дожидается окончания фонового задания на сервере SonarQube и не анализирует результат прохождения Порога качества (`sonarqube` -> `waitForQualityGate`).
+  * Если выполнялась валидация EDT, результаты валидации передаются утилите `sonar-scanner` как значение параметра `sonar.externalIssuesReportPaths` при использовании `stebi` или как значение параметра `sonar.bsl.languageserver.reportPaths` при использовании `edt-ripper`.
 * Рассылка уведомлений:
   * Электронная почта:
     * Для отправки используется плагин [`email-ext`](https://plugins.jenkins.io/email-ext). Шаблоны сообщений конфигурируются в настройках плагина. 
