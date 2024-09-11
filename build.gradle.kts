@@ -5,8 +5,8 @@ plugins {
     groovy
     jacoco
     id("com.mkobit.jenkins.pipelines.shared-library") version "0.10.1"
-    id("com.github.ben-manes.versions") version "0.28.0"
-    id("org.jenkins-ci.jpi") version "0.38.0" apply false
+    id("com.github.ben-manes.versions") version "0.51.0"
+    id("org.jenkins-ci.jpi") version "0.52.0-rc.1" apply false
 }
 
 repositories {
@@ -28,27 +28,29 @@ tasks {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
 
-val junitVersion = "5.6.1"
+val junitVersion = "5.11.0"
 val spockVersion = "1.3-groovy-2.4"
-val groovyVersion = "2.4.19"
-val slf4jVersion = "1.8.0-beta4"
-var jacksonVersion = "2.9.8"
+val groovyVersion = "2.4.21"
+val slf4jVersion = "2.0.16"
+val jsonschemaVersion = "4.36.0"
 
 dependencies {
     implementation("org.codehaus.groovy", "groovy-all", groovyVersion)
 
-    // jackson
-    implementation("com.fasterxml.jackson.module", "jackson-module-jsonSchema", jacksonVersion)
+    // jsonschema-generator
+    implementation("com.github.victools", "jsonschema-generator", jsonschemaVersion)
+    implementation("com.github.victools", "jsonschema-module-jackson", jsonschemaVersion)
 
     // unit-tests
-    testImplementation("org.junit.jupiter", "junit-jupiter-api", junitVersion)
     testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", junitVersion)
+    testImplementation("org.junit.jupiter", "junit-jupiter-api", junitVersion)
 
-    testImplementation("org.assertj", "assertj-core", "3.15.0")
-    testImplementation("org.mockito", "mockito-core", "5.11.0")
+    testImplementation("org.assertj", "assertj-core", "3.26.3")
+    testImplementation("org.mockito", "mockito-core", "5.13.0")
 
     testImplementation("org.slf4j", "slf4j-api", slf4jVersion)
     testImplementation("org.slf4j", "slf4j-simple", slf4jVersion)
@@ -74,7 +76,7 @@ tasks.test {
     }
 
     reports {
-        html.isEnabled = true
+        html.required.set(true)
     }
 }
 
@@ -85,8 +87,8 @@ tasks.check {
 
 tasks.jacocoTestReport {
     reports {
-        xml.isEnabled = true
-        xml.destination = File("$buildDir/reports/jacoco/test/jacoco.xml")
+        xml.required.set(true)
+        xml.outputLocation.set(File("$buildDir/reports/jacoco/test/jacoco.xml"))
     }
 }
 
@@ -101,20 +103,27 @@ sharedLibrary {
     coreVersion.set(jenkinsIntegration.downloadDirectory.file("core-version.txt").map { it.asFile.readText().trim() })
     // TODO: retrieve downloaded plugin resource
     pluginDependencies {
-        dependency("org.jenkins-ci.plugins", "pipeline-build-step", "2.12")
-        dependency("org.jenkins-ci.plugins", "pipeline-utility-steps", "2.8.0")
-        dependency("org.jenkins-ci.plugins", "git", "4.4.4")
-        dependency("org.jenkins-ci.plugins", "http_request", "1.15")
-        dependency("org.6wind.jenkins", "lockable-resources", "2.7")
-        dependency("ru.yandex.qatools.allure", "allure-jenkins-plugin", "2.28.1")
-        val declarativePluginsVersion = "1.6.0"
+        dependency("org.jenkins-ci.plugins", "pipeline-build-step", "540.vb_e8849e1a_b_d8")
+        dependency("org.jenkins-ci.plugins", "pipeline-utility-steps", "2.17.0")
+        dependency("org.jenkins-ci.plugins", "git", "5.2.2")
+        dependency("org.jenkins-ci.plugins", "http_request", "1.19")
+        dependency("org.jenkins-ci.plugins", "timestamper", "1.27")
+        dependency("org.jenkins-ci.plugins", "credentials", "1371.vfee6b_095f0a_3")
+        dependency("org.jenkins-ci.plugins", "token-macro", "400.v35420b_922dcb_")
+        dependency("org.jenkins-ci.plugins.workflow", "workflow-step-api", "678.v3ee58b_469476")
 
+        dependency("org.jenkins-ci.modules", "sshd", "3.329.v668e35efc720")
+
+        dependency("org.6wind.jenkins", "lockable-resources", "1255.vf48745da_35d0")
+        dependency("ru.yandex.qatools.allure", "allure-jenkins-plugin", "2.31.1")
+        dependency("io.jenkins.blueocean", "blueocean-pipeline-api-impl", "1.27.14")
+        dependency("sp.sd", "file-operations", "266.v9d4e1eb_235b_a_")
+
+        val declarativePluginsVersion = "2.2214.vb_b_34b_2ea_9b_83"
 
         dependency("org.jenkinsci.plugins", "pipeline-model-api", declarativePluginsVersion)
-        dependency("org.jenkinsci.plugins", "pipeline-model-declarative-agent", "1.1.1")
         dependency("org.jenkinsci.plugins", "pipeline-model-definition", declarativePluginsVersion)
         dependency("org.jenkinsci.plugins", "pipeline-model-extensions", declarativePluginsVersion)
-        dependency("io.jenkins.blueocean", "blueocean-pipeline-api-impl", "1.25.3")
-        dependency("sp.sd", "file-operations", "214.v2e7dc7f25757")
+        dependency("org.jenkinsci.plugins", "pipeline-model-declarative-agent", "1.1.1")
     }
 }

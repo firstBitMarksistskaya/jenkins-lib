@@ -3,6 +3,7 @@ package ru.pulsar.jenkins.library.steps
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.BranchAnalysisConfiguration
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
+import ru.pulsar.jenkins.library.configuration.ResultsTransformerType
 import ru.pulsar.jenkins.library.configuration.SourceFormat
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.Logger
@@ -10,7 +11,7 @@ import ru.pulsar.jenkins.library.utils.VersionParser
 
 class SonarScanner implements Serializable {
 
-    private final JobConfiguration config;
+    private final JobConfiguration config
 
     SonarScanner(JobConfiguration config) {
         this.config = config
@@ -26,7 +27,7 @@ class SonarScanner implements Serializable {
             return
         }
 
-        def env = steps.env();
+        def env = steps.env()
 
         def sonarScannerBinary
 
@@ -58,8 +59,13 @@ class SonarScanner implements Serializable {
         }
 
         if (config.stageFlags.edtValidate) {
-            steps.unstash("edt-generic-issue")
-            sonarCommand += " -Dsonar.externalIssuesReportPaths=build/out/edt-generic-issue.json"
+            steps.unstash(ResultsTransformer.RESULT_STASH)
+
+            if (config.resultsTransformOptions.transformer == ResultsTransformerType.STEBI) {
+                sonarCommand += " -Dsonar.externalIssuesReportPaths=" + ResultsTransformer.RESULT_FILE
+            } else {
+                sonarCommand += " -Dsonar.bsl.languageserver.reportPaths=" + ResultsTransformer.RESULT_FILE
+            }
         }
 
         if (config.sonarQubeOptions.waitForQualityGate) {
