@@ -31,7 +31,7 @@ class SonarQubeOptions implements Serializable {
       * auto - применяется автоконфигурация sonar-scanner силами branchplugin. Так же может применяться для отключения конфигурирования, если branch plugin отсутствует;
       * fromEnv - применяется ручная конфигурация sonar-scanner на основе переменных среды.
     Значение по умолчанию: fromEnv.""")
-    @JsonProperty(defaultValue = "auto")
+    @JsonProperty(defaultValue = "fromEnv")
     BranchAnalysisConfiguration branchAnalysisConfiguration
   
     @JsonPropertyDescription("""Ожидать состояние Quality Gate от SonarQube после загрузки анализа. По умолчанию `false`.
