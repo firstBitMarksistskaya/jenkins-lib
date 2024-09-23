@@ -234,12 +234,12 @@ pipeline1C()
 }
 ```
 
-## Настройка первичного запуск информационной базы
+## Настройка первичного запуска информационной базы
 
 После миграции, возможно запустить дополнительные команды, используя `initInfobase` -> `additionalInitializationSteps`
 
-  * Создать пользователя Администратор `"additionalInitializationSteps": ["run --command \"СоздатьАдминистратора;Имя=Администратор;ЗавершитьРаботуСистемы\" --execute $runnerRoot\\epf\\СоздатьПользователей.epf"]`;
-  * Запустить Vanessa c собственными параметрами `"additionalInitializationSteps": ["vanessa --settings ./tools/vrunner.first.json"]`.
+* Создать пользователя Администратор `"additionalInitializationSteps": ["run --command \"СоздатьАдминистратора;Имя=Администратор;ЗавершитьРаботуСистемы\" --execute $runnerRoot\\epf\\СоздатьПользователей.epf"]`;
+* Запустить Vanessa c собственными параметрами `"additionalInitializationSteps": ["vanessa --settings ./tools/vrunner.first.json"]`.
 
 ## Настройка шага YAXUnit
 
