@@ -9,6 +9,7 @@ import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.EDT
 import ru.pulsar.jenkins.library.utils.FileUtils
 import ru.pulsar.jenkins.library.utils.Logger
+import ru.pulsar.jenkins.library.utils.VersionParser
 
 class EdtToDesignerFormatTransformation implements Serializable {
 
@@ -60,9 +61,24 @@ class EdtToDesignerFormatTransformation implements Serializable {
         Logger.println("Конвертация исходников конфигурации из формата EDT в формат Конфигуратора")
         steps.deleteDir(configurationRoot)
 
-        def ringCommand = "ring $edtVersionForRing workspace export --workspace-location \"$projectWorkspaceDir\" --project \"$projectDir\" --configuration-files \"$configurationRoot\""
+        if (VersionParser.compare(config.edtVersion, "2024") < 0) {
 
-        steps.ringCommand(ringCommand)
+            Logger.println("Версия EDT меньше 2024.1.X, используется ring")
+
+            def ringCommand = "ring $edtVersionForRing workspace export --workspace-location \"$projectWorkspaceDir\" --project \"$projectDir\" --configuration-files \"$configurationRoot\""
+            steps.ringCommand(ringCommand)
+
+        } else {
+
+            Logger.println("Версия EDT больше 2024.1.X, используется 1cedtcli")
+
+            def projectName = configurationRoot.getName()
+            def edtcliCommand = "1cedtcli -data \"$projectWorkspaceDir\" -command export --configuration-files \"$configurationRoot\" --project-name $projectName"
+
+            def stdOut = steps.cmd(edtcliCommand, false, true)
+
+            Logger.println(stdOut)
+        }
 
         steps.zip(CONFIGURATION_DIR, CONFIGURATION_ZIP)
         steps.stash(CONFIGURATION_ZIP_STASH, CONFIGURATION_ZIP)
@@ -83,9 +99,24 @@ class EdtToDesignerFormatTransformation implements Serializable {
             def projectDir = FileUtils.getFilePath("$env.WORKSPACE/${it.path}")
             def currentExtensionWorkspaceDir = FileUtils.getFilePath("$workspaceDir/cfe/${it.name}")
 
-            def ringCommand = "ring $edtVersionForRing workspace export --workspace-location \"$currentExtensionWorkspaceDir\" --project \"$projectDir\" --configuration-files \"$extensionRoot/${it.name}\""
+            if (VersionParser.compare(config.edtVersion, "2024") < 0) {
 
-            steps.ringCommand(ringCommand)
+                Logger.println("Версия EDT меньше 2024.1.X, для конвертации исходников расширения используется ring")
+
+                def ringCommand = "ring $edtVersionForRing workspace export --workspace-location \"$currentExtensionWorkspaceDir\" --project \"$projectDir\" --configuration-files \"$extensionRoot/${it.name}\""
+                steps.ringCommand(ringCommand)
+
+            } else {
+
+                Logger.println("Версия EDT больше 2024.1.X, для конвертации исходников расширения используется 1cedtcli")
+
+                def edtcliCommand = "1cedtcli -data \"$currentExtensionWorkspaceDir\" -command export --configuration-files \"$extensionRoot/${it.name}\" --project-name ${it.name}"
+
+                def stdOut = steps.cmd(edtcliCommand, false, true)
+
+                Logger.println(stdOut)
+
+            }
         }
         steps.zip(EXTENSION_DIR, EXTENSION_ZIP)
         steps.stash(EXTENSION_ZIP_STASH, EXTENSION_ZIP)
