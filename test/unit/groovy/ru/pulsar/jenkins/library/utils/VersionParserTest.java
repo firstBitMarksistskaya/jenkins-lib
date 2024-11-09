@@ -85,4 +85,34 @@ class VersionParserTest {
     assertThat(storage).isEqualTo("1.0.0.1");
   }
 
+  @Test
+  void testVersionComparisonLessThan() {
+
+    // given
+    String thisVersion = "2023.2.4";
+    String thatVersion = "2023.3.1";
+
+    // when
+    int result = VersionParser.compare(thisVersion, thatVersion);
+
+    // then
+    assertThat(result).isEqualTo(-1);
+
+  }
+
+  @Test
+  void testVersionComparisonEqualShort() {
+
+    // given
+    String thisVersion = "2024.2.4";
+    String thatVersion = "2024.2";
+
+    // when
+    int result = VersionParser.compare(thisVersion, thatVersion);
+
+    // then
+    assertThat(result).isEqualTo(0);
+
+  }
+
 }
