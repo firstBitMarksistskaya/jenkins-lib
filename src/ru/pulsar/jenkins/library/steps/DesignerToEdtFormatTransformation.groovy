@@ -36,7 +36,6 @@ class DesignerToEdtFormatTransformation implements Serializable {
         def workspaceDir = FileUtils.getFilePath("$env.WORKSPACE/$WORKSPACE")
         def srcDir = config.srcDir
         def configurationRoot = FileUtils.getFilePath("$env.WORKSPACE/$srcDir")
-        def projectName = configurationRoot.getName()
         
         steps.deleteDir(workspaceDir)
 
@@ -55,6 +54,7 @@ class DesignerToEdtFormatTransformation implements Serializable {
 
             Logger.println("Версия EDT больше 2024.1.X, используется 1cedtcli")
 
+            def projectName = configurationRoot.getName()
             def edtcliCommand = "1cedtcli -data \"$workspaceDir\" -command import --configuration-files \"$configurationRoot\" --project-name $projectName"
 
             def stdOut = steps.cmd(edtcliCommand, false, true)
