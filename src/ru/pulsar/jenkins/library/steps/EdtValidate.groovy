@@ -7,6 +7,7 @@ import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.EDT
 import ru.pulsar.jenkins.library.utils.FileUtils
 import ru.pulsar.jenkins.library.utils.Logger
+import ru.pulsar.jenkins.library.utils.VersionParser
 
 class EdtValidate implements Serializable {
 
@@ -55,9 +56,25 @@ class EdtValidate implements Serializable {
 
         Logger.println("Выполнение валидации EDT")
 
-        def ringCommand = "ring $edtVersionForRing workspace validate --workspace-location \"$workspaceLocation\" --file \"$resultFile\" $projectList"
-        steps.catchError {
-            steps.ringCommand(ringCommand)
+        if (VersionParser.compare(config.edtVersion, "2024") < 0) {
+
+            Logger.println("Версия EDT меньше 2024.1.X, для валидации используется ring")
+
+            def ringCommand = "ring $edtVersionForRing workspace validate --workspace-location \"$workspaceLocation\" --file \"$resultFile\" $projectList"
+            steps.catchError {
+                steps.ringCommand(ringCommand)
+            }
+
+        } else {
+
+            Logger.println("Версия EDT больше 2024.1.X, для валидации используется 1cedtcli")
+
+            def edtcliCommand = "1cedtcli -data \"$workspaceLocation\" -command validate --file \"$resultFile\" $projectList"
+            steps.catchError {
+                def stdOut = steps.cmd(edtcliCommand, false, true)
+                Logger.println(stdOut)
+            }
+
         }
 
         steps.archiveArtifacts("$DesignerToEdtFormatTransformation.WORKSPACE/.metadata/.log")
