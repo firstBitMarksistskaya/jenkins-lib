@@ -14,7 +14,7 @@ class NativeEdtCliConverter implements IEdtCliEngine {
     @Override
     void edtToDesignerTransformConfiguration(IStepExecutor steps, JobConfiguration config) {
 
-        String workspaceDir = FileUtils.getFilePath("$env.WORKSPACE/$WORKSPACE").getRemote()
+        String workspaceDir = FileUtils.getFilePath("$env.WORKSPACE/$EdtToDesignerFormatTransformation.WORKSPACE").getRemote()
         String projectWorkspaceDir = FileUtils.getFilePath("$workspaceDir/cf").getRemote()
         String configurationRoot = FileUtils.getFilePath("$env.WORKSPACE/$EdtToDesignerFormatTransformation.CONFIGURATION_DIR").getRemote()
 
@@ -34,7 +34,7 @@ class NativeEdtCliConverter implements IEdtCliEngine {
 
         def env = steps.env()
 
-        String workspaceDir = FileUtils.getFilePath("$env.WORKSPACE/$WORKSPACE").getRemote()
+        String workspaceDir = FileUtils.getFilePath("$env.WORKSPACE/$EdtToDesignerFormatTransformation.WORKSPACE").getRemote()
         String extensionRoot = FileUtils.getFilePath("$env.WORKSPACE/$EdtToDesignerFormatTransformation.EXTENSION_DIR").getRemote()
 
         config.initInfoBaseOptions.extensions.each {
@@ -59,7 +59,7 @@ class NativeEdtCliConverter implements IEdtCliEngine {
 
         def env = steps.env()
 
-        def workspaceDir = FileUtils.getFilePath("$env.WORKSPACE/$WORKSPACE")
+        def workspaceDir = FileUtils.getFilePath("$env.WORKSPACE/$DesignerToEdtFormatTransformation.WORKSPACE")
         def srcDir = config.srcDir
         def configurationRoot = FileUtils.getFilePath("$env.WORKSPACE/$srcDir")
         def projectName = configurationRoot.getName()
