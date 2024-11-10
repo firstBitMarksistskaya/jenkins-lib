@@ -65,7 +65,6 @@ class NativeEdtCliConverter implements IEdtCliEngine {
         def projectName = configurationRoot.getName()
 
         steps.deleteDir(workspaceDir)
-        steps.deleteDir(configurationRoot)
 
         Logger.println("Конвертация исходников из формата конфигуратора в формат EDT с помощью 1cedtcli")
 

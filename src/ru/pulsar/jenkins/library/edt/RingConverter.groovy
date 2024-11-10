@@ -50,7 +50,6 @@ class RingConverter implements IEdtCliEngine {
 
             Logger.println("Конвертация исходников расширения ${it.name} из формата EDT в формат Конфигуратора с помощью ring")
 
-
             def projectDir = FileUtils.getFilePath("$env.WORKSPACE/${it.path}")
             def currentExtensionWorkspaceDir = FileUtils.getFilePath("$workspaceDir/cfe/${it.name}")
             def ringCommand = "ring $edtVersionForRing workspace export --workspace-location \"$currentExtensionWorkspaceDir\" --project \"$projectDir\" --configuration-files \"$extensionRoot/${it.name}\""
