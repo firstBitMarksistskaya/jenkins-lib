@@ -43,22 +43,4 @@ class VersionParser implements Serializable {
         return matcher != null && matcher.getCount() == 1 ? matcher[0][1] : ""
     }
 
-    static int compare(String thisVersion, String thatVersion) {
-
-        def thisVersionParts = thisVersion.split("\\.")
-        def thatVersionParts = thatVersion.split("\\.")
-
-        def minIndex = Math.min(thisVersionParts.length, thatVersionParts.length)
-
-        for (int i = 0;i < minIndex;i++) {
-
-            if (thisVersionParts[i].toInteger() > thatVersionParts[i].toInteger()) {
-                return 1
-            } else if (thisVersionParts[i].toInteger() < thatVersionParts[i].toInteger()) {
-                return -1
-            }
-        }
-
-        return 0
-    }
 }

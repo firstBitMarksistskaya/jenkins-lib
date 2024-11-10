@@ -1,13 +1,12 @@
 package ru.pulsar.jenkins.library.steps
 
+import ru.pulsar.jenkins.library.edt.EdtCliEngineFactory
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.SourceFormat
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
-import ru.pulsar.jenkins.library.utils.EDT
 import ru.pulsar.jenkins.library.utils.FileUtils
 import ru.pulsar.jenkins.library.utils.Logger
-import ru.pulsar.jenkins.library.utils.VersionParser
 
 class EdtValidate implements Serializable {
 
@@ -32,7 +31,6 @@ class EdtValidate implements Serializable {
 
         def env = steps.env()
 
-        String workspaceLocation = "$env.WORKSPACE/$DesignerToEdtFormatTransformation.WORKSPACE"
         String projectList
 
         if (config.sourceFormat == SourceFormat.DESIGNER) {
@@ -51,31 +49,11 @@ class EdtValidate implements Serializable {
             projectList = "--project-list \"$projectDir\""
         }
 
-        def resultFile = "$env.WORKSPACE/$RESULT_FILE"
-        def edtVersionForRing = EDT.ringModule(config)
-
         Logger.println("Выполнение валидации EDT")
 
-        if (VersionParser.compare(config.edtVersion, "2024") < 0) {
+        def engine = EdtCliEngineFactory.getEngine(config.edtVersion)
 
-            Logger.println("Версия EDT меньше 2024.1.X, для валидации используется ring")
-
-            def ringCommand = "ring $edtVersionForRing workspace validate --workspace-location \"$workspaceLocation\" --file \"$resultFile\" $projectList"
-            steps.catchError {
-                steps.ringCommand(ringCommand)
-            }
-
-        } else {
-
-            Logger.println("Версия EDT больше 2024.1.X, для валидации используется 1cedtcli")
-
-            def edtcliCommand = "1cedtcli -data \"$workspaceLocation\" -command validate --file \"$resultFile\" $projectList"
-            steps.catchError {
-                def stdOut = steps.cmd(edtcliCommand, false, true)
-                Logger.println(stdOut)
-            }
-
-        }
+        engine.edtValidate(steps, config, projectList)
 
         steps.archiveArtifacts("$DesignerToEdtFormatTransformation.WORKSPACE/.metadata/.log")
         steps.archiveArtifacts(RESULT_FILE)
