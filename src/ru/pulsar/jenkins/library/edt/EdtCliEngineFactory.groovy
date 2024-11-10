@@ -4,7 +4,7 @@ import java.lang.module.ModuleDescriptor
 
 class EdtCliEngineFactory {
 
-    static IEdtCliEngine getEngine(String edtVersion) {
+    static getEngine(String edtVersion) {
 
         def currentVersion = ModuleDescriptor.Version.parse(edtVersion)
         def version2024 = ModuleDescriptor.Version.parse("2024")
