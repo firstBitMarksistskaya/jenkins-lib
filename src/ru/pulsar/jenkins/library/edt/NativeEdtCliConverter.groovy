@@ -18,7 +18,7 @@ class NativeEdtCliConverter implements IEdtCliEngine {
         String projectWorkspaceDir = FileUtils.getFilePath("$workspaceDir/cf").getRemote()
         String configurationRoot = FileUtils.getFilePath("$env.WORKSPACE/$EdtToDesignerFormatTransformation.CONFIGURATION_DIR").getRemote()
 
-        Logger.println("Конвертация исходников конфигурации из формата EDT в формат Конфигуратора с помощью ring")
+        Logger.println("Конвертация исходников конфигурации из формата EDT в формат Конфигуратора с помощью 1cedtcli")
 
         steps.deleteDir(configurationRoot)
 
