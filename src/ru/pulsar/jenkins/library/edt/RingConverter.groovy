@@ -73,7 +73,7 @@ class RingConverter implements IEdtCliEngine {
         Logger.println("Конвертация исходников из формата конфигуратора в формат EDT с помощью ring")
 
         String edtVersionForRing = EDT.ringModule(config)
-        String ringCommand = "ring $edtVersionForRing workspace import --configuration-files \"$configurationRoot\" --project-name $projectName --workspace-location \"$workspaceDir\""
+        String ringCommand = "ring $edtVersionForRing workspace import --configuration-files \"$configurationRoot\" --project-name \"$projectName\" --workspace-location \"$workspaceDir\""
 
         steps.ringCommand(ringCommand)
 
