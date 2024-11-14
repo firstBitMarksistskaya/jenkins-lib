@@ -14,16 +14,19 @@ class NativeEdtCliConverter implements IEdtCliEngine {
     @Override
     void edtToDesignerTransformConfiguration(IStepExecutor steps, JobConfiguration config) {
 
+        def env = steps.env()
+
         String workspaceDir = FileUtils.getFilePath("$env.WORKSPACE/$EdtToDesignerFormatTransformation.WORKSPACE").getRemote()
         String projectWorkspaceDir = FileUtils.getFilePath("$workspaceDir/cf").getRemote()
-        String configurationRoot = FileUtils.getFilePath("$env.WORKSPACE/$EdtToDesignerFormatTransformation.CONFIGURATION_DIR").getRemote()
+        def configurationRoot = FileUtils.getFilePath("$env.WORKSPACE/$EdtToDesignerFormatTransformation.CONFIGURATION_DIR")
+        String configurationRootFullPath = configurationRoot.getRemote()
 
         Logger.println("Конвертация исходников конфигурации из формата EDT в формат Конфигуратора с помощью ring")
 
         steps.deleteDir(configurationRoot)
 
         def projectName = configurationRoot.getName()
-        def edtcliCommand = "1cedtcli -data \"$projectWorkspaceDir\" -command export --configuration-files \"$configurationRoot\" --project-name $projectName"
+        def edtcliCommand = "1cedtcli -data \"$projectWorkspaceDir\" -command export --configuration-files \"$configurationRootFullPath\" --project-name \"$projectName\""
 
         steps.cmd(edtcliCommand)
 
@@ -48,7 +51,7 @@ class NativeEdtCliConverter implements IEdtCliEngine {
 
             def edtcliCommand = "1cedtcli -data \"$currentExtensionWorkspaceDir\" -command export --configuration-files \"$extensionRoot/${it.name}\" --project-name ${it.name}"
 
-           steps.cmd(edtcliCommand)
+            steps.cmd(edtcliCommand)
 
         }
 
@@ -68,7 +71,7 @@ class NativeEdtCliConverter implements IEdtCliEngine {
 
         Logger.println("Конвертация исходников из формата конфигуратора в формат EDT с помощью 1cedtcli")
 
-        def edtcliCommand = "1cedtcli -data \"$workspaceDir\" -command import --configuration-files \"$configurationRoot\" --project-name $projectName"
+        def edtcliCommand = "1cedtcli -data \"$workspaceDir\" -command import --configuration-files \"$configurationRoot\" --project-name \"$projectName\""
 
         steps.cmd(edtcliCommand)
 
