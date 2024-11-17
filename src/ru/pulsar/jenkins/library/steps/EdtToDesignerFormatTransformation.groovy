@@ -1,12 +1,10 @@
 package ru.pulsar.jenkins.library.steps
 
-
+import ru.pulsar.jenkins.library.edt.EdtCliEngineFactory
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.SourceFormat
-import ru.pulsar.jenkins.library.configuration.InitExtensionMethod
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
-import ru.pulsar.jenkins.library.utils.EDT
 import ru.pulsar.jenkins.library.utils.FileUtils
 import ru.pulsar.jenkins.library.utils.Logger
 
@@ -38,57 +36,19 @@ class EdtToDesignerFormatTransformation implements Serializable {
 
         def env = steps.env();
 
-        String srcDir = config.srcDir
         String workspaceDir = FileUtils.getFilePath("$env.WORKSPACE/$WORKSPACE").getRemote()
-
-        String projectWorkspaceDir = FileUtils.getFilePath("$workspaceDir/cf").getRemote()
-        String projectDir = FileUtils.getFilePath("$env.WORKSPACE/$srcDir").getRemote()
-        String configurationRoot = FileUtils.getFilePath("$env.WORKSPACE/$CONFIGURATION_DIR").getRemote()
-
-
-        String extensionRoot = FileUtils.getFilePath("$env.WORKSPACE/$EXTENSION_DIR").getRemote()
-        def edtVersionForRing = EDT.ringModule(config)
-
         steps.deleteDir(workspaceDir)
 
-        transformConfiguration(steps, projectDir, projectWorkspaceDir, configurationRoot, edtVersionForRing)
-        transformExtensions(steps, workspaceDir, extensionRoot, edtVersionForRing)
-    }
+        def engine = EdtCliEngineFactory.getEngine(config.edtVersion)
 
-    private void transformConfiguration(IStepExecutor steps, String projectDir, String projectWorkspaceDir, String configurationRoot, String edtVersionForRing) {
-
-        Logger.println("Конвертация исходников конфигурации из формата EDT в формат Конфигуратора")
-        steps.deleteDir(configurationRoot)
-
-        def ringCommand = "ring $edtVersionForRing workspace export --workspace-location \"$projectWorkspaceDir\" --project \"$projectDir\" --configuration-files \"$configurationRoot\""
-
-        steps.ringCommand(ringCommand)
-
+        engine.edtToDesignerTransformConfiguration(steps, config)
         steps.zip(CONFIGURATION_DIR, CONFIGURATION_ZIP)
         steps.stash(CONFIGURATION_ZIP_STASH, CONFIGURATION_ZIP)
-    }
 
-    private void transformExtensions(IStepExecutor steps, String workspaceDir, String extensionRoot, String edtVersionForRing) {
-        steps.deleteDir(extensionRoot)
-
-        config.initInfoBaseOptions.extensions.each {
-
-            if (it.initMethod != InitExtensionMethod.SOURCE) {
-                return
-            }
-
-            Logger.println("Конвертация исходников расширения ${it.name} из формата EDT в формат Конфигуратора")
-
-            def env = steps.env();
-            def projectDir = FileUtils.getFilePath("$env.WORKSPACE/${it.path}")
-            def currentExtensionWorkspaceDir = FileUtils.getFilePath("$workspaceDir/cfe/${it.name}")
-
-            def ringCommand = "ring $edtVersionForRing workspace export --workspace-location \"$currentExtensionWorkspaceDir\" --project \"$projectDir\" --configuration-files \"$extensionRoot/${it.name}\""
-
-            steps.ringCommand(ringCommand)
-        }
+        engine.edtToDesignerTransformExtensions(steps, config)
         steps.zip(EXTENSION_DIR, EXTENSION_ZIP)
         steps.stash(EXTENSION_ZIP_STASH, EXTENSION_ZIP)
+
     }
 
 }

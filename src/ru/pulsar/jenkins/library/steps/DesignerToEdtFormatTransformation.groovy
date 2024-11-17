@@ -1,11 +1,9 @@
 package ru.pulsar.jenkins.library.steps
 
-
+import ru.pulsar.jenkins.library.edt.EdtCliEngineFactory
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
-import ru.pulsar.jenkins.library.utils.EDT
-import ru.pulsar.jenkins.library.utils.FileUtils
 import ru.pulsar.jenkins.library.utils.Logger
 
 class DesignerToEdtFormatTransformation implements Serializable {
@@ -30,21 +28,8 @@ class DesignerToEdtFormatTransformation implements Serializable {
             return
         }
 
-        def env = steps.env()
-
-        def workspaceDir = FileUtils.getFilePath("$env.WORKSPACE/$WORKSPACE")
-        def srcDir = config.srcDir
-        def configurationRoot = FileUtils.getFilePath("$env.WORKSPACE/$srcDir")
-        def projectName = configurationRoot.getName()
-        def edtVersionForRing = EDT.ringModule(config)
-        
-        steps.deleteDir(workspaceDir)
-
-        Logger.println("Конвертация исходников из формата конфигуратора в формат EDT")
-
-        def ringCommand = "ring $edtVersionForRing workspace import --configuration-files \"$configurationRoot\" --project-name $projectName --workspace-location \"$workspaceDir\""
-
-        steps.ringCommand(ringCommand)
+        def engine = EdtCliEngineFactory.getEngine(config.edtVersion)
+        engine.designerToEdtTransform(steps, config)
 
         steps.zip(WORKSPACE, WORKSPACE_ZIP)
         steps.stash(WORKSPACE_ZIP_STASH, WORKSPACE_ZIP)

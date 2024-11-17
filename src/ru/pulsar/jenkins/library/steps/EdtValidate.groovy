@@ -1,10 +1,10 @@
 package ru.pulsar.jenkins.library.steps
 
+import ru.pulsar.jenkins.library.edt.EdtCliEngineFactory
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.SourceFormat
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
-import ru.pulsar.jenkins.library.utils.EDT
 import ru.pulsar.jenkins.library.utils.FileUtils
 import ru.pulsar.jenkins.library.utils.Logger
 
@@ -31,7 +31,6 @@ class EdtValidate implements Serializable {
 
         def env = steps.env()
 
-        String workspaceLocation = "$env.WORKSPACE/$DesignerToEdtFormatTransformation.WORKSPACE"
         String projectList
 
         if (config.sourceFormat == SourceFormat.DESIGNER) {
@@ -50,15 +49,11 @@ class EdtValidate implements Serializable {
             projectList = "--project-list \"$projectDir\""
         }
 
-        def resultFile = "$env.WORKSPACE/$RESULT_FILE"
-        def edtVersionForRing = EDT.ringModule(config)
-
         Logger.println("Выполнение валидации EDT")
 
-        def ringCommand = "ring $edtVersionForRing workspace validate --workspace-location \"$workspaceLocation\" --file \"$resultFile\" $projectList"
-        steps.catchError {
-            steps.ringCommand(ringCommand)
-        }
+        def engine = EdtCliEngineFactory.getEngine(config.edtVersion)
+
+        engine.edtValidate(steps, config, projectList)
 
         steps.archiveArtifacts("$DesignerToEdtFormatTransformation.WORKSPACE/.metadata/.log")
         steps.archiveArtifacts(RESULT_FILE)
