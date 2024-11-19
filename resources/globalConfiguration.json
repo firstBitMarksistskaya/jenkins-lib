@@ -51,7 +51,8 @@
     "vrunnerSteps": [
       "vanessa --settings ./tools/vrunner.json"
     ],
-    "coverage": false
+    "coverage": false,
+    "dbgsPort": 1550
   },
   "sonarqube": {
     "sonarQubeInstallation": "",
@@ -85,7 +86,8 @@
     "xddConfigPath": "./tools/xUnitParams.json",
     "publishToAllureReport": false,
     "publishToJUnitReport": true,
-    "coverage": false
+    "coverage": false,
+    "dbgsPort": 1551
   },
   "coverage": {
     "dbgsPath": "/opt/1cv8/current/dbgs",
@@ -95,7 +97,9 @@
     "vrunnerSettings": "./tools/vrunner.json",
     "configPath": "./tools/yaxunit.json",
     "publishToAllureReport": false,
-    "publishToJUnitReport": true
+    "publishToJUnitReport": true,
+    "coverage": false,
+    "dbgsPort": 1552
   },
   "resultsTransform": {
     "transformer": "stebi",
