@@ -66,7 +66,7 @@ interface IStepExecutor {
 
     def withEnv(List<String> strings, Closure body)
 
-    def lock(String label, int quantity, String resource, Closure<Object> objectClosure)
+    def lock(String label, int quantity, String resource, Closure<Object> body)
 
     def archiveArtifacts(String path)
 
