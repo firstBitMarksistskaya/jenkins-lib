@@ -121,7 +121,7 @@ class Yaxunit implements Serializable {
         }
 
         if (options.publishToAllureReport) {
-            String allureReport = "./build/out/yaxunit/junit.xml"
+            String allureReport = "./build/out/allure/yaxunit/junit.xml"
             FilePath pathToAllureReport = FileUtils.getFilePath("$env.WORKSPACE/$allureReport")
             String allureReportDir = FileUtils.getLocalPath(pathToAllureReport.getParent())
 
