@@ -53,10 +53,11 @@ class Yaxunit implements Serializable {
         // Готовим конфиг для yaxunit
         String yaxunitConfigPath = options.configPath
         if (!steps.fileExists(yaxunitConfigPath)) {
+            Logger.println("Using default yaxunit config")
             def defaultYaxunitConfig = steps.libraryResource DEFAULT_YAXUNIT_CONFIGURATION_RESOURCE
             steps.writeFile(options.configPath, defaultYaxunitConfig, 'UTF-8')
         }
-        def yaxunitConfig = FileUtils.getFilePath(yaxunitConfigPath)
+        def yaxunitConfig = FileUtils.getFilePath("$env.WORKSPACE/$yaxunitConfigPath")
 
         // Команда запуска тестов
         String runTestsCommand = "$vrunnerPath run --command RunUnitTests=$yaxunitConfig $ibConnection"
@@ -129,6 +130,8 @@ class Yaxunit implements Serializable {
 
             steps.stash(YAXUNIT_ALLURE_STASH, "$allureReportDir/**", true)
         }
+
+        steps.archiveArtifacts("build/out/yaxunit/log.txt")
 
         if (options.coverage) {
             steps.stash(COVERAGE_STASH_NAME, COVERAGE_STASH_PATH, true)
