@@ -3,6 +3,7 @@ package ru.pulsar.jenkins.library.steps
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
+import ru.pulsar.jenkins.library.utils.CoverageUtils
 import ru.pulsar.jenkins.library.utils.FileUtils
 import ru.pulsar.jenkins.library.utils.Logger
 import org.apache.commons.lang.RandomStringUtils
@@ -15,6 +16,7 @@ class Bdd implements Serializable {
     public static final String ALLURE_STASH = 'bdd-allure'
     public static final String COVERAGE_STASH_NAME = 'bdd-coverage'
     public static final String COVERAGE_STASH_PATH = 'build/out/bdd-coverage.xml'
+    public static final String COVERAGE_PIDS_PATH = 'build/bdd-pids'
 
     Bdd(JobConfiguration config) {
         this.config = config
@@ -43,6 +45,8 @@ class Bdd implements Serializable {
 
             def coverageOpts = config.coverageOptions
             def port = options.dbgsPort
+            def currentDbgsPids = CoverageUtils.getPIDs("dbgs")
+            def currentCoverage41CPids = CoverageUtils.getPIDs("Coverage41C")
             def lockableResource = RandomStringUtils.random(9, true, false)
 
             if (options.coverage) {
@@ -54,22 +58,36 @@ class Bdd implements Serializable {
                     steps.start("${coverageOpts.dbgsPath} --addr=127.0.0.1 --port=$port")
                     steps.start("${coverageOpts.coverage41CPath} start -i DefAlias -u http://127.0.0.1:$port -P $workspaceDir -s $srcDir -o $COVERAGE_STASH_PATH")
                     steps.cmd("${coverageOpts.coverage41CPath} check -i DefAlias -u http://127.0.0.1:$port")
+
+                    def newDbgsPids = CoverageUtils.getPIDs("dbgs")
+                    def newCoverage41CPids = CoverageUtils.getPIDs("Coverage41C")
+
+                    newDbgsPids.removeAll(currentDbgsPids)
+                    newCoverage41CPids.removeAll(currentCoverage41CPids)
+
+                    newDbgsPids.addAll(newCoverage41CPids)
+                    def pids = newDbgsPids.join(" ")
+
+                    steps.writeFile(COVERAGE_PIDS_PATH, pids, 'UTF-8')
+
+                    Logger.println("Coverage PIDs for cleanup: $pids")
+
                 }
 
-            config.bddOptions.vrunnerSteps.each {
-                Logger.println("Шаг запуска сценариев командой ${it}")
-                String vrunnerPath = VRunner.getVRunnerPath()
-                Integer bddReturnStatus = VRunner.exec("$vrunnerPath ${it} --ibconnection \"/F./build/ib\"", true)
-                returnStatuses.add(bddReturnStatus)
-            }
+                config.bddOptions.vrunnerSteps.each {
+                    Logger.println("Шаг запуска сценариев командой ${it}")
+                    String vrunnerPath = VRunner.getVRunnerPath()
+                    Integer bddReturnStatus = VRunner.exec("$vrunnerPath ${it} --ibconnection \"/F./build/ib\"", true)
+                    returnStatuses.add(bddReturnStatus)
+                }
 
-            if (Collections.max(returnStatuses) > 2) {
-                steps.error("Получен неожиданный/неверный результат работы. Возможно, работа 1С:Предприятие завершилась некорректно, или возникла ошибка при запуске")
-            } else if (returnStatuses.contains(1)) {
-                steps.unstable("Тестирование сценариев завершилось, но часть фич/сценариев упала")
-            } else {
-                Logger.println("Тестирование сценариев завершилось успешно")
-            }
+                if (Collections.max(returnStatuses) > 2) {
+                    steps.error("Получен неожиданный/неверный результат работы. Возможно, работа 1С:Предприятие завершилась некорректно, или возникла ошибка при запуске")
+                } else if (returnStatuses.contains(1)) {
+                    steps.unstable("Тестирование сценариев завершилось, но часть фич/сценариев упала")
+                } else {
+                    Logger.println("Тестирование сценариев завершилось успешно")
+                }
 
                 if (options.coverage) {
                     steps.cmd("${coverageOpts.coverage41CPath} stop -i DefAlias -u http://127.0.0.1:$port")

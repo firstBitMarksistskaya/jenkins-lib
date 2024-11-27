@@ -236,6 +236,11 @@ void call() {
                                         bdd config
                                     }
                                 }
+                                post {
+                                    cleanup {
+                                        coverageCleanup config, 'bdd'
+                                    }
+                                }
                             }
                         }
                     }
@@ -286,6 +291,11 @@ void call() {
                                 steps {
                                     timeout(time: config.timeoutOptions.smoke, unit: TimeUnit.MINUTES) {
                                         smoke config
+                                    }
+                                }
+                                post {
+                                    cleanup {
+                                        coverageCleanup config, 'smoke'
                                     }
                                 }
                             }

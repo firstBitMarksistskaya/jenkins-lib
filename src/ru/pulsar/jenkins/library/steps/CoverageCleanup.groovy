@@ -22,10 +22,7 @@ class CoverageCleanup implements Serializable {
 
         Logger.printLocation()
 
-        String pidsFilePath = ""
-        if (stageName == 'yaxunit') {
-            pidsFilePath = Yaxunit.COVERAGE_PIDS_PATH
-        }
+        String pidsFilePath = "build/$stageName-pids"
 
         def pids = ""
         if (steps.fileExists(pidsFilePath)) {

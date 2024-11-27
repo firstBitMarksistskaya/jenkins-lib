@@ -73,9 +73,9 @@ class Yaxunit implements Serializable {
 
         def coverageOpts = config.coverageOptions
         def port = options.dbgsPort
-        def lockableResource = RandomStringUtils.random(9, true, false)
         def currentDbgsPids = CoverageUtils.getPIDs("dbgs")
         def currentCoverage41CPids = CoverageUtils.getPIDs("Coverage41C")
+        def lockableResource = RandomStringUtils.random(9, true, false)
         if (options.coverage) {
             lockableResource = "${env.NODE_NAME}_$port"
         }

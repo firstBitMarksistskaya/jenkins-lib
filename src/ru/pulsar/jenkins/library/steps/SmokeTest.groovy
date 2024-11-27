@@ -5,6 +5,7 @@ import org.apache.commons.lang.RandomStringUtils
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
+import ru.pulsar.jenkins.library.utils.CoverageUtils
 import ru.pulsar.jenkins.library.utils.FileUtils
 import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.StringJoiner
@@ -15,6 +16,7 @@ class SmokeTest implements Serializable {
     public static final String ALLURE_STASH = 'smoke-allure'
     public static final String COVERAGE_STASH_NAME = 'smoke-coverage'
     public static final String COVERAGE_STASH_PATH = 'build/out/smoke-coverage.xml'
+    public static final String COVERAGE_PIDS_PATH = 'build/smoke-pids'
 
     private final JobConfiguration config
 
@@ -108,6 +110,8 @@ class SmokeTest implements Serializable {
 
         def coverageOpts = config.coverageOptions
         def port = options.dbgsPort
+        def currentDbgsPids = CoverageUtils.getPIDs("dbgs")
+        def currentCoverage41CPids = CoverageUtils.getPIDs("Coverage41C")
         def lockableResource = RandomStringUtils.random(9, true, false)
         if (options.coverage) {
             lockableResource = "${env.NODE_NAME}_$port"
@@ -118,6 +122,20 @@ class SmokeTest implements Serializable {
                 steps.start("${coverageOpts.dbgsPath} --addr=127.0.0.1 --port=$port")
                 steps.start("${coverageOpts.coverage41CPath} start -i DefAlias -u http://127.0.0.1:$port -P $workspaceDir -s $srcDir -o $COVERAGE_STASH_PATH")
                 steps.cmd("${coverageOpts.coverage41CPath} check -i DefAlias -u http://127.0.0.1:$port")
+
+                def newDbgsPids = CoverageUtils.getPIDs("dbgs")
+                def newCoverage41CPids = CoverageUtils.getPIDs("Coverage41C")
+
+                newDbgsPids.removeAll(currentDbgsPids)
+                newCoverage41CPids.removeAll(currentCoverage41CPids)
+
+                newDbgsPids.addAll(newCoverage41CPids)
+                def pids = newDbgsPids.join(" ")
+
+                steps.writeFile(COVERAGE_PIDS_PATH, pids, 'UTF-8')
+
+                Logger.println("Coverage PIDs for cleanup: $pids")
+
             }
 
             steps.withEnv(logosConfig) {
