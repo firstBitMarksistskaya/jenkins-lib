@@ -131,7 +131,7 @@ class Yaxunit implements Serializable {
             steps.stash(YAXUNIT_ALLURE_STASH, "$allureReportDir/**", true)
         }
 
-        steps.archiveArtifacts("build/out/yaxunit/log.txt")
+        steps.archiveArtifacts("build/out/yaxunit/junit.xml")
 
         if (options.coverage) {
             steps.stash(COVERAGE_STASH_NAME, COVERAGE_STASH_PATH, true)
