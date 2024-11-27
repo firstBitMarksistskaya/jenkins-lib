@@ -121,7 +121,7 @@ class Yaxunit implements Serializable {
         }
 
         if (options.publishToAllureReport) {
-            String allureReport = "./build/out/allure/yaxunit/junit.xml"
+            String allureReport = "./build/out/yaxunit/junit.xml"
             FilePath pathToAllureReport = FileUtils.getFilePath("$env.WORKSPACE/$allureReport")
             String allureReportDir = FileUtils.getLocalPath(pathToAllureReport.getParent())
 
@@ -134,5 +134,4 @@ class Yaxunit implements Serializable {
             steps.stash(COVERAGE_STASH_NAME, COVERAGE_STASH_PATH, true)
         }
     }
-
 }
