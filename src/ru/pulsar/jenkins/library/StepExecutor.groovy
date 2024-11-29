@@ -150,8 +150,8 @@ class StepExecutor implements IStepExecutor {
     }
 
     @Override
-    def lock(String label, int quantity, String resource, Closure body) {
-        steps.lock(label: label, quantity: quantity, resource: resource) {
+    def lock(String resource, Closure body) {
+        steps.lock(resource: resource) {
             body()
         }
     }

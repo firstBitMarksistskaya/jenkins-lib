@@ -117,7 +117,7 @@ class SmokeTest implements Serializable {
             lockableResource = "${env.NODE_NAME}_$port"
         }
 
-        steps.lock(null, 1, lockableResource) {
+        steps.lock(lockableResource) {
             if (options.coverage) {
                 steps.start("${coverageOpts.dbgsPath} --addr=127.0.0.1 --port=$port")
                 steps.start("${coverageOpts.coverage41CPath} start -i DefAlias -u http://127.0.0.1:$port -P $workspaceDir -s $srcDir -o $COVERAGE_STASH_PATH")
