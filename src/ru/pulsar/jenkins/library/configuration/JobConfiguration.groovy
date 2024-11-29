@@ -58,7 +58,7 @@ class JobConfiguration implements Serializable {
 
     @JsonProperty("coverage")
     @JsonPropertyDescription("Настройки замеров покрытия")
-    CoverageOptions coverageOptions;
+    GlobalCoverageOptions coverageOptions
 
     @JsonProperty("yaxunit")
     @JsonPropertyDescription("Настройки YAXUnit")

@@ -1,9 +1,7 @@
 package ru.pulsar.jenkins.library.steps
 
 import hudson.FilePath
-import org.apache.commons.lang3.RandomStringUtils
 import ru.pulsar.jenkins.library.IStepExecutor
-
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.CoverageUtils
@@ -11,7 +9,7 @@ import ru.pulsar.jenkins.library.utils.FileUtils
 import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.VRunner
 
-class Yaxunit implements Serializable {
+class Yaxunit implements Serializable, Coverable {
 
     private final JobConfiguration config
 
@@ -72,33 +70,11 @@ class Yaxunit implements Serializable {
         }
 
         def coverageOpts = config.coverageOptions
-        def port = options.dbgsPort
-        def currentDbgsPids = CoverageUtils.getPIDs("dbgs")
-        def currentCoverage41CPids = CoverageUtils.getPIDs("Coverage41C")
-        def lockableResource = RandomStringUtils.random(9, true, false)
-        if (options.coverage) {
-            lockableResource = "${env.NODE_NAME}_$port"
-        }
+        def coverageContext = CoverageUtils.prepareContext(config, options)
 
-        steps.lock(lockableResource) {
-            if (options.coverage) {
-                steps.start("${coverageOpts.dbgsPath} --addr=127.0.0.1 --port=$port")
-                steps.start("${coverageOpts.coverage41CPath} start -i DefAlias -u http://127.0.0.1:$port -P $workspaceDir -s $srcDir -o $COVERAGE_STASH_PATH")
-                steps.cmd("${coverageOpts.coverage41CPath} check -i DefAlias -u http://127.0.0.1:$port")
-
-                def newDbgsPids = CoverageUtils.getPIDs("dbgs")
-                def newCoverage41CPids = CoverageUtils.getPIDs("Coverage41C")
-
-                newDbgsPids.removeAll(currentDbgsPids)
-                newCoverage41CPids.removeAll(currentCoverage41CPids)
-
-                newDbgsPids.addAll(newCoverage41CPids)
-                def pids = newDbgsPids.join(" ")
-
-                steps.writeFile(COVERAGE_PIDS_PATH, pids, 'UTF-8')
-
-                Logger.println("Coverage PIDs for cleanup: $pids")
-
+        steps.lock(coverageContext.lockableResource) {
+            if (coverageContext != null) {
+                CoverageUtils.startCoverage(steps, coverageOpts, coverageContext, workspaceDir, srcDir, this)
             }
 
             // Выполняем команды
@@ -106,8 +82,8 @@ class Yaxunit implements Serializable {
                 VRunner.exec(runTestsCommand, true)
             }
 
-            if (options.coverage) {
-                steps.cmd("${coverageOpts.coverage41CPath} stop -i DefAlias -u http://127.0.0.1:$port")
+            if (coverageContext != null) {
+                CoverageUtils.stopCoverage(steps, coverageOpts, coverageContext)
             }
         }
 
@@ -137,4 +113,14 @@ class Yaxunit implements Serializable {
             steps.stash(COVERAGE_STASH_NAME, COVERAGE_STASH_PATH, true)
         }
     }
+
+    String getCoverageStashPath() {
+        return COVERAGE_STASH_PATH
+    }
+
+    String getCoveragePidsPath() {
+        return COVERAGE_PIDS_PATH
+    }
+
+
 }
