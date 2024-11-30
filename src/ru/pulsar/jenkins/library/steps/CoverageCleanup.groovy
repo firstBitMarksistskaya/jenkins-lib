@@ -22,7 +22,7 @@ class CoverageCleanup implements Serializable {
 
         Logger.printLocation()
 
-        String pidsFilePath = "build/$stageName-pids"
+        String pidsFilePath = "build${File.separator}${stageName}-pids"
 
         def pids = ""
         if (steps.fileExists(pidsFilePath)) {
@@ -35,16 +35,15 @@ class CoverageCleanup implements Serializable {
         }
 
         Logger.println("Завершение процессов dbgs и Coverage41C с pid: $pids")
-
+        def command
         if (steps.isUnix()) {
-            def command = "kill $pids"
-            steps.sh(command, true, false, encoding)
+            command = "kill $pids"
         } else {
-            def winCommand = pids.split(" ")
+            def pidsForCmd = pids.split(" ")
                     .each { it -> "/PID $it" }
                     .join(" ")
-            def command = "taskkill $winCommand /F"
-            steps.sh(command, true, false, encoding)
+            command = "taskkill $pidsForCmd /F"
         }
+        steps.cmd(command, true, false)
     }
 }

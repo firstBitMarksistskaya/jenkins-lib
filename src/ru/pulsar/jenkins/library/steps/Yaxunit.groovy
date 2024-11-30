@@ -73,8 +73,8 @@ class Yaxunit implements Serializable, Coverable {
         def coverageContext = CoverageUtils.prepareContext(config, options)
 
         steps.lock(coverageContext.lockableResource) {
-            if (coverageContext != null) {
-                CoverageUtils.startCoverage(steps, coverageOpts, coverageContext, workspaceDir, srcDir, this)
+            if (options.coverage) {
+                CoverageContext.startCoverage(steps, coverageOpts, coverageContext, workspaceDir, srcDir, this)
             }
 
             // Выполняем команды
@@ -82,7 +82,7 @@ class Yaxunit implements Serializable, Coverable {
                 VRunner.exec(runTestsCommand, true)
             }
 
-            if (coverageContext != null) {
+            if (options.coverage) {
                 CoverageUtils.stopCoverage(steps, coverageOpts, coverageContext)
             }
         }

@@ -46,8 +46,8 @@ class Bdd implements Serializable, Coverable {
             def coverageContext = CoverageUtils.prepareContext(config, options)
 
             steps.lock(coverageContext.lockableResource) {
-                if (coverageContext != null) {
-                    CoverageUtils.startCoverage(steps, coverageOpts, coverageContext, workspaceDir, srcDir, this)
+                if (options.coverage) {
+                    CoverageContext.startCoverage(steps, coverageOpts, coverageContext, workspaceDir, srcDir, this)
                 }
 
                 config.bddOptions.vrunnerSteps.each {
@@ -65,7 +65,7 @@ class Bdd implements Serializable, Coverable {
                     Logger.println("Тестирование сценариев завершилось успешно")
                 }
 
-                if (coverageContext != null) {
+                if (options.coverage) {
                     CoverageUtils.stopCoverage(steps, coverageOpts, coverageContext)
                 }
             }
