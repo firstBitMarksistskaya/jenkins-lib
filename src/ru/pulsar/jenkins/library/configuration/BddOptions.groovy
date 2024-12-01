@@ -20,7 +20,7 @@ class BddOptions extends StepCoverageOptions implements Serializable {
     Boolean coverage = false
 
     @JsonPropertyDescription("Порт, на котором будет запущен сервер отладки для замера покрытия")
-    int dbgsPort = 1550
+    Integer dbgsPort = 1550
 
     @Override
     @NonCPS
