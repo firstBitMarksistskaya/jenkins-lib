@@ -28,14 +28,16 @@ class WithCoverage implements Serializable {
 
         //noinspection GroovyMissingReturnStatement
         steps.lock(context.lockableResource) {
-            if (coverageOptions.coverage) {
-                CoverageUtils.startCoverage(steps, config, context, stage)
-            }
+            try {
+                if (coverageOptions.coverage) {
+                    CoverageUtils.startCoverage(steps, config, context, stage)
+                }
 
-            body()
-
-            if (coverageOptions.coverage) {
-                CoverageUtils.stopCoverage(steps, config, context)
+                body()
+            } finally {
+                if (coverageOptions.coverage) {
+                    CoverageUtils.stopCoverage(steps, config, context)
+                }
             }
         }
 
