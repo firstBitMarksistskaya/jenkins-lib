@@ -4,7 +4,6 @@ import hudson.FilePath
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
-import ru.pulsar.jenkins.library.utils.CoverageUtils
 import ru.pulsar.jenkins.library.utils.FileUtils
 import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.StringJoiner
@@ -40,9 +39,6 @@ class SmokeTest implements Serializable, Coverable {
 
         def options = config.smokeTestOptions
         def env = steps.env()
-
-        def srcDir = config.srcDir
-        def workspaceDir = FileUtils.getFilePath("$env.WORKSPACE")
 
         String vrunnerPath = VRunner.getVRunnerPath()
         String command = "$vrunnerPath xunit --ibconnection \"/F./build/ib\""
@@ -107,41 +103,30 @@ class SmokeTest implements Serializable, Coverable {
             command += " $testsPath"
         }
 
-        def coverageOpts = config.coverageOptions
-        def coverageContext = CoverageUtils.prepareContext(config, options)
+        steps.withEnv(logosConfig) {
 
-        steps.lock(coverageContext.lockableResource) {
-            if (options.coverage) {
-                CoverageContext.startCoverage(steps, coverageOpts, coverageContext, workspaceDir, srcDir, this)
-            }
-
-            steps.withEnv(logosConfig) {
+            steps.withCoverage(config, this, options) {
                 VRunner.exec(command, true)
             }
 
-            if (options.coverage) {
-                CoverageUtils.stopCoverage(steps, coverageOpts, coverageContext)
+            if (options.publishToAllureReport) {
+                steps.stash(ALLURE_STASH, "$allureReportDir/**", true)
+                steps.archiveArtifacts("$allureReportDir/**")
+            }
+
+            if (options.publishToJUnitReport) {
+                steps.junit("$junitReportDir/*.xml", true)
+                steps.archiveArtifacts("$junitReportDir/**")
             }
         }
-
-        if (options.publishToAllureReport) {
-            steps.stash(ALLURE_STASH, "$allureReportDir/**", true)
-            steps.archiveArtifacts("$allureReportDir/**")
-        }
-
-        if (options.publishToJUnitReport) {
-            steps.junit("$junitReportDir/*.xml", true)
-            steps.archiveArtifacts("$junitReportDir/**")
-        }
-
-        if (options.coverage) {
-            steps.stash(COVERAGE_STASH_NAME, COVERAGE_STASH_PATH, true)
-        }
-
     }
 
     String getCoverageStashPath() {
         return COVERAGE_STASH_PATH
+    }
+
+    String getCoverageStashName() {
+        return COVERAGE_STASH_NAME
     }
 
     String getCoveragePidsPath() {

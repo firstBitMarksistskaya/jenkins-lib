@@ -1,9 +1,7 @@
 package ru.pulsar.jenkins.library.utils
 
-import hudson.FilePath
 import org.apache.commons.lang3.RandomStringUtils
 import ru.pulsar.jenkins.library.IStepExecutor
-import ru.pulsar.jenkins.library.configuration.GlobalCoverageOptions
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.StepCoverageOptions
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
@@ -39,13 +37,20 @@ class CoverageUtils {
             lockableResource = "${env.NODE_NAME}_$port"
         }
 
-        return new CoverageContext(lockableResource, coverageOpts, port, currentDbgsPids, currentCoverage41CPids)
+        return new CoverageContext(lockableResource, config.srcDir, coverageOpts, port, currentDbgsPids, currentCoverage41CPids)
 
     }
 
-    static void startCoverage(IStepExecutor steps, GlobalCoverageOptions coverageOpts, CoverageContext coverageContext, FilePath workspaceDir, String srcDir, Coverable coverable) {
+    static void startCoverage(IStepExecutor steps, JobConfiguration config, CoverageContext coverageContext, Coverable stage) {
+
+        def env = steps.env()
+        def srcDir = config.srcDir
+        def workspaceDir = FileUtils.getFilePath("$env.WORKSPACE")
+
+        def coverageOpts = config.coverageOptions
+
         steps.start("${coverageOpts.dbgsPath} --addr=127.0.0.1 --port=$coverageContext.port")
-        steps.start("${coverageOpts.coverage41CPath} start -i DefAlias -u http://127.0.0.1:$coverageContext.port -P $workspaceDir -s $srcDir -o ${coverable.getCoverageStashPath()}")
+        steps.start("${coverageOpts.coverage41CPath} start -i DefAlias -u http://127.0.0.1:$coverageContext.port -P $workspaceDir -s $srcDir -o ${stage.getCoverageStashPath()}")
         steps.cmd("${coverageOpts.coverage41CPath} check -i DefAlias -u http://127.0.0.1:$coverageContext.port")
 
         def newDbgsPids = getPIDs("dbgs")
@@ -57,12 +62,15 @@ class CoverageUtils {
         newDbgsPids.addAll(newCoverage41CPids)
         def pids = newDbgsPids.join(" ")
 
-        steps.writeFile(coverable.getCoveragePidsPath(), pids, 'UTF-8')
+        steps.writeFile(stage.getCoveragePidsPath(), pids, 'UTF-8')
 
         Logger.println("Coverage PIDs for cleanup: $pids")
     }
 
-    static void stopCoverage(IStepExecutor steps, GlobalCoverageOptions coverageOpts, CoverageContext coverageContext) {
+    static void stopCoverage(IStepExecutor steps, JobConfiguration config, CoverageContext coverageContext) {
+
+        def coverageOpts = config.coverageOptions
+
         steps.cmd("${coverageOpts.coverage41CPath} stop -i DefAlias -u http://127.0.0.1:$coverageContext.port")
     }
 

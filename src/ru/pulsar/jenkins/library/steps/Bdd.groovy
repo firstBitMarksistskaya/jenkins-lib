@@ -3,8 +3,6 @@ package ru.pulsar.jenkins.library.steps
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
-import ru.pulsar.jenkins.library.utils.CoverageUtils
-import ru.pulsar.jenkins.library.utils.FileUtils
 import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.VRunner
 
@@ -32,9 +30,6 @@ class Bdd implements Serializable, Coverable {
         }
 
         def options = config.bddOptions
-        def env = steps.env()
-        def srcDir = config.srcDir
-        def workspaceDir = FileUtils.getFilePath("$env.WORKSPACE")
 
         List<String> logosConfig = ["LOGOS_CONFIG=$config.logosConfig"]
         steps.withEnv(logosConfig) {
@@ -42,13 +37,7 @@ class Bdd implements Serializable, Coverable {
             steps.createDir('build/out')
             List<Integer> returnStatuses = []
 
-            def coverageOpts = config.coverageOptions
-            def coverageContext = CoverageUtils.prepareContext(config, options)
-
-            steps.lock(coverageContext.lockableResource) {
-                if (options.coverage) {
-                    CoverageContext.startCoverage(steps, coverageOpts, coverageContext, workspaceDir, srcDir, this)
-                }
+            steps.withCoverage(config, this, options) {
 
                 config.bddOptions.vrunnerSteps.each {
                     Logger.println("Шаг запуска сценариев командой ${it}")
@@ -64,23 +53,21 @@ class Bdd implements Serializable, Coverable {
                 } else {
                     Logger.println("Тестирование сценариев завершилось успешно")
                 }
-
-                if (options.coverage) {
-                    CoverageUtils.stopCoverage(steps, coverageOpts, coverageContext)
-                }
             }
         }
 
         steps.stash(ALLURE_STASH, 'build/out/allure/**', true)
         steps.stash('bdd-cucumber', 'build/out/cucumber/**', true)
-        if (options.coverage) {
-            steps.stash(COVERAGE_STASH_NAME, COVERAGE_STASH_PATH, true)
-        }
 
     }
 
     String getCoverageStashPath() {
         return COVERAGE_STASH_PATH
+    }
+
+    @Override
+    String getCoverageStashName() {
+        return COVERAGE_STASH_NAME
     }
 
     String getCoveragePidsPath() {

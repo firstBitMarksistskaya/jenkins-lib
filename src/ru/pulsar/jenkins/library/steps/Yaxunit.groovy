@@ -4,7 +4,6 @@ import hudson.FilePath
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
-import ru.pulsar.jenkins.library.utils.CoverageUtils
 import ru.pulsar.jenkins.library.utils.FileUtils
 import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.VRunner
@@ -42,9 +41,6 @@ class Yaxunit implements Serializable, Coverable {
         def options = config.yaxunitOptions
         def env = steps.env()
 
-        def srcDir = config.srcDir
-        def workspaceDir = FileUtils.getFilePath("$env.WORKSPACE")
-
         String vrunnerPath = VRunner.getVRunnerPath()
         String ibConnection = ' --ibconnection "/F./build/ib"'
 
@@ -69,48 +65,34 @@ class Yaxunit implements Serializable, Coverable {
 
         }
 
-        def coverageOpts = config.coverageOptions
-        def coverageContext = CoverageUtils.prepareContext(config, options)
+        steps.withEnv(logosConfig) {
 
-        steps.lock(coverageContext.lockableResource) {
-            if (options.coverage) {
-                CoverageContext.startCoverage(steps, coverageOpts, coverageContext, workspaceDir, srcDir, this)
-            }
-
-            // Выполняем команды
-            steps.withEnv(logosConfig) {
+            steps.withCoverage(config, this, options) {
                 VRunner.exec(runTestsCommand, true)
             }
 
-            if (options.coverage) {
-                CoverageUtils.stopCoverage(steps, coverageOpts, coverageContext)
+            // Сохраняем результаты
+            String junitReport = "./build/out/yaxunit/junit.xml"
+            FilePath pathToJUnitReport = FileUtils.getFilePath("$env.WORKSPACE/$junitReport")
+            String junitReportDir = FileUtils.getLocalPath(pathToJUnitReport.getParent())
+
+            if (options.publishToJUnitReport) {
+                steps.junit("$junitReportDir/*.xml", true)
+                steps.archiveArtifacts("$junitReportDir/**")
             }
-        }
 
-        // Сохраняем результаты
-        String junitReport = "./build/out/yaxunit/junit.xml"
-        FilePath pathToJUnitReport = FileUtils.getFilePath("$env.WORKSPACE/$junitReport")
-        String junitReportDir = FileUtils.getLocalPath(pathToJUnitReport.getParent())
+            if (options.publishToAllureReport) {
+                String allureReport = "./build/out/allure/yaxunit/junit.xml"
+                FilePath pathToAllureReport = FileUtils.getFilePath("$env.WORKSPACE/$allureReport")
+                String allureReportDir = FileUtils.getLocalPath(pathToAllureReport.getParent())
 
-        if (options.publishToJUnitReport) {
-            steps.junit("$junitReportDir/*.xml", true)
-            steps.archiveArtifacts("$junitReportDir/**")
-        }
+                pathToJUnitReport.copyTo(pathToAllureReport)
 
-        if (options.publishToAllureReport) {
-            String allureReport = "./build/out/allure/yaxunit/junit.xml"
-            FilePath pathToAllureReport = FileUtils.getFilePath("$env.WORKSPACE/$allureReport")
-            String allureReportDir = FileUtils.getLocalPath(pathToAllureReport.getParent())
+                steps.stash(YAXUNIT_ALLURE_STASH, "$allureReportDir/**", true)
+            }
 
-            pathToJUnitReport.copyTo(pathToAllureReport)
+            steps.archiveArtifacts("build/out/yaxunit/junit.xml")
 
-            steps.stash(YAXUNIT_ALLURE_STASH, "$allureReportDir/**", true)
-        }
-
-        steps.archiveArtifacts("build/out/yaxunit/junit.xml")
-
-        if (options.coverage) {
-            steps.stash(COVERAGE_STASH_NAME, COVERAGE_STASH_PATH, true)
         }
     }
 
@@ -118,9 +100,12 @@ class Yaxunit implements Serializable, Coverable {
         return COVERAGE_STASH_PATH
     }
 
+    @Override
+    String getCoverageStashName() {
+        return COVERAGE_STASH_NAME
+    }
+
     String getCoveragePidsPath() {
         return COVERAGE_PIDS_PATH
     }
-
-
 }
