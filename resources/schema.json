@@ -51,11 +51,11 @@
       "properties" : {
         "coverage41CPath" : {
           "type" : "string",
-          "description" : "Путь к исполняемому файлу Coverage41C\n    По умолчанию равен Coverage41C.\n    "
+          "description" : "Путь к исполняемому файлу Coverage41C\n    По умолчанию ищется в PATH.\n    "
         },
         "dbgsPath" : {
           "type" : "string",
-          "description" : "Путь к исполняемому файлу dbgs.\n    По умолчанию равен /opt/1cv8/current/dbgs.\n    "
+          "description" : "Путь к исполняемому файлу dbgs.\n    По умолчанию ищется в PATH.\n    "
         }
       },
       "description" : "Настройки замеров покрытия"

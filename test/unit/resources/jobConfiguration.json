@@ -4,6 +4,9 @@
   "secrets": {
     "storage": "1234"
   },
+  "coverage": {
+    "dbgsPath": "/opt/1cv8/current/dbgs"
+  },
   "stages": {
     "syntaxCheck": true
   },

@@ -246,5 +246,5 @@ pipeline1C()
 
 ## Настройка трансформации результата валидации EDT
 
-  * При использовании SonarQube версии <10.3 и `stebi` формат отчета должен быть `Generic_Issue` (параметр `resultsTransform` -> `genericIssueFormat`)
-  * Трансформацию результатов может выполнять `edt-ripper` (параметр `resultsTransform` -> `transformer`). В этом случае замечания будут загружены в SonarQube в формате BSL LS, что позволяет полноценно управлять ими в SonarQube.
+* При использовании SonarQube версии <10.3 и `stebi` формат отчета должен быть `Generic_Issue` (параметр `resultsTransform` -> `genericIssueFormat`)
+* Трансформацию результатов может выполнять `edt-ripper` (параметр `resultsTransform` -> `transformer`). В этом случае замечания будут загружены в SonarQube в формате BSL LS, что позволяет полноценно управлять ими в SonarQube.

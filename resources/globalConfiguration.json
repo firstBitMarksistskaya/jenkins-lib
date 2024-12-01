@@ -90,7 +90,7 @@
     "dbgsPort": 1551
   },
   "coverage": {
-    "dbgsPath": "/opt/1cv8/current/dbgs",
+    "dbgsPath": "dbgs",
     "coverage41CPath": "Coverage41C"
   },
   "yaxunit": {

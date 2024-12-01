@@ -27,12 +27,6 @@ class YaxunitOptions extends StepCoverageOptions implements Serializable {
     """)
     boolean publishToJUnitReport
 
-    @JsonPropertyDescription("Выполнять замер покрытия")
-    Boolean coverage = false
-
-    @JsonPropertyDescription("Порт, на котором будет запущен сервер отладки для замера покрытия")
-    Integer dbgsPort = 1550
-
     @Override
     @NonCPS
     String toString() {
