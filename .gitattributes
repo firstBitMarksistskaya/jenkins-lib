@@ -1,2 +1,3 @@
 *.groovy eol=lf
 *.md eol=lf
+*.os eol=lf

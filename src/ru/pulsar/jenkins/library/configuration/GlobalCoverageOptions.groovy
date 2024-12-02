@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyDescription
 class GlobalCoverageOptions implements Serializable {
     
     @JsonPropertyDescription('''Путь к исполняемому файлу dbgs.
-    По умолчанию ищется в PATH.
+    По умолчанию ищется с помощью v8find для указанной версии платформы (v8version).
     ''')
     String dbgsPath
 

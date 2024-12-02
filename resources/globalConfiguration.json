@@ -87,10 +87,10 @@
     "publishToAllureReport": false,
     "publishToJUnitReport": true,
     "coverage": false,
-    "dbgsPort": 1551
+    "dbgsPort": 1550
   },
   "coverage": {
-    "dbgsPath": "dbgs",
+    "dbgsPath": "",
     "coverage41CPath": "Coverage41C"
   },
   "yaxunit": {
@@ -99,7 +99,7 @@
     "publishToAllureReport": false,
     "publishToJUnitReport": true,
     "coverage": false,
-    "dbgsPort": 1552
+    "dbgsPort": 1550
   },
   "resultsTransform": {
     "transformer": "stebi",

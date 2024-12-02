@@ -49,9 +49,11 @@ class CoverageUtils {
 
         def coverageOpts = config.coverageOptions
 
-        steps.start("${coverageOpts.dbgsPath} --addr=127.0.0.1 --port=$coverageContext.port")
-        steps.start("${coverageOpts.coverage41CPath} start -i DefAlias -u http://127.0.0.1:$coverageContext.port -P $workspaceDir -s $srcDir -o ${stage.getCoverageStashPath()}")
-        steps.cmd("${coverageOpts.coverage41CPath} check -i DefAlias -u http://127.0.0.1:$coverageContext.port")
+        String dbgsPath = findDbgs(steps, config)
+
+        steps.start("${dbgsPath} --addr=127.0.0.1 --port=${coverageContext.port}")
+        steps.start("${coverageOpts.coverage41CPath} start -i DefAlias -u http://127.0.0.1:${coverageContext.port} -P $workspaceDir -s $srcDir -o ${stage.getCoverageStashPath()}")
+        steps.cmd("${coverageOpts.coverage41CPath} check -i DefAlias -u http://127.0.0.1:${coverageContext.port}")
 
         def newDbgsPids = getPIDs("dbgs")
         def newCoverage41CPids = getPIDs("Coverage41C")
@@ -72,6 +74,25 @@ class CoverageUtils {
         def coverageOpts = config.coverageOptions
 
         steps.cmd("${coverageOpts.coverage41CPath} stop -i DefAlias -u http://127.0.0.1:$coverageContext.port")
+    }
+
+    static String findDbgs(IStepExecutor steps, JobConfiguration config) {
+
+        String dbgsPath = config.coverageOptions.dbgsPath
+        if (dbgsPath.isEmpty()) {
+            def osResourcePath = steps.libraryResource "dbgs.os"
+            final osResultPath = "build/dbgs.os"
+            steps.writeFile(osResultPath, osResourcePath, 'UTF-8')
+
+            dbgsPath = steps.cmd("oscript ${osResultPath} ${config.v8version}", false, true)
+        }
+
+        if (dbgsPath.isEmpty()) {
+            steps.error("Не удалось найти путь к dbgs")
+        }
+
+        return dbgsPath.strip()
+
     }
 
 }

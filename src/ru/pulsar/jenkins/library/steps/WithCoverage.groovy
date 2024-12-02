@@ -34,16 +34,17 @@ class WithCoverage implements Serializable {
                 }
 
                 body()
+            } catch (Exception e) {
+                throw new Exception("При выполнении блока произошла ошибка: ${e}")
             } finally {
                 if (coverageOptions.coverage) {
                     CoverageUtils.stopCoverage(steps, config, context)
                 }
             }
-        }
 
-        if (coverageOptions.coverage) {
-            steps.stash(stage.getCoverageStashName(), stage.getCoverageStashPath(), true)
+            if (coverageOptions.coverage) {
+                steps.stash(stage.getCoverageStashName(), stage.getCoverageStashPath(), true)
+            }
         }
-
     }
 }
