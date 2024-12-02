@@ -236,6 +236,11 @@ void call() {
                                         bdd config
                                     }
                                 }
+                                post {
+                                    cleanup {
+                                        coverageCleanup config, 'bdd'
+                                    }
+                                }
                             }
                         }
                     }
@@ -288,6 +293,11 @@ void call() {
                                         smoke config
                                     }
                                 }
+                                post {
+                                    cleanup {
+                                        coverageCleanup config, 'smoke'
+                                    }
+                                }
                             }
                         }
                     }
@@ -323,6 +333,11 @@ void call() {
                                 steps {
                                     timeout(time: config.timeoutOptions.yaxunit, unit: TimeUnit.MINUTES) {
                                         yaxunit config
+                                    }
+                                }
+                                post {
+                                    cleanup {
+                                        coverageCleanup config, 'yaxunit'
                                     }
                                 }
                             }
