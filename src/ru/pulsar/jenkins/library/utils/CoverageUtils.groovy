@@ -9,7 +9,7 @@ import ru.pulsar.jenkins.library.steps.Coverable
 import ru.pulsar.jenkins.library.steps.CoverageContext
 
 class CoverageUtils {
-    static ArrayList<String> getPIDs(String name) {
+    static List<String> getPIDs(String name) {
 
         IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
 
