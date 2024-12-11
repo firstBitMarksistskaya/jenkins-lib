@@ -20,7 +20,7 @@ class CoverageUtils {
         } else {
             pids = steps.bat("chcp 65001 > nul \nfor /f \"tokens=2\" %%a in ('tasklist ^| findstr $name') do @echo %%a", false, true, 'UTF-8')
         }
-        return pids.split('\n').toList()
+        return pids.split('\r?\n').toList()
     }
 
     static CoverageContext prepareContext(JobConfiguration config, StepCoverageOptions options) {
