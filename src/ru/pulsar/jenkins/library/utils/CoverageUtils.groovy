@@ -84,12 +84,14 @@ class CoverageUtils {
             return dbgsPath.strip()
         }
 
-        def osResourcePath = steps.libraryResource "dbgs.os"
-        final osResultPath = "build/dbgs.os"
-        steps.writeFile(osResultPath, osResourcePath, 'UTF-8')
+        def dbgsFindScript = steps.libraryResource("dbgs.os")
+        final dbgsFindScriptPath = "build/dbgs.os"
+        final dbgsPathResult = "build/dbgsPath"
+        steps.writeFile(dbgsFindScriptPath, dbgsFindScript, 'UTF-8')
 
-        dbgsPath = steps.cmd("oscript ${osResultPath} ${config.v8version}", false, true)
-        dbgsPath = dbgsPath.strip()
+        steps.cmd("oscript ${dbgsFindScriptPath} ${config.v8version} > ${dbgsPathResult}", false, false)
+
+        dbgsPath = steps.readFile(dbgsPathResult).strip()
 
         if (dbgsPath.isEmpty()) {
             steps.error("Не удалось найти путь к dbgs")
