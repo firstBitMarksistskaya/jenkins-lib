@@ -20,7 +20,7 @@ class Start implements Serializable {
         if (steps.isUnix()) {
             steps.sh("$executable $params &", false, false , encoding)
         } else {
-            steps.bat("chcp 65001 > nul \nstart \"\" /B \"$executable\" \"$params\"", false, false, encoding)
+            steps.bat("chcp 65001 > nul \nstart \"\" /B \"$executable\" $params", false, false, encoding)
         }
     }
 }
