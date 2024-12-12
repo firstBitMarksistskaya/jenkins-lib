@@ -44,7 +44,7 @@ interface IStepExecutor {
 
     def ringCommand(String script)
 
-    void start(String script)
+    void start(String executable, String params)
 
     void tool(String toolName)
 
