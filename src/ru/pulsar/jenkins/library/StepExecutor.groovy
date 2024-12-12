@@ -7,6 +7,9 @@ import jenkins.plugins.http_request.ResponseContentSupplier
 import org.jenkinsci.plugins.pipeline.utility.steps.fs.FileWrapper
 import org.jenkinsci.plugins.workflow.support.actions.EnvironmentAction
 import org.jenkinsci.plugins.workflow.support.steps.build.RunWrapper
+import ru.pulsar.jenkins.library.configuration.JobConfiguration
+import ru.pulsar.jenkins.library.configuration.StepCoverageOptions
+import ru.pulsar.jenkins.library.steps.Coverable
 import ru.yandex.qatools.allure.jenkins.config.ResultsConfig
 
 class StepExecutor implements IStepExecutor {
@@ -70,6 +73,11 @@ class StepExecutor implements IStepExecutor {
     @Override
     def ringCommand(String script) {
         return steps.ringCommand(script)
+    }
+
+    @Override
+    void start(String executable, String params) {
+        steps.start(executable, params)
     }
 
     @Override
@@ -140,6 +148,18 @@ class StepExecutor implements IStepExecutor {
     @Override
     def withEnv(List<String> strings, Closure body) {
         steps.withEnv(strings) {
+            body()
+        }
+    }
+
+    @Override
+    def withCoverage(JobConfiguration config, Coverable stage, StepCoverageOptions options, Closure body) {
+        steps.withCoverage(config, stage, options, body)
+    }
+
+    @Override
+    def lock(String resource, Closure body) {
+        steps.lock(resource: resource) {
             body()
         }
     }
