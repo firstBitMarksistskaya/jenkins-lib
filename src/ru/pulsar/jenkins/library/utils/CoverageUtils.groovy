@@ -79,19 +79,24 @@ class CoverageUtils {
     static String findDbgs(IStepExecutor steps, JobConfiguration config) {
 
         String dbgsPath = config.coverageOptions.dbgsPath
-        if (dbgsPath.isEmpty()) {
-            def osResourcePath = steps.libraryResource "dbgs.os"
-            final osResultPath = "build/dbgs.os"
-            steps.writeFile(osResultPath, osResourcePath, 'UTF-8')
-
-            dbgsPath = steps.cmd("oscript ${osResultPath} ${config.v8version}", false, true)
+        if (!dbgsPath.isEmpty()) {
+            Logger.println("Using dbgsPath from config: $dbgsPath")
+            return dbgsPath.strip()
         }
+
+        def osResourcePath = steps.libraryResource "dbgs.os"
+        final osResultPath = "build/dbgs.os"
+        steps.writeFile(osResultPath, osResourcePath, 'UTF-8')
+
+        dbgsPath = steps.cmd("oscript ${osResultPath} ${config.v8version}", false, true)
+        dbgsPath = dbgsPath.strip()
 
         if (dbgsPath.isEmpty()) {
             steps.error("Не удалось найти путь к dbgs")
         }
 
-        return dbgsPath.strip()
+        Logger.println("Found dbgs: ${dbgsPath}")
+        return dbgsPath
 
     }
 
