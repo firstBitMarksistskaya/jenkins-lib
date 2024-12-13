@@ -20,7 +20,7 @@ class CoverageUtils {
             script = "ps -aux | grep '$name' | grep -v grep | awk '{print \$2}'"
             pids = steps.sh(script, false, true, 'UTF-8')
         } else {
-            script = "@echo off\nchcp 65001 > nul\nfor /f \"tokens=2\" %%a in ('tasklist ^| findstr /C:\"$name\"') do (@echo %%a)"
+            script = "@echo off\nchcp 65001 > nul\nfor /f \"tokens=2\" %%a in ('tasklist ^| findstr \"$name\" || exit 0') do (@echo %%a)"
             pids = steps.bat(script, false, true, 'UTF-8')
         }
         return pids.split('\r?\n').toList()
