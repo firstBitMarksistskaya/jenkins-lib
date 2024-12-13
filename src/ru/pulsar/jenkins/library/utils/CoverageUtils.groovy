@@ -14,11 +14,14 @@ class CoverageUtils {
         IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
 
         String pids
+        def script
 
         if (steps.isUnix()) {
-            pids = steps.sh("ps -aux | grep '$name' | awk '{print \$2}'", false, true, 'UTF-8')
+            script = "ps -aux | grep '$name' | grep -v grep | awk '{print \$2}'"
+            pids = steps.sh(script, false, true, 'UTF-8')
         } else {
-            pids = steps.bat("chcp 65001 > nul \nfor /f \"tokens=2\" %%a in (\"tasklist ^| findstr $name\") do @echo %%a", false, true, 'UTF-8')
+            script = "@echo off\nchcp 65001 > nul\nfor /f \"tokens=2\" %%a in (\'tasklist ^| findstr $name\') do (@echo %%a)"
+            pids = steps.bat(script, false, true, 'UTF-8')
         }
         return pids.split('\r?\n').toList()
     }
