@@ -10,8 +10,6 @@ class CoverageCleanup implements Serializable {
     private final JobConfiguration config
     private final String stageName
 
-    private String encoding = 'UTF-8'
-
     CoverageCleanup(JobConfiguration config, String stageName = "") {
         this.config = config
         this.stageName = stageName
@@ -39,9 +37,14 @@ class CoverageCleanup implements Serializable {
         if (steps.isUnix()) {
             command = "kill $pids"
         } else {
-            def pidsForCmd = pids.split(" ")
-                    .each { it -> "/PID $it" }
-                    .join(" ")
+            def pidsForCmd = ''
+            def pidsArray = pids.split(" ")
+
+            pidsArray.each {
+                pidsForCmd += "/PID $it"
+            }
+            pidsForCmd = pidsForCmd.trim()
+
             command = "taskkill $pidsForCmd /F"
         }
         steps.cmd(command, true, false)
