@@ -93,36 +93,27 @@ class CoverageUtils {
 
         String dbgsPath = config.coverageOptions.dbgsPath
         if (!dbgsPath.isEmpty()) {
-            Logger.println("Using dbgsPath from config: $dbgsPath")
+            Logger.println("Использую путь к dbgs и параметра dbgsPath: $dbgsPath")
             return dbgsPath.strip()
         }
 
         final dbgsFindScriptPath = "build/tmp/dbgs_${System.currentTimeMillis()}.os"
         final dbgsPathResult = "build/tmp/dbgsPath_${System.currentTimeMillis()}"
 
-        try {
-            def dbgsFindScript = steps.libraryResource("dbgs.os")
-            if (!steps.writeFile(dbgsFindScriptPath, dbgsFindScript, 'UTF-8')) {
-                throw new IOException("Не удалось записать скрипт поиска dbgs")
-            }
-
-            steps.cmd("oscript ${dbgsFindScriptPath} ${config.v8version} > ${dbgsPathResult}")
-            dbgsPath = steps.readFile(dbgsPathResult).strip()
-
-            if (dbgsPath.isEmpty()) {
-                steps.error("Не удалось найти путь к dbgs")
-            }
-
-            Logger.println("Found dbgs: ${dbgsPath}")
-            return dbgsPath
-        } finally {
-            try {
-                steps.deleteFile(dbgsFindScriptPath)
-                steps.deleteFile(dbgsPathResult)
-            } catch (Exception e) {
-                Logger.println("Не удалось удалить временные файлы: ${e.message}")
-            }
+        def dbgsFindScript = steps.libraryResource("dbgs.os")
+        if (!steps.writeFile(dbgsFindScriptPath, dbgsFindScript, 'UTF-8')) {
+            throw new IOException("Не удалось записать скрипт поиска dbgs")
         }
+
+        steps.cmd("oscript ${dbgsFindScriptPath} ${config.v8version} > ${dbgsPathResult}")
+        dbgsPath = steps.readFile(dbgsPathResult).strip()
+
+        if (dbgsPath.isEmpty()) {
+            steps.error("Не удалось найти путь к dbgs")
+        }
+
+        Logger.println("Найден путь к dbgs: ${dbgsPath}")
+        return dbgsPath
     }
 
 }
