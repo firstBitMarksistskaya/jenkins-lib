@@ -20,7 +20,7 @@ class Start implements Serializable {
 
         def executable_name = getExecutableName(executable)
         if (steps.isUnix()) {
-            steps.sh("$executable $params > \"./build/${env.STAGE_NAME}-start-${executable_name}.log 2>&1 &", false, false , encoding)
+            steps.sh("$executable $params > \"./build/${env.STAGE_NAME}-start-${executable_name}.log\" 2>&1 &", false, false , encoding)
         } else {
             steps.bat("chcp 65001 > nul \nstart \"\" /B \"$executable\" $params > \"./build/${env.STAGE_NAME}-start-${executable_name}.log\" 2>&1", false, false, encoding)
         }
