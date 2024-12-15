@@ -77,7 +77,14 @@ class StepExecutor implements IStepExecutor {
 
     @Override
     void start(String executable, String params) {
-        steps.start(executable, params)
+        if (executable == null || executable.trim().isEmpty()) {
+            throw new IllegalArgumentException("executable не может быть пустым")
+        }
+        try {
+            steps.start(executable, params)
+        } catch (Exception e) {
+            throw new RuntimeException("Ошибка при запуске процесса: ${e.message}", e)
+        }
     }
 
     @Override
