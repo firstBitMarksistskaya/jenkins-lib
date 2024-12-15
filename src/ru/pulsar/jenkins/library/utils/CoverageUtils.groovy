@@ -93,7 +93,7 @@ class CoverageUtils {
 
         String dbgsPath = config.coverageOptions.dbgsPath
         if (!dbgsPath.isEmpty()) {
-            Logger.println("Использую путь к dbgs и параметра dbgsPath: $dbgsPath")
+            Logger.println("Использую путь к dbgs из параметра dbgsPath: $dbgsPath")
             return dbgsPath.strip()
         }
 
@@ -101,9 +101,7 @@ class CoverageUtils {
         final dbgsPathResult = "build/tmp/dbgsPath_${System.currentTimeMillis()}"
 
         def dbgsFindScript = steps.libraryResource("dbgs.os")
-        if (!steps.writeFile(dbgsFindScriptPath, dbgsFindScript, 'UTF-8')) {
-            throw new IOException("Не удалось записать скрипт поиска dbgs")
-        }
+        steps.writeFile(dbgsFindScriptPath, dbgsFindScript, 'UTF-8')
 
         steps.cmd("oscript ${dbgsFindScriptPath} ${config.v8version} > ${dbgsPathResult}")
         dbgsPath = steps.readFile(dbgsPathResult).strip()
