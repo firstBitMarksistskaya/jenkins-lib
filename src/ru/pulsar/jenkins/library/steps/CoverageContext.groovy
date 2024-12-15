@@ -8,9 +8,9 @@ class CoverageContext {
     String srcDir
     GlobalCoverageOptions coverageOptions
     int port
-    ArrayList<String> pids
-    ArrayList<String> dbgsPids
-    ArrayList<String> coverage41CPids
+    List<String> pids
+    List<String> dbgsPids
+    List<String> coverage41CPids
 
     CoverageContext(String lockableResource, String srcDir, GlobalCoverageOptions coverageOptions, int port, List<String> dbgsPids, List<String> coverage41CPids) {
         this.lockableResource = lockableResource
