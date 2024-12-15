@@ -17,7 +17,7 @@ class CoverageUtils {
         def script
 
         if (steps.isUnix()) {
-            script = "ps -C '$name' -o pid="
+            script = "ps -C '$name' -o pid= || true"
             pids = steps.sh(script, false, true, 'UTF-8')
         } else {
             script = """@echo off
