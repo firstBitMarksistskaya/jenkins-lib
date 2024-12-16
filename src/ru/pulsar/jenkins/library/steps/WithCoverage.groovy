@@ -68,7 +68,7 @@ class WithCoverage implements Serializable {
                     def pidsArray = pids.split(" ")
 
                     pidsArray.each {
-                        pidsForCmd += "/PID $it"
+                        pidsForCmd += " /PID $it"
                     }
                     pidsForCmd = pidsForCmd.trim()
 
