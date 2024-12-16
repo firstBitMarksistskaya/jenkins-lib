@@ -38,13 +38,13 @@ class WithCoverage implements Serializable {
 
                 body()
 
+                CoverageUtils.stopCoverage(steps, config, context)
+
                 steps.stash(stage.getCoverageStashName(), stage.getCoverageStashPath(), true)
 
             } catch (Exception e) {
                 throw new Exception("При выполнении блока произошла ошибка: ${e}")
             } finally {
-
-                CoverageUtils.stopCoverage(steps, config, context)
 
                 String pidsFilePath = "build/${stage.getStageSlug()}-pids"
 
