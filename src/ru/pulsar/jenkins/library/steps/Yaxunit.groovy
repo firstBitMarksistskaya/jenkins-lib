@@ -91,8 +91,6 @@ class Yaxunit implements Serializable, Coverable {
                 steps.stash(YAXUNIT_ALLURE_STASH, "$allureReportDir/**", true)
             }
 
-            steps.archiveArtifacts("build/out/yaxunit/junit.xml")
-
         }
     }
 
