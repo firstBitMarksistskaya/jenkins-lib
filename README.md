@@ -290,6 +290,8 @@ jobConfiguration.json
 ```
 
 Для `yaxunit`:
+
+./tools/vrunner.json
 ```
 "default": {
   "--additional": "/debug -http -attach /debuggerURL http://localhost:1550"
@@ -297,6 +299,8 @@ jobConfiguration.json
 ```
 
 Для `smoke` (после исправления ошибки в vanessa-add):
+
+./tools/vrunner.json
 ```
 "xunit": {
   "--testclient-additional": "/debug -http -attach /debuggerURL http://localhost:1550"
