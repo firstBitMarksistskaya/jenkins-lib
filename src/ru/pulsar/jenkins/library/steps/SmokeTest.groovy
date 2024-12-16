@@ -122,7 +122,7 @@ class SmokeTest implements Serializable, Coverable {
     }
 
     String getStageSlug() {
-        return "bdd"
+        return "smoke"
     }
 
     String getCoverageStashPath() {
