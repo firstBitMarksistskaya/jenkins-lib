@@ -56,6 +56,10 @@ class JobConfiguration implements Serializable {
     @JsonPropertyDescription("Настройки дымового тестирования")
     SmokeTestOptions smokeTestOptions
 
+    @JsonProperty("coverage")
+    @JsonPropertyDescription("Настройки замеров покрытия")
+    GlobalCoverageOptions coverageOptions
+
     @JsonProperty("yaxunit")
     @JsonPropertyDescription("Настройки YAXUnit")
     YaxunitOptions yaxunitOptions
@@ -89,6 +93,7 @@ class JobConfiguration implements Serializable {
             ", sonarQubeOptions=" + sonarQubeOptions +
             ", syntaxCheckOptions=" + syntaxCheckOptions +
             ", smokeTestOptions=" + smokeTestOptions +
+            ", coverageOptions=" + coverageOptions +
             ", yaxunitOptions=" + yaxunitOptions +
             ", resultsTransformOptions=" + resultsTransformOptions +
             ", notificationOptions=" + notificationsOptions +
