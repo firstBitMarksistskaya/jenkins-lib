@@ -1,6 +1,5 @@
 package ru.pulsar.jenkins.library.utils
 
-import org.apache.commons.lang3.RandomStringUtils
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.StepCoverageOptions
@@ -42,10 +41,7 @@ class CoverageUtils {
         def port = options.dbgsPort
         def currentDbgsPids = getPIDs("dbgs")
         def currentCoverage41CPids = getPIDs("Coverage41C")
-        def lockableResource = RandomStringUtils.random(9, true, false)
-        if (options.coverage) {
-            lockableResource = "${env.NODE_NAME}_$port"
-        }
+        def lockableResource = "${env.NODE_NAME}_$port"
 
         return new CoverageContext(lockableResource, config.srcDir, coverageOpts, port, currentDbgsPids, currentCoverage41CPids)
 
@@ -76,7 +72,7 @@ class CoverageUtils {
 
         steps.writeFile(stage.getCoveragePidsPath(), pids, 'UTF-8')
 
-        Logger.println("Coverage PIDs for cleanup: $pids")
+        Logger.println("PID процессов dbgs и Coverage41C для ${stage.getStageSlug()}: $pids")
     }
 
     static void stopCoverage(IStepExecutor steps, JobConfiguration config, CoverageContext coverageContext) {

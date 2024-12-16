@@ -5,6 +5,7 @@ import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.StepCoverageOptions
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.CoverageUtils
+import ru.pulsar.jenkins.library.utils.Logger
 
 class WithCoverage implements Serializable {
 
@@ -22,28 +23,58 @@ class WithCoverage implements Serializable {
 
     def run() {
 
-        def context = CoverageUtils.prepareContext(config, coverageOptions)
+        if (!coverageOptions.coverage) {
+            body()
+            return
+        }
 
+        def context = CoverageUtils.prepareContext(config, coverageOptions)
         IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
 
-        //noinspection GroovyMissingReturnStatement
         steps.lock(context.lockableResource) {
             try {
-                if (coverageOptions.coverage) {
-                    CoverageUtils.startCoverage(steps, config, context, stage)
-                }
+
+                CoverageUtils.startCoverage(steps, config, context, stage)
 
                 body()
+
+                steps.stash(stage.getCoverageStashName(), stage.getCoverageStashPath(), true)
+
             } catch (Exception e) {
                 throw new Exception("При выполнении блока произошла ошибка: ${e}")
             } finally {
-                if (coverageOptions.coverage) {
-                    CoverageUtils.stopCoverage(steps, config, context)
-                }
-            }
 
-            if (coverageOptions.coverage) {
-                steps.stash(stage.getCoverageStashName(), stage.getCoverageStashPath(), true)
+                CoverageUtils.stopCoverage(steps, config, context)
+
+                String pidsFilePath = "build/${stage.getStageSlug()}-pids"
+
+                def pids = ""
+                if (steps.fileExists(pidsFilePath)) {
+                    pids = steps.readFile(pidsFilePath)
+                }
+
+                if (pids.isEmpty()) {
+                    Logger.println("Нет запущенных процессов dbgs и Coverage41C")
+                    return
+                }
+
+                Logger.println("Завершение процессов dbgs и Coverage41C с pid: $pids")
+                def command
+                if (steps.isUnix()) {
+                    command = "kill $pids || true"
+                } else {
+                    def pidsForCmd = ''
+                    def pidsArray = pids.split(" ")
+
+                    pidsArray.each {
+                        pidsForCmd += "/PID $it"
+                    }
+                    pidsForCmd = pidsForCmd.trim()
+
+                    command = "taskkill $pidsForCmd /F > nul"
+
+                }
+                steps.cmd(command, false, false)
             }
         }
     }

@@ -61,6 +61,10 @@ class Bdd implements Serializable, Coverable {
 
     }
 
+    String getStageSlug() {
+        return "bdd"
+    }
+
     String getCoverageStashPath() {
         return COVERAGE_STASH_PATH
     }

@@ -96,6 +96,10 @@ class Yaxunit implements Serializable, Coverable {
         }
     }
 
+    String getStageSlug() {
+        return "yaxunit"
+    }
+
     String getCoverageStashPath() {
         return COVERAGE_STASH_PATH
     }
