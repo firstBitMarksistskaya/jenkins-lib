@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-class SmokeTestOptions implements Serializable {
+class SmokeTestOptions extends StepCoverageOptions implements Serializable {
 
     @JsonPropertyDescription("""Путь к конфигурационному файлу vanessa-runner.
     По умолчанию содержит значение "./tools/vrunner.json".
@@ -15,7 +15,7 @@ class SmokeTestOptions implements Serializable {
     @JsonPropertyDescription("""Путь к конфигурационному файлу для xddTestRunner.
     По умолчанию содержит значение "./tools/xUnitParams.json".
     """)
-    String xddConfigPath;
+    String xddConfigPath
 
     @JsonPropertyDescription("""Выполнять публикацию результатов в отчет Allure.
     По умолчанию выключено.
@@ -35,6 +35,8 @@ class SmokeTestOptions implements Serializable {
             ", xddConfigPath='" + xddConfigPath + '\'' +
             ", publishToAllureReport=" + publishToAllureReport +
             ", publishToJUnitReport=" + publishToJUnitReport +
+            ", coverage=" + coverage +
+            ", dbgsPort=" + dbgsPort +
             '}'
     }
 }

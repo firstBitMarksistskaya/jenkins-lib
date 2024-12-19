@@ -18,9 +18,9 @@
   "reportFormat": "jUnit",
   "showReport": false,
   "logging": {
-    "file": "./build/out/yaxunit/log.txt",
-    "enable": false,
-    "level": "debug"
+    "enable": true,
+    "console": true,
+    "level": "info"
   },
   "exitCode": "./build/out/yaxunit/result.txt"
 }

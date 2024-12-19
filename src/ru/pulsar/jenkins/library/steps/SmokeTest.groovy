@@ -9,9 +9,12 @@ import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.StringJoiner
 import ru.pulsar.jenkins.library.utils.VRunner
 
-class SmokeTest implements Serializable {
+class SmokeTest implements Serializable, Coverable {
 
-    public static final String SMOKE_ALLURE_STASH = 'smoke-allure'
+    public static final String ALLURE_STASH = 'smoke-allure'
+    public static final String COVERAGE_STASH_NAME = 'smoke-coverage'
+    public static final String COVERAGE_STASH_PATH = 'build/out/smoke-coverage.xml'
+    public static final String COVERAGE_PIDS_PATH = 'build/smoke-pids'
 
     private final JobConfiguration config
 
@@ -101,18 +104,40 @@ class SmokeTest implements Serializable {
         }
 
         steps.withEnv(logosConfig) {
-            VRunner.exec(command, true)
-        }
 
-        if (options.publishToAllureReport) {
-            steps.stash(SMOKE_ALLURE_STASH, "$allureReportDir/**", true)
-            steps.archiveArtifacts("$allureReportDir/**")
-        }
+            steps.withCoverage(config, this, options) {
+                VRunner.exec(command, true)
+            }
 
-        if (options.publishToJUnitReport) {
-            steps.junit("$junitReportDir/*.xml", true)
-            steps.archiveArtifacts("$junitReportDir/**")
-        }
+            if (options.publishToAllureReport) {
+                steps.stash(ALLURE_STASH, "$allureReportDir/**", true)
+                steps.archiveArtifacts("$allureReportDir/**")
+            }
 
+            if (options.publishToJUnitReport) {
+                steps.junit("$junitReportDir/*.xml", true)
+                steps.archiveArtifacts("$junitReportDir/**")
+            }
+        }
+    }
+
+    @Override
+    String getStageSlug() {
+        return "smoke"
+    }
+
+    @Override
+    String getCoverageStashPath() {
+        return COVERAGE_STASH_PATH
+    }
+
+    @Override
+    String getCoverageStashName() {
+        return COVERAGE_STASH_NAME
+    }
+
+    @Override
+    String getCoveragePidsPath() {
+        return COVERAGE_PIDS_PATH
     }
 }

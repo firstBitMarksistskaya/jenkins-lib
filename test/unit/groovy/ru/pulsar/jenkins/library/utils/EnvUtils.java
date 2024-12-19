@@ -9,6 +9,7 @@ public class EnvUtils implements EnvironmentAction {
 
     public String NODE_NAME = "node";
     public String WORKSPACE = "ws";
+    public String BRANCH_NAME = "master";
 
     @Override
     public EnvVars getEnvironment() throws IOException, InterruptedException {
