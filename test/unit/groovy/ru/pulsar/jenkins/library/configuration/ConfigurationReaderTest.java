@@ -60,7 +60,10 @@ class ConfigurationReaderTest {
     assertThat(jobConfiguration.getSmokeTestOptions().getVrunnerSettings()).contains("./tools/vrunner-smoke.json");
     assertThat(jobConfiguration.getSmokeTestOptions().isPublishToAllureReport()).isFalse();
     assertThat(jobConfiguration.getSmokeTestOptions().isPublishToJUnitReport()).isTrue();
-    assertThat(jobConfiguration.getSmokeTestOptions().getCoverage()).isFalse();
+    assertThat(jobConfiguration.getSmokeTestOptions().getCoverage()).isTrue();
+    assertThat(jobConfiguration.getSmokeTestOptions().getDbgsPort()).isEqualTo(1555);
+
+    assertThat(jobConfiguration.getYaxunitOptions().getDbgsPort()).isEqualTo(1550);
 
     assertThat(jobConfiguration.getInitInfoBaseOptions().getRunMigration()).isFalse();
     assertThat(jobConfiguration.getInitInfoBaseOptions().getAdditionalInitializationSteps()).contains("vanessa --settings ./tools/vrunner.first.json");
@@ -118,7 +121,7 @@ class ConfigurationReaderTest {
     assertThat(jobConfiguration.edtAgentLabel()).isEqualTo("edt@2021.3.4:x86_64");
   }
 
-  @Disabled
+  @Test
   void testInfoBaseFromFiles() throws IOException {
     // given
     String config = IOUtils.resourceToString(

@@ -20,16 +20,20 @@
     ],
     "extensions": [
       {
-      "name": "YAXUnit",
-      "initMethod": "fromSource",
-      "path": "./src/cfe/YAXUnit",
-      "stages": ["yaxunit"]
+        "name": "YAXUnit",
+        "initMethod": "fromSource",
+        "path": "./src/cfe/YAXUnit",
+        "stages": [
+          "yaxunit"
+        ]
       },
       {
         "name": "BDD",
         "initMethod": "fromSource",
         "path": "./src/cfe/bdd",
-        "stages": ["bdd"]
+        "stages": [
+          "bdd"
+        ]
       },
       {
         "name": "mods",
@@ -40,7 +44,9 @@
         "name": "mods2",
         "initMethod": "fromSource",
         "path": "./src/cfe/mods2",
-        "stages": ["initInfoBase"]
+        "stages": [
+          "initInfoBase"
+        ]
       }
     ]
   },
@@ -50,11 +56,11 @@
   },
   "syntaxCheck": {
     "checkModes": [
-      "-ThickClient",  
+      "-ThickClient",
       "-ThinClient",
       "-WebClient",
       "-Server"
-  ]
+    ]
   },
   "resultsTransform": {
     "transformer": "stebi",
@@ -64,7 +70,9 @@
   "smoke": {
     "vrunnerSettings": "./tools/vrunner-smoke.json",
     "publishToAllureReport": false,
-    "publishToJUnitReport": true
+    "publishToJUnitReport": true,
+    "coverage": true,
+    "dbgsPort": 1555
   },
   "notifications": {
     "email": {
