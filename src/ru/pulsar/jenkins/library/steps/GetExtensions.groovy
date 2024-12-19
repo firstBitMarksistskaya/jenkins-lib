@@ -16,7 +16,7 @@ class GetExtensions implements Serializable {
     public static final String EXTENSIONS_STASH = 'extensions'
     public static final String EXTENSIONS_OUT_DIR = 'build/out/cfe'
 
-    private final JobConfiguration config;
+    private final JobConfiguration config
 
     GetExtensions(JobConfiguration config) {
         this.config = config
@@ -29,9 +29,9 @@ class GetExtensions implements Serializable {
 
         def env = steps.env()
 
-        steps.installLocalDependencies();
+        steps.installLocalDependencies()
 
-        String vrunnerPath = initVRunnerPath();
+        String vrunnerPath = initVRunnerPath()
 
         Logger.println("Сборка расширений")
 
@@ -88,7 +88,7 @@ class GetExtensions implements Serializable {
 
     private void extractConvertedExtensions(String sourceDirName, IStepExecutor steps) {
         if (config.sourceFormat == SourceFormat.EDT) {
-            // usntash and unzip the edt to designer format transformation
+            // unstash and unzip the edt to designer format transformation
             steps.unstash(EdtToDesignerFormatTransformation.EXTENSION_ZIP_STASH)
             steps.unzip(sourceDirName, EdtToDesignerFormatTransformation.EXTENSION_ZIP)
         }
