@@ -121,18 +121,22 @@ class SmokeTest implements Serializable, Coverable {
         }
     }
 
+    @Override
     String getStageSlug() {
         return "smoke"
     }
 
+    @Override
     String getCoverageStashPath() {
         return COVERAGE_STASH_PATH
     }
 
+    @Override
     String getCoverageStashName() {
         return COVERAGE_STASH_NAME
     }
 
+    @Override
     String getCoveragePidsPath() {
         return COVERAGE_PIDS_PATH
     }

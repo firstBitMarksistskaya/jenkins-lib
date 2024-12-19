@@ -94,10 +94,12 @@ class Yaxunit implements Serializable, Coverable {
         }
     }
 
+    @Override
     String getStageSlug() {
         return "yaxunit"
     }
 
+    @Override
     String getCoverageStashPath() {
         return COVERAGE_STASH_PATH
     }
@@ -107,6 +109,7 @@ class Yaxunit implements Serializable, Coverable {
         return COVERAGE_STASH_NAME
     }
 
+    @Override
     String getCoveragePidsPath() {
         return COVERAGE_PIDS_PATH
     }

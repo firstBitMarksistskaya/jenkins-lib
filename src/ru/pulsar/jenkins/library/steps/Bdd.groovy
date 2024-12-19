@@ -61,10 +61,12 @@ class Bdd implements Serializable, Coverable {
 
     }
 
+    @Override
     String getStageSlug() {
         return "bdd"
     }
 
+    @Override
     String getCoverageStashPath() {
         return COVERAGE_STASH_PATH
     }
@@ -74,6 +76,7 @@ class Bdd implements Serializable, Coverable {
         return COVERAGE_STASH_NAME
     }
 
+    @Override
     String getCoveragePidsPath() {
         return COVERAGE_PIDS_PATH
     }
