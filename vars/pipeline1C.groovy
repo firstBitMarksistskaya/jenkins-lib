@@ -144,7 +144,7 @@ void call() {
                                             timeout(time: config.timeoutOptions.zipInfoBase, unit: TimeUnit.MINUTES) {
                                                 printLocation()
 
-                                                zipInfobase()
+                                                zipInfobase(config)
                                             }
                                         }
                                     }

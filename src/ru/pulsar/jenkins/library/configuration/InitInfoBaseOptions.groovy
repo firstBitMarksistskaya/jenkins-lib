@@ -40,6 +40,11 @@ class InitInfoBaseOptions implements Serializable {
     """)
     String templateDBPath
 
+    @JsonPropertyDescription("""
+    Сохранить базу после выполнения всех шагов инициализации
+    """)
+    Boolean archiveInfobase
+
     @JsonPropertyDescription("Массив расширений для загрузки в конфигурацию.")
     Extension[] extensions
 
@@ -80,6 +85,7 @@ class InitInfoBaseOptions implements Serializable {
             ", vrunnerSettings=" + vrunnerSettings +
             ", templateDBPath=" + templateDBPath +
             ", additionalInitializationSteps=" + additionalInitializationSteps +
+            ", archiveInfobase=" + archiveInfobase +
             ", extensions=" + extensions +
                 '}'
     }

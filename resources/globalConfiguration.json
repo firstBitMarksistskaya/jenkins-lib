@@ -45,6 +45,7 @@
     "additionalInitializationSteps": [],
     "templateDBPath": "",
     "vrunnerSettings": "./tools/vrunner.json",
+    "archiveInfobase": false,
     "extensions": []
   },
   "bdd": {

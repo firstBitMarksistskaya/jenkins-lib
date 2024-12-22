@@ -119,6 +119,10 @@
           "type" : "boolean",
           "description" : "Запустить миграцию ИБ"
         },
+        "archiveInfobase" : {
+          "type" : "boolean",
+          "description" : "\n    Сохранить базу после выполнения всех шагов инициализации\n    "
+        },
         "templateDBPath" : {
           "type" : "string",
           "description" : "\n    Путь к файлу эталонной базы данных.\n                * По умолчанию не заполнен;\n                * Указывается путь к файлу *.dt или *.1CD.\n    "

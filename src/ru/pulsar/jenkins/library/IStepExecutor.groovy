@@ -89,6 +89,8 @@ interface IStepExecutor {
     @SuppressWarnings('unused')
     def zip(String dir, String zipFile, String glob)
 
+    def zip(String dir, String zipFile, String glob, boolean archive)
+
     def unzip(String dir, String zipFile)
 
     @SuppressWarnings('unused')

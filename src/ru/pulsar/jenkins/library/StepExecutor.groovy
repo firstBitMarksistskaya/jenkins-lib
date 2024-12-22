@@ -197,6 +197,11 @@ class StepExecutor implements IStepExecutor {
     }
 
     @Override
+    def zip(String dir, String zipFile, String glob = '', boolean archive) {
+        steps.zip dir: dir, zipFile: zipFile, glob: glob, overwrite: true, archive: archive
+    }
+
+    @Override
     def unzip(String dir, String zipFile, quiet = true) {
         steps.unzip dir: dir, zipFile: zipFile, quiet: quiet
     }

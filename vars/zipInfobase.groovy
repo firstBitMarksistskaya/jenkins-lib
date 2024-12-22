@@ -1,7 +1,10 @@
-def call() {
-    if (fileExists('1Cv8.1CD.zip')) {
-        fileOperations([fileDeleteOperation(includes: '1Cv8.1CD.zip')])
-    }
-    zip dir: 'build/ib', glob: '1Cv8.1CD', zipFile: '1Cv8.1CD.zip'
-    stash name: "1Cv8.1CD.zip", includes: "1Cv8.1CD.zip", allowEmpty: false
+import ru.pulsar.jenkins.library.configuration.JobConfiguration
+
+def call(JobConfiguration config) {
+
+    def archiveName = '1Cv8.1CD.zip'
+
+    zip dir: 'build/ib', glob: '1Cv8.1CD', zipFile: archiveName, archive: config.initInfoBaseOptions.archiveInfobase
+    stash name: archiveName, includes: archiveName, allowEmpty: false
+
 }
