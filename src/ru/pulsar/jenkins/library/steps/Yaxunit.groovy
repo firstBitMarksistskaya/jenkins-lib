@@ -86,7 +86,8 @@ class Yaxunit implements Serializable, Coverable {
                 FilePath pathToAllureReport = FileUtils.getFilePath("$env.WORKSPACE/$allureReport")
                 String allureReportDir = FileUtils.getLocalPath(pathToAllureReport.getParent())
 
-                pathToJUnitReport.copyTo(pathToAllureReport)
+                // * Закомментировано, т.к. ошибка формирования отчета allure 
+                //pathToJUnitReport.copyTo(pathToAllureReport)
 
                 steps.stash(YAXUNIT_ALLURE_STASH, "$allureReportDir/**", true)
             }
