@@ -35,11 +35,17 @@ class FileUtils {
         Path workspacePath = new File(env.WORKSPACE).toPath()
         Path rawFilePath = new File(filePath.getRemote()).toPath()
 
-        return workspacePath.relativize(rawFilePath)
+        def str = workspacePath.relativize(rawFilePath)
             .toString()
             .replaceAll('\\\\\\\\', '/')
             .replaceAll('\\\\', '/')
             .toString()
+        
+        if (str.startsWith("../")) {
+            str = str.substring(3)
+            }
+        
+        return str
     }
 
     static void loadFile(String filePathFrom, def env, String filePathTo) {
