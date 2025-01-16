@@ -50,7 +50,7 @@ class SonarScanner implements Serializable {
             } else {
                 sonarCommand += " -Dsonar.branch.name=$env.BRANCH_NAME"
             }
-        } else (branchAnalysisConfiguration == BranchAnalysisConfiguration.AUTO) {
+        } else if (branchAnalysisConfiguration == BranchAnalysisConfiguration.AUTO) {
             // no-op
         }
 
