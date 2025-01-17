@@ -7,11 +7,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyDescription
 @JsonIgnoreProperties(ignoreUnknown = true)
 class SyntaxCheckOptions implements Serializable {
 
-    @JsonPropertyDescription("""Путь к файлу отчета jUnit
-    По умолчанию содержит значение "./build/out/jUnit/syntax.xml"
-    """)
-    String pathToJUnitReport = "./build/out/jUnit/syntax.xml"
-
     @JsonPropertyDescription("""Группировать выявленные ошибки по объектам метаданных.
     По умолчанию включено.
     """)
@@ -31,14 +26,25 @@ class SyntaxCheckOptions implements Serializable {
     """)
     String vrunnerSettings = "./tools/vrunner.json"
 
+    @JsonPropertyDescription("""Выполнять публикацию результатов в отчет Allure.
+    По умолчанию выключено.
+    """)
+    boolean publishToAllureReport
+
+    @JsonPropertyDescription("""Выполнять публикацию результатов в отчет JUnit.
+    По умолчанию включено.
+    """)
+    boolean publishToJUnitReport
+
     @Override
     @NonCPS
     String toString() {
         return "SyntaxCheckOptions{" +
-            "pathToJUnitReport='" + pathToJUnitReport + '\'' +
             ", groupErrorsByMetadata=" + groupErrorsByMetadata +
             ", checkModes=" + checkModes +
             ", vrunnerSettings=" + vrunnerSettings +
-            '}';
+            ", publishToAllureReport=" + publishToAllureReport +
+            ", publishToJUnitReport=" + publishToJUnitReport +
+            '}'
     }
 }

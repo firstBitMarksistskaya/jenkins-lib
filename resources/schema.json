@@ -378,9 +378,13 @@
           "type" : "boolean",
           "description" : "Группировать выявленные ошибки по объектам метаданных.\n    По умолчанию включено.\n    "
         },
-        "pathToJUnitReport" : {
-          "type" : "string",
-          "description" : "Путь к файлу отчета jUnit\n    По умолчанию содержит значение \"./build/out/jUnit/syntax.xml\"\n    "
+        "publishToAllureReport" : {
+          "type" : "boolean",
+          "description" : "Выполнять публикацию результатов в отчет Allure.\n    По умолчанию выключено.\n    "
+        },
+        "publishToJUnitReport" : {
+          "type" : "boolean",
+          "description" : "Выполнять публикацию результатов в отчет JUnit.\n    По умолчанию включено.\n    "
         },
         "vrunnerSettings" : {
           "type" : "string",
