@@ -30,13 +30,11 @@
       "properties" : {
         "coverage" : {
           "type" : "boolean",
-          "description" : "Выполнять замер покрытия",
-          "default" : "false"
+          "description" : "Выполнять замер покрытия"
         },
         "dbgsPort" : {
           "type" : "integer",
-          "description" : "Порт, на котором будет запущен сервер отладки для замера покрытия",
-          "default" : "1550"
+          "description" : "Порт, на котором будет запущен сервер отладки для замера покрытия"
         },
         "vrunnerSteps" : {
           "description" : "Шаги, запускаемые через vrunner.\n    В каждой строке передается отдельная команда \n    vrunner и ее аргументы (например, \"vanessa --settings ./tools/vrunner.json\").\n    По умолчанию содержит одну команду \"vanessa --settings ./tools/vrunner.json\".\n    ",
@@ -250,12 +248,12 @@
         "coverage" : {
           "type" : "boolean",
           "description" : "Выполнять замер покрытия",
-          "default" : "false"
+          "default" : false
         },
         "dbgsPort" : {
           "type" : "integer",
           "description" : "Порт, на котором будет запущен сервер отладки для замера покрытия",
-          "default" : "1550"
+          "default" : 1550
         },
         "publishToAllureReport" : {
           "type" : "boolean",
@@ -380,11 +378,13 @@
         },
         "publishToAllureReport" : {
           "type" : "boolean",
-          "description" : "Выполнять публикацию результатов в отчет Allure.\n    По умолчанию выключено.\n    "
+          "description" : "Выполнять публикацию результатов в отчет Allure.\n    По умолчанию выключено.\n    ",
+          "default": false
         },
         "publishToJUnitReport" : {
           "type" : "boolean",
-          "description" : "Выполнять публикацию результатов в отчет JUnit.\n    По умолчанию включено.\n    "
+          "description" : "Выполнять публикацию результатов в отчет JUnit.\n    По умолчанию включено.\n    ",
+          "default": true
         },
         "vrunnerSettings" : {
           "type" : "string",
@@ -473,12 +473,12 @@
         "coverage" : {
           "type" : "boolean",
           "description" : "Выполнять замер покрытия",
-          "default" : "false"
+          "default" : false
         },
         "dbgsPort" : {
           "type" : "integer",
           "description" : "Порт, на котором будет запущен сервер отладки для замера покрытия",
-          "default" : "1550"
+          "default" : 1550
         },
         "publishToAllureReport" : {
           "type" : "boolean",

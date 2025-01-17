@@ -2,6 +2,8 @@ package ru.pulsar.jenkins.library.configuration
 
 import com.cloudbees.groovy.cps.NonCPS
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -29,12 +31,14 @@ class SyntaxCheckOptions implements Serializable {
     @JsonPropertyDescription("""Выполнять публикацию результатов в отчет Allure.
     По умолчанию выключено.
     """)
-    boolean publishToAllureReport
+    @JsonProperty(defaultValue = "false")
+    boolean publishToAllureReport = false
 
     @JsonPropertyDescription("""Выполнять публикацию результатов в отчет JUnit.
     По умолчанию включено.
     """)
-    boolean publishToJUnitReport
+    @JsonProperty(defaultValue = "true")
+    boolean publishToJUnitReport = true
 
     @Override
     @NonCPS
