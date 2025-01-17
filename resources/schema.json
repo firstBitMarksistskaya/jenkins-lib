@@ -30,11 +30,13 @@
       "properties" : {
         "coverage" : {
           "type" : "boolean",
-          "description" : "Выполнять замер покрытия"
+          "description" : "Выполнять замер покрытия",
+          "default" : false
         },
         "dbgsPort" : {
           "type" : "integer",
-          "description" : "Порт, на котором будет запущен сервер отладки для замера покрытия"
+          "description" : "Порт, на котором будет запущен сервер отладки для замера покрытия",
+           "default" : 1550
         },
         "vrunnerSteps" : {
           "description" : "Шаги, запускаемые через vrunner.\n    В каждой строке передается отдельная команда \n    vrunner и ее аргументы (например, \"vanessa --settings ./tools/vrunner.json\").\n    По умолчанию содержит одну команду \"vanessa --settings ./tools/vrunner.json\".\n    ",
