@@ -36,7 +36,7 @@ val junitVersion = "5.11.0"
 val spockVersion = "1.3-groovy-2.4"
 val groovyVersion = "2.4.21"
 val slf4jVersion = "2.0.16"
-val jsonschemaVersion = "4.36.0"
+val jsonschemaVersion = "4.37.0"
 
 dependencies {
     implementation("org.codehaus.groovy", "groovy-all", groovyVersion)

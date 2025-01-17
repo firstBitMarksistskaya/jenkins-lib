@@ -2,15 +2,12 @@ package ru.pulsar.jenkins.library.configuration
 
 import com.cloudbees.groovy.cps.NonCPS
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 class SyntaxCheckOptions implements Serializable {
-
-    @JsonPropertyDescription("""Путь к файлу отчета jUnit
-    По умолчанию содержит значение "./build/out/jUnit/syntax.xml"
-    """)
-    String pathToJUnitReport = "./build/out/jUnit/syntax.xml"
 
     @JsonPropertyDescription("""Группировать выявленные ошибки по объектам метаданных.
     По умолчанию включено.
@@ -31,14 +28,27 @@ class SyntaxCheckOptions implements Serializable {
     """)
     String vrunnerSettings = "./tools/vrunner.json"
 
+    @JsonPropertyDescription("""Выполнять публикацию результатов в отчет Allure.
+    По умолчанию выключено.
+    """)
+    @JsonProperty(defaultValue = "false")
+    boolean publishToAllureReport = false
+
+    @JsonPropertyDescription("""Выполнять публикацию результатов в отчет JUnit.
+    По умолчанию включено.
+    """)
+    @JsonProperty(defaultValue = "true")
+    boolean publishToJUnitReport = true
+
     @Override
     @NonCPS
     String toString() {
         return "SyntaxCheckOptions{" +
-            "pathToJUnitReport='" + pathToJUnitReport + '\'' +
             ", groupErrorsByMetadata=" + groupErrorsByMetadata +
             ", checkModes=" + checkModes +
             ", vrunnerSettings=" + vrunnerSettings +
-            '}';
+            ", publishToAllureReport=" + publishToAllureReport +
+            ", publishToJUnitReport=" + publishToJUnitReport +
+            '}'
     }
 }
