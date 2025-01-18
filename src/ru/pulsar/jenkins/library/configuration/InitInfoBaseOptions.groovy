@@ -40,10 +40,9 @@ class InitInfoBaseOptions implements Serializable {
     """)
     String templateDBPath
 
-    @JsonPropertyDescription("""
-    Сохранить базу после выполнения всех шагов инициализации
+    @JsonPropertyDescription("""Настройки сохранения базы после выполнения всех шагов
     """)
-    Boolean archiveInfobase
+    ArchiveInfobaseOptions archiveInfobase
 
     @JsonPropertyDescription("Массив расширений для загрузки в конфигурацию.")
     Extension[] extensions

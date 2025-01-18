@@ -1,10 +1,10 @@
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
+import ru.pulsar.jenkins.library.ioc.ContextRegistry
+import ru.pulsar.jenkins.library.steps.ZipInfobase
 
-def call(JobConfiguration config) {
+def call(JobConfiguration config, String stageName) {
+    ContextRegistry.registerDefaultContext(this)
 
-    def archiveName = '1Cv8.1CD.zip'
-
-    zip dir: 'build/ib', glob: '1Cv8.1CD', zipFile: archiveName, archive: config.initInfoBaseOptions.archiveInfobase
-    stash name: archiveName, includes: archiveName, allowEmpty: false
-
+    def zipInfobase = new ZipInfobase(config, stageName)
+    zipInfobase.run()
 }
