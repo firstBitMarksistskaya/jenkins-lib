@@ -69,6 +69,7 @@ class ConfigurationReader implements Serializable {
             "yaxunitOptions",
             "syntaxCheckOptions",
             "resultsTransformOptions",
+            "archiveInfobase",
             "notificationsOptions",
             "emailNotificationOptions",
             "alwaysEmailOptions",
@@ -83,6 +84,7 @@ class ConfigurationReader implements Serializable {
         mergeInitInfoBaseOptions(baseConfiguration.initInfoBaseOptions, configurationToMerge.initInfoBaseOptions)
         mergeBddOptions(baseConfiguration.bddOptions, configurationToMerge.bddOptions)
         mergeSyntaxCheckOptions(baseConfiguration.syntaxCheckOptions, configurationToMerge.syntaxCheckOptions)
+//        mergeArchiveInfobaseOptions(baseConfiguration.archiveInfobaseOptions, configurationToMerge.archiveInfobaseOptions)
         mergeNotificationsOptions(baseConfiguration.notificationsOptions, configurationToMerge.notificationsOptions)
 
         return baseConfiguration
