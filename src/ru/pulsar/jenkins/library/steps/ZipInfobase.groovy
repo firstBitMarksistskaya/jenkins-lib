@@ -35,7 +35,12 @@ class ZipInfobase implements Serializable {
             archiveInfobase = true
         }
 
-        def archiveName = "1Cv8.1CD.${stage}.zip"
+        def archiveName
+        if (!stage) {
+            archiveName = "1Cv8.1CD.zip"
+        } else {
+            archiveName = "1Cv8.1CD.${stage}.zip"
+        }
         steps.zip('build/ib', archiveName, '1Cv8.1CD', archiveInfobase)
         steps.stash(archiveName, archiveName, false)
     }
