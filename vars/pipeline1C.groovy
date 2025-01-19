@@ -144,7 +144,7 @@ void call() {
                                             timeout(time: config.timeoutOptions.zipInfoBase, unit: TimeUnit.MINUTES) {
                                                 printLocation()
 
-                                                zipInfobase config
+                                                zipInfobase config, 'initInfoBase'
                                             }
                                         }
                                     }
@@ -234,6 +234,16 @@ void call() {
                                 steps {
                                     timeout(time: config.timeoutOptions.bdd, unit: TimeUnit.MINUTES) {
                                         bdd config
+                                    }
+                                }
+                            }
+
+                            stage('Архивация ИБ') {
+                                steps {
+                                    timeout(time: config.timeoutOptions.zipInfoBase, unit: TimeUnit.MINUTES) {
+                                        printLocation()
+
+                                        zipInfobase config, 'bdd'
                                     }
                                 }
                             }

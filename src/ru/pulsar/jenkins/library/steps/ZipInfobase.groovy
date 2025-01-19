@@ -27,6 +27,14 @@ class ZipInfobase implements Serializable {
 
         def archiveInfobaseOptions = getArchiveInfobaseOptionsForStage(config, stage)
 
+        def archiveName
+        if (stage == 'initInfoBase') {
+            archiveName = "1Cv8.1CD.zip"
+        } else {
+            archiveName = "1Cv8.1CD.${stage}.zip"
+        }
+
+        // опция отвечает только за то, будет ли файл сохранен в виде артефакта
         def archiveInfobase = false
         if (archiveInfobaseOptions.onAlways
                 || (archiveInfobaseOptions.onFailure && (currentResult == Result.FAILURE || currentResult == Result.ABORTED))
@@ -35,12 +43,6 @@ class ZipInfobase implements Serializable {
             archiveInfobase = true
         }
 
-        def archiveName
-        if (!stage) {
-            archiveName = "1Cv8.1CD.zip"
-        } else {
-            archiveName = "1Cv8.1CD.${stage}.zip"
-        }
         steps.zip('build/ib', archiveName, '1Cv8.1CD', archiveInfobase)
         steps.stash(archiveName, archiveName, false)
     }
