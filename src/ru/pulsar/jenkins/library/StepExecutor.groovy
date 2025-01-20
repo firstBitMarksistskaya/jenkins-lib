@@ -11,6 +11,7 @@ import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.StepCoverageOptions
 import ru.pulsar.jenkins.library.steps.Coverable
 import ru.yandex.qatools.allure.jenkins.config.ResultsConfig
+import sp.sd.fileoperations.FileOperation
 
 class StepExecutor implements IStepExecutor {
 
@@ -53,6 +54,16 @@ class StepExecutor implements IStepExecutor {
     @Override
     boolean fileExists(String file) {
         steps.fileExists file
+    }
+
+    @Override
+    void fileOperations(List<FileOperation> fileOperations) {
+        steps.fileOperations fileOperations
+    }
+
+    @Override
+    void fileDeleteOperation(String includes) {
+        steps.fileDeleteOperation includes: includes, excludes: '', useDefaultExcludes: true
     }
 
     @Override
