@@ -59,8 +59,9 @@ class ZipInfobase implements Serializable {
 
         try {
             return config."${stageName}Options".archiveInfobase
-        } catch(Exception e) {
-            Logger.println(e.message)
+        } catch(MissingPropertyException | NullPointerException e) {
+            Logger.println("Ошибка при получении настроек архивации для этапа ${stageName}: ${e.message}")
+            Logger.println(e.toString())
             return defaultOptions
         }
     }
