@@ -61,7 +61,7 @@ class ZipInfobase implements Serializable {
             return config."${stageName}Options".archiveInfobase
         } catch(Exception e) {
             Logger.println(e.message)
-           return defaultOptions
+            return defaultOptions
         }
     }
 }

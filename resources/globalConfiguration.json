@@ -48,7 +48,7 @@
     "archiveInfobase": {
       "onAlways": false,
       "onFailure": true,
-      "onUnstable": false,
+      "onUnstable": true,
       "onSuccess": false
     },
     "extensions": []
@@ -60,7 +60,7 @@
     "archiveInfobase": {
       "onAlways": false,
       "onFailure": true,
-      "onUnstable": false,
+      "onUnstable": true,
       "onSuccess": false
     },
     "coverage": false,
