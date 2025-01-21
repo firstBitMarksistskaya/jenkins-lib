@@ -47,8 +47,8 @@
     "vrunnerSettings": "./tools/vrunner.json",
     "archiveInfobase": {
       "onAlways": false,
-      "onFailure": true,
-      "onUnstable": true,
+      "onFailure": false,
+      "onUnstable": false,
       "onSuccess": false
     },
     "extensions": []
@@ -59,8 +59,8 @@
     ],
     "archiveInfobase": {
       "onAlways": false,
-      "onFailure": true,
-      "onUnstable": true,
+      "onFailure": false,
+      "onUnstable": false,
       "onSuccess": false
     },
     "coverage": false,
