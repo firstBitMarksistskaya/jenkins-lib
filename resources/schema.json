@@ -1,6 +1,27 @@
 {
   "$schema" : "http://json-schema.org/draft-07/schema#",
   "definitions" : {
+    "ArchiveInfobaseOptions" : {
+      "type" : "object",
+      "properties" : {
+        "onAlways" : {
+          "type" : "boolean",
+          "description" : "Сохранять всегда"
+        },
+        "onFailure" : {
+          "type" : "boolean",
+          "description" : "Сохранять при падении сборки"
+        },
+        "onSuccess" : {
+          "type" : "boolean",
+          "description" : "Сохранять при успешной сборке"
+        },
+        "onUnstable" : {
+          "type" : "boolean",
+          "description" : "Сохранять при нестабильной сборке"
+        }
+      }
+    },
     "EmailExtConfiguration" : {
       "type" : "object",
       "properties" : {
@@ -28,6 +49,13 @@
     "bdd" : {
       "type" : "object",
       "properties" : {
+        "archiveInfobase" : {
+          "allOf" : [ {
+            "$ref" : "#/definitions/ArchiveInfobaseOptions"
+          }, {
+            "description" : "Настройки сохранения базы после выполнения всех шагов\n    "
+          } ]
+        },
         "coverage" : {
           "type" : "boolean",
           "description" : "Выполнять замер покрытия",
@@ -79,6 +107,13 @@
           "items" : {
             "type" : "string"
           }
+        },
+        "archiveInfobase" : {
+          "allOf" : [ {
+            "$ref" : "#/definitions/ArchiveInfobaseOptions"
+          }, {
+            "description" : "Настройки сохранения базы после выполнения всех шагов\n    "
+          } ]
         },
         "extensions" : {
           "description" : "Массив расширений для загрузки в конфигурацию.",
@@ -381,12 +416,12 @@
         "publishToAllureReport" : {
           "type" : "boolean",
           "description" : "Выполнять публикацию результатов в отчет Allure.\n    По умолчанию выключено.\n    ",
-          "default": false
+          "default" : false
         },
         "publishToJUnitReport" : {
           "type" : "boolean",
           "description" : "Выполнять публикацию результатов в отчет JUnit.\n    По умолчанию включено.\n    ",
-          "default": true
+          "default" : true
         },
         "vrunnerSettings" : {
           "type" : "string",

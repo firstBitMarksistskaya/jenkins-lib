@@ -45,12 +45,24 @@
     "additionalInitializationSteps": [],
     "templateDBPath": "",
     "vrunnerSettings": "./tools/vrunner.json",
+    "archiveInfobase": {
+      "onAlways": false,
+      "onFailure": false,
+      "onUnstable": false,
+      "onSuccess": false
+    },
     "extensions": []
   },
   "bdd": {
     "vrunnerSteps": [
       "vanessa --settings ./tools/vrunner.json"
     ],
+    "archiveInfobase": {
+      "onAlways": false,
+      "onFailure": false,
+      "onUnstable": false,
+      "onSuccess": false
+    },
     "coverage": false,
     "dbgsPort": 1550
   },
@@ -58,7 +70,7 @@
     "sonarQubeInstallation": "",
     "useSonarScannerFromPath": true,
     "sonarScannerToolName": "sonar-scanner",
-    "infoBaseUpdateModuleName" : "",
+    "infoBaseUpdateModuleName": "",
     "branchAnalysisConfiguration": "fromEnv",
     "waitForQualityGate": false
   },
