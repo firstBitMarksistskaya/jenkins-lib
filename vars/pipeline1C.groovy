@@ -144,7 +144,7 @@ void call() {
                                             timeout(time: config.timeoutOptions.zipInfoBase, unit: TimeUnit.MINUTES) {
                                                 printLocation()
 
-                                                zipInfobase()
+                                                zipInfobase config, 'initInfoBase'
                                             }
                                         }
                                     }
@@ -237,6 +237,16 @@ void call() {
                                     }
                                 }
                             }
+
+                            stage('Архивация ИБ') {
+                                steps {
+                                    timeout(time: config.timeoutOptions.zipInfoBase, unit: TimeUnit.MINUTES) {
+                                        printLocation()
+
+                                        zipInfobase config, 'bdd'
+                                    }
+                                }
+                            }
                         }
                     }
 
@@ -248,9 +258,19 @@ void call() {
                             beforeAgent true
                             expression { config.stageFlags.syntaxCheck }
                         }
-                        steps {
-                            timeout(time: config.timeoutOptions.syntaxCheck, unit: TimeUnit.MINUTES) {
-                                syntaxCheck config
+                        stages {
+                            stage('Распаковка ИБ') {
+                                steps {
+                                    unzipInfobase()
+                                }
+                            }
+
+                            stage('Выполнение синтаксического контроля') {
+                                steps {
+                                    timeout(time: config.timeoutOptions.syntaxCheck, unit: TimeUnit.MINUTES) {
+                                        syntaxCheck config
+                                    }
+                                }
                             }
                         }
                     }

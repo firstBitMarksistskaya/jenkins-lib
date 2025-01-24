@@ -33,7 +33,8 @@ public class JobConfigurationSchemaGenerator {
       writer.write(jsonSchema.toPrettyString());
       System.out.println(jsonSchema.toPrettyString());
     } catch (IOException e) {
-      e.printStackTrace();
+        //noinspection CallToPrintStackTrace
+        e.printStackTrace();
     }
   }
 
