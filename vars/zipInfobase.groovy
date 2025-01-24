@@ -1,7 +1,10 @@
-def call() {
-    if (fileExists('1Cv8.1CD.zip')) {
-        fileOperations([fileDeleteOperation(includes: '1Cv8.1CD.zip')])
-    }
-    zip dir: 'build/ib', glob: '1Cv8.1CD', zipFile: '1Cv8.1CD.zip'
-    stash name: "1Cv8.1CD.zip", includes: "1Cv8.1CD.zip", allowEmpty: false
+import ru.pulsar.jenkins.library.configuration.JobConfiguration
+import ru.pulsar.jenkins.library.ioc.ContextRegistry
+import ru.pulsar.jenkins.library.steps.ZipInfobase
+
+def call(JobConfiguration config, String stageName) {
+    ContextRegistry.registerDefaultContext(this)
+
+    def zipInfobase = new ZipInfobase(config, stageName)
+    zipInfobase.run()
 }

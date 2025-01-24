@@ -16,11 +16,16 @@ class BddOptions extends StepCoverageOptions implements Serializable {
         'vanessa --settings ./tools/vrunner.json'
     ]
 
+    @JsonPropertyDescription("""Настройки сохранения базы после выполнения всех шагов
+    """)
+    ArchiveInfobaseOptions archiveInfobase
+
     @Override
     @NonCPS
     String toString() {
         return "BddOptions{" +
             "vrunnerSteps=" + vrunnerSteps +
+            "archiveInfobase=" + archiveInfobase +
             "coverage=" + coverage +
             "dbgsPort=" + dbgsPort +
             '}'

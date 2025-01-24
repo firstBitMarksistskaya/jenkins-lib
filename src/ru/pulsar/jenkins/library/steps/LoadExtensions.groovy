@@ -17,7 +17,7 @@ class LoadExtensions implements Serializable {
 
     private Extension[] extensionsFiltered
 
-    LoadExtensions(JobConfiguration config, String stageName = "") {
+    LoadExtensions(JobConfiguration config, String stageName) {
         this.config = config
         this.stageName = stageName
     }
@@ -33,13 +33,19 @@ class LoadExtensions implements Serializable {
 
         def extensions = this.config.initInfoBaseOptions.extensions
 
-        if (this.stageName) {
-            this.extensionsFiltered = extensions.findAll { extension ->
-                extension.stages.contains(this.stageName)
-            }
-        }
-        else {
-            this.extensionsFiltered = extensions.findAll { extension -> extension.stages.length == 0 || extension.stages.contains("initInfoBase") }
+        // NB: расширения, подключаемые на этапе initInfoBase, остаются подключенными на всех остальных этапах
+        if (this.stageName == "initInfoBase") {
+            // подключаются все расширения, у которых явно указано подключение на текущем этапе
+            // и те расширения, в которых этапы подключения не указаны вообще
+            this.extensionsFiltered = extensions.findAll({ extension ->
+                extension.stages.contains(this.stageName) || extension.stages.length == 0
+            })
+        } else {
+            // на остальных этапах подключаются расширения, которые не были подключены на этапе initInfoBase
+            // и у которых явно указано подключение на текущем этапе
+            this.extensionsFiltered = extensions.findAll({ extension ->
+                !extension.stages.contains("initInfoBase") && extension.stages.contains(this.stageName)
+            })
         }
 
         def env = steps.env()

@@ -45,12 +45,24 @@
     "additionalInitializationSteps": [],
     "templateDBPath": "",
     "vrunnerSettings": "./tools/vrunner.json",
+    "archiveInfobase": {
+      "onAlways": false,
+      "onFailure": false,
+      "onUnstable": false,
+      "onSuccess": false
+    },
     "extensions": []
   },
   "bdd": {
     "vrunnerSteps": [
       "vanessa --settings ./tools/vrunner.json"
     ],
+    "archiveInfobase": {
+      "onAlways": false,
+      "onFailure": false,
+      "onUnstable": false,
+      "onSuccess": false
+    },
     "coverage": false,
     "dbgsPort": 1550
   },
@@ -58,13 +70,12 @@
     "sonarQubeInstallation": "",
     "useSonarScannerFromPath": true,
     "sonarScannerToolName": "sonar-scanner",
-    "infoBaseUpdateModuleName" : "",
+    "infoBaseUpdateModuleName": "",
     "branchAnalysisConfiguration": "fromEnv",
     "waitForQualityGate": false
   },
   "syntaxCheck": {
     "groupErrorsByMetadata": true,
-    "pathToJUnitReport": "./build/out/jUnit/syntax.xml",
     "exceptionFile": "./tools/syntax-check-exception-file.txt",
     "checkModes": [
       "-ThinClient",
@@ -79,7 +90,9 @@
       "-CheckUseSynchronousCalls",
       "-DistributiveModules"
     ],
-    "vrunnerSettings": "./tools/vrunner.json"
+    "vrunnerSettings": "./tools/vrunner.json",
+    "publishToAllureReport": false,
+    "publishToJUnitReport": true
   },
   "smoke": {
     "vrunnerSettings": "./tools/vrunner.json",

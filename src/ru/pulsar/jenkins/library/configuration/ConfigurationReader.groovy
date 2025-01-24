@@ -69,6 +69,7 @@ class ConfigurationReader implements Serializable {
             "yaxunitOptions",
             "syntaxCheckOptions",
             "resultsTransformOptions",
+            "archiveInfobase",
             "notificationsOptions",
             "emailNotificationOptions",
             "alwaysEmailOptions",

@@ -48,7 +48,10 @@
           "initInfoBase"
         ]
       }
-    ]
+    ],
+    "archiveInfobase": {
+      "onAlways": true
+    }
   },
   "sonarqube": {
     "sonarQubeInstallation": "qa",
