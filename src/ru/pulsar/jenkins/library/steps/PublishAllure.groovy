@@ -17,10 +17,11 @@ class PublishAllure implements Serializable {
     }
 
     def run() {
+
         Logger.printLocation()
 
         if (config == null) {
-            Logger.println('jobConfiguration is not initialized')
+            Logger.println("jobConfiguration is not initialized")
             return
         }
 
@@ -46,37 +47,16 @@ class PublishAllure implements Serializable {
 
         FilePath allurePath = FileUtils.getFilePath("$env.WORKSPACE/build/out/allure")
         if (!allurePath.exists()) {
-            Logger.println('Отсутствуют результаты allure для публикации')
+            Logger.println("Отсутствуют результаты allure для публикации")
             return
         }
 
         List<String> results = new ArrayList<>()
 
-        int directoryCount = allurePath.listDirectories().size()
-        Logger.println("Log: Количество подкаталогов в $allurePath: $directoryCount")
-
-        FilePath workSpacePath = FileUtils.getFilePath("$env.WORKSPACE")
-        String basePath = replaceBackslashesWithSlashes(workSpacePath.toString())
-        Logger.println("Log: workSpacePath = $workSpacePath, basePath = $basePath")
-
         allurePath.listDirectories().each { FilePath filePath ->
-            FilePath pathCurrent = FileUtils.getFilePath("$filePath")
-            String pathdir = FileUtils.getLocalPath(pathCurrent)
-            Logger.println("Log: pathCurrent = $pathCurrent, pathdir = $pathdir")
-
-            String rezultPath = getRelativePath(pathdir, basePath)
-            Logger.println("Log: pathdir = $pathdir, basePath = $basePath. Результат через getRelativePath() = $rezultPath")
-            results.add(rezultPath)
-
-            //String pathdir = FileUtils.getLocalPath(filePath)
-            //results.add(FileUtils.getLocalPath(filePath))
-            //Logger.println("Log: Результат для добавления в allure getLocalPath($pathCurrent): $pathdir")
+            results.add(FileUtils.getLocalPath(filePath))
         }
-
-        String pathAllure = FileUtils.getLocalPath(allurePath)
-        Logger.println("Log: если в подкаталогах allure пусто, то будет добавлен только путь на основе getLocalPath($allurePath): $pathAllure")
         if (results.isEmpty()) {
-            Logger.println('Log: результат пустой и фиксиурем путь выше')
             results.add(FileUtils.getLocalPath(allurePath))
         }
 
@@ -90,23 +70,4 @@ class PublishAllure implements Serializable {
             Logger.println("Can't unstash $stashName")
         }
     }
-
-    private static replaceBackslashesWithSlashes(String path) {
-        return path.replace('\\', '/')
-    }
-
-    private static String getRelativePath(String absolutePath, String basePath) {
-        def normalizedAbsolutePath = new File(absolutePath).canonicalPath
-        def normalizedBasePath = new File(basePath).canonicalPath
-
-        def relativePath = normalizedAbsolutePath.replaceFirst(normalizedBasePath, '')
-
-        // Убираем начальный '/' если он есть
-        if (relativePath.startsWith('/')) {
-            relativePath = relativePath.substring(1)
-        }
-
-        return relativePath
-    }
-
 }
