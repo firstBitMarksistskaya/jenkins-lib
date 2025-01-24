@@ -416,12 +416,12 @@
         "publishToAllureReport" : {
           "type" : "boolean",
           "description" : "Выполнять публикацию результатов в отчет Allure.\n    По умолчанию выключено.\n    ",
-          "default" : "false"
+          "default" : false
         },
         "publishToJUnitReport" : {
           "type" : "boolean",
           "description" : "Выполнять публикацию результатов в отчет JUnit.\n    По умолчанию включено.\n    ",
-          "default" : "true"
+          "default" : true
         },
         "vrunnerSettings" : {
           "type" : "string",
