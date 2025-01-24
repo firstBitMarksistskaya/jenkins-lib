@@ -29,17 +29,20 @@ class FileUtils {
 
     static String getLocalPath(FilePath filePath) {
         IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
+        String workspacePath = steps.env().WORKSPACE
+        String fileRemotePath = filePath.getRemote()
 
-        def env = steps.env();
+        // Нормализуем пути: заменяем обратные слэши на прямые
+        workspacePath = workspacePath.replace('\\', '/')
+        fileRemotePath = fileRemotePath.replace('\\', '/')
 
-        Path workspacePath = new File(env.WORKSPACE).toPath()
-        Path rawFilePath = new File(filePath.getRemote()).toPath()
+        // Проверяем, что файл находится внутри рабочей директории
+        if (!fileRemotePath.startsWith(workspacePath)) {
+            throw new IllegalArgumentException("File path is not within the workspace directory")
+        }
 
-        return workspacePath.relativize(rawFilePath)
-            .toString()
-            .replaceAll('\\\\\\\\', '/')
-            .replaceAll('\\\\', '/')
-            .toString()
+        // Вычисляем относительный путь
+        return fileRemotePath.substring(workspacePath.length() + 1)
     }
 
     static void loadFile(String filePathFrom, def env, String filePathTo) {
