@@ -2,7 +2,6 @@ package ru.pulsar.jenkins.library.configuration;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import ru.pulsar.jenkins.library.configuration.sonarqube.GenericIssueFormat;
 import ru.pulsar.jenkins.library.utils.TestUtils;
@@ -66,6 +65,7 @@ class ConfigurationReaderTest {
     assertThat(jobConfiguration.getYaxunitOptions().getDbgsPort()).isEqualTo(1550);
 
     assertThat(jobConfiguration.getInitInfoBaseOptions().getRunMigration()).isFalse();
+    assertThat(jobConfiguration.getInitInfoBaseOptions().getArchiveInfobase().getOnAlways()).isTrue();
     assertThat(jobConfiguration.getInitInfoBaseOptions().getAdditionalInitializationSteps()).contains("vanessa --settings ./tools/vrunner.first.json");
 
     assertThat(jobConfiguration.getBddOptions().getVrunnerSteps()).contains("vanessa --settings ./tools/vrunner.json");

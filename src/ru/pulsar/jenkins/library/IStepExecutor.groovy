@@ -10,6 +10,7 @@ import org.jenkinsci.plugins.workflow.support.steps.build.RunWrapper
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.StepCoverageOptions
 import ru.pulsar.jenkins.library.steps.Coverable
+import sp.sd.fileoperations.FileOperation
 
 interface IStepExecutor {
 
@@ -33,6 +34,10 @@ interface IStepExecutor {
     void writeFile(String file, String text, String encoding)
 
     boolean fileExists(String file)
+
+    void fileOperations(List<FileOperation> fileOperations)
+
+    void fileDeleteOperation(String includes)
 
     void echo(message)
 
@@ -89,6 +94,8 @@ interface IStepExecutor {
     @SuppressWarnings('unused')
     def zip(String dir, String zipFile, String glob)
 
+    def zip(String dir, String zipFile, String glob, boolean archive)
+
     def unzip(String dir, String zipFile)
 
     @SuppressWarnings('unused')
@@ -120,4 +127,5 @@ interface IStepExecutor {
     def brokenTestsSuspects()
 
     RunWrapper currentBuild()
+
 }

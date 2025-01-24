@@ -38,6 +38,9 @@ class PublishAllure implements Serializable {
         if (config.stageFlags.smoke && config.smokeTestOptions.publishToAllureReport) {
             safeUnstash(SmokeTest.ALLURE_STASH)
         }
+        if (config.stageFlags.syntaxCheck && config.syntaxCheckOptions.publishToAllureReport) {
+            safeUnstash(SyntaxCheck.ALLURE_STASH)
+        }
 
         def env = steps.env()
 

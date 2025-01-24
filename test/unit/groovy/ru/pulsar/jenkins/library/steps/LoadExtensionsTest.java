@@ -35,7 +35,7 @@ class LoadExtensionsTest {
                     .thenReturn(new FilePath(new File("/")));
 
             // given
-            // файл содержит 4 расширения для разных стейджей
+            // файл содержит 4 расширения для разных этапов
             String config = IOUtils.resourceToString(
                     "jobConfiguration.json",
                     StandardCharsets.UTF_8,
@@ -44,11 +44,11 @@ class LoadExtensionsTest {
             JobConfiguration jobConfiguration = ConfigurationReader.create(config);
 
             // when
-            LoadExtensions loadExtensions = new LoadExtensions(jobConfiguration);
-            loadExtensions.run();
+            LoadExtensions loadExtensionsInit = new LoadExtensions(jobConfiguration, "initInfoBase");
+            loadExtensionsInit.run();
 
             // then
-            InitInfoBaseOptions.Extension[] extensions = loadExtensions.getExtensionsFiltered();
+            InitInfoBaseOptions.Extension[] extensions = loadExtensionsInit.getExtensionsFiltered();
             assertThat(extensions.length).isEqualTo(2);
             assertThat(extensions[0].getName()).isEqualTo("mods");
             assertThat(extensions[1].getName()).isEqualTo("mods2");
