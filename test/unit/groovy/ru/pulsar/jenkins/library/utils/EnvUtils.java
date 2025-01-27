@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public class EnvUtils implements EnvironmentAction {
 
-    public String NODE_NAME = "node";
+    public String NODE_NAME = "built-in";
     public String WORKSPACE = "ws";
     public String BRANCH_NAME = "master";
 
