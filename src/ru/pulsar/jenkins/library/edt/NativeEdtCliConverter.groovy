@@ -15,6 +15,7 @@ class NativeEdtCliConverter implements IEdtCliEngine {
     void edtToDesignerTransformConfiguration(IStepExecutor steps, JobConfiguration config) {
 
         def env = steps.env()
+        def srcDir = config.srcDir
 
         String workspaceDir = FileUtils.getFilePath("$env.WORKSPACE/$EdtToDesignerFormatTransformation.WORKSPACE").getRemote()
         String projectWorkspaceDir = FileUtils.getFilePath("$workspaceDir/cf").getRemote()
@@ -25,8 +26,8 @@ class NativeEdtCliConverter implements IEdtCliEngine {
 
         steps.deleteDir(configurationRoot)
 
-        def projectName = configurationRoot.getName()
-        def edtcliCommand = "1cedtcli -data \"$projectWorkspaceDir\" -command export --configuration-files \"$configurationRootFullPath\" --project-name \"$projectName\""
+        def projectDir = FileUtils.getFilePath("$env.WORKSPACE/$srcDir").getRemote()
+        def edtcliCommand = "1cedtcli -data \"$projectWorkspaceDir\" -command export --configuration-files \"$configurationRootFullPath\" --project \"$projectDir\""
 
         steps.cmd(edtcliCommand)
 
@@ -48,8 +49,9 @@ class NativeEdtCliConverter implements IEdtCliEngine {
 
             Logger.println("Конвертация исходников расширения ${it.name} из формата EDT в формат Конфигуратора с помощью 1cedtcli")
             def currentExtensionWorkspaceDir = FileUtils.getFilePath("$workspaceDir/cfe/${it.name}")
+            def currentExtensionProjectDir = FileUtils.getFilePath("$env.WORKSPACE/${it.path}").getRemote()
 
-            def edtcliCommand = "1cedtcli -data \"$currentExtensionWorkspaceDir\" -command export --configuration-files \"$extensionRoot/${it.name}\" --project-name ${it.name}"
+            def edtcliCommand = "1cedtcli -data \"$currentExtensionWorkspaceDir\" -command export --configuration-files \"$extensionRoot/${it.name}\" --project \"$currentExtensionProjectDir\""
 
             steps.cmd(edtcliCommand)
 
