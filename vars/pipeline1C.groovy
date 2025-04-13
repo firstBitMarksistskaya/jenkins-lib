@@ -15,6 +15,9 @@ String agent1C
 @Field
 String agentEdt
 
+@Field
+Boolean isInfobaseInitialized = true
+
 void call() {
 
     //noinspection GroovyAssignabilityCheck
@@ -48,7 +51,7 @@ void call() {
 
             stage('Подготовка') {
                 parallel {
-                    stage('Подготовка 1C базы') {
+                    stage('Подготовка 1С базы') {
                         when {
                             beforeAgent true
                             expression { config.stageFlags.needInfoBase() }
@@ -70,7 +73,7 @@ void call() {
                                 }
                             }
 
-                            stage('Подготовка 1С базы') {
+                            stage('Подготовка ИБ') {
                                 agent {
                                     label agent1C
                                 }
@@ -113,7 +116,7 @@ void call() {
                                         }
                                     }
 
-                                    stage('Загрузка расширений в конфигурацию'){
+                                    stage('Загрузка расширений в конфигурацию') {
                                         when {
                                             beforeAgent true
                                             expression { config.needLoadExtensions() }
@@ -133,7 +136,9 @@ void call() {
                                         steps {
                                             timeout(time: config.timeoutOptions.initInfoBase, unit: TimeUnit.MINUTES) {
                                                 // Инициализация и первичная миграция
-                                                initInfobase config
+                                                script {
+                                                    isInfobaseInitialized = initInfobase config
+                                                }
                                             }
                                         }
                                     }
@@ -209,7 +214,7 @@ void call() {
                         }
                         when {
                             beforeAgent true
-                            expression { config.stageFlags.bdd }
+                            expression { config.stageFlags.bdd && isInfobaseInitialized }
                         }
                         stages {
                             stage('Распаковка ИБ') {
@@ -281,7 +286,7 @@ void call() {
                         }
                         when {
                             beforeAgent true
-                            expression { config.stageFlags.smoke }
+                            expression { config.stageFlags.smoke && isInfobaseInitialized }
                         }
                         stages {
                             stage('Распаковка ИБ') {
@@ -318,7 +323,7 @@ void call() {
                         }
                         when {
                             beforeAgent true
-                            expression { config.stageFlags.yaxunit }
+                            expression { config.stageFlags.yaxunit && isInfobaseInitialized }
                         }
                         stages {
                             stage('Распаковка ИБ') {
