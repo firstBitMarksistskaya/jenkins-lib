@@ -16,6 +16,7 @@ String agent1C
 String agentEdt
 
 @Field
+// Флаг, указывающий на успешность инициализации информационной базы
 Boolean isInfobaseInitialized = true
 
 void call() {

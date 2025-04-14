@@ -20,9 +20,9 @@ class InitInfoBaseTest {
 
         // given
         String resource = Objects.requireNonNull(getClass()
-                .getClassLoader()
-                .getResource("exitStatus0"))
-                .getPath();
+                        .getClassLoader()
+                        .getResource("exitStatus0"))
+                        .getPath();
 
         // when
         Integer exitStatus = InitInfoBase.readExitStatusFromFile(resource);
@@ -38,12 +38,12 @@ class InitInfoBaseTest {
         String resource = Objects.requireNonNull(getClass()
                         .getClassLoader()
                         .getResource("exitStatus1"))
-                .getPath();
+                        .getPath();
 
         // when
-        Integer exitStatus_1 = InitInfoBase.readExitStatusFromFile(resource);
+        Integer exitStatus = InitInfoBase.readExitStatusFromFile(resource);
         // then
-        assertThat(exitStatus_1).isEqualTo(1);
+        assertThat(exitStatus).isEqualTo(1);
 
     }
 
