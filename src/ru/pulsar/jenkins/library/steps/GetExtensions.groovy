@@ -27,11 +27,6 @@ class GetExtensions implements Serializable {
 
         Logger.printLocation()
 
-        if (!config.needLoadExtensions()) {
-            Logger.println("Расширения не найдены в конфигурации. Сборка расширений пропущена.")
-            return
-        }
-
         def env = steps.env()
 
         steps.installLocalDependencies()
