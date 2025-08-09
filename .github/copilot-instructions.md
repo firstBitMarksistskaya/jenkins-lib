@@ -16,23 +16,23 @@ Always reference these instructions first and fallback to search or bash command
 
 ### Bootstrap and Build Process
 ```bash
-# Basic validation (always works)
+# Basic validation commands
 ./gradlew --version
 ./gradlew clean
 ./gradlew tasks
 
-# Main build commands - NOW FULLY WORKING with excellent network access
-./gradlew build      # ✅ FULLY WORKING: Takes ~2 minutes consistently
-./gradlew test       # ✅ FULLY WORKING: Takes ~25 seconds consistently  
-./gradlew check      # ✅ FULLY WORKING: Takes ~1 minute when cached
+# Main build commands with reliable performance
+./gradlew build      # Takes ~2 minutes consistently
+./gradlew test       # Takes ~25 seconds consistently  
+./gradlew check      # Takes ~1 minute when cached
 ```
 
-### Build Dependencies and Limitations
-**UPDATED**: Jenkins repositories are now fully accessible with excellent connectivity:
-- `repo.jenkins-ci.org` - Jenkins core and plugins ✅ Fully Working
-- `repo.maven.apache.org` - Maven central ✅ Fully Working
+### Build Dependencies and Network Access
+Jenkins repositories are fully accessible with excellent connectivity:
+- `repo.jenkins-ci.org` - Jenkins core and plugins
+- `repo.maven.apache.org` - Maven central
 
-Repository connectivity is excellent:
+Repository connectivity characteristics:
 - All dependency downloads work reliably
 - No timeout issues with AWS S3 CDN endpoints
 - Build times are consistent and reasonable
@@ -40,38 +40,34 @@ Repository connectivity is excellent:
 
 ### Core Development Commands
 ```bash
-# Clean build artifacts (ALWAYS WORKS)
+# Clean build artifacts
 ./gradlew clean
 
-# All commands now work perfectly with Jenkins repository access:
-./gradlew compileGroovy compileJava    # Compile sources ✅ Fully Working
-./gradlew test                         # Run unit tests ✅ Fully Working (~25s)
-./gradlew integrationTest             # Run integration tests ✅ Fully Working
-./gradlew build                       # Full build ✅ Fully Working (~2min)
-./gradlew jacocoTestReport            # Generate test coverage report ✅ Fully Working
-./gradlew check                       # Run all verification tasks ✅ Fully Working
+# Compilation and testing commands
+./gradlew compileGroovy compileJava    # Compile sources
+./gradlew test                         # Run unit tests (~25s)
+./gradlew integrationTest             # Run integration tests
+./gradlew build                       # Full build (~2min)
+./gradlew jacocoTestReport            # Generate test coverage report
+./gradlew check                       # Run all verification tasks
 ```
-
-**UPDATED BUILD STATUS**: Jenkins repository access is now excellent. All commands work reliably without network issues or timeouts.
 
 ## Validation and Testing
 
 ### Manual Validation Scenarios
-**UPDATED**: Jenkins repository access is now excellent. All validation commands work reliably.
 
-1. **Basic Repository Validation** (works offline):
+1. **Basic Repository Validation**:
    ```bash
    ./gradlew clean    # Verify Gradle setup
    ./gradlew tasks    # List available tasks
    ```
 
-2. **Source Code Compilation** (✅ fully working):
+2. **Source Code Compilation**:
    ```bash
-   # CONFIRMED FULLY WORKING: Compilation works perfectly
    ./gradlew compileGroovy compileJava
    ```
 
-2. **JSON Configuration Validation** (works offline):
+3. **JSON Configuration Validation**:
    ```bash
    # Validate JSON syntax for configuration files
    python3 -m json.tool resources/globalConfiguration.json > /dev/null && echo "Valid JSON" || echo "Invalid JSON"
@@ -83,14 +79,14 @@ Repository connectivity is excellent:
    python3 -m json.tool test/integration/resources/jobConfiguration.json > /dev/null && echo "Valid JSON" || echo "Invalid JSON"
    ```
 
-3. **Manual Code Review Checklist** (offline validation):
+4. **Manual Code Review Checklist**:
    - Check Groovy syntax in `/vars/*.groovy` files for obvious errors
    - Verify new pipeline steps follow existing patterns
    - Ensure proper error handling in pipeline steps
    - Validate configuration schema changes match actual usage
    - Review test files for coverage of new functionality
 
-4. **Git-based Validation** (works offline):
+5. **Git-based Validation**:
    ```bash
    # Check what files were modified
    git status
@@ -153,16 +149,15 @@ The main `pipeline1C()` function in `vars/pipeline1C.groovy` orchestrates a comp
    - After schema changes: Update `resources/schema.json`
 
 ### Pre-commit Validation
-**All validation now works reliably** with excellent network access to Jenkins repositories.
 
 ```bash
-# Optimal validation (fully working) - Reliable build times
-./gradlew check      # ✅ Works perfectly: Takes ~1-2 minutes
+# Optimal validation commands with reliable build times
+./gradlew check      # Takes ~1-2 minutes
 
-# Individual commands also work reliably:
-./gradlew clean      # ✅ Always works
-./gradlew build      # ✅ Works perfectly: Takes ~2 minutes  
-./gradlew test       # ✅ Works perfectly: Takes ~25 seconds
+# Individual commands for iterative development:
+./gradlew clean      # Always works
+./gradlew build      # Takes ~2 minutes  
+./gradlew test       # Takes ~25 seconds
 ```
 
 ## Project Structure and Navigation
@@ -229,10 +224,10 @@ The main `pipeline1C()` function in `vars/pipeline1C.groovy` orchestrates a comp
 
 ### Development Workflow
 1. Make changes to Groovy files in `/vars/` or Java files in `/src/`
-2. Run `./gradlew compileGroovy` for quick syntax validation (✅ works perfectly)
-3. Run `./gradlew test` for unit tests (✅ works perfectly, ~25s)
-4. Run `./gradlew integrationTest` for full pipeline testing (✅ works perfectly)
-5. Run `./gradlew check` before committing (✅ works perfectly, ~1min)
+2. Run `./gradlew compileGroovy` for quick syntax validation
+3. Run `./gradlew test` for unit tests (~25s)
+4. Run `./gradlew integrationTest` for full pipeline testing
+5. Run `./gradlew check` before committing (~1min)
 
 ## Performance and Timing Expectations
 
@@ -242,7 +237,6 @@ The main `pipeline1C()` function in `vars/pipeline1C.groovy` orchestrates a comp
 - Integration tests (`integrationTest`): ~1-2 minutes
 - Full build (`build`): ~2 minutes
 - Full verification (`check`): ~1 minute (when artifacts cached)
-- **All commands work reliably with excellent performance**
 
 All timings are consistent and reliable with excellent network access to dependencies.
 
@@ -300,31 +294,29 @@ The project uses GitHub Actions (`.github/workflows/gradle.yml`):
 
 ### Expected Behavior in CI
 - **Success**: All builds, tests, and checks pass
-- **Network Status**: Jenkins repositories are now accessible (firewall configured)
+- **Network Status**: Jenkins repositories are accessible
 - **Build Time**: 5-10 minutes for full `./gradlew check`
 - **Artifacts**: Test reports and coverage reports in `build/` directory
 
-## Validation Status (Updated)
+## Validated Commands Reference
 
-### ✅ Confirmed Fully Working Commands
+All build, test, and validation commands work reliably. Jenkins repository access is excellent and all artifacts download successfully.
+
+### Core Commands
 ```bash
-./gradlew --version          # ✅ Works
-./gradlew clean             # ✅ Works  
-./gradlew tasks             # ✅ Works
-./gradlew compileGroovy     # ✅ Works perfectly
-./gradlew compileJava       # ✅ Works perfectly
-./gradlew dependencies      # ✅ Works perfectly
-./gradlew test              # ✅ Works perfectly (~25s)
-./gradlew build             # ✅ Works perfectly (~2min)
-./gradlew check             # ✅ Works perfectly (~1min when cached)
-./gradlew integrationTest   # ✅ Works perfectly
+./gradlew --version          # Version information
+./gradlew clean             # Clean build artifacts  
+./gradlew tasks             # List available tasks
+./gradlew compileGroovy     # Compile Groovy sources
+./gradlew compileJava       # Compile Java sources
+./gradlew dependencies      # Show dependency tree
+./gradlew test              # Run unit tests (~25s)
+./gradlew build             # Full build (~2min)
+./gradlew check             # All verification tasks (~1min when cached)
+./gradlew integrationTest   # Run integration tests
 
 # JSON validation commands
-python3 -m json.tool resources/globalConfiguration.json    # ✅ Works
-python3 -m json.tool test/unit/resources/jobConfiguration.json    # ✅ Works  
-python3 -m json.tool test/integration/resources/jobConfiguration.json    # ✅ Works
+python3 -m json.tool resources/globalConfiguration.json
+python3 -m json.tool test/unit/resources/jobConfiguration.json  
+python3 -m json.tool test/integration/resources/jobConfiguration.json
 ```
-
-### 🎉 All Commands Now Fully Working
-All build, test, and validation commands work reliably without any network connectivity issues. Jenkins repository access is excellent and all artifacts download successfully.
-- Validates on every push and pull request
