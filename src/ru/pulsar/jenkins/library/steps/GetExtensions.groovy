@@ -87,7 +87,7 @@ class GetExtensions implements Serializable {
     }
 
     private void extractConvertedExtensions(String sourceDirName, IStepExecutor steps) {
-        if (config.sourceFormat == SourceFormat.EDT && config.needLoadExtensions()) {
+        if (config.sourceFormat == SourceFormat.EDT) {
             // unstash and unzip the edt to designer format transformation
             steps.unstash(EdtToDesignerFormatTransformation.EXTENSION_ZIP_STASH)
             steps.unzip(sourceDirName, EdtToDesignerFormatTransformation.EXTENSION_ZIP)
