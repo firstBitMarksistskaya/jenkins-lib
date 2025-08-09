@@ -27,6 +27,11 @@ class GetExtensions implements Serializable {
 
         Logger.printLocation()
 
+        if (!config.needLoadExtensions()) {
+            Logger.println("Расширения не найдены в конфигурации. Сборка расширений пропущена.")
+            return
+        }
+
         def env = steps.env()
 
         steps.installLocalDependencies()
@@ -87,7 +92,7 @@ class GetExtensions implements Serializable {
     }
 
     private void extractConvertedExtensions(String sourceDirName, IStepExecutor steps) {
-        if (config.sourceFormat == SourceFormat.EDT) {
+        if (config.sourceFormat == SourceFormat.EDT && config.needLoadExtensions()) {
             // unstash and unzip the edt to designer format transformation
             steps.unstash(EdtToDesignerFormatTransformation.EXTENSION_ZIP_STASH)
             steps.unzip(sourceDirName, EdtToDesignerFormatTransformation.EXTENSION_ZIP)

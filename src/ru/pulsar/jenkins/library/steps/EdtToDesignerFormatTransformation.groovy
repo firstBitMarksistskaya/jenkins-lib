@@ -45,9 +45,11 @@ class EdtToDesignerFormatTransformation implements Serializable {
         steps.zip(CONFIGURATION_DIR, CONFIGURATION_ZIP)
         steps.stash(CONFIGURATION_ZIP_STASH, CONFIGURATION_ZIP)
 
-        engine.edtToDesignerTransformExtensions(steps, config)
-        steps.zip(EXTENSION_DIR, EXTENSION_ZIP)
-        steps.stash(EXTENSION_ZIP_STASH, EXTENSION_ZIP)
+        if (config.needLoadExtensions()) {
+            engine.edtToDesignerTransformExtensions(steps, config)
+            steps.zip(EXTENSION_DIR, EXTENSION_ZIP)
+            steps.stash(EXTENSION_ZIP_STASH, EXTENSION_ZIP)
+        }
 
     }
 
