@@ -26,39 +26,40 @@ Always reference these instructions first and fallback to search or bash command
 ./gradlew test       # NEVER CANCEL: Expected to take 2-4 minutes. Set timeout to 10+ minutes.
 ./gradlew check      # NEVER CANCEL: Expected to take 5-8 minutes. Set timeout to 15+ minutes.
 
-# Note: Build may fail with "repo.jenkins-ci.org: No address associated with hostname"
-# This indicates network connectivity issues to Jenkins repositories
+# Note: Build may occasionally fail with individual artifact download issues from AWS S3 CDN endpoints
+# Basic Jenkins repository connectivity is functional, but some specific artifacts may have timeout issues
 ```
 
 ### Build Dependencies and Limitations
-**CRITICAL**: This project has hard dependencies on Jenkins repositories that may not always be accessible:
-- `repo.jenkins-ci.org` - Jenkins core and plugins
-- `repo.maven.apache.org` - Maven central
+**UPDATED**: Jenkins repositories (`repo.jenkins-ci.org`) are now accessible through firewall configuration:
+- `repo.jenkins-ci.org` - Jenkins core and plugins ✅ Accessible
+- `repo.maven.apache.org` - Maven central ✅ Accessible
 
-If build fails with repository errors:
-- Check network connectivity
-- Try again later (repository may be temporarily unavailable)
-- Use `--offline` mode only works if dependencies were previously cached
+If build fails with artifact errors:
+- Basic repository connectivity is working
+- Individual artifact downloads may occasionally timeout from AWS S3 CDN endpoints
+- Retry the build command as timeout issues are often temporary
+- Use `--offline` mode only if dependencies were previously cached
 
 ### Core Development Commands
 ```bash
 # Clean build artifacts (ALWAYS WORKS)
 ./gradlew clean
 
-# The following commands REQUIRE NETWORK ACCESS to Jenkins repositories:
-./gradlew compileGroovy compileJava    # Compile sources
-./gradlew test                         # Run unit tests  
-./gradlew integrationTest             # Run integration tests
+# The following commands now work with Jenkins repository access:
+./gradlew compileGroovy compileJava    # Compile sources ✅ Working
+./gradlew test                         # Run unit tests (may have occasional artifact timeouts)
+./gradlew integrationTest             # Run integration tests 
 ./gradlew jacocoTestReport            # Generate test coverage report
 ./gradlew check                       # Run all verification tasks (build + test + coverage)
 ```
 
-**CRITICAL BUILD LIMITATION**: All compilation and testing tasks require network access to Jenkins repositories. Without network connectivity, only basic tasks like `clean` and `tasks` will work.
+**UPDATED BUILD STATUS**: Jenkins repository access is now functional through firewall configuration. Compilation and basic validation work, though some individual artifact downloads may occasionally timeout.
 
 ## Validation and Testing
 
 ### Manual Validation Scenarios
-**WARNING**: Most validation requires network access to download Jenkins dependencies.
+**UPDATED**: Jenkins repository access is now working. Most validation commands function correctly.
 
 1. **Basic Repository Validation** (works offline):
    ```bash
@@ -66,9 +67,9 @@ If build fails with repository errors:
    ./gradlew tasks    # List available tasks
    ```
 
-2. **Source Code Compilation** (requires network):
+2. **Source Code Compilation** (✅ now working):
    ```bash
-   # NEVER CANCEL: Takes 2-3 minutes with network delays
+   # CONFIRMED WORKING: Basic compilation functions correctly
    ./gradlew compileGroovy compileJava
    ```
 
@@ -307,7 +308,33 @@ The project uses GitHub Actions (`.github/workflows/gradle.yml`):
 
 ### Expected Behavior in CI
 - **Success**: All builds, tests, and checks pass
-- **Network Issues**: May fail with Jenkins repository connectivity errors
+- **Network Status**: Jenkins repositories are now accessible (firewall configured)
 - **Build Time**: 5-10 minutes for full `./gradlew check`
 - **Artifacts**: Test reports and coverage reports in `build/` directory
+
+## Validation Status (Updated)
+
+### ✅ Confirmed Working Commands
+```bash
+./gradlew --version          # ✅ Works
+./gradlew clean             # ✅ Works  
+./gradlew tasks             # ✅ Works
+./gradlew compileGroovy     # ✅ Works (Jenkins repos accessible)
+./gradlew compileJava       # ✅ Works
+./gradlew dependencies      # ✅ Works (dependency resolution functional)
+
+# JSON validation commands
+python3 -m json.tool resources/globalConfiguration.json    # ✅ Works
+python3 -m json.tool test/unit/resources/jobConfiguration.json    # ✅ Works  
+python3 -m json.tool test/integration/resources/jobConfiguration.json    # ✅ Works
+```
+
+### ⚠️ Partially Working Commands
+```bash
+./gradlew build             # May have individual artifact timeout issues
+./gradlew test              # May have individual artifact timeout issues  
+./gradlew check             # May have individual artifact timeout issues
+```
+
+**Note**: The main Jenkins repository connectivity is functional. Occasional timeouts occur with specific artifact downloads from AWS S3 CDN endpoints, but these are typically resolved by retrying the command.
 - Validates on every push and pull request
