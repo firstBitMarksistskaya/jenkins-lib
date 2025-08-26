@@ -64,7 +64,7 @@ dependencies {
     integrationTestImplementation("org.codehaus.groovy", "groovy-all", groovyVersion)
 
     integrationTestImplementation("org.springframework.security", "spring-security-core", "6.5.2")
-	//integrationTestImplementation("jakarta.servlet", "jakarta.servlet-api", "5.0.0")
+	integrationTestImplementation("jakarta.servlet", "jakarta.servlet-api", "5.0.0")
 
     integrationTestImplementation("org.slf4j", "slf4j-api", slf4jVersion)
     integrationTestImplementation("org.slf4j", "slf4j-simple", slf4jVersion)
