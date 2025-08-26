@@ -7,7 +7,7 @@ import hudson.scm.ChangeLogSet
 import io.jenkins.blueocean.rest.impl.pipeline.FlowNodeWrapper
 import io.jenkins.blueocean.rest.impl.pipeline.PipelineNodeGraphVisitor
 import io.jenkins.blueocean.rest.model.BlueRun
-import org.apache.commons.lang.time.DurationFormatUtils
+import org.apache.commons.lang3.time.DurationFormatUtils
 import jenkins.plugins.http_request.HttpMode
 import jenkins.plugins.http_request.MimeType
 import org.jenkinsci.plugins.workflow.actions.TimingAction
