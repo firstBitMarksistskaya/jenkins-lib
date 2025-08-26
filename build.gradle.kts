@@ -1,5 +1,4 @@
 import com.mkobit.jenkins.pipelines.http.AnonymousAuthentication
-import org.gradle.api.tasks.Copy
 
 plugins {
     java
@@ -15,10 +14,12 @@ repositories {
 }
 
 tasks {
-	register<Copy>("resolveIntegrationTestDependencies") {
-		// Place dependencies into the processed resources output for the integrationTest source set
-		into(layout.buildDirectory.dir("resources/integrationTest/test-dependencies"))
-		from(configurations.integrationTestRuntimeClasspath.get())
+	register<org.jenkinsci.gradle.plugins.jpi.TestDependenciesTask>("resolveIntegrationTestDependencies") {
+		into {
+			val javaConvention = project.convention.getPlugin<JavaPluginConvention>()
+			File("${javaConvention.sourceSets.integrationTest.get().output.resourcesDir}/test-dependencies")
+		}
+		configuration = configurations.integrationTestRuntimeClasspath.get()
 	}
 
     processIntegrationTestResources {
@@ -108,6 +109,7 @@ sharedLibrary {
     pluginDependencies {
         dependency("org.jenkins-ci.plugins", "pipeline-build-step", "571.v08a_fffd4b_0ce")
         dependency("org.jenkins-ci.plugins", "pipeline-utility-steps", "2.19.0")
+        dependency("org.jenkins-ci.plugins", "durable-task", "595.ve87b_f1318d67")
         dependency("org.jenkins-ci.plugins", "git", "5.7.0")
         dependency("org.jenkins-ci.plugins", "http_request", "1.20")
         dependency("org.jenkins-ci.plugins", "timestamper", "1.30")
