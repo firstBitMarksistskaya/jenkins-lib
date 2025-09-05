@@ -84,7 +84,12 @@ class SyntaxCheck {
 
             if (options.publishToAllureReport) {
                 steps.stash(ALLURE_STASH, "$allureReportDir/**", true)
-                steps.archiveArtifacts("$allureReportDir/**")
+                
+                // Архивируем результат в отдельный архив и отправляем в артефакты.
+                String archivePath = "build/out/allure/syntax.zip"
+                steps.zip("$allureReportDir", archivePath)
+                steps.archiveArtifacts("$archivePath")
+                //steps.archiveArtifacts("$allureReportDir/**")
             }
 
             if (options.publishToJUnitReport) {
