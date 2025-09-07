@@ -89,7 +89,6 @@ class SyntaxCheck {
                 String archivePath = "build/out/allure/syntax.zip"
                 steps.zip("$allureReportDir", archivePath)
                 steps.archiveArtifacts("$archivePath")
-                //steps.archiveArtifacts("$allureReportDir/**")
             }
 
             if (options.publishToJUnitReport) {
