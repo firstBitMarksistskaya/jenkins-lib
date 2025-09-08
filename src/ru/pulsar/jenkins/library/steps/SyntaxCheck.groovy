@@ -87,8 +87,8 @@ class SyntaxCheck {
                 
                 // Архивируем результат в отдельный архив и отправляем в артефакты.
                 String archivePath = "build/out/allure/syntax.zip"
-                steps.zip("$allureReportDir", archivePath)
-                steps.archiveArtifacts("$archivePath")
+                Boolean archiveArtifacts = true
+                steps.zip("$allureReportDir", archivePath, '', archiveArtifacts)
             }
 
             if (options.publishToJUnitReport) {
