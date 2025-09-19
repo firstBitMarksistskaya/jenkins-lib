@@ -214,7 +214,9 @@ void call() {
                         stages {
                             stage('Распаковка ИБ') {
                                 steps {
-                                    unzipInfobase()
+                                     lock(resource: 'infobase_unzip_lock', quantity: 1) {
+                                        unzipInfobase()
+                                     }
                                 }
                             }
 
@@ -261,7 +263,9 @@ void call() {
                         stages {
                             stage('Распаковка ИБ') {
                                 steps {
-                                    unzipInfobase()
+                                     lock(resource: 'infobase_unzip_lock', quantity: 1) {
+                                        unzipInfobase()
+                                     }
                                 }
                             }
 
@@ -286,7 +290,9 @@ void call() {
                         stages {
                             stage('Распаковка ИБ') {
                                 steps {
-                                    unzipInfobase()
+                                     lock(resource: 'infobase_unzip_lock', quantity: 1) {
+                                        unzipInfobase()
+                                     }
                                 }
                             }
 
@@ -323,7 +329,9 @@ void call() {
                         stages {
                             stage('Распаковка ИБ') {
                                 steps {
-                                    unzipInfobase()
+                                     lock(resource: 'infobase_unzip_lock', quantity: 1) {
+                                        unzipInfobase()
+                                     }
                                 }
                             }
 
