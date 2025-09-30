@@ -15,38 +15,6 @@ String agent1C
 @Field
 String agentEdt
 
-/**
- * Safely loads configuration, supporting pipeline restarts.
- * First tries to use the cached config, then attempts to unstash it,
- * and finally loads it fresh as a fallback.
- */
-JobConfiguration safeLoadConfig() {
-    if (config != null) {
-        return config
-    }
-    
-    // Try to unstash configuration from pre-stage
-    try {
-        unstash 'pipeline-config'
-        config = jobConfiguration('pipeline-config.json') as JobConfiguration
-        // Ensure agent variables are set after loading config
-        if (agent1C == null) {
-            agent1C = config.v8AgentLabel()
-        }
-        if (agentEdt == null) {
-            agentEdt = config.edtAgentLabel()
-        }
-        return config
-    } catch (Exception e) {
-        // Fallback to loading fresh configuration
-        echo "Warning: Could not restore configuration from stash, loading fresh config. This may happen on pipeline restart."
-        config = jobConfiguration() as JobConfiguration
-        agent1C = config.v8AgentLabel()
-        agentEdt = config.edtAgentLabel()
-        return config
-    }
-}
-
 void call() {
 
     //noinspection GroovyAssignabilityCheck
@@ -74,11 +42,6 @@ void call() {
                         agent1C = config.v8AgentLabel()
                         agentEdt = config.edtAgentLabel()
                         RepoUtils.computeRepoSlug(env.GIT_URL)
-                        
-                        // Stash configuration for pipeline restart support
-                        def configJson = writeJSON returnText: true, json: config
-                        writeFile file: 'pipeline-config.json', text: configJson, encoding: 'UTF-8'
-                        stash name: 'pipeline-config', includes: 'pipeline-config.json'
                     }
                 }
             }
@@ -88,7 +51,7 @@ void call() {
                     stage('Подготовка 1C базы') {
                         when {
                             beforeAgent true
-                            expression { safeLoadConfig().stageFlags.needInfoBase() }
+                            expression { config.stageFlags.needInfoBase() }
                         }
 
                         stages {
@@ -98,10 +61,7 @@ void call() {
                                 }
                                 when {
                                     beforeAgent true
-                                    expression { 
-                                        def cfg = safeLoadConfig()
-                                        cfg.stageFlags.needInfoBase() && cfg.infoBaseFromFiles() && cfg.sourceFormat == SourceFormat.EDT 
-                                    }
+                                    expression { config.stageFlags.needInfoBase() && config.infoBaseFromFiles() && config.sourceFormat == SourceFormat.EDT }
                                 }
                                 steps {
                                     timeout(time: config.timeoutOptions.edtToDesignerFormatTransformation, unit: TimeUnit.MINUTES) {
@@ -118,7 +78,7 @@ void call() {
                                 stages {
                                     stage('Сборка расширений из исходников') {
                                         when {
-                                            expression { safeLoadConfig().needLoadExtensions() }
+                                            expression { config.needLoadExtensions() }
                                         }
                                         steps {
                                             timeout(time: config.timeoutOptions.getBinaries, unit: TimeUnit.MINUTES) {
@@ -156,7 +116,7 @@ void call() {
                                     stage('Загрузка расширений в конфигурацию'){
                                         when {
                                             beforeAgent true
-                                            expression { safeLoadConfig().needLoadExtensions() }
+                                            expression { config.needLoadExtensions() }
                                         }
                                         steps {
                                             timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
@@ -168,7 +128,7 @@ void call() {
                                     stage('Инициализация ИБ') {
                                         when {
                                             beforeAgent true
-                                            expression { safeLoadConfig().stageFlags.initSteps }
+                                            expression { config.stageFlags.initSteps }
                                         }
                                         steps {
                                             timeout(time: config.timeoutOptions.initInfoBase, unit: TimeUnit.MINUTES) {
@@ -200,10 +160,7 @@ void call() {
                         }
                         when {
                             beforeAgent true
-                            expression { 
-                                def cfg = safeLoadConfig()
-                                cfg.sourceFormat == SourceFormat.DESIGNER && cfg.stageFlags.edtValidate 
-                            }
+                            expression { config.sourceFormat == SourceFormat.DESIGNER && config.stageFlags.edtValidate }
                         }
                         steps {
                             timeout(time: config.timeoutOptions.designerToEdtFormatTransformation, unit: TimeUnit.MINUTES) {
@@ -219,7 +176,7 @@ void call() {
                     stage('EDT контроль') {
                         when {
                             beforeAgent true
-                            expression { safeLoadConfig().stageFlags.edtValidate }
+                            expression { config.stageFlags.edtValidate }
                         }
                         stages {
                             stage('Валидация EDT') {
@@ -252,7 +209,7 @@ void call() {
                         }
                         when {
                             beforeAgent true
-                            expression { safeLoadConfig().stageFlags.bdd }
+                            expression { config.stageFlags.bdd }
                         }
                         stages {
                             stage('Распаковка ИБ') {
@@ -264,7 +221,7 @@ void call() {
                             stage('Загрузка расширений в конфигурацию') {
                                 when {
                                     beforeAgent true
-                                    expression { safeLoadConfig().needLoadExtensions('bdd') }
+                                    expression { config.needLoadExtensions('bdd') }
                                 }
                                 steps {
                                     timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
@@ -299,7 +256,7 @@ void call() {
                         }
                         when {
                             beforeAgent true
-                            expression { safeLoadConfig().stageFlags.syntaxCheck }
+                            expression { config.stageFlags.syntaxCheck }
                         }
                         stages {
                             stage('Распаковка ИБ') {
@@ -324,7 +281,7 @@ void call() {
                         }
                         when {
                             beforeAgent true
-                            expression { safeLoadConfig().stageFlags.smoke }
+                            expression { config.stageFlags.smoke }
                         }
                         stages {
                             stage('Распаковка ИБ') {
@@ -336,7 +293,7 @@ void call() {
                             stage('Загрузка расширений в конфигурацию') {
                                 when {
                                     beforeAgent true
-                                    expression { safeLoadConfig().needLoadExtensions('smoke') }
+                                    expression { config.needLoadExtensions('smoke') }
                                 }
                                 steps {
                                     timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
@@ -361,7 +318,7 @@ void call() {
                         }
                         when {
                             beforeAgent true
-                            expression { safeLoadConfig().stageFlags.yaxunit }
+                            expression { config.stageFlags.yaxunit }
                         }
                         stages {
                             stage('Распаковка ИБ') {
@@ -373,7 +330,7 @@ void call() {
                             stage('Загрузка расширений в конфигурацию') {
                                 when {
                                     beforeAgent true
-                                    expression { safeLoadConfig().needLoadExtensions('yaxunit') }
+                                    expression { config.needLoadExtensions('yaxunit') }
                                 }
                                 steps {
                                     timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
@@ -400,7 +357,7 @@ void call() {
                 }
                 when {
                     beforeAgent true
-                    expression { safeLoadConfig().stageFlags.sonarqube }
+                    expression { config.stageFlags.sonarqube }
                 }
                 steps {
                     timeout(time: config.timeoutOptions.sonarqube, unit: TimeUnit.MINUTES) {
