@@ -43,13 +43,12 @@ class Bdd implements Serializable, Coverable {
                     Logger.println("Шаг запуска сценариев командой ${it}")
 
                     String vrunnerPath = VRunner.getVRunnerPath()
-                    def bddStepExitCodeFile = "build/out/bdd-step-exit-code.log"
+                    def bddStepExitCodeFile = "build/out/bdd-exit-code.log"
                     def command = "$vrunnerPath ${it}"
                     command += " --ibconnection \"/F./build/ib\""
-                    command += " --exitCodePath \"${bddStepExitCodeFile}\""
                     VRunner.exec(command, true)
 
-                    def bddStepExitCode = VRunner.readExitStatusFromFile(bddStepExitCodeFile)
+                    def bddStepExitCode = VRunner.readExitStatusFromFile(bddStepExitCodeFile, 0)
                     returnStatuses.add(bddStepExitCode)
                 }
 

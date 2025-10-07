@@ -41,7 +41,7 @@ class VRunner {
         return fileContent.contains("\"$settingName\"")
     }
 
-    static Integer readExitStatusFromFile(String path) {
+    static Integer readExitStatusFromFile(String path, Integer valueIfNoSuchFile = 1) {
 
         Logger.println("Читаем статус возврата из файла ${path}")
 
@@ -59,7 +59,7 @@ class VRunner {
             }
         } catch (NoSuchFileException e) {
             Logger.println("Файл со статусом возврата ${path} не найден: ${e.message}")
-            return 1
+            return valueIfNoSuchFile
         } catch (NumberFormatException e) {
             Logger.println("В файле со статусом возврата ${path} записано не числовое значение: ${e.message}")
             return 1
