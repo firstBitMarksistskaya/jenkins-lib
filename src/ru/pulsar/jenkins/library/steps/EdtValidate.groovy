@@ -11,7 +11,7 @@ import ru.pulsar.jenkins.library.utils.Logger
 class EdtValidate implements Serializable {
 
     public static final String RESULT_STASH = 'edt-validate'
-    public static final String RESULT_FILE = 'build/out/edt-validate.out'
+    public static final String RESULT_FILE = 'build/out/edt-validate/edt-validate.out'
 
     private final JobConfiguration config
 
@@ -55,8 +55,9 @@ class EdtValidate implements Serializable {
 
         engine.edtValidate(steps, config, projectList)
 
-        steps.archiveArtifacts("$DesignerToEdtFormatTransformation.WORKSPACE/.metadata/.log")
-        steps.archiveArtifacts(RESULT_FILE)
+        // * Каратаев Олег - Убрана отправка в артефакты, т.к. непонятен смысл наличия данных артефактов в сборке
+        //steps.archiveArtifacts("$DesignerToEdtFormatTransformation.WORKSPACE/.metadata/.log")
+        //steps.archiveArtifacts(RESULT_FILE)
         steps.stash(RESULT_STASH, RESULT_FILE)
     }
 }
