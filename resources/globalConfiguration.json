@@ -54,6 +54,7 @@
     "extensions": []
   },
   "bdd": {
+    "vrunnerSettings": "./tools/vrunner.json",
     "vrunnerSteps": [
       "vanessa --settings ./tools/vrunner.json"
     ],
