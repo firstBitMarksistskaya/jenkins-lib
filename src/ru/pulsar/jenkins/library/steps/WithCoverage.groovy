@@ -131,6 +131,7 @@ class WithCoverage implements Serializable {
 
         steps.start(dbgsPath, "--addr=127.0.0.1 --port=${coverageContext.port}")
         steps.start(coverageOpts.coverage41CPath, "start -i DefAlias -u http://127.0.0.1:${coverageContext.port} -P $workspaceDir -s $srcDir -o ${stage.getCoverageStashPath()}")
+        sleep(1000)
         steps.cmd("${coverageOpts.coverage41CPath} check -i DefAlias -u http://127.0.0.1:${coverageContext.port}")
 
         def newDbgsPids = getPIDs("dbgs")
