@@ -77,7 +77,7 @@ class ResultsTransformer implements Serializable {
 
         // Архивируем результат в отдельный архив и отправляем в артефакты.
         def resultDir = FileUtils.getFilePath("$edtValidateFile").getParent()
-        String archivePath = "edt-validate-ResultForSonar.zip"
+        String archivePath = "edt-validate-ResultsTransformer.zip"
         Boolean archiveArtifacts = true
         steps.zip("$resultDir", archivePath, '', archiveArtifacts)
 

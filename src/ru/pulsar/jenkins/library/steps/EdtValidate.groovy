@@ -55,9 +55,17 @@ class EdtValidate implements Serializable {
 
         engine.edtValidate(steps, config, projectList)
 
-        // * Каратаев Олег - Убрана отправка в артефакты, т.к. непонятен смысл наличия данных артефактов в сборке
-        //steps.archiveArtifacts("$DesignerToEdtFormatTransformation.WORKSPACE/.metadata/.log")
-        //steps.archiveArtifacts(RESULT_FILE)
         steps.stash(RESULT_STASH, RESULT_FILE)
+
+        // Архивируем все результаты в отдельныом архиве и отправляем в артефакты.
+        def resultDir = FileUtils.getFilePath("$RESULT_FILE").getParent()
+        
+        String resultLogFrom = "$DesignerToEdtFormatTransformation.WORKSPACE/.metadata/.log"
+        String resultLogTo = "$resultDir/.log"
+        FileUtils.loadFile(resultLogFrom, env, resultLogTo) // копируем лог в папку, которая будет архивироваться
+        
+        String archivePath = "edt-validate.zip"
+        Boolean archiveArtifacts = true
+        steps.zip("$resultDir", archivePath, '', archiveArtifacts)
     }
 }
