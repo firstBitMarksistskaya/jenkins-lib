@@ -6,6 +6,7 @@ import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.VRunner
+import ru.pulsar.jenkins.library.utils.FileUtils
 
 class InitInfoBase implements Serializable {
 
@@ -27,6 +28,15 @@ class InitInfoBase implements Serializable {
             return
         }
 
+        def env = steps.env();
+
+        String workspaceAllure = FileUtils.getFilePath("$env.WORKSPACE/build/out/allure").getRemote()
+        Logger.println("Очистка каталога Allure: $workspaceAllure")
+        steps.deleteDir(workspaceAllure)        
+        String workspaceCucumber = FileUtils.getFilePath("$env.WORKSPACE/build/out/cucumber").getRemote()
+        Logger.println("Очистка каталога Cucumber: $workspaceCucumber")
+        steps.deleteDir(workspaceCucumber)        
+        
         List<String> logosConfig = ["LOGOS_CONFIG=$config.logosConfig"]
         steps.withEnv(logosConfig) {
 
