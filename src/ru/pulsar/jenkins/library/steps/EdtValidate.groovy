@@ -60,8 +60,8 @@ class EdtValidate implements Serializable {
         // Архивируем все результаты в отдельныом архиве и отправляем в артефакты.
         def resultDir = FileUtils.getFilePath("$RESULT_FILE").getParent()
         
-        String resultLogFrom = "$DesignerToEdtFormatTransformation.WORKSPACE/.metadata/.log"
-        String resultLogTo = "$resultDir/.log"
+        String resultLogFrom = FileUtils.getFilePath("$env.WORKSPACE/$DesignerToEdtFormatTransformation.WORKSPACE/.metadata/.log")
+        String resultLogTo = FileUtils.getFilePath("$env.WORKSPACE/$resultDir/.log")
         FileUtils.loadFile(resultLogFrom, env, resultLogTo) // копируем лог в папку, которая будет архивироваться
         
         String archivePath = "edt-validate.zip"
