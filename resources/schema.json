@@ -72,6 +72,10 @@
           "items" : {
             "type" : "string"
           }
+        },
+        "vrunnerSettings" : {
+          "type" : "string",
+          "description" : "Путь к конфигурационному файлу vanessa-runner.\n    По умолчанию содержит значение \"./tools/vrunner.json\".\n    "
         }
       },
       "description" : "Настройки шага запуска BDD сценариев"
