@@ -68,8 +68,8 @@ class SmokeTest implements Serializable, Coverable {
         StringJoiner reportsConfigConstructor = new StringJoiner(";")
 
         if (options.publishToJUnitReport) {
-            steps.deleteDir(junitReportDir)
-            steps.createDir(junitReportDir)
+            boolean deleteDir = true
+            steps.createDir(junitReportDir, deleteDir)
 
             String junitReportCommand = "ГенераторОтчетаJUnitXML{$junitReport}"
 
@@ -77,8 +77,8 @@ class SmokeTest implements Serializable, Coverable {
         }
 
         if (options.publishToAllureReport) {
-            steps.deleteDir(allureReportDir)
-            steps.createDir(allureReportDir)
+            boolean deleteDir = true
+            steps.createDir(allureReportDir, deleteDir)
 
             String allureReportCommand = "ГенераторОтчетаAllureXMLВерсия2{$allureReport}"
 
