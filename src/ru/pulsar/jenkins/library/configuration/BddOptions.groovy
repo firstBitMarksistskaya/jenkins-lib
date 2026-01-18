@@ -24,6 +24,7 @@ class BddOptions extends StepCoverageOptions implements Serializable {
      * Если vrunnerSteps не задан явно, возвращает значение по умолчанию
      * на основе vrunnerSettings.
      */
+    @NonCPS
     String[] getEffectiveVrunnerSteps() {
         if (vrunnerSteps == null) {
             String step = "vanessa --settings " + vrunnerSettings
