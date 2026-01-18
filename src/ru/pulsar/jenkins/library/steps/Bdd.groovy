@@ -39,7 +39,7 @@ class Bdd implements Serializable, Coverable {
 
             steps.withCoverage(config, this, options) {
 
-                config.bddOptions.vrunnerSteps.each {
+                config.bddOptions.effectiveVrunnerSteps.each {
                     Logger.println("Шаг запуска сценариев командой ${it}")
                     String vrunnerPath = VRunner.getVRunnerPath()
                     Integer bddReturnStatus = VRunner.exec("$vrunnerPath ${it} --ibconnection \"/F./build/ib\"", true)

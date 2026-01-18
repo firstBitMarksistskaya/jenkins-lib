@@ -141,7 +141,7 @@ pipeline1C()
   * После загрузки конфигурации в ИБ будет выполняться запуск ИБ с целью запуска обработчиков обновления из БСП (`initInfobase` -> `runMigration`).
   * Если в настройках шага инициализации не заполнен массив дополнительных шагов миграции (`initInfobase` -> `additionalInitializationSteps`), но в каталоге `tools` присутствуют файлы с именами, удовлетворяющими шаблону `vrunner.init*.json`, то автоматически выполняется запуск `vrunner vanessa` с передачей найденных файлов в качестве значения настроек (параметр `--settings`) в порядке лексикографической сортировки имен файлов.
 * BDD:
-  * Если в конфигурационном файле проекта не заполнена настройка `bdd` -> `vrunnerSteps`, то автоматически выполняется запуск `vrunner vanessa --settings tools/vrunner.json`.
+  * Если в конфигурационном файле проекта не заполнена настройка `bdd` -> `vrunnerSteps`, то автоматически выполняется запуск `vrunner vanessa --settings <vrunnerSettings>`, где `<vrunnerSettings>` — значение настройки `bdd` -> `vrunnerSettings` (по умолчанию `./tools/vrunner.json`).
 * YAXUnit:
   * Если в репозитории существует файл `tools/yaxunit.json`, то он будет передан в качестве параметра для YAXUnit при запуске тестов. Если файла с таким именем нет, то в YAXUnit будет передан файл из текущей библиотеки `resources/yaxunit.json`. Он содержит минимально необходимые параметры и настроен на поиск сценариев в расширении с именем `YAXUnit`.
 * Дымовые тесты:
@@ -268,10 +268,22 @@ pipeline1C()
 Пример настройки подключения для `bdd`:
 
 jobConfiguration.json
+
+Если нужно использовать нестандартный путь к файлу настроек, достаточно указать только `vrunnerSettings`:
+```json
+"bdd": {
+    "vrunnerSettings": "./tools/my-vrunner.json",
+    "coverage": true,
+    "dbgsPort": 1550
+  },
+```
+
+Если нужно выполнить несколько команд, используйте `vrunnerSteps`:
 ```json
 "bdd": {
     "vrunnerSteps": [
-      "vanessa --settings ./tools/vrunner.json"
+      "vanessa --settings ./tools/vrunner.json",
+      "vanessa --settings ./tools/vrunner2.json"
     ],
     "coverage": true,
     "dbgsPort": 1550
