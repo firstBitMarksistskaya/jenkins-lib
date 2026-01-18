@@ -57,7 +57,7 @@ class EdtValidate implements Serializable {
 
         steps.stash(RESULT_STASH, RESULT_FILE)
 
-        // Архивируем все результаты в отдельныом архиве и отправляем в артефакты.
+        // Архивируем все результаты в отдельном архиве и отправляем в артефакты.
         def resultDir = FileUtils.getFilePath("$RESULT_FILE").getParent()
         
         String resultLogFrom = FileUtils.getFilePath("$env.WORKSPACE/$DesignerToEdtFormatTransformation.WORKSPACE/.metadata/.log")
