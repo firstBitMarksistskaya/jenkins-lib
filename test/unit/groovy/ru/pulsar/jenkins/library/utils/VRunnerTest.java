@@ -1,14 +1,13 @@
-package ru.pulsar.jenkins.library.steps;
+package ru.pulsar.jenkins.library.utils;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.pulsar.jenkins.library.utils.TestUtils;
 
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class InitInfoBaseTest {
+class VRunnerTest {
 
     @BeforeEach
     void setUp() {
@@ -25,11 +24,11 @@ class InitInfoBaseTest {
                         .getPath();
 
         // when
-        Integer exitStatus = InitInfoBase.readExitStatusFromFile(resource);
+        Integer exitStatus = VRunner.readExitStatusFromFile(resource);
         // then
         assertThat(exitStatus).isEqualTo(0);
 
-        }
+    }
 
     @Test
     void readExitStatusFromFile_failure() {
@@ -41,7 +40,7 @@ class InitInfoBaseTest {
                         .getPath();
 
         // when
-        Integer exitStatus = InitInfoBase.readExitStatusFromFile(resource);
+        Integer exitStatus = VRunner.readExitStatusFromFile(resource);
         // then
         assertThat(exitStatus).isEqualTo(1);
 
@@ -54,9 +53,10 @@ class InitInfoBaseTest {
         String resource = "exitStatusDoesNotExist";
 
         // when
-        Integer exitStatus = InitInfoBase.readExitStatusFromFile(resource);
+        Integer exitStatus = VRunner.readExitStatusFromFile(resource);
         // then
         assertThat(exitStatus).isEqualTo(1);
 
     }
 }
+

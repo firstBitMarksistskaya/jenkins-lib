@@ -7,8 +7,6 @@ import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.VRunner
 
-import java.nio.file.NoSuchFileException
-
 class InitInfoBase implements Serializable {
 
     private final JobConfiguration config
@@ -63,7 +61,7 @@ class InitInfoBase implements Serializable {
                 // Запуск миграции
                 steps.catchError {
                     VRunner.exec(command, true)
-                    exitStatuses.put(command, readExitStatusFromFile(migrationStatusFile))
+                    exitStatuses.put(command, VRunner.readExitStatusFromFile(migrationStatusFile))
                 }
             } else {
                 Logger.println("Шаг миграции ИБ выключен")
@@ -110,34 +108,6 @@ class InitInfoBase implements Serializable {
         if (!isInfobaseInitialized) {
             // Throws exception
             steps.error("Инициализация ИБ завершилась с ошибками")
-        }
-    }
-
-    static Integer readExitStatusFromFile(String path) {
-
-        Logger.println("Читаем статус возврата из файла ${path}")
-
-        try {
-            String content = ContextRegistry.getContext().getStepExecutor()
-                    .readFile(path)
-                    .trim()
-                    .replaceAll(/^\uFEFF/, '') // платформа генерирует файл с BOM
-
-            if (!content) {
-                Logger.println("Файл со статусом возврата ${path} пуст")
-                return 1
-            } else {
-                return content.toInteger()
-            }
-        } catch (NoSuchFileException e) {
-            Logger.println("Файл со статусом возврата ${path} не найден: ${e.message}")
-            return 1
-        } catch (NumberFormatException e) {
-            Logger.println("В файле со статусом возврата ${path} записано не числовое значение: ${e.message}")
-            return 1
-        } catch (Exception e) {
-            Logger.println("При чтении файла со статусом возврата ${path} возникла ошибка: ${e.message}")
-            return 1
         }
     }
 }
