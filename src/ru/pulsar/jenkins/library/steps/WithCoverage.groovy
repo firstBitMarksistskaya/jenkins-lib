@@ -171,7 +171,11 @@ class WithCoverage implements Serializable {
         def dbgsFindScript = steps.libraryResource("dbgs.os")
         steps.writeFile(dbgsFindScriptPath, dbgsFindScript, 'UTF-8')
 
-        steps.cmd("oscript ${dbgsFindScriptPath} ${config.v8version} > ${dbgsPathResult}")
+        if (steps.isUnix()) {
+            steps.cmd("LOGOS_LEVEL=DISABLE oscript ${dbgsFindScriptPath} ${config.v8version} > ${dbgsPathResult}")
+        } else {
+            steps.cmd("set LOGOS_LEVEL=DISABLE && oscript ${dbgsFindScriptPath} ${config.v8version} > ${dbgsPathResult}")
+        }
         dbgsPath = steps.readFile(dbgsPathResult).strip()
 
         if (dbgsPath.isEmpty()) {
