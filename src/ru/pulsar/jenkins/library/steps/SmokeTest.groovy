@@ -111,7 +111,11 @@ class SmokeTest implements Serializable, Coverable {
 
             if (options.publishToAllureReport) {
                 steps.stash(ALLURE_STASH, "$allureReportDir/**", true)
-                steps.archiveArtifacts("$allureReportDir/**")
+                
+                // Архивируем результат в отдельный архив и отправляем в артефакты.
+                String archivePath = "build/out/allure/smoke.zip"
+                Boolean archiveArtifacts = true
+                steps.zip("$allureReportDir", archivePath, '', archiveArtifacts)
             }
 
             if (options.publishToJUnitReport) {
