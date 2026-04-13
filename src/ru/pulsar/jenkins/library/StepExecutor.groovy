@@ -10,7 +10,7 @@ import org.jenkinsci.plugins.workflow.support.steps.build.RunWrapper
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.StepCoverageOptions
 import ru.pulsar.jenkins.library.steps.Coverable
-import ru.yandex.qatools.allure.jenkins.config.ResultsConfig
+import org.allurereport.jenkins.config.ResultsConfig
 import sp.sd.fileoperations.FileOperation
 
 class StepExecutor implements IStepExecutor {
