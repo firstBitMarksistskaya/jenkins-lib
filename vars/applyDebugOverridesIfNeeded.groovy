@@ -28,7 +28,12 @@ boolean call() {
         return false
     }
 
-    DebugOverrides.validateDebugProfile(profile)
+    try {
+        DebugOverrides.validateDebugProfile(profile)
+    } catch (IllegalArgumentException exception) {
+        echo "Debug overrides: invalid profile ${profileKey}, skip (${exception.message})"
+        return false
+    }
 
     List replacements = profile.replacements as List
     echo "Debug overrides: applying ${replacements.size()} replacement(s)"
@@ -81,6 +86,11 @@ private Map loadControlConfig() {
 
         if (DebugOverrides.shouldTreatConfigFileProviderErrorAsMissingControlFile(exception)) {
             echo 'Debug overrides: control file is unavailable, skip'
+            return null
+        }
+
+        if (DebugOverrides.shouldTreatConfigFileProviderErrorAsInvalidControlFile(exception)) {
+            echo "Debug overrides: control file is invalid, skip (${exception.message})"
             return null
         }
 

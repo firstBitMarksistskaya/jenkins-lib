@@ -139,8 +139,24 @@ class DebugOverridesTest {
   }
 
   @Test
+  void shouldTreatConfigFileProviderErrorAsInvalidControlFile_detectsInvalidJsonException() {
+    Exception exception = new RuntimeException("Unexpected character at line 1");
+
+    assertThat(DebugOverrides.shouldTreatConfigFileProviderErrorAsInvalidControlFile(exception))
+      .isTrue();
+  }
+
+  @Test
   void shouldTreatUnstashErrorAsMissingStash_detectsMissingStash() {
     Exception exception = new RuntimeException("No such saved stash 'debug-overrides-files'");
+
+    assertThat(DebugOverrides.shouldTreatUnstashErrorAsMissingStash(exception))
+      .isTrue();
+  }
+
+  @Test
+  void shouldTreatUnstashErrorAsMissingStash_normalizesCurlyQuotes() {
+    Exception exception = new RuntimeException("No such saved stash \u2018debug-overrides-files\u2019");
 
     assertThat(DebugOverrides.shouldTreatUnstashErrorAsMissingStash(exception))
       .isTrue();

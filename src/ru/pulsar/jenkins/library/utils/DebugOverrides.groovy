@@ -1,6 +1,6 @@
 package ru.pulsar.jenkins.library.utils
 
-class DebugOverrides implements Serializable {
+class DebugOverrides {
 
     static final String CONTROL_FILE_ID = 'jenkins-debug-overrides-control'
     static final String CONTROL_FILE_VARIABLE = 'DEBUG_OVERRIDES_CONTROL_FILE'
@@ -153,11 +153,27 @@ class DebugOverrides implements Serializable {
         )
     }
 
+    static boolean shouldTreatConfigFileProviderErrorAsInvalidControlFile(Exception exception) {
+        String className = exception?.class?.name ?: ''
+        String message = exception?.message ?: ''
+        String lowerCaseMessage = message.toLowerCase()
+
+        return className.contains('Json') ||
+            className.contains('JSONException') ||
+            lowerCaseMessage.contains('invalid json') ||
+            lowerCaseMessage.contains('unable to parse') ||
+            lowerCaseMessage.contains('unexpected character') ||
+            lowerCaseMessage.contains('expected a') ||
+            lowerCaseMessage.contains('net.sf.json')
+    }
+
     static boolean shouldTreatUnstashErrorAsMissingStash(Exception exception) {
         String message = exception?.message ?: ''
+        String normalizedMessage = message
+            .replace('\u2018', "'")
+            .replace('\u2019', "'")
 
-        return message.contains("No such saved stash '${STASH_NAME}'") ||
-            message.contains("No such saved stash ‘${STASH_NAME}’") ||
-            (message.contains('No such saved stash') && message.contains(STASH_NAME))
+        return normalizedMessage.contains("No such saved stash '${STASH_NAME}'") ||
+            (normalizedMessage.contains('No such saved stash') && normalizedMessage.contains(STASH_NAME))
     }
 }

@@ -81,16 +81,12 @@ void call() {
                                 }
 
                                 stages {
-                                    stage('Восстановление debug overrides') {
-                                        steps {
-                                            restoreDebugOverridesIfNeeded()
-                                        }
-                                    }
                                     stage('Сборка расширений из исходников') {
                                         when {
                                             expression { config.needLoadExtensions() }
                                         }
                                         steps {
+                                            restoreDebugOverridesIfNeeded()
                                             timeout(time: config.timeoutOptions.getBinaries, unit: TimeUnit.MINUTES) {
                                                 createDir('build/out/cfe')
                                                 // Соберем или загрузим cfe из исходников и положим их в папку build/out/cfe
@@ -224,13 +220,9 @@ void call() {
                             expression { config.stageFlags.bdd && isInfobaseInitialized }
                         }
                         stages {
-                            stage('Восстановление debug overrides') {
-                                steps {
-                                    restoreDebugOverridesIfNeeded()
-                                }
-                            }
                             stage('Распаковка ИБ') {
                                 steps {
+                                    restoreDebugOverridesIfNeeded()
                                     unzipInfobase()
                                 }
                             }
@@ -276,13 +268,9 @@ void call() {
                             expression { config.stageFlags.syntaxCheck }
                         }
                         stages {
-                            stage('Восстановление debug overrides') {
-                                steps {
-                                    restoreDebugOverridesIfNeeded()
-                                }
-                            }
                             stage('Распаковка ИБ') {
                                 steps {
+                                    restoreDebugOverridesIfNeeded()
                                     unzipInfobase()
                                 }
                             }
@@ -306,13 +294,9 @@ void call() {
                             expression { config.stageFlags.smoke && isInfobaseInitialized }
                         }
                         stages {
-                            stage('Восстановление debug overrides') {
-                                steps {
-                                    restoreDebugOverridesIfNeeded()
-                                }
-                            }
                             stage('Распаковка ИБ') {
                                 steps {
+                                    restoreDebugOverridesIfNeeded()
                                     unzipInfobase()
                                 }
                             }
@@ -348,13 +332,9 @@ void call() {
                             expression { config.stageFlags.yaxunit && isInfobaseInitialized }
                         }
                         stages {
-                            stage('Восстановление debug overrides') {
-                                steps {
-                                    restoreDebugOverridesIfNeeded()
-                                }
-                            }
                             stage('Распаковка ИБ') {
                                 steps {
+                                    restoreDebugOverridesIfNeeded()
                                     unzipInfobase()
                                 }
                             }
@@ -391,18 +371,10 @@ void call() {
                     beforeAgent true
                     expression { config.stageFlags.sonarqube }
                 }
-                stages {
-                    stage('Восстановление debug overrides') {
-                        steps {
-                            restoreDebugOverridesIfNeeded()
-                        }
-                    }
-                    stage('Запуск SonarQube') {
-                        steps {
-                            timeout(time: config.timeoutOptions.sonarqube, unit: TimeUnit.MINUTES) {
-                                sonarScanner config
-                            }
-                        }
+                steps {
+                    restoreDebugOverridesIfNeeded()
+                    timeout(time: config.timeoutOptions.sonarqube, unit: TimeUnit.MINUTES) {
+                        sonarScanner config
                     }
                 }
             }
