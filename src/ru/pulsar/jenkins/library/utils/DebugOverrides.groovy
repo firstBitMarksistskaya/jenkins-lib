@@ -12,6 +12,10 @@ class DebugOverrides {
         'tools/VAParams.json'
     ].asImmutable()
 
+    // buildStashIncludes joins entries with commas, so downstream targets must
+    // remain plain relative paths without commas or Ant wildcard syntax.
+    static final String STASH_SAFE_TARGET_PATTERN = /^[^,*?{}]+$/
+
     static String resolveProfileKey(String jobName) {
         if (jobName == null) {
             return null
@@ -73,16 +77,16 @@ class DebugOverrides {
             throw new IllegalArgumentException('Replacement target must be non-empty')
         }
 
+        if (normalized.startsWith('//')) {
+            throw new IllegalArgumentException("UNC target paths are not allowed: ${target}")
+        }
+
         if (normalized.startsWith('/')) {
             throw new IllegalArgumentException("Absolute target paths are not allowed: ${target}")
         }
 
         if (normalized ==~ /^[A-Za-z]:\/.*/) {
             throw new IllegalArgumentException("Windows absolute target paths are not allowed: ${target}")
-        }
-
-        if (normalized.startsWith('//')) {
-            throw new IllegalArgumentException("UNC target paths are not allowed: ${target}")
         }
 
         List<String> segments = normalized.split('/') as List<String>
@@ -112,6 +116,13 @@ class DebugOverrides {
     }
 
     static String buildStashIncludes(List<String> targets) {
+        List<String> unsafeTargets = targets.findAll { !(it ==~ STASH_SAFE_TARGET_PATTERN) }
+        if (!unsafeTargets.isEmpty()) {
+            throw new IllegalArgumentException(
+                "Downstream targets are not stash-safe: ${unsafeTargets.join(', ')}"
+            )
+        }
+
         targets.join(',')
     }
 
@@ -157,14 +168,22 @@ class DebugOverrides {
         String className = exception?.class?.name ?: ''
         String message = exception?.message ?: ''
         String lowerCaseMessage = message.toLowerCase()
-
-        return className.contains('Json') ||
-            className.contains('JSONException') ||
-            lowerCaseMessage.contains('invalid json') ||
-            lowerCaseMessage.contains('unable to parse') ||
+        boolean isJsonParseError =
+            className.endsWith('JsonException') ||
+            className.endsWith('JSONException') ||
+            className.endsWith('JsonParseException') ||
+            lowerCaseMessage.contains('net.sf.json') ||
+            lowerCaseMessage.contains('jsonparseexception') ||
+            lowerCaseMessage.contains('jsonexception') ||
             lowerCaseMessage.contains('unexpected character') ||
-            lowerCaseMessage.contains('expected a') ||
-            lowerCaseMessage.contains('net.sf.json')
+            lowerCaseMessage.contains('unable to parse')
+        boolean referencesControlFile =
+            message.contains(CONTROL_FILE_ID) ||
+            lowerCaseMessage.contains(CONTROL_FILE_VARIABLE.toLowerCase()) ||
+            lowerCaseMessage.contains('readjson') ||
+            (exception?.stackTrace ?: []).any { it.methodName == 'loadControlConfig' }
+
+        return isJsonParseError && referencesControlFile
     }
 
     static boolean shouldTreatUnstashErrorAsMissingStash(Exception exception) {

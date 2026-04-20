@@ -51,7 +51,7 @@ boolean call() {
                 createDir(parentPath)
             }
 
-            writeFile file: target, text: readFile(file: sourcePath), encoding: 'UTF-8'
+            writeFile file: target, text: readFile(file: sourcePath, encoding: 'UTF-8'), encoding: 'UTF-8'
             echo "Debug overrides: wrote ${target} from managed file ${replacement.fileId}"
         }
 
