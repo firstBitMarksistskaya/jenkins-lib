@@ -58,7 +58,7 @@ class VRunner {
                 return content.toInteger()
             }
         } catch (NoSuchFileException e) {
-            Logger.println("Файл со статусом возврата ${path} не найден: ${e.message}")
+            Logger.println("Файл со статусом возврата ${path} не найден: ${e.message}. Будет использован переданный статус ${valueIfNoSuchFile}")
             return valueIfNoSuchFile
         } catch (NumberFormatException e) {
             Logger.println("В файле со статусом возврата ${path} записано не числовое значение: ${e.message}")

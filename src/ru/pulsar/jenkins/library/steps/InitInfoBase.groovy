@@ -60,8 +60,8 @@ class InitInfoBase implements Serializable {
                 command += " --exitCodePath \"${migrationStatusFile}\""
                 // Запуск миграции
                 steps.catchError {
-                    VRunner.exec(command, true)
-                    exitStatuses.put(command, VRunner.readExitStatusFromFile(migrationStatusFile))
+                    Integer exitStatus = VRunner.exec(command, true)
+                    exitStatuses.put(command, VRunner.readExitStatusFromFile(migrationStatusFile, exitStatus))
                 }
             } else {
                 Logger.println("Шаг миграции ИБ выключен")
