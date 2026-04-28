@@ -30,6 +30,16 @@ class VRunner {
         } as int
     }
 
+    static String appendV8Version(String command, String v8version) {
+        if (v8version == null || v8version.trim().isEmpty()) {
+            return command
+        }
+        if (command.contains("--v8version")) {
+            return command
+        }
+        return "${command} --v8version ${v8version}"
+    }
+
     static boolean configContainsSetting(String configPath, String settingName) {
         IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
 

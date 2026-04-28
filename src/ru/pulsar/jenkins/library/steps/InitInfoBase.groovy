@@ -58,6 +58,7 @@ class InitInfoBase implements Serializable {
                 command += settingsIncrement
                 def migrationStatusFile = "build/migration-exit-status.log"
                 command += " --exitCodePath \"${migrationStatusFile}\""
+                command = VRunner.appendV8Version(command, config.v8version)
                 // Запуск миграции
                 steps.catchError {
                     VRunner.exec(command, true)
@@ -73,6 +74,7 @@ class InitInfoBase implements Serializable {
                 files.each {
                     Logger.println("Первичная инициализация файлом ${it.path}")
                     def command = "$vrunnerPath vanessa --settings ${it.path} --ibconnection \"/F./build/ib\""
+                    command = VRunner.appendV8Version(command, config.v8version)
                     Integer exitStatus = VRunner.exec(command, true)
                     exitStatuses.put(command, exitStatus)
                 }
@@ -80,6 +82,7 @@ class InitInfoBase implements Serializable {
                 options.additionalInitializationSteps.each {
                     Logger.println("Первичная инициализация командой ${it}")
                     def command = "$vrunnerPath ${it} --ibconnection \"/F./build/ib\"${settingsIncrement}"
+                    command = VRunner.appendV8Version(command, config.v8version)
                     Integer exitStatus = VRunner.exec(command, true)
                     exitStatuses.put(command, exitStatus)
                 }
