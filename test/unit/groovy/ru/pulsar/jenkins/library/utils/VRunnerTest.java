@@ -109,6 +109,9 @@ class VRunnerTest {
 
         // then
         assertThat(result).isEqualTo(command);
+    }
+
+    @Test
     void readExitStatusFromFile_does_not_exist_uses_provided_fallback() {
 
         // given
