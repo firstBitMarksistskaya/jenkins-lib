@@ -11,6 +11,9 @@ plugins {
 
 repositories {
     mavenCentral()
+    maven {
+        url = uri("https://repo.jenkins-ci.org/public/")
+    }
 }
 
 tasks {
@@ -128,6 +131,5 @@ sharedLibrary {
         dependency("org.jenkinsci.plugins", "pipeline-model-api", declarativePluginsVersion)
         dependency("org.jenkinsci.plugins", "pipeline-model-definition", declarativePluginsVersion)
         dependency("org.jenkinsci.plugins", "pipeline-model-extensions", declarativePluginsVersion)
-        dependency("org.jenkinsci.plugins", "pipeline-model-declarative-agent", "1.1.1")
     }
 }
