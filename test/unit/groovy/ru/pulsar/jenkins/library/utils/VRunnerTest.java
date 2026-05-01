@@ -60,6 +60,58 @@ class VRunnerTest {
     }
 
     @Test
+    void appendV8Version_appends_parameter() {
+
+        // given
+        String command = "vrunner xunit --ibconnection \"/F./build/ib\"";
+
+        // when
+        String result = VRunner.appendV8Version(command, "8.3.21.1644");
+
+        // then
+        assertThat(result).isEqualTo("vrunner xunit --ibconnection \"/F./build/ib\" --v8version 8.3.21.1644");
+    }
+
+    @Test
+    void appendV8Version_returns_command_when_v8version_is_null() {
+
+        // given
+        String command = "vrunner xunit";
+
+        // when
+        String result = VRunner.appendV8Version(command, null);
+
+        // then
+        assertThat(result).isEqualTo(command);
+    }
+
+    @Test
+    void appendV8Version_returns_command_when_v8version_is_blank() {
+
+        // given
+        String command = "vrunner xunit";
+
+        // when
+        String result = VRunner.appendV8Version(command, "  ");
+
+        // then
+        assertThat(result).isEqualTo(command);
+    }
+
+    @Test
+    void appendV8Version_does_not_duplicate_parameter() {
+
+        // given
+        String command = "vrunner xunit --v8version 8.3.21.1644";
+
+        // when
+        String result = VRunner.appendV8Version(command, "8.3.25.1299");
+
+        // then
+        assertThat(result).isEqualTo(command);
+    }
+
+    @Test
     void readExitStatusFromFile_does_not_exist_uses_provided_fallback() {
 
         // given
