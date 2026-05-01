@@ -4,7 +4,6 @@ import ru.pulsar.jenkins.library.configuration.JobConfiguration
 
 class ContextRegistry implements Serializable {
     private static IContext context
-    private static JobConfiguration jobConfiguration
 
     static void registerContext(IContext context) {
         ContextRegistry.context = context
@@ -15,7 +14,7 @@ class ContextRegistry implements Serializable {
     }
 
     static JobConfiguration registerJobConfiguration(JobConfiguration config) {
-        jobConfiguration = config
+        context.registerJobConfiguration(config)
         return config
     }
 
@@ -24,6 +23,6 @@ class ContextRegistry implements Serializable {
     }
 
     static JobConfiguration getJobConfiguration() {
-        return jobConfiguration
+        return context.getJobConfiguration()
     }
 }
