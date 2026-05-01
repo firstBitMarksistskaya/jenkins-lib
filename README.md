@@ -59,6 +59,7 @@
 1. Конфигурирование логгера запускаемых oscript-приложений.
 1. Замер покрытия при выполнении тестов.
 1. Возможность сохранить информационную базу в виде артефакта сборки после выполнения шагов инициализации и\или после выполнения сценарных тестов.
+1. Debug Overrides: временная подмена `jobConfiguration.json`, `sonar-project.properties` и файлов из `tools/` через Jenkins Managed Files без изменений в прикладном репозитории. Подробная настройка описана в [docs/feat_debug_replace/how_to_add_debug_settings.md](docs/feat_debug_replace/how_to_add_debug_settings.md).
 
 ## Подключение
 
