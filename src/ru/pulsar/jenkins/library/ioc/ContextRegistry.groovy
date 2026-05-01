@@ -1,5 +1,7 @@
 package ru.pulsar.jenkins.library.ioc
 
+import ru.pulsar.jenkins.library.configuration.JobConfiguration
+
 class ContextRegistry implements Serializable {
     private static IContext context
 
@@ -11,7 +13,16 @@ class ContextRegistry implements Serializable {
         context = new DefaultContext(steps)
     }
 
+    static JobConfiguration registerJobConfiguration(JobConfiguration config) {
+        context.registerJobConfiguration(config)
+        return config
+    }
+
     static IContext getContext() {
         return context
+    }
+
+    static JobConfiguration getJobConfiguration() {
+        return context.getJobConfiguration()
     }
 }

@@ -137,6 +137,11 @@ class StepExecutor implements IStepExecutor {
     }
 
     @Override
+    void createDir(String path, boolean deleteDir) {
+        steps.createDir(path, deleteDir)
+    }
+
+    @Override
     def dir(String path, Closure body) {
         steps.dir(path) {
             body()
