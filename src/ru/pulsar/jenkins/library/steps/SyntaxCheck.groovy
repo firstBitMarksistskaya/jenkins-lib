@@ -79,8 +79,6 @@ class SyntaxCheck {
                 command += " --mode $checkModes"
             }
 
-            command = VRunner.appendV8Version(command, config.v8version)
-
             // Запуск синтакс-проверки
             VRunner.exec(command, true)
 

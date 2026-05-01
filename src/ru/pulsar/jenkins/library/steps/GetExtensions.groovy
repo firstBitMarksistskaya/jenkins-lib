@@ -68,7 +68,6 @@ class GetExtensions implements Serializable {
     private void buildExtension(Extension extension, String srcDir, String vrunnerPath, IStepExecutor steps) {
 
         def compileExtCommand = "$vrunnerPath compileexttocfe --src ${srcDir} --out $EXTENSIONS_OUT_DIR/${extension.name}.cfe"
-        compileExtCommand = VRunner.appendV8Version(compileExtCommand, config.v8version)
         List<String> logosConfig = ["LOGOS_CONFIG=$config.logosConfig"]
         steps.withEnv(logosConfig) {
             VRunner.exec(compileExtCommand)

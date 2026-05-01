@@ -78,8 +78,6 @@ class LoadExtensions implements Serializable {
             loadCommand += " --settings $vrunnerSettings"
         }
 
-        loadCommand = VRunner.appendV8Version(loadCommand, this.config.v8version)
-
         List<String> logosConfig = ["LOGOS_CONFIG=$config.logosConfig"]
         steps.withEnv(logosConfig) {
             VRunner.exec(loadCommand)

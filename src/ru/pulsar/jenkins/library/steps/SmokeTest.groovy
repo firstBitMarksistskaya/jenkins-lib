@@ -103,8 +103,6 @@ class SmokeTest implements Serializable, Coverable {
             command += " $testsPath"
         }
 
-        command = VRunner.appendV8Version(command, config.v8version)
-
         steps.withEnv(logosConfig) {
 
             steps.withCoverage(config, this, options) {

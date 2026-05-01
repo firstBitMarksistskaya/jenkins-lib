@@ -65,8 +65,6 @@ class Yaxunit implements Serializable, Coverable {
 
         }
 
-        runTestsCommand = VRunner.appendV8Version(runTestsCommand, config.v8version)
-
         steps.withEnv(logosConfig) {
 
             steps.withCoverage(config, this, options) {

@@ -51,8 +51,6 @@ class InitFromFiles implements Serializable {
             command += " --settings $vrunnerSettings"
         }
 
-        command = VRunner.appendV8Version(command, config.v8version)
-
         VRunner.exec(command)
     }
 }
