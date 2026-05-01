@@ -24,10 +24,21 @@ class VRunner {
 
     static int exec(String command, boolean returnStatus = false) {
         IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
+        String commandWithVersion = appendV8Version(command, ContextRegistry.getJobConfiguration()?.v8version)
 
         steps.withEnv([DEFAULT_VRUNNER_OPTS]) {
-            return steps.cmd(command, returnStatus)
+            return steps.cmd(commandWithVersion, returnStatus)
         } as int
+    }
+
+    static String appendV8Version(String command, String v8version) {
+        if (v8version == null || v8version.trim().isEmpty()) {
+            return command
+        }
+        if (command.contains("--v8version")) {
+            return command
+        }
+        return "${command} --v8version ${v8version}"
     }
 
     static boolean configContainsSetting(String configPath, String settingName) {
