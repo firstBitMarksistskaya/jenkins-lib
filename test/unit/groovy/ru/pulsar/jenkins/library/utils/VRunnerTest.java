@@ -58,5 +58,18 @@ class VRunnerTest {
         assertThat(exitStatus).isEqualTo(1);
 
     }
+
+    @Test
+    void readExitStatusFromFile_does_not_exist_uses_provided_fallback() {
+
+        // given
+        String resource = "exitStatusDoesNotExist";
+
+        // when
+        Integer exitStatus = VRunner.readExitStatusFromFile(resource, 0);
+        // then
+        assertThat(exitStatus).isEqualTo(0);
+
+    }
 }
 
