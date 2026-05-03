@@ -75,8 +75,23 @@ class VRunner {
             Logger.println("В файле со статусом возврата ${path} записано не числовое значение: ${e.message}")
             return 1
         } catch (Exception e) {
+            if (isNoSuchFileException(e)) {
+                Logger.println("Файл со статусом возврата ${path} не найден: ${e.message}. Будет использован переданный статус ${valueIfNoSuchFile}")
+                return valueIfNoSuchFile
+            }
             Logger.println("При чтении файла со статусом возврата ${path} возникла ошибка: ${e.message}")
             return 1
         }
+    }
+
+    private static boolean isNoSuchFileException(Throwable e) {
+        Throwable current = e
+        while (current != null) {
+            if (current instanceof NoSuchFileException || current.message?.contains(NoSuchFileException.name)) {
+                return true
+            }
+            current = current.cause
+        }
+        return false
     }
 }
