@@ -10,7 +10,6 @@ import org.jenkinsci.plugins.workflow.support.steps.build.RunWrapper
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.StepCoverageOptions
 import ru.pulsar.jenkins.library.steps.Coverable
-import ru.yandex.qatools.allure.jenkins.config.ResultsConfig
 import sp.sd.fileoperations.FileOperation
 
 class StepExecutor implements IStepExecutor {
@@ -138,6 +137,11 @@ class StepExecutor implements IStepExecutor {
     }
 
     @Override
+    void createDir(String path, boolean deleteDir) {
+        steps.createDir(path, deleteDir)
+    }
+
+    @Override
     def dir(String path, Closure body) {
         steps.dir(path) {
             body()
@@ -252,7 +256,7 @@ class StepExecutor implements IStepExecutor {
             jdk: '',
             properties: [],
             reportBuildPolicy: 'ALWAYS',
-            results: ResultsConfig.convertPaths(results)
+            results: results.collect { [path: it] }
         ])
     }
 

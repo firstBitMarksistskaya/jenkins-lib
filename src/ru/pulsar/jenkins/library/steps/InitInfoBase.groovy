@@ -6,6 +6,7 @@ import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.VRunner
+import ru.pulsar.jenkins.library.utils.FileUtils
 
 class InitInfoBase implements Serializable {
 
@@ -26,6 +27,15 @@ class InitInfoBase implements Serializable {
             Logger.println("Init step is disabled")
             return
         }
+
+        def env = steps.env();
+
+        String workspaceAllure = FileUtils.getFilePath("$env.WORKSPACE/build/out/allure").getRemote()
+        Logger.println("Очистка каталога Allure: $workspaceAllure")
+        steps.deleteDir(workspaceAllure)        
+        String workspaceCucumber = FileUtils.getFilePath("$env.WORKSPACE/build/out/cucumber").getRemote()
+        Logger.println("Очистка каталога Cucumber: $workspaceCucumber")
+        steps.deleteDir(workspaceCucumber)
 
         def isInfobaseInitialized = true
 
@@ -60,8 +70,8 @@ class InitInfoBase implements Serializable {
                 command += " --exitCodePath \"${migrationStatusFile}\""
                 // Запуск миграции
                 steps.catchError {
-                    VRunner.exec(command, true)
-                    exitStatuses.put(command, VRunner.readExitStatusFromFile(migrationStatusFile))
+                    Integer exitStatus = VRunner.exec(command, true)
+                    exitStatuses.put(command, VRunner.readExitStatusFromFile(migrationStatusFile, exitStatus))
                 }
             } else {
                 Logger.println("Шаг миграции ИБ выключен")

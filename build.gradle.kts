@@ -11,6 +11,9 @@ plugins {
 
 repositories {
     mavenCentral()
+    maven {
+        url = uri("https://repo.jenkins-ci.org/public/")
+    }
 }
 
 tasks {
@@ -120,7 +123,6 @@ sharedLibrary {
         dependency("org.jenkins-ci.modules", "sshd", "3.374.v19b_d59ce6610")
 
         dependency("org.6wind.jenkins", "lockable-resources", "1412.v3f305a_fb_a_117")
-        dependency("ru.yandex.qatools.allure", "allure-jenkins-plugin", "2.32.0")
         dependency("io.jenkins.blueocean", "blueocean-pipeline-api-impl", "1.27.21")
         dependency("sp.sd", "file-operations", "353.vf3b_9b_a_f1f7f7")
 
@@ -129,6 +131,5 @@ sharedLibrary {
         dependency("org.jenkinsci.plugins", "pipeline-model-api", declarativePluginsVersion)
         dependency("org.jenkinsci.plugins", "pipeline-model-definition", declarativePluginsVersion)
         dependency("org.jenkinsci.plugins", "pipeline-model-extensions", declarativePluginsVersion)
-        dependency("org.jenkinsci.plugins", "pipeline-model-declarative-agent", "1.1.1")
     }
 }

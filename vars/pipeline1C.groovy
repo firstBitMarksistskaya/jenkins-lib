@@ -42,6 +42,7 @@ void call() {
 
                 steps {
                     script {
+                        applyDebugOverridesIfNeeded()
                         config = jobConfiguration() as JobConfiguration
                         agent1C = config.v8AgentLabel()
                         agentEdt = config.edtAgentLabel()
@@ -85,6 +86,7 @@ void call() {
                                             expression { config.needLoadExtensions() }
                                         }
                                         steps {
+                                            restoreDebugOverridesIfNeeded()
                                             timeout(time: config.timeoutOptions.getBinaries, unit: TimeUnit.MINUTES) {
                                                 createDir('build/out/cfe')
                                                 // Соберем или загрузим cfe из исходников и положим их в папку build/out/cfe
@@ -220,6 +222,7 @@ void call() {
                         stages {
                             stage('Распаковка ИБ') {
                                 steps {
+                                    restoreDebugOverridesIfNeeded()
                                     unzipInfobase()
                                 }
                             }
@@ -267,6 +270,7 @@ void call() {
                         stages {
                             stage('Распаковка ИБ') {
                                 steps {
+                                    restoreDebugOverridesIfNeeded()
                                     unzipInfobase()
                                 }
                             }
@@ -292,6 +296,7 @@ void call() {
                         stages {
                             stage('Распаковка ИБ') {
                                 steps {
+                                    restoreDebugOverridesIfNeeded()
                                     unzipInfobase()
                                 }
                             }
@@ -329,6 +334,7 @@ void call() {
                         stages {
                             stage('Распаковка ИБ') {
                                 steps {
+                                    restoreDebugOverridesIfNeeded()
                                     unzipInfobase()
                                 }
                             }
@@ -366,6 +372,7 @@ void call() {
                     expression { config.stageFlags.sonarqube }
                 }
                 steps {
+                    restoreDebugOverridesIfNeeded()
                     timeout(time: config.timeoutOptions.sonarqube, unit: TimeUnit.MINUTES) {
                         sonarScanner config
                     }

@@ -25,7 +25,7 @@ class YaxunitOptions extends StepCoverageOptions implements Serializable {
     @JsonPropertyDescription("""Выполнять публикацию результатов в отчет JUnit.
     По умолчанию включено.
     """)
-    boolean publishToJUnitReport
+    boolean publishToJUnitReport = true
 
     @Override
     @NonCPS
