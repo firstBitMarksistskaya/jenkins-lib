@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.pulsar.jenkins.library.IStepExecutor;
 
+import java.nio.file.NoSuchFileException;
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -133,7 +134,7 @@ class VRunnerTest {
         String resource = "build/migration-exit-status.log";
         IStepExecutor steps = TestUtils.getMockedStepExecutor();
         TestUtils.setupMockedContext(steps);
-        doThrow(new RuntimeException("java.nio.file.NoSuchFileException: " + resource))
+        doThrow(new RuntimeException("read failed", new NoSuchFileException(resource)))
                 .when(steps).readFile(resource);
 
         // when

@@ -2,7 +2,6 @@ package ru.pulsar.jenkins.library.steps;
 
 import groovy.lang.Closure;
 import org.apache.commons.io.IOUtils;
-import org.jenkinsci.plugins.pipeline.utility.steps.fs.FileWrapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
@@ -10,6 +9,7 @@ import org.mockito.Mockito;
 import ru.pulsar.jenkins.library.IStepExecutor;
 import ru.pulsar.jenkins.library.configuration.ConfigurationReader;
 import ru.pulsar.jenkins.library.configuration.JobConfiguration;
+import ru.pulsar.jenkins.library.utils.BspDetector;
 import ru.pulsar.jenkins.library.utils.TestUtils;
 import ru.pulsar.jenkins.library.utils.VRunner;
 
@@ -23,7 +23,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -61,12 +60,10 @@ class InitInfoBaseTest {
                 this.getClass().getClassLoader()
         );
         JobConfiguration jobConfiguration = ConfigurationReader.create(config);
-        when(steps.findFiles(anyString())).thenAnswer(invocation -> {
-            String glob = invocation.getArgument(0);
-            return glob.endsWith(".xml")
-                    ? new FileWrapper[]{mock(FileWrapper.class)}
-                    : new FileWrapper[0];
-        });
+        String modulePath = "src/cf/CommonModules/"
+                + BspDetector.DEFAULT_INFO_BASE_UPDATE_MODULE_NAME
+                + "/Ext/Module.bsl";
+        when(steps.fileExists(modulePath)).thenReturn(true);
         List<String> commands = new ArrayList<>();
 
         try (MockedStatic<VRunner> vrunner = Mockito.mockStatic(VRunner.class)) {
@@ -97,7 +94,6 @@ class InitInfoBaseTest {
                 this.getClass().getClassLoader()
         );
         JobConfiguration jobConfiguration = ConfigurationReader.create(config);
-        when(steps.findFiles(anyString())).thenReturn(new FileWrapper[0]);
         List<String> commands = new ArrayList<>();
 
         try (MockedStatic<VRunner> vrunner = Mockito.mockStatic(VRunner.class)) {

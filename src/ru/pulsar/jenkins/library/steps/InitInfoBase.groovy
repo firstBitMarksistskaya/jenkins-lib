@@ -4,6 +4,7 @@ import org.jenkinsci.plugins.pipeline.utility.steps.fs.FileWrapper
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
+import ru.pulsar.jenkins.library.utils.BspDetector
 import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.VRunner
 import ru.pulsar.jenkins.library.utils.FileUtils
@@ -67,8 +68,8 @@ class InitInfoBase implements Serializable {
 
                 command += settingsIncrement
                 def migrationStatusFile = "build/migration-exit-status.log"
-                boolean bspConfiguration = isBspConfiguration(steps)
-                if (bspConfiguration) {
+                boolean useExitCodeFile = BspDetector.isBspConfiguration(config, steps)
+                if (useExitCodeFile) {
                     command += " --exitCodePath \"${migrationStatusFile}\""
                 } else {
                     Logger.println("Конфигурация не на БСП, запуск миграции ИБ без контроля ${migrationStatusFile}")
@@ -76,11 +77,10 @@ class InitInfoBase implements Serializable {
                 // Запуск миграции
                 steps.catchError {
                     Integer exitStatus = VRunner.exec(command, true)
-                    if (bspConfiguration) {
-                        exitStatuses.put(command, VRunner.readExitStatusFromFile(migrationStatusFile, exitStatus))
-                    } else {
-                        exitStatuses.put(command, exitStatus)
-                    }
+                    Integer effectiveExitStatus = useExitCodeFile
+                            ? VRunner.readExitStatusFromFile(migrationStatusFile, exitStatus)
+                            : exitStatus
+                    exitStatuses.put(command, effectiveExitStatus)
                 }
             } else {
                 Logger.println("Шаг миграции ИБ выключен")
@@ -130,18 +130,4 @@ class InitInfoBase implements Serializable {
         }
     }
 
-    private boolean isBspConfiguration(IStepExecutor steps) {
-        if (config.srcDir == null || config.srcDir.trim().isEmpty()) {
-            Logger.println("Не указан srcDir, конфигурация считается не на БСП")
-            return false
-        }
-
-        String sourceDir = config.srcDir.replace('\\', '/')
-        FileWrapper[] xmlFiles = steps.findFiles("${sourceDir}/**/ОбновлениеИнформационнойБазыБСП.xml") ?: new FileWrapper[0]
-        FileWrapper[] mdoFiles = steps.findFiles("${sourceDir}/**/ОбновлениеИнформационнойБазыБСП.mdo") ?: new FileWrapper[0]
-        boolean bspConfiguration = xmlFiles.length > 0 || mdoFiles.length > 0
-
-        Logger.println("Определение БСП по исходникам ${sourceDir}: ${bspConfiguration ? 'БСП' : 'не БСП'}")
-        return bspConfiguration
-    }
 }

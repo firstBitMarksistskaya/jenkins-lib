@@ -3,6 +3,8 @@ package ru.pulsar.jenkins.library.utils
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 
+import com.cloudbees.groovy.cps.NonCPS
+
 import java.nio.file.NoSuchFileException
 
 class VRunner {
@@ -68,14 +70,11 @@ class VRunner {
             } else {
                 return content.toInteger()
             }
-        } catch (NoSuchFileException e) {
-            Logger.println("Файл со статусом возврата ${path} не найден: ${e.message}. Будет использован переданный статус ${valueIfNoSuchFile}")
-            return valueIfNoSuchFile
         } catch (NumberFormatException e) {
             Logger.println("В файле со статусом возврата ${path} записано не числовое значение: ${e.message}")
             return 1
         } catch (Exception e) {
-            if (isNoSuchFileException(e)) {
+            if (findCause(e, NoSuchFileException) != null) {
                 Logger.println("Файл со статусом возврата ${path} не найден: ${e.message}. Будет использован переданный статус ${valueIfNoSuchFile}")
                 return valueIfNoSuchFile
             }
@@ -84,14 +83,19 @@ class VRunner {
         }
     }
 
-    private static boolean isNoSuchFileException(Throwable e) {
+    @NonCPS
+    private static <T extends Throwable> T findCause(Throwable e, Class<T> type) {
         Throwable current = e
         while (current != null) {
-            if (current instanceof NoSuchFileException || current.message?.contains(NoSuchFileException.name)) {
-                return true
+            if (type.isInstance(current)) {
+                return type.cast(current)
+            }
+            if (current.cause != null && current.cause.is(current)) {
+                break
             }
             current = current.cause
         }
-        return false
+
+        return null
     }
 }
