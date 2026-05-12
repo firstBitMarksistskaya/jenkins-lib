@@ -3,12 +3,14 @@ package ru.pulsar.jenkins.library.utils
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.SourceFormat
+import ru.pulsar.jenkins.library.ioc.ContextRegistry
 
 class BspDetector implements Serializable {
 
     public static final String DEFAULT_INFO_BASE_UPDATE_MODULE_NAME = "ОбновлениеИнформационнойБазыБСП"
 
-    static boolean isBspConfiguration(JobConfiguration config, IStepExecutor steps) {
+    static boolean isBspConfiguration(JobConfiguration config) {
+        IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
         String sourceDir = config.srcDir?.trim()?.replace('\\', '/')
         if (!sourceDir) {
             Logger.println("Не указан srcDir, конфигурация считается не на БСП")

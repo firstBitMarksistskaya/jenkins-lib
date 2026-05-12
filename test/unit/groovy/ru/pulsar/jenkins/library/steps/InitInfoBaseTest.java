@@ -94,6 +94,7 @@ class InitInfoBaseTest {
                 this.getClass().getClassLoader()
         );
         JobConfiguration jobConfiguration = ConfigurationReader.create(config);
+        when(steps.fileExists(anyString())).thenReturn(false);
         List<String> commands = new ArrayList<>();
 
         try (MockedStatic<VRunner> vrunner = Mockito.mockStatic(VRunner.class)) {

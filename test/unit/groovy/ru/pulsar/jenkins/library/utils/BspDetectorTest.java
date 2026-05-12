@@ -1,5 +1,6 @@
 package ru.pulsar.jenkins.library.utils;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.pulsar.jenkins.library.IStepExecutor;
 import ru.pulsar.jenkins.library.configuration.JobConfiguration;
@@ -12,11 +13,18 @@ import static org.mockito.Mockito.when;
 
 class BspDetectorTest {
 
+    private IStepExecutor steps;
+
+    @BeforeEach
+    void setUp() {
+        steps = TestUtils.getMockedStepExecutor();
+        TestUtils.setupMockedContext(steps);
+    }
+
     @Test
     void isBspConfiguration_checks_designer_module_path() {
 
         // given
-        IStepExecutor steps = TestUtils.getMockedStepExecutor();
         JobConfiguration config = createConfig("src/cf", SourceFormat.DESIGNER, "");
         String expectedPath = "src/cf/CommonModules/"
                 + BspDetector.DEFAULT_INFO_BASE_UPDATE_MODULE_NAME
@@ -24,7 +32,7 @@ class BspDetectorTest {
         when(steps.fileExists(expectedPath)).thenReturn(true);
 
         // when
-        boolean result = BspDetector.isBspConfiguration(config, steps);
+        boolean result = BspDetector.isBspConfiguration(config);
 
         // then
         assertThat(result).isTrue();
@@ -35,7 +43,6 @@ class BspDetectorTest {
     void isBspConfiguration_checks_edt_module_path() {
 
         // given
-        IStepExecutor steps = TestUtils.getMockedStepExecutor();
         JobConfiguration config = createConfig("src/cf", SourceFormat.EDT, "");
         String expectedPath = "src/cf/src/CommonModules/"
                 + BspDetector.DEFAULT_INFO_BASE_UPDATE_MODULE_NAME
@@ -43,7 +50,7 @@ class BspDetectorTest {
         when(steps.fileExists(expectedPath)).thenReturn(true);
 
         // when
-        boolean result = BspDetector.isBspConfiguration(config, steps);
+        boolean result = BspDetector.isBspConfiguration(config);
 
         // then
         assertThat(result).isTrue();
@@ -54,13 +61,12 @@ class BspDetectorTest {
     void isBspConfiguration_uses_custom_module_name_and_trims_src_dir() {
 
         // given
-        IStepExecutor steps = TestUtils.getMockedStepExecutor();
         JobConfiguration config = createConfig(" src\\cf ", SourceFormat.DESIGNER, "InfoBaseUpdateModule");
         String expectedPath = "src/cf/CommonModules/InfoBaseUpdateModule/Ext/Module.bsl";
         when(steps.fileExists(expectedPath)).thenReturn(true);
 
         // when
-        boolean result = BspDetector.isBspConfiguration(config, steps);
+        boolean result = BspDetector.isBspConfiguration(config);
 
         // then
         assertThat(result).isTrue();
@@ -71,11 +77,10 @@ class BspDetectorTest {
     void isBspConfiguration_returns_false_for_blank_src_dir() {
 
         // given
-        IStepExecutor steps = TestUtils.getMockedStepExecutor();
         JobConfiguration config = createConfig("   ", SourceFormat.DESIGNER, "");
 
         // when
-        boolean result = BspDetector.isBspConfiguration(config, steps);
+        boolean result = BspDetector.isBspConfiguration(config);
 
         // then
         assertThat(result).isFalse();

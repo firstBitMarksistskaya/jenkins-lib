@@ -68,7 +68,7 @@ class InitInfoBase implements Serializable {
 
                 command += settingsIncrement
                 def migrationStatusFile = "build/migration-exit-status.log"
-                boolean useExitCodeFile = BspDetector.isBspConfiguration(config, steps)
+                boolean useExitCodeFile = BspDetector.isBspConfiguration(config)
                 if (useExitCodeFile) {
                     command += " --exitCodePath \"${migrationStatusFile}\""
                 } else {
