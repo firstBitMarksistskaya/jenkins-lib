@@ -96,6 +96,10 @@
     "telegram": {
       "onAlways": false,
       "onFailure": true
+    },
+    "max": {
+      "onAlways": false,
+      "onFailure": true
     }
   },
   "logosConfig": "logger.rootLogger=DEBUG"

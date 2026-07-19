@@ -33,6 +33,9 @@ class StageFlags implements Serializable {
     @JsonPropertyDescription("Выполнять рассылку результатов сборки в telegram")
     Boolean telegram
 
+    @JsonPropertyDescription("Выполнять рассылку результатов сборки в MAX")
+    Boolean max
+
     @Override
     @NonCPS
     String toString() {
@@ -45,6 +48,7 @@ class StageFlags implements Serializable {
             ", bdd=" + bdd +
             ", email=" + email +
             ", telegram=" + telegram +
+            ", max=" + max +
             '}';
     }
 

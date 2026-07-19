@@ -210,6 +210,28 @@
           },
           "description" : "Настройки рассылки результатов сборки через email"
         },
+        "max" : {
+          "type" : "object",
+          "properties" : {
+            "onAlways" : {
+              "type" : "boolean",
+              "description" : "Отправлять всегда"
+            },
+            "onFailure" : {
+              "type" : "boolean",
+              "description" : "Отправлять при падении сборки"
+            },
+            "onSuccess" : {
+              "type" : "boolean",
+              "description" : "Отправлять при успешной сборке"
+            },
+            "onUnstable" : {
+              "type" : "boolean",
+              "description" : "Отправлять при нестабильной сборке"
+            }
+          },
+          "description" : "Настройки рассылки результатов сборки через MAX"
+        },
         "telegram" : {
           "type" : "object",
           "properties" : {
@@ -264,6 +286,14 @@
     "secrets" : {
       "type" : "object",
       "properties" : {
+        "maxBotToken" : {
+          "type" : "string",
+          "description" : "Токен авторизации MAX-бота для отправки уведомлений"
+        },
+        "maxChatId" : {
+          "type" : "string",
+          "description" : "Идентификатор MAX-чата для отправки уведомлений"
+        },
         "storage" : {
           "type" : "string",
           "description" : "Данные авторизации в хранилище конфигурации"
@@ -375,6 +405,10 @@
         "initSteps" : {
           "type" : "boolean",
           "description" : "Предварительные шаги инициализации включены"
+        },
+        "max" : {
+          "type" : "boolean",
+          "description" : "Выполнять рассылку результатов сборки в MAX"
         },
         "smoke" : {
           "type" : "boolean",

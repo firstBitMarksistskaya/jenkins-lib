@@ -9,7 +9,9 @@
     "storagePath": "UNKNOWN_ID",
     "storage": "UNKNOWN_ID",
     "telegramBotToken": "UNKNOWN_ID",
-    "telegramChatId": "UNKNOWN_ID"
+    "telegramChatId": "UNKNOWN_ID",
+    "maxBotToken": "UNKNOWN_ID",
+    "maxChatId": "UNKNOWN_ID"
   },
   "stages": {
     "initSteps": false,
@@ -20,7 +22,8 @@
     "smoke": false,
     "yaxunit": false,
     "email": false,
-    "telegram": false
+    "telegram": false,
+    "max": false
   },
   "timeout": {
     "smoke": 240,
@@ -159,6 +162,12 @@
       }
     },
     "telegram": {
+      "onAlways": true,
+      "onFailure": false,
+      "onUnstable": false,
+      "onSuccess": false
+    },
+    "max": {
       "onAlways": true,
       "onFailure": false,
       "onUnstable": false,

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
 import ru.pulsar.jenkins.library.configuration.notification.EmailNotificationOptions
+import ru.pulsar.jenkins.library.configuration.notification.MaxNotificationOptions
 import ru.pulsar.jenkins.library.configuration.notification.TelegramNotificationOptions
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -18,12 +19,17 @@ class NotificationsOptions implements Serializable {
     @JsonPropertyDescription("Настройки рассылки результатов сборки через telegram")
     TelegramNotificationOptions telegramNotificationOptions;
 
+    @JsonProperty("max")
+    @JsonPropertyDescription("Настройки рассылки результатов сборки через MAX")
+    MaxNotificationOptions maxNotificationOptions;
+
     @Override
     @NonCPS
     String toString() {
         return "NotificationOptions{" +
             "emailNotificationOptions=" + emailNotificationOptions +
             ", telegramNotificationOptions=" + telegramNotificationOptions +
+            ", maxNotificationOptions=" + maxNotificationOptions +
             '}';
     }
 }

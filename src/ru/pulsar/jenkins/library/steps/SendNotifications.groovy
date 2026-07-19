@@ -26,5 +26,8 @@ class SendNotifications implements Serializable {
         def telegramNotification = new TelegramNotification(config);
         telegramNotification.run();
 
+        def maxNotification = new MaxNotification(config);
+        maxNotification.run();
+
     }
 }

@@ -87,6 +87,9 @@ class ConfigurationReaderTest {
 
     assertThat(jobConfiguration.getNotificationsOptions().getTelegramNotificationOptions().getOnAlways()).isFalse();
     assertThat(jobConfiguration.getNotificationsOptions().getTelegramNotificationOptions().getOnFailure()).isTrue();
+
+    assertThat(jobConfiguration.getNotificationsOptions().getMaxNotificationOptions().getOnAlways()).isFalse();
+    assertThat(jobConfiguration.getNotificationsOptions().getMaxNotificationOptions().getOnFailure()).isTrue();
   }
 
   @Test
