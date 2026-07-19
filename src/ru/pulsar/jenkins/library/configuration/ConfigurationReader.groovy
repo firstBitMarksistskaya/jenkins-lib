@@ -77,7 +77,8 @@ class ConfigurationReader implements Serializable {
             "failureEmailOptions",
             "unstableEmailOptions",
             "recipientProviders",
-            "telegramNotificationOptions"
+            "telegramNotificationOptions",
+            "maxNotificationOptions"
         ).toSet()
 
         mergeObjects(baseConfiguration, configurationToMerge, nonMergeableSettings)
@@ -167,6 +168,15 @@ class ConfigurationReader implements Serializable {
             mergeObjects(
                 baseObject.telegramNotificationOptions,
                 objectToMerge.telegramNotificationOptions,
+                emptySet()
+            )
+        }
+
+        if (objectToMerge.maxNotificationOptions != null) {
+
+            mergeObjects(
+                baseObject.maxNotificationOptions,
+                objectToMerge.maxNotificationOptions,
                 emptySet()
             )
         }
