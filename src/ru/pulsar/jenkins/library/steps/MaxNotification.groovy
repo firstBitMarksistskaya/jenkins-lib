@@ -150,7 +150,6 @@ class MaxNotification implements Serializable {
         messageJoiner.add(duration)
 
         def changeSet = getChangeSet(currentBuild)
-        steps.echo(changeSet)
         if (changeSet.length() > 0) {
             changeSet = 'Изменения с последней сборки:\n\n' + changeSet
             messageJoiner.add(changeSet)
@@ -158,8 +157,6 @@ class MaxNotification implements Serializable {
 
         String buildUrl = "[Лог сборки](${env.BUILD_URL}console)"
         messageJoiner.add(buildUrl)
-
-        steps.echo(messageJoiner.toString())
 
         return messageJoiner.toString()
     }
