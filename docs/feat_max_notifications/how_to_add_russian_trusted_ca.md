@@ -44,6 +44,8 @@ RUN set -eux && \
     CACERTS="$(dirname $(dirname $(readlink -f $(which keytool))))/lib/security/cacerts" && \
     curl -sSL -o /tmp/root.crt https://gu-st.ru/content/lending/russian_trusted_root_ca_pem.crt && \
     curl -sSL -o /tmp/sub.crt  https://gu-st.ru/content/lending/russian_trusted_sub_ca_pem.crt && \
+    (keytool -delete -alias mincifra-root -keystore "$CACERTS" -storepass changeit || true) && \
+    (keytool -delete -alias mincifra-sub  -keystore "$CACERTS" -storepass changeit || true) && \
     keytool -import -trustcacerts -noprompt -alias mincifra-root -file /tmp/root.crt -keystore "$CACERTS" -storepass changeit && \
     keytool -import -trustcacerts -noprompt -alias mincifra-sub  -file /tmp/sub.crt  -keystore "$CACERTS" -storepass changeit && \
     rm /tmp/root.crt /tmp/sub.crt
