@@ -158,7 +158,8 @@ class MaxNotification implements Serializable {
         String buildUrl = "[Лог сборки](${env.BUILD_URL}console)"
         messageJoiner.add(buildUrl)
 
-        return messageJoiner.toString()
+        String message = messageJoiner.toString()
+        return message.length() <= 4000 ? message : message.substring(0, 3997) + '...'
     }
 
     @NonCPS
