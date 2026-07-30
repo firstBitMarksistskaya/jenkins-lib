@@ -1,6 +1,7 @@
 package ru.pulsar.jenkins.library.steps
 
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
+import ru.pulsar.jenkins.library.configuration.notification.im.MaxMessenger
 import ru.pulsar.jenkins.library.utils.Logger
 
 class SendNotifications implements Serializable {
@@ -26,8 +27,7 @@ class SendNotifications implements Serializable {
         def telegramNotification = new TelegramNotification(config);
         telegramNotification.run();
 
-        def maxNotification = new MaxNotification(config);
-        maxNotification.run();
+        new IMNotification(config, new MaxMessenger()).run()
 
     }
 }

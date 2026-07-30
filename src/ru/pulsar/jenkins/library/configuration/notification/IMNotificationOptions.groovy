@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-class MaxNotificationOptions implements Serializable {
+class IMNotificationOptions implements Serializable {
 
     @JsonPropertyDescription("Отправлять всегда")
     Boolean onAlways
@@ -19,7 +19,7 @@ class MaxNotificationOptions implements Serializable {
     @Override
     @NonCPS
     String toString() {
-        return "MaxNotificationOptions{" +
+        return "IMNotificationOptions{" +
             "onAlways=" + onAlways +
             ", onSuccess=" + onSuccess +
             ", onFailure=" + onFailure +

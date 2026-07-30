@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.commons.beanutils.BeanUtilsBean
 import org.apache.commons.beanutils.ConvertUtilsBean
 import ru.pulsar.jenkins.library.IStepExecutor
+import ru.pulsar.jenkins.library.configuration.notification.IMNotificationOptions
 import ru.pulsar.jenkins.library.configuration.notification.email.EmailExtConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 
@@ -78,7 +79,7 @@ class ConfigurationReader implements Serializable {
             "unstableEmailOptions",
             "recipientProviders",
             "telegramNotificationOptions",
-            "maxNotificationOptions"
+            "imNotificationOptions"
         ).toSet()
 
         mergeObjects(baseConfiguration, configurationToMerge, nonMergeableSettings)
@@ -92,6 +93,9 @@ class ConfigurationReader implements Serializable {
 
     @NonCPS
     private static <T extends Object> void mergeObjects(T baseObject, T objectToMerge, Set<String> nonMergeableSettings) {
+        if (baseObject instanceof Map || objectToMerge instanceof Map) {
+            return
+        }
         beanUtilsBean.describe(objectToMerge).entrySet().stream()
             .filter({ e -> e.getValue() != null })
             .filter({ e -> e.getKey() != "class" })
@@ -172,14 +176,7 @@ class ConfigurationReader implements Serializable {
             )
         }
 
-        if (objectToMerge.maxNotificationOptions != null) {
-
-            mergeObjects(
-                baseObject.maxNotificationOptions,
-                objectToMerge.maxNotificationOptions,
-                emptySet()
-            )
-        }
+        mergeImNotificationOptions(baseObject, objectToMerge)
 
         def emailNotificationOptionsBase = baseObject.emailNotificationOptions
         def emailNotificationOptionsToMerge = objectToMerge.emailNotificationOptions
@@ -201,6 +198,24 @@ class ConfigurationReader implements Serializable {
                 emailNotificationOptionsBase.alwaysEmailOptions,
                 emailNotificationOptionsToMerge.alwaysEmailOptions
             )
+        }
+    }
+
+    @NonCPS
+    private static void mergeImNotificationOptions(NotificationsOptions baseObject, NotificationsOptions objectToMerge) {
+        if (objectToMerge.imNotificationOptions == null || objectToMerge.imNotificationOptions.isEmpty()) {
+            return
+        }
+        if (baseObject.imNotificationOptions == null) {
+            baseObject.imNotificationOptions = [:]
+        }
+        objectToMerge.imNotificationOptions.each { key, opts ->
+            IMNotificationOptions baseOpts = baseObject.imNotificationOptions[key]
+            if (baseOpts == null) {
+                baseObject.imNotificationOptions[key] = opts
+            } else {
+                mergeObjects(baseOpts, opts, emptySet())
+            }
         }
     }
 
