@@ -25,6 +25,7 @@ class NotificationsOptions implements Serializable {
     Map<String, IMNotificationOptions> imNotificationOptions = [:]
 
     @JsonAnySetter
+    @NonCPS
     void addImNotificationOptions(String key, Map<String, Object> value) {
         if (value == null) {
             return
