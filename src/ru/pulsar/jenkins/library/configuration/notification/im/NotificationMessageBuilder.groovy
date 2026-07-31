@@ -88,7 +88,7 @@ class NotificationMessageBuilder implements Serializable {
                 }
 
                 def authorRef = flavor.link(entry.author.displayName, entry.author.absoluteUrl)
-                def message = flavor.escape(entry.getMsgAnnotated())
+                def message = flavor.escape(entry.getMsg())
                 changeSetText += "${flavor.bullet()} $commit $message ${flavor.openParen()}${authorRef}${flavor.closeParen()}\n"
             }
             changeSetText += '\n'
