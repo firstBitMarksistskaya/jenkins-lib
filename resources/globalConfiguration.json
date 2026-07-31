@@ -12,7 +12,9 @@
     "telegramChatId": "UNKNOWN_ID",
     "maxBotToken": "UNKNOWN_ID",
     "maxChatId": "UNKNOWN_ID",
-    "discordWebhookUrl": "UNKNOWN_ID"
+    "discordWebhookUrl": "UNKNOWN_ID",
+    "discordBotToken": "UNKNOWN_ID",
+    "discordBotChatId": "UNKNOWN_ID"
   },
   "stages": {
     "initSteps": false,
@@ -25,7 +27,8 @@
     "email": false,
     "telegram": false,
     "max": false,
-    "discordWebhook": false
+    "discordWebhook": false,
+    "discordBot": false
   },
   "timeout": {
     "smoke": 240,
@@ -176,6 +179,12 @@
       "onSuccess": false
     },
     "discordWebhook": {
+      "onAlways": true,
+      "onFailure": false,
+      "onUnstable": false,
+      "onSuccess": false
+    },
+    "discordBot": {
       "onAlways": true,
       "onFailure": false,
       "onUnstable": false,

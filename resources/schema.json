@@ -245,6 +245,13 @@
             "description" : "Настройки рассылки результатов сборки в Discord через webhook"
           } ]
         },
+        "discordBot" : {
+          "allOf" : [ {
+            "$ref" : "#/definitions/IMNotificationOptions"
+          }, {
+            "description" : "Настройки рассылки результатов сборки в Discord через бота"
+          } ]
+        },
         "telegram" : {
           "allOf" : [ {
             "$ref" : "#/definitions/IMNotificationOptions"
@@ -287,6 +294,14 @@
         "discordWebhookUrl" : {
           "type" : "string",
           "description" : "Discord webhook URL для отправки уведомлений"
+        },
+        "discordBotToken" : {
+          "type" : "string",
+          "description" : "Токен авторизации Discord-бота для отправки уведомлений"
+        },
+        "discordBotChatId" : {
+          "type" : "string",
+          "description" : "Идентификатор Discord-канала для отправки уведомлений ботом"
         },
         "maxBotToken" : {
           "type" : "string",
@@ -411,6 +426,10 @@
         "discordWebhook" : {
           "type" : "boolean",
           "description" : "Выполнять рассылку результатов сборки в Discord через webhook"
+        },
+        "discordBot" : {
+          "type" : "boolean",
+          "description" : "Выполнять рассылку результатов сборки в Discord через бота"
         },
         "max" : {
           "type" : "boolean",
