@@ -47,7 +47,7 @@ class DiscordWebhookMessenger implements Messenger {
     @Override
     String buildBody(String chatId, String message) {
         def body = [
-            content         : message,
+            embeds          : [[description: message]],
             allowed_mentions: [parse: []]
         ]
         return new ObjectMapper().writeValueAsString(body)
@@ -67,6 +67,6 @@ class DiscordWebhookMessenger implements Messenger {
     @Override
     @NonCPS
     int getMaxMessageLength() {
-        return 2000
+        return 4096
     }
 }
