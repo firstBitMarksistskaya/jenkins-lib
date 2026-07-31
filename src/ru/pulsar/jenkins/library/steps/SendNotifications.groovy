@@ -1,6 +1,7 @@
 package ru.pulsar.jenkins.library.steps
 
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
+import ru.pulsar.jenkins.library.configuration.notification.im.DiscordWebhookMessenger
 import ru.pulsar.jenkins.library.configuration.notification.im.MaxMessenger
 import ru.pulsar.jenkins.library.utils.Logger
 
@@ -28,6 +29,8 @@ class SendNotifications implements Serializable {
         telegramNotification.run();
 
         new IMNotification(config, new MaxMessenger()).run()
+
+        new IMNotification(config, new DiscordWebhookMessenger()).run()
 
     }
 }

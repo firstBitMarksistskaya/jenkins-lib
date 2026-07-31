@@ -27,6 +27,9 @@ class Secrets implements Serializable {
     @JsonPropertyDescription("Токен авторизации MAX-бота для отправки уведомлений")
     String maxBotToken
 
+    @JsonPropertyDescription("Discord webhook URL для отправки уведомлений")
+    String discordWebhookUrl
+
     @Override
     @NonCPS
     String toString() {
@@ -37,6 +40,7 @@ class Secrets implements Serializable {
             ", telegramBotToken='" + telegramBotToken + '\'' +
             ", maxChatId='" + maxChatId + '\'' +
             ", maxBotToken='" + maxBotToken + '\'' +
+            ", discordWebhookUrl='" + discordWebhookUrl + '\'' +
             '}';
     }
 }

@@ -11,7 +11,8 @@
     "telegramBotToken": "UNKNOWN_ID",
     "telegramChatId": "UNKNOWN_ID",
     "maxBotToken": "UNKNOWN_ID",
-    "maxChatId": "UNKNOWN_ID"
+    "maxChatId": "UNKNOWN_ID",
+    "discordWebhookUrl": "UNKNOWN_ID"
   },
   "stages": {
     "initSteps": false,
@@ -23,7 +24,8 @@
     "yaxunit": false,
     "email": false,
     "telegram": false,
-    "max": false
+    "max": false,
+    "discordWebhook": false
   },
   "timeout": {
     "smoke": 240,
@@ -168,6 +170,12 @@
       "onSuccess": false
     },
     "max": {
+      "onAlways": true,
+      "onFailure": false,
+      "onUnstable": false,
+      "onSuccess": false
+    },
+    "discordWebhook": {
       "onAlways": true,
       "onFailure": false,
       "onUnstable": false,

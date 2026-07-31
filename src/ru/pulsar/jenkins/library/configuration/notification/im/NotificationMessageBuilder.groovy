@@ -26,8 +26,7 @@ class NotificationMessageBuilder implements Serializable {
 
         def messageJoiner = new StringJoiner('\n\n')
 
-        def displayName = flavor.escape(currentBuild.fullDisplayName)
-        String header = "[$displayName]($env.BUILD_URL)"
+        String header = flavor.link(currentBuild.fullDisplayName, env.BUILD_URL as String)
         messageJoiner.add(header)
 
         String result = ''
@@ -59,7 +58,7 @@ class NotificationMessageBuilder implements Serializable {
             messageJoiner.add(changeSet)
         }
 
-        String buildUrl = "[Лог сборки](${env.BUILD_URL}console)"
+        String buildUrl = flavor.link('Лог сборки', "${env.BUILD_URL}console")
         messageJoiner.add(buildUrl)
 
         return messageJoiner.toString()
@@ -82,17 +81,15 @@ class NotificationMessageBuilder implements Serializable {
 
                     def link = changeSet.browser?.getChangeSetLink(entry)
                     if (link != null) {
-                        commit = "[$commitId]($link)"
+                        commit = flavor.link(commitId as String, link as String)
                     } else {
                         commit = commitId
                     }
                 }
 
-                def author = flavor.escape(entry.author.displayName)
-                def authorLink = entry.author.absoluteUrl
-
+                def authorRef = flavor.link(entry.author.displayName, entry.author.absoluteUrl)
                 def message = flavor.escape(entry.getMsgAnnotated())
-                changeSetText += "${flavor.bullet()} $commit $message ${flavor.openParen()}[$author]($authorLink)${flavor.closeParen()}\n"
+                changeSetText += "${flavor.bullet()} $commit $message ${flavor.openParen()}${authorRef}${flavor.closeParen()}\n"
             }
             changeSetText += '\n'
         }

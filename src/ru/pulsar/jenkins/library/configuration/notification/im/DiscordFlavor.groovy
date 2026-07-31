@@ -2,7 +2,7 @@ package ru.pulsar.jenkins.library.configuration.notification.im
 
 import com.cloudbees.groovy.cps.NonCPS
 
-class StandardMarkdownFlavor implements MarkdownFlavor {
+class DiscordFlavor implements MarkdownFlavor {
 
     @Override
     @NonCPS
@@ -15,16 +15,16 @@ class StandardMarkdownFlavor implements MarkdownFlavor {
             .replace('_', '\\_')
             .replace('*', '\\*')
             .replace('`', '\\`')
-            .replace('[', '\\[')
-            .replace(']', '\\]')
-            .replace('(', '\\(')
-            .replace(')', '\\)')
+            .replace('~', '\\~')
+            .replace('|', '\\|')
+            .replace('>', '\\>')
+            .replace('#', '\\#')
     }
 
     @Override
     @NonCPS
     String bullet() {
-        return '*'
+        return '-'
     }
 
     @Override
@@ -48,6 +48,6 @@ class StandardMarkdownFlavor implements MarkdownFlavor {
     @Override
     @NonCPS
     String link(String text, String url) {
-        return "[${escape(text)}](${url})"
+        return "${escape(text)} (<${url}>)"
     }
 }

@@ -11,4 +11,6 @@ interface MarkdownFlavor extends Serializable {
     String openParen()
 
     String closeParen()
+
+    String link(String text, String url)
 }

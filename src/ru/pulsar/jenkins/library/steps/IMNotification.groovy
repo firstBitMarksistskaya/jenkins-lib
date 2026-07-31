@@ -62,13 +62,18 @@ class IMNotification implements Serializable {
         String botTokenCred = messenger.getBotTokenCredentialId(config, repoSlug)
         String chatIdCred = messenger.getChatIdCredentialId(config, repoSlug)
 
-        steps.withCredentials([
-            steps.string(botTokenCred, 'TOKEN'),
-            steps.string(chatIdCred, 'CHAT_ID')
-        ]) {
+        def bindings = []
+        if (botTokenCred != null) {
+            bindings << steps.string(botTokenCred, 'TOKEN')
+        }
+        if (chatIdCred != null) {
+            bindings << steps.string(chatIdCred, 'CHAT_ID')
+        }
 
-            String token = env.TOKEN as String
-            String chatId = env.CHAT_ID as String
+        steps.withCredentials(bindings) {
+
+            String token = botTokenCred != null ? (env.TOKEN as String) : null
+            String chatId = chatIdCred != null ? (env.CHAT_ID as String) : null
 
             String messageToSend = truncate(fullMessage, messenger.getMaxMessageLength())
             String url = messenger.buildUrl(token, chatId)
@@ -85,7 +90,7 @@ class IMNotification implements Serializable {
                     HttpMode.POST,
                     MimeType.APPLICATION_JSON_UTF8,
                     bodyString,
-                    '200',
+                    '200:299',
                     true
                 )
             } else {
@@ -94,7 +99,7 @@ class IMNotification implements Serializable {
                     HttpMode.POST,
                     MimeType.APPLICATION_JSON_UTF8,
                     bodyString,
-                    '200',
+                    '200:299',
                     true,
                     customHeaders
                 )
