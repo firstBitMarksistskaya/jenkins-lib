@@ -52,6 +52,9 @@ class DiscordFlavor implements MarkdownFlavor {
     @Override
     @NonCPS
     String link(String text, String url) {
+        if (url == null) {
+            return escape(text)
+        }
         return "[${escape(text)}](${escapeUrl(url)})"
     }
 
