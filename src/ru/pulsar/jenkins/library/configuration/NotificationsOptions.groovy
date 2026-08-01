@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
 import ru.pulsar.jenkins.library.configuration.notification.EmailNotificationOptions
 import ru.pulsar.jenkins.library.configuration.notification.IMNotificationOptions
-import ru.pulsar.jenkins.library.configuration.notification.TelegramNotificationOptions
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 class NotificationsOptions implements Serializable {
@@ -16,10 +15,6 @@ class NotificationsOptions implements Serializable {
     @JsonProperty("email")
     @JsonPropertyDescription("Настройки рассылки результатов сборки через email")
     EmailNotificationOptions emailNotificationOptions;
-
-    @JsonProperty("telegram")
-    @JsonPropertyDescription("Настройки рассылки результатов сборки через telegram")
-    TelegramNotificationOptions telegramNotificationOptions;
 
     @JsonIgnore
     Map<String, IMNotificationOptions> imNotificationOptions = [:]
@@ -43,7 +38,6 @@ class NotificationsOptions implements Serializable {
     String toString() {
         return "NotificationOptions{" +
             "emailNotificationOptions=" + emailNotificationOptions +
-            ", telegramNotificationOptions=" + telegramNotificationOptions +
             ", imNotificationOptions=" + imNotificationOptions +
             '}';
     }

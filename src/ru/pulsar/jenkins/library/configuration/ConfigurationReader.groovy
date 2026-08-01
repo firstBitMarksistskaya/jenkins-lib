@@ -78,7 +78,6 @@ class ConfigurationReader implements Serializable {
             "failureEmailOptions",
             "unstableEmailOptions",
             "recipientProviders",
-            "telegramNotificationOptions",
             "imNotificationOptions"
         ).toSet()
 
@@ -165,15 +164,6 @@ class ConfigurationReader implements Serializable {
     private static void mergeNotificationsOptions(NotificationsOptions baseObject, NotificationsOptions objectToMerge) {
         if (objectToMerge == null) {
             return
-        }
-
-        if (objectToMerge.telegramNotificationOptions != null) {
-
-            mergeObjects(
-                baseObject.telegramNotificationOptions,
-                objectToMerge.telegramNotificationOptions,
-                emptySet()
-            )
         }
 
         mergeImNotificationOptions(baseObject, objectToMerge)
