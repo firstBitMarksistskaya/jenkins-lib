@@ -38,6 +38,8 @@ class SendNotifications implements Serializable {
         messengers.each { messenger ->
             try {
                 new IMNotification(config, messenger).run()
+            } catch (InterruptedException e) {
+                throw e
             } catch (Exception e) {
                 Logger.println("Failed to send ${messenger.name()} notification: ${e.message}")
             }
