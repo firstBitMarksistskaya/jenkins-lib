@@ -19,6 +19,11 @@ class StandardMarkdownFlavor implements MarkdownFlavor {
             .replace(']', '\\]')
             .replace('(', '\\(')
             .replace(')', '\\)')
+            .replace('~', '\\~')
+            .replace('+', '\\+')
+            .replace('^', '\\^')
+            .replace('#', '\\#')
+            .replace('>', '\\>')
     }
 
     @Override
