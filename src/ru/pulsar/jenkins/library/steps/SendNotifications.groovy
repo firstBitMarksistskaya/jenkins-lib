@@ -1,6 +1,10 @@
 package ru.pulsar.jenkins.library.steps
 
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
+import ru.pulsar.jenkins.library.configuration.notification.im.DiscordBotMessenger
+import ru.pulsar.jenkins.library.configuration.notification.im.DiscordWebhookMessenger
+import ru.pulsar.jenkins.library.configuration.notification.im.MaxMessenger
+import ru.pulsar.jenkins.library.configuration.notification.im.TelegramMessenger
 import ru.pulsar.jenkins.library.utils.Logger
 
 class SendNotifications implements Serializable {
@@ -23,11 +27,13 @@ class SendNotifications implements Serializable {
         def emailNotification = new EmailNotification(config);
         emailNotification.run()
 
-        def telegramNotification = new TelegramNotification(config);
-        telegramNotification.run();
+        new IMNotification(config, new TelegramMessenger()).run()
 
-        def maxNotification = new MaxNotification(config);
-        maxNotification.run();
+        new IMNotification(config, new MaxMessenger()).run()
+
+        new IMNotification(config, new DiscordWebhookMessenger()).run()
+
+        new IMNotification(config, new DiscordBotMessenger()).run()
 
     }
 }
