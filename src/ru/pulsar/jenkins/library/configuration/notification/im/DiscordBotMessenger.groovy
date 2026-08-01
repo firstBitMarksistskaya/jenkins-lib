@@ -39,7 +39,7 @@ class DiscordBotMessenger implements Messenger {
     @Override
     String getChatIdCredentialId(JobConfiguration config, String repoSlug) {
         Secrets secrets = config.secrets
-        return secrets.discordBotChatId == UNKNOWN_ID ? repoSlug + "_DISCORD_BOT_CHAT_ID" : secrets.discordBotChatId
+        return secrets.discordChatId == UNKNOWN_ID ? repoSlug + "_DISCORD_CHAT_ID" : secrets.discordChatId
     }
 
     @Override

@@ -33,8 +33,8 @@ class Secrets implements Serializable {
     @JsonPropertyDescription("Токен авторизации Discord-бота для отправки уведомлений")
     String discordBotToken
 
-    @JsonPropertyDescription("Идентификатор Discord-канала для отправки уведомлений ботом")
-    String discordBotChatId
+    @JsonPropertyDescription("Идентификатор Discord-канала для отправки уведомлений")
+    String discordChatId
 
     @Override
     @NonCPS
@@ -48,7 +48,7 @@ class Secrets implements Serializable {
             ", maxBotToken='" + maxBotToken + '\'' +
             ", discordWebhookUrl='" + discordWebhookUrl + '\'' +
             ", discordBotToken='" + discordBotToken + '\'' +
-            ", discordBotChatId='" + discordBotChatId + '\'' +
+            ", discordChatId='" + discordChatId + '\'' +
             '}';
     }
 }

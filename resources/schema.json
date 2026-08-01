@@ -299,9 +299,9 @@
           "type" : "string",
           "description" : "Токен авторизации Discord-бота для отправки уведомлений"
         },
-        "discordBotChatId" : {
+        "discordChatId" : {
           "type" : "string",
-          "description" : "Идентификатор Discord-канала для отправки уведомлений ботом"
+          "description" : "Идентификатор Discord-канала для отправки уведомлений"
         },
         "maxBotToken" : {
           "type" : "string",

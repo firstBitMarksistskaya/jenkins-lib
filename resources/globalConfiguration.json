@@ -14,7 +14,7 @@
     "maxChatId": "UNKNOWN_ID",
     "discordWebhookUrl": "UNKNOWN_ID",
     "discordBotToken": "UNKNOWN_ID",
-    "discordBotChatId": "UNKNOWN_ID"
+    "discordChatId": "UNKNOWN_ID"
   },
   "stages": {
     "initSteps": false,

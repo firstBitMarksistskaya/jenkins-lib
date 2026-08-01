@@ -55,7 +55,7 @@
 1. Валидация проекта средствами EDT и трансформация отчета EDT в формат BSL LS с помощью `edt-ripper` или Generic Issue с помощью `stebi`.
 1. Запуск статического анализа для SonarQube.
 1. Публикация результатов junit и Allure в интерфейс Jenkins.
-1. Рассылка результатов сборки на почту, в Telegram и в MAX.
+1. Рассылка результатов сборки на почту, в Telegram, в MAX и в Discord (webhook и bot).
 1. Конфигурирование логгера запускаемых oscript-приложений.
 1. Замер покрытия при выполнении тестов.
 1. Возможность сохранить информационную базу в виде артефакта сборки после выполнения шагов инициализации и\или после выполнения сценарных тестов.
@@ -134,8 +134,11 @@ pipeline1C()
     * `STORAGE_USER` - параметры авторизации в хранилище вида "username with password" (для `secrets` -> `storage`).
     * `TELEGRAM_CHAT_ID` - идентификатор чата Telegram для рассылки уведомлений и результате сборки вида "secret text" (для `secrets` -> `telegramChatId`).
     * `MAX_CHAT_ID` - идентификатор чата MAX для рассылки уведомлений о результате сборки вида "secret text" (для `secrets` -> `maxChatId`).
+    * `DISCORD_CHAT_ID` - идентификатор Discord-канала для рассылки уведомлений вида "secret text" (для `secrets` -> `discordChatId`).
+    * `DISCORD_WEBHOOK_URL` - URL Discord-вебхука для рассылки уведомлений вида "secret text" (для `secrets` -> `discordWebhookUrl`). У webhook нет общего токена уровня "регистрация бота", сам URL и есть секрет, поэтому per-repo секрет только один.
   * Секрет `TELEGRAM_BOT_TOKEN` задается глобально на весь сервер Jenkins, либо может быть переопределен (`secrets` -> `telegramBotToken`)
   * Секрет `MAX_BOT_TOKEN` задается глобально на весь сервер Jenkins, либо может быть переопределен (`secrets` -> `maxBotToken`)
+  * Секрет `DISCORD_BOT_TOKEN` задается глобально на весь сервер Jenkins, либо может быть переопределен (`secrets` -> `discordBotToken`)
   * Все "шаги" по умолчанию выключены (`stages`).
   * Если в корне репозитория существует файл `packagedef`, то в шагах, работающих с информационной базой, будет выполнена попытка установки локальных зависимостей средствами `opm`.
   * Если после установки локальных зависимостей в каталоге `oscript_modules/bin` существует файл `vrunner`, то для выполнения команд работы с информационной базой будет использоваться он, а не глобально установленный `vrunner` из `PATH`.
@@ -201,10 +204,9 @@ pipeline1C()
       * при успехе - разработчики и запустивший сборку;
       * при нестабильной сборке (упавшие тесты) - разработчики и запустивший сборку.
     * Прямые получатели уведомлений не заполнены (`notifications` -> `email` -> `*options` -> `directRecipients`).
-  * Telegram:
-    * Уведомления о результатах сборки по умолчанию рассылаются всегда (`notifications` -> `telegram` -> `onAlways`, `onFailure`, `onUnstable`, `onSuccess`).
-  * MAX:
-    * Уведомления о результатах сборки по умолчанию рассылаются всегда (`notifications` -> `max` -> `onAlways`, `onFailure`, `onUnstable`, `onSuccess`). Требуется настройка российского корневого TLS-сертификата (Минцифры) на агенте, см. [docs/feat_max_notifications/how_to_add_russian_trusted_ca.md](docs/feat_max_notifications/how_to_add_russian_trusted_ca.md).
+  * Telegram, MAX, Discord:
+    * Уведомления о результатах сборки по умолчанию рассылаются всегда (`notifications` -> `telegram` / `max` / `discordWebhook` / `discordBot` -> `onAlways`, `onFailure`, `onUnstable`, `onSuccess`).
+    * Для MAX требуется настройка российского корневого TLS-сертификата (Минцифры) на агенте, см. [docs/feat_max_notifications/how_to_add_russian_trusted_ca.md](docs/feat_max_notifications/how_to_add_russian_trusted_ca.md).
 
 ## Инициализация базы
 
