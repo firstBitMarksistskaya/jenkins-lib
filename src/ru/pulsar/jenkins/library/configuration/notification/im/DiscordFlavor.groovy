@@ -19,6 +19,10 @@ class DiscordFlavor implements MarkdownFlavor {
             .replace('|', '\\|')
             .replace('>', '\\>')
             .replace('#', '\\#')
+            .replace('[', '\\[')
+            .replace(']', '\\]')
+            .replace('(', '\\(')
+            .replace(')', '\\)')
     }
 
     @Override
@@ -48,6 +52,16 @@ class DiscordFlavor implements MarkdownFlavor {
     @Override
     @NonCPS
     String link(String text, String url) {
-        return "[${escape(text)}](${url})"
+        return "[${escape(text)}](${escapeUrl(url)})"
+    }
+
+    @NonCPS
+    private static String escapeUrl(String url) {
+        if (url == null) {
+            return null
+        }
+        return url
+            .replace('\\', '\\\\')
+            .replace(')', '\\)')
     }
 }
