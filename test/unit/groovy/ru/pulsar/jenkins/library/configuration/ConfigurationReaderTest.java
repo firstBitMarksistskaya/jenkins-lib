@@ -68,7 +68,7 @@ class ConfigurationReaderTest {
     assertThat(jobConfiguration.getInitInfoBaseOptions().getArchiveInfobase().getOnAlways()).isTrue();
     assertThat(jobConfiguration.getInitInfoBaseOptions().getAdditionalInitializationSteps()).contains("vanessa --settings ./tools/vrunner.first.json");
 
-    assertThat(jobConfiguration.getBddOptions().getVrunnerSteps()).contains("vanessa --settings ./tools/vrunner.json");
+    assertThat(jobConfiguration.getBddOptions().getEffectiveVrunnerSteps()).contains("vanessa --settings ./tools/vrunner.json");
     assertThat(jobConfiguration.getBddOptions().getCoverage()).isFalse();
 
     assertThat(jobConfiguration.getLogosConfig()).isEqualTo("logger.rootLogger=DEBUG");
@@ -137,4 +137,48 @@ class ConfigurationReaderTest {
     assertThat(jobConfiguration.infoBaseFromFiles()).isFalse();
   }
 
+  @Test
+  void testBddVrunnerStepsUsesVrunnerSettingsByDefault() {
+    // given - конфигурация без явного указания vrunnerSteps, но с кастомным vrunnerSettings
+    String config =
+            """
+            { 
+              "bdd": {
+                "vrunnerSettings": "./custom/vrunner.json" 
+              } 
+            }
+            """;
+
+    // when
+    JobConfiguration jobConfiguration = ConfigurationReader.create(config);
+
+    // then - vrunnerSteps должен быть null (не задан явно)
+    assertThat(jobConfiguration.getBddOptions().getVrunnerSteps()).isNull();
+
+    // effectiveVrunnerSteps должен использовать значение из vrunnerSettings
+    String[] steps = jobConfiguration.getBddOptions().getEffectiveVrunnerSteps();
+    String vrunnerSettings = jobConfiguration.getBddOptions().getVrunnerSettings();
+
+    assertThat(vrunnerSettings).isEqualTo("./custom/vrunner.json");
+    assertThat(steps).hasSize(1);
+    assertThat(steps[0]).isEqualTo("vanessa --settings ./custom/vrunner.json");
+  }
+
+  @Test
+  void testBddVrunnerStepsExplicitValueOverridesDefault() throws IOException {
+    // given - конфигурация с явным указанием vrunnerSteps
+    String config = "{ \"bdd\": { \"vrunnerSettings\": \"./custom/vrunner.json\", \"vrunnerSteps\": [\"vanessa --settings ./explicit.json\"] } }";
+
+    // when
+    JobConfiguration jobConfiguration = ConfigurationReader.create(config);
+
+    // then - явно заданный vrunnerSteps не должен использовать vrunnerSettings
+    assertThat(jobConfiguration.getBddOptions().getVrunnerSteps()).hasSize(1);
+    assertThat(jobConfiguration.getBddOptions().getVrunnerSteps()[0])
+        .isEqualTo("vanessa --settings ./explicit.json");
+  }
+
 }
+
+
+

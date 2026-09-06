@@ -54,9 +54,7 @@
     "extensions": []
   },
   "bdd": {
-    "vrunnerSteps": [
-      "vanessa --settings ./tools/vrunner.json"
-    ],
+    "vrunnerSettings": "./tools/vrunner.json",
     "archiveInfobase": {
       "onAlways": false,
       "onFailure": false,

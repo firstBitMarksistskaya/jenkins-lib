@@ -7,9 +7,9 @@ JobConfiguration call(String path = "jobConfiguration.json") {
 
     if (fileExists(path)) {
         def config = readFile(path)
-        return ConfigurationReader.create(config)
+        return ContextRegistry.registerJobConfiguration(ConfigurationReader.create(config))
     } else {
-        return ConfigurationReader.create()
+        return ContextRegistry.registerJobConfiguration(ConfigurationReader.create())
     }
 
 }

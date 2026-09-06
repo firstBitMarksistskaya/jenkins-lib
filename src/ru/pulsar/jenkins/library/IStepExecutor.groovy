@@ -67,6 +67,8 @@ interface IStepExecutor {
 
     void createDir(String path)
 
+    void createDir(String path, boolean deleteDir)
+
     void deleteDir()
 
     void deleteDir(String path)

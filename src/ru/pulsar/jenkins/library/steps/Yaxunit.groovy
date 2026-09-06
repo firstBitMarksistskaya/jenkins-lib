@@ -66,6 +66,10 @@ class Yaxunit implements Serializable, Coverable {
         }
 
         steps.withEnv(logosConfig) {
+            
+            String workspaceYaxunit = FileUtils.getFilePath("$env.WORKSPACE/build/out/allure").getRemote()
+            Logger.println("Очистка каталога результатов allure: $workspaceYaxunit")
+            steps.deleteDir(workspaceYaxunit)        
 
             steps.withCoverage(config, this, options) {
                 VRunner.exec(runTestsCommand, true)
