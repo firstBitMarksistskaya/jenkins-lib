@@ -2,10 +2,13 @@ package ru.pulsar.jenkins.library.utils;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.pulsar.jenkins.library.IStepExecutor;
 
+import java.nio.file.NoSuchFileException;
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doThrow;
 
 class VRunnerTest {
 
@@ -123,5 +126,21 @@ class VRunnerTest {
         assertThat(exitStatus).isEqualTo(0);
 
     }
-}
 
+    @Test
+    void readExitStatusFromFile_jenkins_wrapped_no_such_file_uses_provided_fallback() {
+
+        // given
+        String resource = "build/migration-exit-status.log";
+        IStepExecutor steps = TestUtils.getMockedStepExecutor();
+        TestUtils.setupMockedContext(steps);
+        doThrow(new RuntimeException("read failed", new NoSuchFileException(resource)))
+                .when(steps).readFile(resource);
+
+        // when
+        Integer exitStatus = VRunner.readExitStatusFromFile(resource, 0);
+
+        // then
+        assertThat(exitStatus).isEqualTo(0);
+    }
+}
