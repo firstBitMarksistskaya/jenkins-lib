@@ -96,6 +96,7 @@ void call() {
                                     }
                                     stage('Создание ИБ') {
                                         steps {
+                                            publishAgentScreenLink()
                                             timeout(time: config.timeoutOptions.createInfoBase, unit: TimeUnit.MINUTES) {
                                                 createDir('build/out/')
                                                     createInfobase config
@@ -223,6 +224,7 @@ void call() {
                             stage('Распаковка ИБ') {
                                 steps {
                                     restoreDebugOverridesIfNeeded()
+                                    publishAgentScreenLink()
                                     unzipInfobase()
                                 }
                             }
@@ -271,6 +273,7 @@ void call() {
                             stage('Распаковка ИБ') {
                                 steps {
                                     restoreDebugOverridesIfNeeded()
+                                    publishAgentScreenLink()
                                     unzipInfobase()
                                 }
                             }
@@ -297,6 +300,7 @@ void call() {
                             stage('Распаковка ИБ') {
                                 steps {
                                     restoreDebugOverridesIfNeeded()
+                                    publishAgentScreenLink()
                                     unzipInfobase()
                                 }
                             }
@@ -335,6 +339,7 @@ void call() {
                             stage('Распаковка ИБ') {
                                 steps {
                                     restoreDebugOverridesIfNeeded()
+                                    publishAgentScreenLink()
                                     unzipInfobase()
                                 }
                             }
