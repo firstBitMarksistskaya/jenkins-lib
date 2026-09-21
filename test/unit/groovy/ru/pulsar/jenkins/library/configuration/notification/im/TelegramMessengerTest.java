@@ -86,12 +86,31 @@ class TelegramMessengerTest {
   }
 
   @Test
-  @DisplayName("прокси глобальный; чат прочих веток — суффикс per-repo slug")
+  @DisplayName("сплит + явный secrets.telegramChatIdOtherBranches → этот id")
+  void explicitOtherBranchesSecretOverridesSlug() {
+    Secrets secrets = secrets(ORIGINAL_CHAT, "custom-other-chat");
+
+    assertThat(resolve(secrets, "feature/foo", true)).isEqualTo("custom-other-chat");
+    assertThat(resolve(secrets, "main", true)).isEqualTo(ORIGINAL_CHAT);
+  }
+
+  @Test
+  @DisplayName("явный telegramChatIdOtherBranches без сплита не используется")
+  void explicitOtherBranchesSecretIgnoredWhenSplitDisabled() {
+    Secrets secrets = secrets(ORIGINAL_CHAT, "custom-other-chat");
+
+    assertThat(resolve(secrets, "feature/foo", false)).isEqualTo(ORIGINAL_CHAT);
+  }
+
+  @Test
+  @DisplayName("прокси глобальный; ключи чатов как у TELEGRAM_CHAT_ID")
   void telegramCredentialIdsAreFixed() {
     assertThat(TelegramMessenger.TELEGRAM_HTTP_PROXY_CREDENTIAL_ID)
         .isEqualTo("TELEGRAM_HTTP_PROXY");
     assertThat(TelegramMessenger.TELEGRAM_HTTP_PROXY_AUTH_CREDENTIAL_ID)
         .isEqualTo("TELEGRAM_HTTP_PROXY_AUTH");
+    assertThat(TelegramMessenger.TELEGRAM_CHAT_ID)
+        .isEqualTo("TELEGRAM_CHAT_ID");
     assertThat(TelegramMessenger.TELEGRAM_CHAT_ID_OTHER_BRANCHES)
         .isEqualTo("TELEGRAM_CHAT_ID_OTHER_BRANCHES");
   }
@@ -107,8 +126,13 @@ class TelegramMessengerTest {
   }
 
   private static Secrets secrets(String telegramChatId) {
+    return secrets(telegramChatId, UNKNOWN_ID);
+  }
+
+  private static Secrets secrets(String telegramChatId, String telegramChatIdOtherBranches) {
     Secrets secrets = new Secrets();
     secrets.setTelegramChatId(telegramChatId);
+    secrets.setTelegramChatIdOtherBranches(telegramChatIdOtherBranches);
     return secrets;
   }
 }

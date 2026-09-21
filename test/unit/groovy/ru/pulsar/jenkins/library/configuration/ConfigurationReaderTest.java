@@ -46,6 +46,8 @@ class ConfigurationReaderTest {
     assertThat(jobConfiguration.getSecrets())
       .hasFieldOrPropertyWithValue("storage", "1234")
       .hasFieldOrPropertyWithValue("storagePath", "UNKNOWN_ID")
+      .hasFieldOrPropertyWithValue("telegramChatId", "UNKNOWN_ID")
+      .hasFieldOrPropertyWithValue("telegramChatIdOtherBranches", "custom-other-telegram-chat")
     ;
 
     assertThat(jobConfiguration.getSyntaxCheckOptions().getCheckModes()).hasSize(4);

@@ -10,6 +10,7 @@
     "storage": "UNKNOWN_ID",
     "telegramBotToken": "UNKNOWN_ID",
     "telegramChatId": "UNKNOWN_ID",
+    "telegramChatIdOtherBranches": "UNKNOWN_ID",
     "maxBotToken": "UNKNOWN_ID",
     "maxChatId": "UNKNOWN_ID",
     "discordWebhookUrl": "UNKNOWN_ID",

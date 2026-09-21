@@ -18,6 +18,9 @@ class Secrets implements Serializable {
     @JsonPropertyDescription("Идентификатор telegram-чата для отправки уведомлений")
     String telegramChatId
 
+    @JsonPropertyDescription("Идентификатор telegram-чата для уведомлений о сборках прочих веток (не defaultBranch). Если UNKNOWN_ID, используется {slug}_TELEGRAM_CHAT_ID_OTHER_BRANCHES")
+    String telegramChatIdOtherBranches
+
     @JsonPropertyDescription("Токен авторизации telegram-бота для отправки уведомлений")
     String telegramBotToken
 
@@ -43,6 +46,7 @@ class Secrets implements Serializable {
             "storagePath='" + storagePath + '\'' +
             ", storage='" + storage + '\'' +
             ", telegramChatId='" + telegramChatId + '\'' +
+            ", telegramChatIdOtherBranches='" + telegramChatIdOtherBranches + '\'' +
             ", telegramBotToken='" + telegramBotToken + '\'' +
             ", maxChatId='" + maxChatId + '\'' +
             ", maxBotToken='" + maxBotToken + '\'' +

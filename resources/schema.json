@@ -68,7 +68,7 @@
         },
         "useOtherBranchesChat" : {
           "type" : "boolean",
-          "description" : "Отправлять сборки прочих веток в отдельный чат (Telegram). Chat id берётся из Jenkins credential {slug}_TELEGRAM_CHAT_ID_OTHER_BRANCHES (secret text), в jobConfiguration не указывается. Основная ветка (defaultBranch) и сборки без BRANCH_NAME всегда идут в исходный telegramChatId"
+          "description" : "Отправлять сборки прочих веток в отдельный чат (Telegram). Chat id — secrets.telegramChatIdOtherBranches, при UNKNOWN_ID {slug}_TELEGRAM_CHAT_ID_OTHER_BRANCHES. Основная ветка (defaultBranch) и сборки без BRANCH_NAME всегда идут в telegramChatId"
         }
       }
     }
@@ -334,6 +334,10 @@
         "telegramChatId" : {
           "type" : "string",
           "description" : "Идентификатор telegram-чата для отправки уведомлений"
+        },
+        "telegramChatIdOtherBranches" : {
+          "type" : "string",
+          "description" : "Идентификатор telegram-чата для уведомлений о сборках прочих веток (не defaultBranch). Если UNKNOWN_ID, используется {slug}_TELEGRAM_CHAT_ID_OTHER_BRANCHES"
         }
       },
       "description" : "Идентификаторы сохраненных секретов"
