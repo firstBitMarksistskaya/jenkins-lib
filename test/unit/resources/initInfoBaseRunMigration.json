@@ -1,4 +1,5 @@
 {
+  "srcDir": "src/cf",
   "stages": {
     "initSteps": true
   },

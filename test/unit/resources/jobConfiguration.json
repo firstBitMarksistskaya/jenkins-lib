@@ -98,6 +98,10 @@
       "onFailure": true,
       "useHttpProxy": true,
       "useOtherBranchesChat": true
+    },
+    "max": {
+      "onAlways": false,
+      "onFailure": true
     }
   },
   "logosConfig": "logger.rootLogger=DEBUG"

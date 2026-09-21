@@ -7,6 +7,7 @@ def plugins = [
     "bouncycastle-api",
     "cloudbees-folder",
     "command-launcher",
+    "config-file-provider",
     "copyartifact",
     "credentials",
     "docker-commons",

@@ -1,4 +1,4 @@
-package ru.pulsar.jenkins.library.steps;
+package ru.pulsar.jenkins.library.configuration.notification.im;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -7,7 +7,7 @@ import ru.pulsar.jenkins.library.configuration.Secrets;
 import static org.assertj.core.api.Assertions.assertThat;
 import static ru.pulsar.jenkins.library.configuration.Secrets.UNKNOWN_ID;
 
-class TelegramNotificationTest {
+class TelegramMessengerTest {
 
   private static final String SLUG = "org_repo";
   private static final String AUTO_CHAT = SLUG + "_TELEGRAM_CHAT_ID";
@@ -39,7 +39,7 @@ class TelegramNotificationTest {
     Secrets secrets = secrets(ORIGINAL_CHAT);
 
     assertThat(resolve(secrets, "feature/foo", true))
-        .isEqualTo(TelegramNotification.TELEGRAM_CHAT_ID_OTHER_BRANCHES_CREDENTIAL_ID);
+        .isEqualTo(TelegramMessenger.TELEGRAM_CHAT_ID_OTHER_BRANCHES_CREDENTIAL_ID);
   }
 
   @Test
@@ -48,7 +48,7 @@ class TelegramNotificationTest {
     Secrets secrets = secrets(ORIGINAL_CHAT);
 
     assertThat(resolve(secrets, "PR-12", true))
-        .isEqualTo(TelegramNotification.TELEGRAM_CHAT_ID_OTHER_BRANCHES_CREDENTIAL_ID);
+        .isEqualTo(TelegramMessenger.TELEGRAM_CHAT_ID_OTHER_BRANCHES_CREDENTIAL_ID);
   }
 
   @Test
@@ -67,7 +67,7 @@ class TelegramNotificationTest {
 
     assertThat(resolve(secrets, "main", true)).isEqualTo(AUTO_CHAT);
     assertThat(resolve(secrets, "feature/foo", true))
-        .isEqualTo(TelegramNotification.TELEGRAM_CHAT_ID_OTHER_BRANCHES_CREDENTIAL_ID);
+        .isEqualTo(TelegramMessenger.TELEGRAM_CHAT_ID_OTHER_BRANCHES_CREDENTIAL_ID);
   }
 
   @Test
@@ -76,7 +76,7 @@ class TelegramNotificationTest {
     Secrets secrets = secrets(ORIGINAL_CHAT);
 
     assertThat(resolve(secrets, "master", true))
-        .isEqualTo(TelegramNotification.TELEGRAM_CHAT_ID_OTHER_BRANCHES_CREDENTIAL_ID);
+        .isEqualTo(TelegramMessenger.TELEGRAM_CHAT_ID_OTHER_BRANCHES_CREDENTIAL_ID);
   }
 
   @Test
@@ -91,16 +91,16 @@ class TelegramNotificationTest {
   @Test
   @DisplayName("имена credentials прокси и чата прочих веток фиксированы")
   void telegramCredentialIdsAreFixed() {
-    assertThat(TelegramNotification.TELEGRAM_HTTP_PROXY_CREDENTIAL_ID)
+    assertThat(TelegramMessenger.TELEGRAM_HTTP_PROXY_CREDENTIAL_ID)
         .isEqualTo("TELEGRAM_HTTP_PROXY");
-    assertThat(TelegramNotification.TELEGRAM_HTTP_PROXY_AUTH_CREDENTIAL_ID)
+    assertThat(TelegramMessenger.TELEGRAM_HTTP_PROXY_AUTH_CREDENTIAL_ID)
         .isEqualTo("TELEGRAM_HTTP_PROXY_AUTH");
-    assertThat(TelegramNotification.TELEGRAM_CHAT_ID_OTHER_BRANCHES_CREDENTIAL_ID)
+    assertThat(TelegramMessenger.TELEGRAM_CHAT_ID_OTHER_BRANCHES_CREDENTIAL_ID)
         .isEqualTo("TELEGRAM_CHAT_ID_OTHER_BRANCHES");
   }
 
   private static String resolve(Secrets secrets, String branch, boolean useOtherBranchesChat) {
-    return TelegramNotification.resolveTelegramChatIdCredential(
+    return TelegramMessenger.resolveChatIdCredentialId(
         secrets,
         branch,
         DEFAULT_BRANCH,
