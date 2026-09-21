@@ -232,6 +232,7 @@ pipeline1C()
     * Уведомления о результатах сборки по умолчанию рассылаются всегда (`notifications` -> `telegram` / `max` / `discordWebhook` / `discordBot` -> `onAlways`, `onFailure`, `onUnstable`, `onSuccess`).
     * HTTP-прокси до `api.telegram.org` включается булевым `notifications` -> `telegram` -> `useHttpProxy` (по умолчанию `false`). Адрес и логин/пароль **не** хранятся в git: при `true` библиотека берёт secret text `TELEGRAM_HTTP_PROXY` (URL) через `withCredentials` и передаёт id `TELEGRAM_HTTP_PROXY_AUTH` (Username with password) в шаг `http_request`. Имена credentials фиксированы, как у `TELEGRAM_BOT_TOKEN`.
     * Разные чаты по ветке включаются булевым `notifications` -> `telegram` -> `useOtherBranchesChat` (по умолчанию `false`). Пока флаг выключен, все ветки используют исходный `telegramChatId`. При `true` сборки `defaultBranch` остаются в `telegramChatId`; остальные ветки — в `secrets` -> `telegramChatIdOtherBranches` (при `UNKNOWN_ID` — `{slug}_TELEGRAM_CHAT_ID_OTHER_BRANCHES`). Оба chat id резолвятся одинаково.
+    * В блок стадий попадают логические шаги (`BDD сценарии`, `YAXUnit тесты`, `Дымовые тесты` и т.д.), без контейнеров `Подготовка` / `Проверка качества` и без вложенных sequential (`Выполнение …`, `Распаковка ИБ`).
     * Для MAX требуется настройка российского корневого TLS-сертификата (Минцифры) на агенте, см. [docs/feat_max_notifications/how_to_add_russian_trusted_ca.md](docs/feat_max_notifications/how_to_add_russian_trusted_ca.md).
 
 ## Инициализация базы
