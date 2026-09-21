@@ -26,6 +26,9 @@ import static ru.pulsar.jenkins.library.configuration.Secrets.UNKNOWN_ID
 
 class TelegramNotification implements Serializable {
 
+    static final String TELEGRAM_HTTP_PROXY_CREDENTIAL_ID = "TELEGRAM_HTTP_PROXY"
+    static final String TELEGRAM_HTTP_PROXY_AUTH_CREDENTIAL_ID = "TELEGRAM_HTTP_PROXY_AUTH"
+
     private final JobConfiguration config;
 
     TelegramNotification(JobConfiguration config) {
@@ -81,13 +84,16 @@ class TelegramNotification implements Serializable {
         )
         String telegramBotTokenCredentials = secrets.telegramBotToken == UNKNOWN_ID ? "TELEGRAM_BOT_TOKEN" : secrets.telegramBotToken
 
-        String httpProxy = configuredString(options.httpProxy)
-        String proxyAuthentication = httpProxy == null ? null : configuredString(options.proxyAuthentication)
-
-        steps.withCredentials([
+        boolean useHttpProxy = options.useHttpProxy == true
+        def credentialBindings = [
             steps.string(telegramBotTokenCredentials, 'TOKEN'),
             steps.string(telegramChatIdCredentials, 'CHAT_ID')
-        ]) {
+        ]
+        if (useHttpProxy) {
+            credentialBindings.add(steps.string(TELEGRAM_HTTP_PROXY_CREDENTIAL_ID, 'HTTP_PROXY'))
+        }
+
+        steps.withCredentials(credentialBindings) {
 
             def mapper = new ObjectMapper()
 
@@ -103,6 +109,9 @@ class TelegramNotification implements Serializable {
 
             steps.echo(message)
             steps.echo(bodyString)
+
+            String httpProxy = useHttpProxy ? env.HTTP_PROXY : null
+            String proxyAuthentication = useHttpProxy ? TELEGRAM_HTTP_PROXY_AUTH_CREDENTIAL_ID : null
 
             steps.httpRequest(
                 url,

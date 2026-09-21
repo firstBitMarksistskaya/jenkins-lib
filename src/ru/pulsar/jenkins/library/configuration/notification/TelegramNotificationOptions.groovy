@@ -16,11 +16,8 @@ class TelegramNotificationOptions implements Serializable {
     @JsonPropertyDescription("Отправлять при нестабильной сборке")
     Boolean onUnstable
 
-    @JsonPropertyDescription("URL HTTP-прокси для запросов к api.telegram.org, например http://proxy.company.local:8080. Если не задан, запрос идёт напрямую")
-    String httpProxy
-
-    @JsonPropertyDescription("Идентификатор Jenkins credential типа Username with password для авторизации на HTTP-прокси")
-    String proxyAuthentication
+    @JsonPropertyDescription("Отправлять через HTTP-прокси. Адрес и авторизация берутся из фиксированных Jenkins credentials TELEGRAM_HTTP_PROXY (secret text) и TELEGRAM_HTTP_PROXY_AUTH (username with password), в jobConfiguration не указываются")
+    Boolean useHttpProxy
 
     @Override
     @NonCPS
@@ -30,10 +27,7 @@ class TelegramNotificationOptions implements Serializable {
             ", onSuccess=" + onSuccess +
             ", onFailure=" + onFailure +
             ", onUnstable=" + onUnstable +
-            ", httpProxy='" + httpProxy + '\'' +
-            ", proxyAuthentication='" + proxyAuthentication + '\'' +
+            ", useHttpProxy=" + useHttpProxy +
             '}';
     }
 }
-
-

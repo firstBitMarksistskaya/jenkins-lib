@@ -97,8 +97,7 @@
     "telegram": {
       "onAlways": false,
       "onFailure": true,
-      "httpProxy": "http://proxy.company.local:8080",
-      "proxyAuthentication": "telegram-proxy-creds"
+      "useHttpProxy": true
     }
   },
   "logosConfig": "logger.rootLogger=DEBUG"

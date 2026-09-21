@@ -90,6 +90,15 @@ class TelegramNotificationTest {
         .isEqualTo("other-chat");
   }
 
+  @Test
+  @DisplayName("имена credentials HTTP-прокси фиксированы и не берутся из jobConfiguration")
+  void proxyCredentialIdsAreFixed() {
+    assertThat(TelegramNotification.TELEGRAM_HTTP_PROXY_CREDENTIAL_ID)
+        .isEqualTo("TELEGRAM_HTTP_PROXY");
+    assertThat(TelegramNotification.TELEGRAM_HTTP_PROXY_AUTH_CREDENTIAL_ID)
+        .isEqualTo("TELEGRAM_HTTP_PROXY_AUTH");
+  }
+
   private static Secrets secrets(String telegramChatId, String telegramChatIdDefaultBranch) {
     Secrets secrets = new Secrets();
     secrets.setTelegramChatId(telegramChatId);

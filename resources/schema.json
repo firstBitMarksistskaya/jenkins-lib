@@ -229,13 +229,9 @@
               "type" : "boolean",
               "description" : "Отправлять при нестабильной сборке"
             },
-            "httpProxy" : {
-              "type" : "string",
-              "description" : "URL HTTP-прокси для запросов к api.telegram.org, например http://proxy.company.local:8080. Если не задан, запрос идёт напрямую"
-            },
-            "proxyAuthentication" : {
-              "type" : "string",
-              "description" : "Идентификатор Jenkins credential типа Username with password для авторизации на HTTP-прокси"
+            "useHttpProxy" : {
+              "type" : "boolean",
+              "description" : "Отправлять через HTTP-прокси. Адрес и авторизация берутся из фиксированных Jenkins credentials TELEGRAM_HTTP_PROXY (secret text) и TELEGRAM_HTTP_PROXY_AUTH (username with password), в jobConfiguration не указываются"
             }
           },
           "description" : "Настройки рассылки результатов сборки через telegram"

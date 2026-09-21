@@ -163,7 +163,8 @@
       "onAlways": true,
       "onFailure": false,
       "onUnstable": false,
-      "onSuccess": false
+      "onSuccess": false,
+      "useHttpProxy": false
     }
   },
   "logosConfig": ""
