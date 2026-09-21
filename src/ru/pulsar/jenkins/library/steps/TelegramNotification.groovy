@@ -26,8 +26,8 @@ import static ru.pulsar.jenkins.library.configuration.Secrets.UNKNOWN_ID
 
 class TelegramNotification implements Serializable {
 
-    static final String TELEGRAM_HTTP_PROXY_CREDENTIAL_ID = "TELEGRAM_HTTP_PROXY"
-    static final String TELEGRAM_HTTP_PROXY_AUTH_CREDENTIAL_ID = "TELEGRAM_HTTP_PROXY_AUTH"
+    public static final String TELEGRAM_HTTP_PROXY_CREDENTIAL_ID = "TELEGRAM_HTTP_PROXY"
+    public static final String TELEGRAM_HTTP_PROXY_AUTH_CREDENTIAL_ID = "TELEGRAM_HTTP_PROXY_AUTH"
 
     private final JobConfiguration config;
 
