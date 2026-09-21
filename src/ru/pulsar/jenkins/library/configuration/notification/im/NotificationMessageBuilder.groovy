@@ -139,7 +139,7 @@ class NotificationMessageBuilder implements Serializable {
     }
 
     @NonCPS
-    static boolean shouldReportStage(
+    public static boolean shouldReportStage(
         String type,
         String result,
         boolean isContainer,
@@ -147,7 +147,7 @@ class NotificationMessageBuilder implements Serializable {
         String parentResult,
         boolean parentIsContainer
     ) {
-        if (type == null || type == 'STEP') {
+        if (type == null || type == 'STEP' || type == 'PARALLEL') {
             return false
         }
         if (result == null || result == 'SUCCESS' || result == 'NOT_BUILT') {

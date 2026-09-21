@@ -24,6 +24,7 @@ class NotificationMessageBuilderTest {
   @DisplayName("контейнеры Подготовка / Проверка качества с parallel-ребёнком не репортим")
   void containersWithParallelChildAreDropped() {
     assertThat(report("STAGE", "UNSTABLE", true, null, null, false)).isFalse();
+    assertThat(report("PARALLEL", "UNSTABLE", true, "STAGE", "UNSTABLE", true)).isFalse();
     assertThat(report("PARALLEL", "UNSTABLE", false, "STAGE", "UNSTABLE", true)).isFalse();
   }
 
