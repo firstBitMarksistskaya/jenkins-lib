@@ -122,8 +122,7 @@ pipeline1C()
 ```json
 {
     "secrets": {
-        "telegramChatId": "myjob_TELEGRAM_CHAT_ID",
-        "telegramChatIdDefaultBranch": "myjob_TELEGRAM_CHAT_ID_MAIN"
+        "telegramChatId": "myjob_TELEGRAM_CHAT_ID"
     },
     "stages": {
         "telegram": true
@@ -131,7 +130,8 @@ pipeline1C()
     "notifications": {
         "telegram": {
             "onAlways": true,
-            "useHttpProxy": true
+            "useHttpProxy": true,
+            "useOtherBranchesChat": true
         }
     }
 }
@@ -152,10 +152,10 @@ pipeline1C()
   * Имена большинства "секретов" (jenkins credentials, `secrets`) по умолчанию высчитываются из пути к git-репозиторию (без учета домена, с заменой `/` на `_`) с прибавлением ключа секрета. Например, для репозитория `https://github.com/firstBitSemenovskaya/jenkins-lib` секрет с адресом хранилища будет выглядеть как `firstBitSemenovskaya_jenkins-lib_STORAGE_PATH`. Ключи секретов:
     * `STORAGE_PATH` - путь к хранилищу конфигурации (для `secrets` -> `storagePath`);
     * `STORAGE_USER` - параметры авторизации в хранилище вида "username with password" (для `secrets` -> `storage`).
-    * `TELEGRAM_CHAT_ID` - идентификатор чата Telegram для рассылки уведомлений о результате сборки вида "secret text" (для `secrets` -> `telegramChatId`). Это чат прочих веток и единственный чат, пока не задан чат основной ветки.
+    * `TELEGRAM_CHAT_ID` - идентификатор чата Telegram для рассылки уведомлений о результате сборки вида "secret text" (для `secrets` -> `telegramChatId`). Это исходный чат: все ветки, пока выключен `useOtherBranchesChat`; при включённом сплите — только `defaultBranch` и сборки без `BRANCH_NAME`.
   * Секрет `TELEGRAM_BOT_TOKEN` задается глобально на весь сервер Jenkins, либо может быть переопределен (`secrets` -> `telegramBotToken`).
   * HTTP-прокси Telegram задаётся **только** глобальными credentials (имена фиксированы, в `jobConfiguration` не указываются): `TELEGRAM_HTTP_PROXY` — secret text с URL прокси; `TELEGRAM_HTTP_PROXY_AUTH` — Username with password для прокси. Включение — булево `notifications` -> `telegram` -> `useHttpProxy`.
-  * Опциональный чат основной ветки задаётся **только явно** в `secrets` -> `telegramChatIdDefaultBranch` (id credential типа "secret text"). Авто-секрета `{slug}_TELEGRAM_CHAT_ID_MAIN` нет: если поле `null`, пустое или `UNKNOWN_ID`, сборки всех веток идут в `telegramChatId`. Сплит веток смотрит на `env.BRANCH_NAME` (multibranch Pipeline). У обычного Pipeline `BRANCH_NAME` часто пустой — тогда чат основной ветки не выберется (то же ограничение, что у загрузки ИБ из хранилища на `defaultBranch`).
+  * Чат прочих веток задаётся **только** глобальным credential `TELEGRAM_CHAT_ID_OTHER_BRANCHES` (secret text; имя фиксировано). Включение — булево `notifications` -> `telegram` -> `useOtherBranchesChat`. Если флаг `false`, сборки всех веток идут в исходный `telegramChatId` (как до доработки). При `true` исходный чат получает `defaultBranch`; остальные именованные ветки — `TELEGRAM_CHAT_ID_OTHER_BRANCHES`. Сплит смотрит на `env.BRANCH_NAME` (multibranch Pipeline). У обычного Pipeline `BRANCH_NAME` часто пустой — тогда остаётся исходный чат.
   * Все "шаги" по умолчанию выключены (`stages`).
   * Если в корне репозитория существует файл `packagedef`, то в шагах, работающих с информационной базой, будет выполнена попытка установки локальных зависимостей средствами `opm`.
   * Если после установки локальных зависимостей в каталоге `oscript_modules/bin` существует файл `vrunner`, то для выполнения команд работы с информационной базой будет использоваться он, а не глобально установленный `vrunner` из `PATH`.
@@ -224,7 +224,7 @@ pipeline1C()
   * Telegram:
     * Уведомления о результатах сборки по умолчанию рассылаются всегда (`notifications` -> `telegram` -> `onAlways`, `onFailure`, `onUnstable`, `onSuccess`).
     * HTTP-прокси до `api.telegram.org` включается булевым `notifications` -> `telegram` -> `useHttpProxy` (по умолчанию `false`). Адрес и логин/пароль **не** хранятся в git: при `true` библиотека берёт secret text `TELEGRAM_HTTP_PROXY` (URL) через `withCredentials` и передаёт id `TELEGRAM_HTTP_PROXY_AUTH` (Username with password) в шаг `http_request`. Имена credentials фиксированы, как у `TELEGRAM_BOT_TOKEN`.
-    * Разные чаты по ветке: `secrets` -> `telegramChatIdDefaultBranch` — чат сборок `defaultBranch`; `secrets` -> `telegramChatId` — чат остальных веток. Пока второй id не задан, все ветки используют `telegramChatId`.
+    * Разные чаты по ветке включаются булевым `notifications` -> `telegram` -> `useOtherBranchesChat` (по умолчанию `false`). Пока флаг выключен, все ветки используют исходный `telegramChatId`. При `true` сборки `defaultBranch` остаются в `telegramChatId`; остальные ветки идут в secret text `TELEGRAM_CHAT_ID_OTHER_BRANCHES`. Имя credential фиксировано, как у `TELEGRAM_BOT_TOKEN`.
 
 ## Инициализация базы
 

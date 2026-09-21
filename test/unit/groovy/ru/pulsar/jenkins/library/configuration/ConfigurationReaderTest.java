@@ -88,9 +88,7 @@ class ConfigurationReaderTest {
     assertThat(jobConfiguration.getNotificationsOptions().getTelegramNotificationOptions().getOnAlways()).isFalse();
     assertThat(jobConfiguration.getNotificationsOptions().getTelegramNotificationOptions().getOnFailure()).isTrue();
     assertThat(jobConfiguration.getNotificationsOptions().getTelegramNotificationOptions().getUseHttpProxy()).isTrue();
-
-    assertThat(jobConfiguration.getSecrets())
-        .hasFieldOrPropertyWithValue("telegramChatIdDefaultBranch", "main-telegram-chat");
+    assertThat(jobConfiguration.getNotificationsOptions().getTelegramNotificationOptions().getUseOtherBranchesChat()).isTrue();
   }
 
   @Test
@@ -98,6 +96,7 @@ class ConfigurationReaderTest {
     JobConfiguration defaults = ConfigurationReader.create();
 
     assertThat(defaults.getNotificationsOptions().getTelegramNotificationOptions().getUseHttpProxy()).isFalse();
+    assertThat(defaults.getNotificationsOptions().getTelegramNotificationOptions().getUseOtherBranchesChat()).isFalse();
   }
 
   @Test

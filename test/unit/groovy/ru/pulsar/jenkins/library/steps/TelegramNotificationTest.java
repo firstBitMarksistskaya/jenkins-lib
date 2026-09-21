@@ -11,98 +11,107 @@ class TelegramNotificationTest {
 
   private static final String SLUG = "org_repo";
   private static final String AUTO_CHAT = SLUG + "_TELEGRAM_CHAT_ID";
+  private static final String DEFAULT_BRANCH = "main";
+  private static final String ORIGINAL_CHAT = "existing-chat";
 
   @Test
-  @DisplayName("main + задан telegramChatIdDefaultBranch → чат основной ветки")
-  void defaultBranchUsesExplicitDefaultBranchChat() {
-    Secrets secrets = secrets("other-chat", "main-chat");
+  @DisplayName("без сплита все ветки идут в исходный telegramChatId")
+  void disabledSplitUsesOriginalChatOnEveryBranch() {
+    Secrets secrets = secrets(ORIGINAL_CHAT);
 
-    assertThat(TelegramNotification.resolveTelegramChatIdCredential(secrets, "main", "main", SLUG))
-        .isEqualTo("main-chat");
+    assertThat(resolve(secrets, "main", false)).isEqualTo(ORIGINAL_CHAT);
+    assertThat(resolve(secrets, "feature/foo", false)).isEqualTo(ORIGINAL_CHAT);
+    assertThat(resolve(secrets, "PR-12", false)).isEqualTo(ORIGINAL_CHAT);
+    assertThat(resolve(secrets, null, false)).isEqualTo(ORIGINAL_CHAT);
   }
 
   @Test
-  @DisplayName("feature при заданном втором чате → telegramChatId")
-  void featureBranchUsesOtherChatWhenSplitEnabled() {
-    Secrets secrets = secrets("other-chat", "main-chat");
+  @DisplayName("сплит: defaultBranch остаётся в исходном чате")
+  void defaultBranchStaysOnOriginalChatWhenSplitEnabled() {
+    Secrets secrets = secrets(ORIGINAL_CHAT);
 
-    assertThat(TelegramNotification.resolveTelegramChatIdCredential(secrets, "feature/foo", "main", SLUG))
-        .isEqualTo("other-chat");
+    assertThat(resolve(secrets, "main", true)).isEqualTo(ORIGINAL_CHAT);
   }
 
   @Test
-  @DisplayName("PR-* при заданном втором чате → telegramChatId")
-  void pullRequestUsesOtherChatWhenSplitEnabled() {
-    Secrets secrets = secrets("other-chat", "main-chat");
+  @DisplayName("сплит: feature → фиксированный TELEGRAM_CHAT_ID_OTHER_BRANCHES")
+  void featureBranchUsesOtherBranchesChatWhenSplitEnabled() {
+    Secrets secrets = secrets(ORIGINAL_CHAT);
 
-    assertThat(TelegramNotification.resolveTelegramChatIdCredential(secrets, "PR-12", "main", SLUG))
-        .isEqualTo("other-chat");
+    assertThat(resolve(secrets, "feature/foo", true))
+        .isEqualTo(TelegramNotification.TELEGRAM_CHAT_ID_OTHER_BRANCHES_CREDENTIAL_ID);
   }
 
   @Test
-  @DisplayName("UNKNOWN_ID второго чата → авто {slug}_TELEGRAM_CHAT_ID на любой ветке")
-  void unknownDefaultBranchChatFallsBackToAutoId() {
-    Secrets secrets = secrets(UNKNOWN_ID, UNKNOWN_ID);
+  @DisplayName("сплит: PR-* → TELEGRAM_CHAT_ID_OTHER_BRANCHES")
+  void pullRequestUsesOtherBranchesChatWhenSplitEnabled() {
+    Secrets secrets = secrets(ORIGINAL_CHAT);
 
-    assertThat(TelegramNotification.resolveTelegramChatIdCredential(secrets, "main", "main", SLUG))
-        .isEqualTo(AUTO_CHAT);
-    assertThat(TelegramNotification.resolveTelegramChatIdCredential(secrets, "feature/foo", "main", SLUG))
-        .isEqualTo(AUTO_CHAT);
+    assertThat(resolve(secrets, "PR-12", true))
+        .isEqualTo(TelegramNotification.TELEGRAM_CHAT_ID_OTHER_BRANCHES_CREDENTIAL_ID);
   }
 
   @Test
-  @DisplayName("пустая строка второго чата → как сейчас, все ветки в telegramChatId")
-  void emptyDefaultBranchChatFallsBackToOtherChat() {
-    Secrets secrets = secrets("other-chat", "");
+  @DisplayName("UNKNOWN_ID без сплита → авто {slug}_TELEGRAM_CHAT_ID на любой ветке")
+  void unknownOriginalChatFallsBackToAutoId() {
+    Secrets secrets = secrets(UNKNOWN_ID);
 
-    assertThat(TelegramNotification.resolveTelegramChatIdCredential(secrets, "main", "main", SLUG))
-        .isEqualTo("other-chat");
-    assertThat(TelegramNotification.resolveTelegramChatIdCredential(secrets, "feature/foo", "main", SLUG))
-        .isEqualTo("other-chat");
+    assertThat(resolve(secrets, "main", false)).isEqualTo(AUTO_CHAT);
+    assertThat(resolve(secrets, "feature/foo", false)).isEqualTo(AUTO_CHAT);
   }
 
   @Test
-  @DisplayName("null второго чата → все ветки в telegramChatId")
-  void nullDefaultBranchChatFallsBackToOtherChat() {
-    Secrets secrets = secrets("other-chat", null);
+  @DisplayName("UNKNOWN_ID при сплите: main → авто исходный, feature → TELEGRAM_CHAT_ID_OTHER_BRANCHES")
+  void unknownOriginalChatStillSplitsOtherBranches() {
+    Secrets secrets = secrets(UNKNOWN_ID);
 
-    assertThat(TelegramNotification.resolveTelegramChatIdCredential(secrets, "main", "main", SLUG))
-        .isEqualTo("other-chat");
+    assertThat(resolve(secrets, "main", true)).isEqualTo(AUTO_CHAT);
+    assertThat(resolve(secrets, "feature/foo", true))
+        .isEqualTo(TelegramNotification.TELEGRAM_CHAT_ID_OTHER_BRANCHES_CREDENTIAL_ID);
   }
 
   @Test
-  @DisplayName("тестовый EnvUtils BRANCH_NAME=master не совпадает с defaultBranch=main")
+  @DisplayName("master не совпадает с defaultBranch=main → чат прочих веток")
   void masterIsNotDefaultMain() {
-    Secrets secrets = secrets("other-chat", "main-chat");
+    Secrets secrets = secrets(ORIGINAL_CHAT);
 
-    assertThat(TelegramNotification.resolveTelegramChatIdCredential(secrets, "master", "main", SLUG))
-        .isEqualTo("other-chat");
+    assertThat(resolve(secrets, "master", true))
+        .isEqualTo(TelegramNotification.TELEGRAM_CHAT_ID_OTHER_BRANCHES_CREDENTIAL_ID);
   }
 
   @Test
-  @DisplayName("пустой BRANCH_NAME при заданном втором чате → telegramChatId")
-  void emptyBranchNameUsesOtherChat() {
-    Secrets secrets = secrets("other-chat", "main-chat");
+  @DisplayName("пустой BRANCH_NAME при сплите → исходный чат (как до доработки)")
+  void emptyBranchNameStaysOnOriginalChat() {
+    Secrets secrets = secrets(ORIGINAL_CHAT);
 
-    assertThat(TelegramNotification.resolveTelegramChatIdCredential(secrets, "", "main", SLUG))
-        .isEqualTo("other-chat");
-    assertThat(TelegramNotification.resolveTelegramChatIdCredential(secrets, null, "main", SLUG))
-        .isEqualTo("other-chat");
+    assertThat(resolve(secrets, "", true)).isEqualTo(ORIGINAL_CHAT);
+    assertThat(resolve(secrets, null, true)).isEqualTo(ORIGINAL_CHAT);
   }
 
   @Test
-  @DisplayName("имена credentials HTTP-прокси фиксированы и не берутся из jobConfiguration")
-  void proxyCredentialIdsAreFixed() {
+  @DisplayName("имена credentials прокси и чата прочих веток фиксированы")
+  void telegramCredentialIdsAreFixed() {
     assertThat(TelegramNotification.TELEGRAM_HTTP_PROXY_CREDENTIAL_ID)
         .isEqualTo("TELEGRAM_HTTP_PROXY");
     assertThat(TelegramNotification.TELEGRAM_HTTP_PROXY_AUTH_CREDENTIAL_ID)
         .isEqualTo("TELEGRAM_HTTP_PROXY_AUTH");
+    assertThat(TelegramNotification.TELEGRAM_CHAT_ID_OTHER_BRANCHES_CREDENTIAL_ID)
+        .isEqualTo("TELEGRAM_CHAT_ID_OTHER_BRANCHES");
   }
 
-  private static Secrets secrets(String telegramChatId, String telegramChatIdDefaultBranch) {
+  private static String resolve(Secrets secrets, String branch, boolean useOtherBranchesChat) {
+    return TelegramNotification.resolveTelegramChatIdCredential(
+        secrets,
+        branch,
+        DEFAULT_BRANCH,
+        SLUG,
+        useOtherBranchesChat
+    );
+  }
+
+  private static Secrets secrets(String telegramChatId) {
     Secrets secrets = new Secrets();
     secrets.setTelegramChatId(telegramChatId);
-    secrets.setTelegramChatIdDefaultBranch(telegramChatIdDefaultBranch);
     return secrets;
   }
 }

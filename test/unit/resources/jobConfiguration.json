@@ -2,8 +2,7 @@
   "v8version": "8.3.14.1944",
   "edtVersion": "2021.3.4:x86_64",
   "secrets": {
-    "storage": "1234",
-    "telegramChatIdDefaultBranch": "main-telegram-chat"
+    "storage": "1234"
   },
   "coverage": {
     "dbgsPath": "/opt/1cv8/current/dbgs"
@@ -97,7 +96,8 @@
     "telegram": {
       "onAlways": false,
       "onFailure": true,
-      "useHttpProxy": true
+      "useHttpProxy": true,
+      "useOtherBranchesChat": true
     }
   },
   "logosConfig": "logger.rootLogger=DEBUG"

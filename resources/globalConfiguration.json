@@ -9,8 +9,7 @@
     "storagePath": "UNKNOWN_ID",
     "storage": "UNKNOWN_ID",
     "telegramBotToken": "UNKNOWN_ID",
-    "telegramChatId": "UNKNOWN_ID",
-    "telegramChatIdDefaultBranch": "UNKNOWN_ID"
+    "telegramChatId": "UNKNOWN_ID"
   },
   "stages": {
     "initSteps": false,
@@ -164,7 +163,8 @@
       "onFailure": false,
       "onUnstable": false,
       "onSuccess": false,
-      "useHttpProxy": false
+      "useHttpProxy": false,
+      "useOtherBranchesChat": false
     }
   },
   "logosConfig": ""

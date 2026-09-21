@@ -28,6 +28,7 @@ class TelegramNotification implements Serializable {
 
     public static final String TELEGRAM_HTTP_PROXY_CREDENTIAL_ID = "TELEGRAM_HTTP_PROXY"
     public static final String TELEGRAM_HTTP_PROXY_AUTH_CREDENTIAL_ID = "TELEGRAM_HTTP_PROXY_AUTH"
+    public static final String TELEGRAM_CHAT_ID_OTHER_BRANCHES_CREDENTIAL_ID = "TELEGRAM_CHAT_ID_OTHER_BRANCHES"
 
     private final JobConfiguration config;
 
@@ -80,7 +81,8 @@ class TelegramNotification implements Serializable {
             secrets,
             env.BRANCH_NAME,
             config.defaultBranch,
-            repoSlug
+            repoSlug,
+            options.useOtherBranchesChat == true
         )
         String telegramBotTokenCredentials = secrets.telegramBotToken == UNKNOWN_ID ? "TELEGRAM_BOT_TOKEN" : secrets.telegramBotToken
 
@@ -127,14 +129,18 @@ class TelegramNotification implements Serializable {
     }
 
     @NonCPS
-    static String resolveTelegramChatIdCredential(Secrets secrets, String branch, String defaultBranch, String slug) {
+    static String resolveTelegramChatIdCredential(
+        Secrets secrets,
+        String branch,
+        String defaultBranch,
+        String slug,
+        boolean useOtherBranchesChat
+    ) {
+        if (useOtherBranchesChat && isOtherBranch(branch, defaultBranch)) {
+            return TELEGRAM_CHAT_ID_OTHER_BRANCHES_CREDENTIAL_ID
+        }
         if (secrets == null) {
             return slug + "_TELEGRAM_CHAT_ID"
-        }
-        if (isCredentialIdConfigured(secrets.telegramChatIdDefaultBranch)
-            && branch != null
-            && branch == defaultBranch) {
-            return secrets.telegramChatIdDefaultBranch
         }
         return secrets.telegramChatId == UNKNOWN_ID || secrets.telegramChatId == null
             ? slug + "_TELEGRAM_CHAT_ID"
@@ -142,20 +148,15 @@ class TelegramNotification implements Serializable {
     }
 
     @NonCPS
-    static String configuredString(String value) {
-        if (value == null) {
-            return null
+    private static boolean isOtherBranch(String branch, String defaultBranch) {
+        if (branch == null) {
+            return false
         }
-        String trimmed = value.trim()
-        if (trimmed.isEmpty() || trimmed == UNKNOWN_ID) {
-            return null
+        String trimmed = branch.trim()
+        if (trimmed.isEmpty()) {
+            return false
         }
-        return trimmed
-    }
-
-    @NonCPS
-    static boolean isCredentialIdConfigured(String credentialsId) {
-        return configuredString(credentialsId) != null
+        return trimmed != defaultBranch
     }
 
     private static String getMessage(RunWrapper currentBuild) {
