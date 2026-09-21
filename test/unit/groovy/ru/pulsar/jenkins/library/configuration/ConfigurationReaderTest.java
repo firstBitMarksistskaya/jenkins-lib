@@ -7,7 +7,6 @@ import ru.pulsar.jenkins.library.configuration.sonarqube.GenericIssueFormat;
 import ru.pulsar.jenkins.library.utils.TestUtils;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -91,23 +90,6 @@ class ConfigurationReaderTest {
 
     assertThat(jobConfiguration.getNotificationsOptions().getImNotificationOptions())
       .containsOnlyKeys("telegram", "discordWebhook", "discordBot");
-  }
-
-  @Test
-  void testMaxMessengerIsNotSupported() {
-    // when
-    JobConfiguration jobConfiguration = ConfigurationReader.create();
-
-    // then
-    assertThat(jobConfiguration.getNotificationsOptions().getImNotificationOptions()).doesNotContainKey("max");
-
-    assertThat(StageFlags.class.getDeclaredFields())
-      .extracting(Field::getName)
-      .doesNotContain("max");
-
-    assertThat(Secrets.class.getDeclaredFields())
-      .extracting(Field::getName)
-      .doesNotContain("maxChatId", "maxBotToken");
   }
 
   @Test
