@@ -75,6 +75,14 @@ dependencies {
 
 }
 
+tasks.register<JavaExec>("generateJobConfigurationSchema") {
+    group = "build"
+    description = "Regenerate resources/schema.json from JobConfiguration"
+    classpath = sourceSets["main"].runtimeClasspath
+    mainClass.set("JobConfigurationSchemaGenerator")
+    workingDir = project.projectDir
+}
+
 tasks.test {
     useJUnitPlatform()
 

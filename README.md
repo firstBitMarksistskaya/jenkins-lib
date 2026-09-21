@@ -117,6 +117,27 @@ pipeline1C()
 }
 ```
 
+Пример переопределения Telegram (прокси и чат основной ветки; оба поля опциональны):
+
+```json
+{
+    "secrets": {
+        "telegramChatId": "myjob_TELEGRAM_CHAT_ID",
+        "telegramChatIdDefaultBranch": "myjob_TELEGRAM_CHAT_ID_MAIN"
+    },
+    "stages": {
+        "telegram": true
+    },
+    "notifications": {
+        "telegram": {
+            "onAlways": true,
+            "httpProxy": "http://proxy.company.local:8080",
+            "proxyAuthentication": "telegram-proxy-creds"
+        }
+    }
+}
+```
+
 ## Параметры по умолчанию
 
 В библиотеке применяется принцип "соглашения по конфигурации" (convention over configuration): конфигурационный файл
@@ -132,8 +153,9 @@ pipeline1C()
   * Имена большинства "секретов" (jenkins credentials, `secrets`) по умолчанию высчитываются из пути к git-репозиторию (без учета домена, с заменой `/` на `_`) с прибавлением ключа секрета. Например, для репозитория `https://github.com/firstBitSemenovskaya/jenkins-lib` секрет с адресом хранилища будет выглядеть как `firstBitSemenovskaya_jenkins-lib_STORAGE_PATH`. Ключи секретов:
     * `STORAGE_PATH` - путь к хранилищу конфигурации (для `secrets` -> `storagePath`);
     * `STORAGE_USER` - параметры авторизации в хранилище вида "username with password" (для `secrets` -> `storage`).
-    * `TELEGRAM_CHAT_ID` - идентификатор чата Telegram для рассылки уведомлений и результате сборки вида "secret text" (для `secrets` -> `telegramChatId`).
+    * `TELEGRAM_CHAT_ID` - идентификатор чата Telegram для рассылки уведомлений о результате сборки вида "secret text" (для `secrets` -> `telegramChatId`). Это чат прочих веток и единственный чат, пока не задан чат основной ветки.
   * Секрет `TELEGRAM_BOT_TOKEN` задается глобально на весь сервер Jenkins, либо может быть переопределен (`secrets` -> `telegramBotToken`)
+  * Опциональный чат основной ветки задаётся **только явно** в `secrets` -> `telegramChatIdDefaultBranch` (id credential типа "secret text"). Авто-секрета `{slug}_TELEGRAM_CHAT_ID_MAIN` нет: если поле `null`, пустое или `UNKNOWN_ID`, сборки всех веток идут в `telegramChatId`. Сплит веток смотрит на `env.BRANCH_NAME` (multibranch Pipeline). У обычного Pipeline `BRANCH_NAME` часто пустой — тогда чат основной ветки не выберется (то же ограничение, что у загрузки ИБ из хранилища на `defaultBranch`).
   * Все "шаги" по умолчанию выключены (`stages`).
   * Если в корне репозитория существует файл `packagedef`, то в шагах, работающих с информационной базой, будет выполнена попытка установки локальных зависимостей средствами `opm`.
   * Если после установки локальных зависимостей в каталоге `oscript_modules/bin` существует файл `vrunner`, то для выполнения команд работы с информационной базой будет использоваться он, а не глобально установленный `vrunner` из `PATH`.
@@ -201,6 +223,8 @@ pipeline1C()
     * Прямые получатели уведомлений не заполнены (`notifications` -> `email` -> `*options` -> `directRecipients`).
   * Telegram:
     * Уведомления о результатах сборки по умолчанию рассылаются всегда (`notifications` -> `telegram` -> `onAlways`, `onFailure`, `onUnstable`, `onSuccess`).
+    * HTTP-прокси до `api.telegram.org` задаётся опционально в `notifications` -> `telegram` -> `httpProxy` (URL, например `http://proxy.company.local:8080`). Если поле пустое, запрос идёт напрямую. При прокси с логином/паролем укажите id credential типа Username with password в `notifications` -> `telegram` -> `proxyAuthentication` (плагин `http_request` читает credential сам; в `withCredentials` остаются только токен бота и chat id).
+    * Разные чаты по ветке: `secrets` -> `telegramChatIdDefaultBranch` — чат сборок `defaultBranch`; `secrets` -> `telegramChatId` — чат остальных веток. Пока второй id не задан, все ветки используют `telegramChatId`.
 
 ## Инициализация базы
 

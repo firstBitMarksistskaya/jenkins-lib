@@ -87,6 +87,13 @@ class ConfigurationReaderTest {
 
     assertThat(jobConfiguration.getNotificationsOptions().getTelegramNotificationOptions().getOnAlways()).isFalse();
     assertThat(jobConfiguration.getNotificationsOptions().getTelegramNotificationOptions().getOnFailure()).isTrue();
+    assertThat(jobConfiguration.getNotificationsOptions().getTelegramNotificationOptions().getHttpProxy())
+        .isEqualTo("http://proxy.company.local:8080");
+    assertThat(jobConfiguration.getNotificationsOptions().getTelegramNotificationOptions().getProxyAuthentication())
+        .isEqualTo("telegram-proxy-creds");
+
+    assertThat(jobConfiguration.getSecrets())
+        .hasFieldOrPropertyWithValue("telegramChatIdDefaultBranch", "main-telegram-chat");
   }
 
   @Test

@@ -71,9 +71,18 @@ class TelegramNotification implements Serializable {
         String repoSlug = RepoUtils.getRepoSlug()
 
         Secrets secrets = config.secrets
+        def options = config.notificationsOptions.telegramNotificationOptions
 
-        String telegramChatIdCredentials = secrets.telegramChatId == UNKNOWN_ID ? repoSlug + "_TELEGRAM_CHAT_ID" : secrets.telegramChatId
+        String telegramChatIdCredentials = resolveTelegramChatIdCredential(
+            secrets,
+            env.BRANCH_NAME,
+            config.defaultBranch,
+            repoSlug
+        )
         String telegramBotTokenCredentials = secrets.telegramBotToken == UNKNOWN_ID ? "TELEGRAM_BOT_TOKEN" : secrets.telegramBotToken
+
+        String httpProxy = configuredString(options.httpProxy)
+        String proxyAuthentication = httpProxy == null ? null : configuredString(options.proxyAuthentication)
 
         steps.withCredentials([
             steps.string(telegramBotTokenCredentials, 'TOKEN'),
@@ -101,9 +110,43 @@ class TelegramNotification implements Serializable {
                 MimeType.APPLICATION_JSON_UTF8,
                 bodyString,
                 '200',
-                true
+                true,
+                httpProxy,
+                proxyAuthentication
             )
         }
+    }
+
+    @NonCPS
+    static String resolveTelegramChatIdCredential(Secrets secrets, String branch, String defaultBranch, String slug) {
+        if (secrets == null) {
+            return slug + "_TELEGRAM_CHAT_ID"
+        }
+        if (isCredentialIdConfigured(secrets.telegramChatIdDefaultBranch)
+            && branch != null
+            && branch == defaultBranch) {
+            return secrets.telegramChatIdDefaultBranch
+        }
+        return secrets.telegramChatId == UNKNOWN_ID || secrets.telegramChatId == null
+            ? slug + "_TELEGRAM_CHAT_ID"
+            : secrets.telegramChatId
+    }
+
+    @NonCPS
+    static String configuredString(String value) {
+        if (value == null) {
+            return null
+        }
+        String trimmed = value.trim()
+        if (trimmed.isEmpty() || trimmed == UNKNOWN_ID) {
+            return null
+        }
+        return trimmed
+    }
+
+    @NonCPS
+    static boolean isCredentialIdConfigured(String credentialsId) {
+        return configuredString(credentialsId) != null
     }
 
     private static String getMessage(RunWrapper currentBuild) {

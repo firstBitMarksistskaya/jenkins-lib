@@ -108,7 +108,7 @@ interface IStepExecutor {
     @SuppressWarnings('unused')
     ResponseContentSupplier httpRequest(String url, String outputFile, String responseHandle, boolean wrapAsMultipart)
 
-    ResponseContentSupplier httpRequest(String url, HttpMode httpMode, MimeType contentType, String requestBody, String validResponseCodes, boolean consoleLogResponseBody)
+    ResponseContentSupplier httpRequest(String url, HttpMode httpMode, MimeType contentType, String requestBody, String validResponseCodes, boolean consoleLogResponseBody, String httpProxy, String proxyAuthentication)
 
     def error(String errorMessage)
 

@@ -228,6 +228,14 @@
             "onUnstable" : {
               "type" : "boolean",
               "description" : "Отправлять при нестабильной сборке"
+            },
+            "httpProxy" : {
+              "type" : "string",
+              "description" : "URL HTTP-прокси для запросов к api.telegram.org, например http://proxy.company.local:8080. Если не задан, запрос идёт напрямую"
+            },
+            "proxyAuthentication" : {
+              "type" : "string",
+              "description" : "Идентификатор Jenkins credential типа Username with password для авторизации на HTTP-прокси"
             }
           },
           "description" : "Настройки рассылки результатов сборки через telegram"
@@ -279,6 +287,10 @@
         "telegramChatId" : {
           "type" : "string",
           "description" : "Идентификатор telegram-чата для отправки уведомлений"
+        },
+        "telegramChatIdDefaultBranch" : {
+          "type" : "string",
+          "description" : "Идентификатор telegram-чата для уведомлений о сборках основной ветки (defaultBranch). Только явный id credential; если не задан, все ветки используют telegramChatId"
         }
       },
       "description" : "Идентификаторы сохраненных секретов"
