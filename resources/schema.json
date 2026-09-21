@@ -231,13 +231,6 @@
           },
           "description" : "Настройки рассылки результатов сборки через email"
         },
-        "max" : {
-          "allOf" : [ {
-            "$ref" : "#/definitions/IMNotificationOptions"
-          }, {
-            "description" : "Настройки рассылки результатов сборки через MAX"
-          } ]
-        },
         "discordWebhook" : {
           "allOf" : [ {
             "$ref" : "#/definitions/IMNotificationOptions"
@@ -302,14 +295,6 @@
         "discordChatId" : {
           "type" : "string",
           "description" : "Идентификатор Discord-канала для отправки уведомлений"
-        },
-        "maxBotToken" : {
-          "type" : "string",
-          "description" : "Токен авторизации MAX-бота для отправки уведомлений"
-        },
-        "maxChatId" : {
-          "type" : "string",
-          "description" : "Идентификатор MAX-чата для отправки уведомлений"
         },
         "storage" : {
           "type" : "string",
@@ -430,10 +415,6 @@
         "discordBot" : {
           "type" : "boolean",
           "description" : "Выполнять рассылку результатов сборки в Discord через бота"
-        },
-        "max" : {
-          "type" : "boolean",
-          "description" : "Выполнять рассылку результатов сборки в MAX"
         },
         "smoke" : {
           "type" : "boolean",
