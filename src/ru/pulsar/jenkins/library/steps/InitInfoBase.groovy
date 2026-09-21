@@ -4,6 +4,7 @@ import org.jenkinsci.plugins.pipeline.utility.steps.fs.FileWrapper
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
+import ru.pulsar.jenkins.library.utils.BspDetector
 import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.VRunner
 import ru.pulsar.jenkins.library.utils.FileUtils
@@ -67,11 +68,19 @@ class InitInfoBase implements Serializable {
 
                 command += settingsIncrement
                 def migrationStatusFile = "build/migration-exit-status.log"
-                command += " --exitCodePath \"${migrationStatusFile}\""
+                boolean useExitCodeFile = BspDetector.isBspConfiguration(config)
+                if (useExitCodeFile) {
+                    command += " --exitCodePath \"${migrationStatusFile}\""
+                } else {
+                    Logger.println("Конфигурация не на БСП, запуск миграции ИБ без контроля ${migrationStatusFile}")
+                }
                 // Запуск миграции
                 steps.catchError {
                     Integer exitStatus = VRunner.exec(command, true)
-                    exitStatuses.put(command, VRunner.readExitStatusFromFile(migrationStatusFile, exitStatus))
+                    Integer effectiveExitStatus = useExitCodeFile
+                            ? VRunner.readExitStatusFromFile(migrationStatusFile, exitStatus)
+                            : exitStatus
+                    exitStatuses.put(command, effectiveExitStatus)
                 }
             } else {
                 Logger.println("Шаг миграции ИБ выключен")
@@ -120,4 +129,5 @@ class InitInfoBase implements Serializable {
             steps.error("Инициализация ИБ завершилась с ошибками")
         }
     }
+
 }
