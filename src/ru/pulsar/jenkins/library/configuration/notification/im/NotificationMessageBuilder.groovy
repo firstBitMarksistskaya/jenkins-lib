@@ -113,10 +113,10 @@ class NotificationMessageBuilder implements Serializable {
             if (!shouldReportStage(
                 stage.type?.name(),
                 stage.status?.result?.name(),
-                isContainerStage(stage, parallelParentIds),
+                isOuterParallelContainer(stage, parallelParentIds),
                 parent?.type?.name(),
                 parent?.status?.result?.name(),
-                parent != null && isContainerStage(parent, parallelParentIds)
+                parent != null && isOuterParallelContainer(parent, parallelParentIds)
             )) {
                 continue
             }
@@ -139,7 +139,7 @@ class NotificationMessageBuilder implements Serializable {
     }
 
     @NonCPS
-    public static boolean shouldReportStage(
+    static boolean shouldReportStage(
         String type,
         String result,
         boolean isContainer,
@@ -147,13 +147,16 @@ class NotificationMessageBuilder implements Serializable {
         String parentResult,
         boolean parentIsContainer
     ) {
-        if (type == null || type == 'STEP' || type == 'PARALLEL') {
+        if (type == null || type == 'STEP') {
             return false
         }
         if (result == null || result == 'SUCCESS' || result == 'NOT_BUILT') {
             return false
         }
         if (isContainer) {
+            return false
+        }
+        if (parentType == 'PARALLEL') {
             return false
         }
         if (parentType == null || parentType == 'STEP') {
@@ -166,11 +169,8 @@ class NotificationMessageBuilder implements Serializable {
     }
 
     @NonCPS
-    private static boolean isContainerStage(FlowNodeWrapper node, Set parallelParentIds) {
-        if (node == null) {
-            return false
-        }
-        return node.type == FlowNodeWrapper.NodeType.PARALLEL || parallelParentIds.contains(node.id)
+    private static boolean isOuterParallelContainer(FlowNodeWrapper node, Set parallelParentIds) {
+        return node != null && parallelParentIds.contains(node.id)
     }
 
     @NonCPS

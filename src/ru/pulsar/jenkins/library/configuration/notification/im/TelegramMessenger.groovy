@@ -2,11 +2,9 @@ package ru.pulsar.jenkins.library.configuration.notification.im
 
 import com.cloudbees.groovy.cps.NonCPS
 import com.fasterxml.jackson.databind.ObjectMapper
-import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.Secrets
 import ru.pulsar.jenkins.library.configuration.notification.IMNotificationOptions
-import ru.pulsar.jenkins.library.ioc.ContextRegistry
 
 import static ru.pulsar.jenkins.library.configuration.Secrets.UNKNOWN_ID
 
@@ -42,13 +40,12 @@ class TelegramMessenger implements Messenger {
     }
 
     @Override
-    String getChatIdCredentialId(JobConfiguration config, String repoSlug) {
-        IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
+    String getChatIdCredentialId(JobConfiguration config, String repoSlug, String branchName) {
         def options = getOptions(config)
         boolean useOtherBranchesChat = options != null && options.useOtherBranchesChat == true
         return resolveChatIdCredentialId(
             config.secrets,
-            steps.env().BRANCH_NAME,
+            branchName,
             config.defaultBranch,
             repoSlug,
             useOtherBranchesChat
@@ -79,7 +76,7 @@ class TelegramMessenger implements Messenger {
 
     @NonCPS
     private static String configuredOrSlug(String configuredId, String slug, String key) {
-        if (configuredId == UNKNOWN_ID || configuredId == null) {
+        if (configuredId == null || configuredId == UNKNOWN_ID || configuredId.trim().isEmpty()) {
             return slug + "_" + key
         }
         return configuredId

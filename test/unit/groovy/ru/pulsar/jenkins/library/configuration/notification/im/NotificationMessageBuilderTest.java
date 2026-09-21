@@ -8,24 +8,29 @@ import static org.assertj.core.api.Assertions.assertThat;
 class NotificationMessageBuilderTest {
 
   @Test
-  @DisplayName("BDD сценарии / YAXUnit тесты — ветки parallel, одна строка на шаг")
+  @DisplayName("BDD / YAXUnit / Дымовые тесты — нода PARALLEL, имя логического шага")
   void parallelBranchesAreReported() {
-    assertThat(report("STAGE", "UNSTABLE", false, "STAGE", "SUCCESS", true)).isTrue();
-    assertThat(report("STAGE", "UNSTABLE", false, "STAGE", "UNSTABLE", true)).isTrue();
+    assertThat(report("PARALLEL", "UNSTABLE", false, "STAGE", "SUCCESS", true)).isTrue();
+    assertThat(report("PARALLEL", "UNSTABLE", false, "STAGE", "UNSTABLE", true)).isTrue();
   }
 
   @Test
-  @DisplayName("Выполнение BDD/YAXUnit — вложенные sequential, из сообщения PR-376")
+  @DisplayName("Трансформация в формат EDT — PARALLEL без вложенных stages")
+  void leafParallelBranchIsReported() {
+    assertThat(report("PARALLEL", "FAILURE", false, "STAGE", "UNSTABLE", true)).isTrue();
+  }
+
+  @Test
+  @DisplayName("Выполнение BDD/YAXUnit — вложенные sequential под PARALLEL")
   void nestedExecutionStagesAreDropped() {
+    assertThat(report("STAGE", "UNSTABLE", false, "PARALLEL", "UNSTABLE", false)).isFalse();
     assertThat(report("STAGE", "UNSTABLE", false, "STAGE", "UNSTABLE", false)).isFalse();
   }
 
   @Test
-  @DisplayName("контейнеры Подготовка / Проверка качества с parallel-ребёнком не репортим")
-  void containersWithParallelChildAreDropped() {
+  @DisplayName("контейнеры Подготовка / Проверка качества не репортим")
+  void outerParallelContainersAreDropped() {
     assertThat(report("STAGE", "UNSTABLE", true, null, null, false)).isFalse();
-    assertThat(report("PARALLEL", "UNSTABLE", true, "STAGE", "UNSTABLE", true)).isFalse();
-    assertThat(report("PARALLEL", "UNSTABLE", false, "STAGE", "UNSTABLE", true)).isFalse();
   }
 
   @Test
@@ -45,6 +50,7 @@ class NotificationMessageBuilderTest {
   @DisplayName("SUCCESS и NOT_BUILT не репортим")
   void successfulAndSkippedAreDropped() {
     assertThat(report("STAGE", "SUCCESS", false, "STAGE", "SUCCESS", true)).isFalse();
+    assertThat(report("PARALLEL", "SUCCESS", false, "STAGE", "SUCCESS", true)).isFalse();
     assertThat(report("STAGE", "NOT_BUILT", false, "STAGE", "SUCCESS", true)).isFalse();
   }
 

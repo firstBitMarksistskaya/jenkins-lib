@@ -40,7 +40,7 @@ class MaxMessenger implements Messenger {
     }
 
     @Override
-    String getChatIdCredentialId(JobConfiguration config, String repoSlug) {
+    String getChatIdCredentialId(JobConfiguration config, String repoSlug, String branchName) {
         Secrets secrets = config.secrets
         return secrets.maxChatId == UNKNOWN_ID ? repoSlug + "_MAX_CHAT_ID" : secrets.maxChatId
     }

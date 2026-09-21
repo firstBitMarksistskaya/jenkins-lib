@@ -103,6 +103,15 @@ class TelegramMessengerTest {
   }
 
   @Test
+  @DisplayName("пустой telegramChatId / telegramChatIdOtherBranches → авто из slug")
+  void blankSecretFallsBackToSlug() {
+    Secrets secrets = secrets("", "  ");
+
+    assertThat(resolve(secrets, "main", false)).isEqualTo(AUTO_CHAT);
+    assertThat(resolve(secrets, "feature/foo", true)).isEqualTo(OTHER_BRANCHES_CHAT);
+  }
+
+  @Test
   @DisplayName("прокси глобальный; ключи чатов как у TELEGRAM_CHAT_ID")
   void telegramCredentialIdsAreFixed() {
     assertThat(TelegramMessenger.TELEGRAM_HTTP_PROXY_CREDENTIAL_ID)

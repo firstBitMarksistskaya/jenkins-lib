@@ -62,7 +62,7 @@ class IMNotification implements Serializable {
         def options = messenger.getOptions(config)
 
         String botTokenCred = messenger.getBotTokenCredentialId(config, repoSlug)
-        String chatIdCred = messenger.getChatIdCredentialId(config, repoSlug)
+        String chatIdCred = messenger.getChatIdCredentialId(config, repoSlug, env.BRANCH_NAME as String)
         boolean useHttpProxy = messenger instanceof TelegramMessenger && options?.useHttpProxy == true
 
         def bindings = []
@@ -73,7 +73,7 @@ class IMNotification implements Serializable {
             bindings << steps.string(chatIdCred, 'CHAT_ID')
         }
         if (useHttpProxy) {
-            bindings << steps.string(TelegramMessenger.TELEGRAM_HTTP_PROXY_CREDENTIAL_ID, 'HTTP_PROXY')
+            bindings << steps.string(TelegramMessenger.TELEGRAM_HTTP_PROXY_CREDENTIAL_ID, 'TELEGRAM_HTTP_PROXY_URL')
         }
 
         steps.withCredentials(bindings) {
@@ -90,7 +90,7 @@ class IMNotification implements Serializable {
             steps.echo(fullMessage)
             steps.echo(bodyString)
 
-            String httpProxy = useHttpProxy ? env.HTTP_PROXY : null
+            String httpProxy = useHttpProxy ? env.TELEGRAM_HTTP_PROXY_URL : null
             String proxyAuthentication = useHttpProxy ? TelegramMessenger.TELEGRAM_HTTP_PROXY_AUTH_CREDENTIAL_ID : null
 
             if (customHeaders == null || customHeaders.isEmpty()) {
