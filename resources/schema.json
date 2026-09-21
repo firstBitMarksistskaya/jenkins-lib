@@ -42,6 +42,27 @@
           }
         }
       }
+    },
+    "IMNotificationOptions" : {
+      "type" : "object",
+      "properties" : {
+        "onAlways" : {
+          "type" : "boolean",
+          "description" : "Отправлять всегда"
+        },
+        "onFailure" : {
+          "type" : "boolean",
+          "description" : "Отправлять при падении сборки"
+        },
+        "onSuccess" : {
+          "type" : "boolean",
+          "description" : "Отправлять при успешной сборке"
+        },
+        "onUnstable" : {
+          "type" : "boolean",
+          "description" : "Отправлять при нестабильной сборке"
+        }
+      }
     }
   },
   "type" : "object",
@@ -210,27 +231,33 @@
           },
           "description" : "Настройки рассылки результатов сборки через email"
         },
+        "max" : {
+          "allOf" : [ {
+            "$ref" : "#/definitions/IMNotificationOptions"
+          }, {
+            "description" : "Настройки рассылки результатов сборки через MAX"
+          } ]
+        },
+        "discordWebhook" : {
+          "allOf" : [ {
+            "$ref" : "#/definitions/IMNotificationOptions"
+          }, {
+            "description" : "Настройки рассылки результатов сборки в Discord через webhook"
+          } ]
+        },
+        "discordBot" : {
+          "allOf" : [ {
+            "$ref" : "#/definitions/IMNotificationOptions"
+          }, {
+            "description" : "Настройки рассылки результатов сборки в Discord через бота"
+          } ]
+        },
         "telegram" : {
-          "type" : "object",
-          "properties" : {
-            "onAlways" : {
-              "type" : "boolean",
-              "description" : "Отправлять всегда"
-            },
-            "onFailure" : {
-              "type" : "boolean",
-              "description" : "Отправлять при падении сборки"
-            },
-            "onSuccess" : {
-              "type" : "boolean",
-              "description" : "Отправлять при успешной сборке"
-            },
-            "onUnstable" : {
-              "type" : "boolean",
-              "description" : "Отправлять при нестабильной сборке"
-            }
-          },
-          "description" : "Настройки рассылки результатов сборки через telegram"
+          "allOf" : [ {
+            "$ref" : "#/definitions/IMNotificationOptions"
+          }, {
+            "description" : "Настройки рассылки результатов сборки через telegram"
+          } ]
         }
       },
       "description" : "Настройки рассылки результатов сборки"
@@ -264,6 +291,26 @@
     "secrets" : {
       "type" : "object",
       "properties" : {
+        "discordWebhookUrl" : {
+          "type" : "string",
+          "description" : "Discord webhook URL для отправки уведомлений"
+        },
+        "discordBotToken" : {
+          "type" : "string",
+          "description" : "Токен авторизации Discord-бота для отправки уведомлений"
+        },
+        "discordChatId" : {
+          "type" : "string",
+          "description" : "Идентификатор Discord-канала для отправки уведомлений"
+        },
+        "maxBotToken" : {
+          "type" : "string",
+          "description" : "Токен авторизации MAX-бота для отправки уведомлений"
+        },
+        "maxChatId" : {
+          "type" : "string",
+          "description" : "Идентификатор MAX-чата для отправки уведомлений"
+        },
         "storage" : {
           "type" : "string",
           "description" : "Данные авторизации в хранилище конфигурации"
@@ -375,6 +422,18 @@
         "initSteps" : {
           "type" : "boolean",
           "description" : "Предварительные шаги инициализации включены"
+        },
+        "discordWebhook" : {
+          "type" : "boolean",
+          "description" : "Выполнять рассылку результатов сборки в Discord через webhook"
+        },
+        "discordBot" : {
+          "type" : "boolean",
+          "description" : "Выполнять рассылку результатов сборки в Discord через бота"
+        },
+        "max" : {
+          "type" : "boolean",
+          "description" : "Выполнять рассылку результатов сборки в MAX"
         },
         "smoke" : {
           "type" : "boolean",

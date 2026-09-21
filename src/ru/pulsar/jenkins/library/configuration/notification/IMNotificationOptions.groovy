@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-class TelegramNotificationOptions implements Serializable {
+class IMNotificationOptions implements Serializable {
 
     @JsonPropertyDescription("Отправлять всегда")
     Boolean onAlways
@@ -19,7 +19,7 @@ class TelegramNotificationOptions implements Serializable {
     @Override
     @NonCPS
     String toString() {
-        return "TelegramNotificationOptions{" +
+        return "IMNotificationOptions{" +
             "onAlways=" + onAlways +
             ", onSuccess=" + onSuccess +
             ", onFailure=" + onFailure +
@@ -27,5 +27,3 @@ class TelegramNotificationOptions implements Serializable {
             '}';
     }
 }
-
-

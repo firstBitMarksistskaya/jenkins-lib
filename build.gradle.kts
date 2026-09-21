@@ -87,6 +87,14 @@ tasks.test {
     }
 }
 
+tasks.named<Test>("integrationTest") {
+    testLogging {
+        events("passed", "skipped", "failed")
+        exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+        showStandardStreams = true
+    }
+}
+
 tasks.check {
     dependsOn(tasks.jacocoTestReport)
     dependsOn(tasks.integrationTest)

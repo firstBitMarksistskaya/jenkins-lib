@@ -244,6 +244,19 @@ class StepExecutor implements IStepExecutor {
     }
 
     @Override
+    ResponseContentSupplier httpRequest(String url, HttpMode httpMode, MimeType contentType, String requestBody, String validResponseCodes, boolean consoleLogResponseBody, List<Map<String, String>> customHeaders) {
+        steps.httpRequest(
+            url: url,
+            httpMode: httpMode,
+            contentType: contentType,
+            requestBody: requestBody,
+            validResponseCodes: validResponseCodes,
+            consoleLogResponseBody: consoleLogResponseBody,
+            customHeaders: customHeaders
+        )
+    }
+
+    @Override
     def error(String errorMessage) {
         steps.error errorMessage
     }
