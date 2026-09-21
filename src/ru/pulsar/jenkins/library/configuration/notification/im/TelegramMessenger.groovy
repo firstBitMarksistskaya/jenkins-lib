@@ -14,7 +14,7 @@ class TelegramMessenger implements Messenger {
 
     public static final String TELEGRAM_HTTP_PROXY_CREDENTIAL_ID = "TELEGRAM_HTTP_PROXY"
     public static final String TELEGRAM_HTTP_PROXY_AUTH_CREDENTIAL_ID = "TELEGRAM_HTTP_PROXY_AUTH"
-    public static final String TELEGRAM_CHAT_ID_OTHER_BRANCHES_CREDENTIAL_ID = "TELEGRAM_CHAT_ID_OTHER_BRANCHES"
+    public static final String TELEGRAM_CHAT_ID_OTHER_BRANCHES = "TELEGRAM_CHAT_ID_OTHER_BRANCHES"
 
     private static final MarkdownV2Flavor FLAVOR = new MarkdownV2Flavor()
 
@@ -63,7 +63,7 @@ class TelegramMessenger implements Messenger {
         boolean useOtherBranchesChat
     ) {
         if (useOtherBranchesChat && isOtherBranch(branch, defaultBranch)) {
-            return TELEGRAM_CHAT_ID_OTHER_BRANCHES_CREDENTIAL_ID
+            return slug + "_" + TELEGRAM_CHAT_ID_OTHER_BRANCHES
         }
         if (secrets == null) {
             return slug + "_TELEGRAM_CHAT_ID"

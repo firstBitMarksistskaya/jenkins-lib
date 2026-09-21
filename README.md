@@ -153,12 +153,13 @@ pipeline1C()
     * `STORAGE_PATH` - путь к хранилищу конфигурации (для `secrets` -> `storagePath`);
     * `STORAGE_USER` - параметры авторизации в хранилище вида "username with password" (для `secrets` -> `storage`).
     * `TELEGRAM_CHAT_ID` - идентификатор чата Telegram для рассылки уведомлений о результате сборки вида "secret text" (для `secrets` -> `telegramChatId`). Это исходный чат: все ветки, пока выключен `useOtherBranchesChat`; при включённом сплите — только `defaultBranch` и сборки без `BRANCH_NAME`.
+    * `TELEGRAM_CHAT_ID_OTHER_BRANCHES` - идентификатор чата прочих веток при `useOtherBranchesChat` (secret text). Имя считается так же, как у `TELEGRAM_CHAT_ID`: `{slug}_TELEGRAM_CHAT_ID_OTHER_BRANCHES`.
     * `MAX_CHAT_ID` - идентификатор чата MAX для рассылки уведомлений о результате сборки вида "secret text" (для `secrets` -> `maxChatId`).
     * `DISCORD_CHAT_ID` - идентификатор Discord-канала для рассылки уведомлений вида "secret text" (для `secrets` -> `discordChatId`).
     * `DISCORD_WEBHOOK_URL` - URL Discord-вебхука для рассылки уведомлений вида "secret text" (для `secrets` -> `discordWebhookUrl`). У webhook нет общего токена уровня "регистрация бота", сам URL и есть секрет, поэтому per-repo секрет только один.
   * Секрет `TELEGRAM_BOT_TOKEN` задается глобально на весь сервер Jenkins, либо может быть переопределен (`secrets` -> `telegramBotToken`).
   * HTTP-прокси Telegram задаётся **только** глобальными credentials (имена фиксированы, в `jobConfiguration` не указываются): `TELEGRAM_HTTP_PROXY` — secret text с URL прокси; `TELEGRAM_HTTP_PROXY_AUTH` — Username with password для прокси. Включение — булево `notifications` -> `telegram` -> `useHttpProxy`.
-  * Чат прочих веток задаётся **только** глобальным credential `TELEGRAM_CHAT_ID_OTHER_BRANCHES` (secret text; имя фиксировано). Включение — булево `notifications` -> `telegram` -> `useOtherBranchesChat`. Если флаг `false`, сборки всех веток идут в исходный `telegramChatId` (как до доработки). При `true` исходный чат получает `defaultBranch`; остальные именованные ветки — `TELEGRAM_CHAT_ID_OTHER_BRANCHES`. Сплит смотрит на `env.BRANCH_NAME` (multibranch Pipeline). У обычного Pipeline `BRANCH_NAME` часто пустой — тогда остаётся исходный чат.
+  * Чат прочих веток включается булевым `notifications` -> `telegram` -> `useOtherBranchesChat`. Если флаг `false`, сборки всех веток идут в исходный `telegramChatId` (как до доработки). При `true` исходный чат получает `defaultBranch`; остальные именованные ветки — credential `{slug}_TELEGRAM_CHAT_ID_OTHER_BRANCHES` (secret text, per-repo). Сплит смотрит на `env.BRANCH_NAME` (multibranch Pipeline). У обычного Pipeline `BRANCH_NAME` часто пустой — тогда остаётся исходный чат.
   * Секрет `MAX_BOT_TOKEN` задается глобально на весь сервер Jenkins, либо может быть переопределен (`secrets` -> `maxBotToken`)
   * Секрет `DISCORD_BOT_TOKEN` задается глобально на весь сервер Jenkins, либо может быть переопределен (`secrets` -> `discordBotToken`)
   * Все "шаги" по умолчанию выключены (`stages`).
@@ -229,7 +230,7 @@ pipeline1C()
   * Telegram, MAX, Discord:
     * Уведомления о результатах сборки по умолчанию рассылаются всегда (`notifications` -> `telegram` / `max` / `discordWebhook` / `discordBot` -> `onAlways`, `onFailure`, `onUnstable`, `onSuccess`).
     * HTTP-прокси до `api.telegram.org` включается булевым `notifications` -> `telegram` -> `useHttpProxy` (по умолчанию `false`). Адрес и логин/пароль **не** хранятся в git: при `true` библиотека берёт secret text `TELEGRAM_HTTP_PROXY` (URL) через `withCredentials` и передаёт id `TELEGRAM_HTTP_PROXY_AUTH` (Username with password) в шаг `http_request`. Имена credentials фиксированы, как у `TELEGRAM_BOT_TOKEN`.
-    * Разные чаты по ветке включаются булевым `notifications` -> `telegram` -> `useOtherBranchesChat` (по умолчанию `false`). Пока флаг выключен, все ветки используют исходный `telegramChatId`. При `true` сборки `defaultBranch` остаются в `telegramChatId`; остальные ветки идут в secret text `TELEGRAM_CHAT_ID_OTHER_BRANCHES`. Имя credential фиксировано, как у `TELEGRAM_BOT_TOKEN`.
+    * Разные чаты по ветке включаются булевым `notifications` -> `telegram` -> `useOtherBranchesChat` (по умолчанию `false`). Пока флаг выключен, все ветки используют исходный `telegramChatId`. При `true` сборки `defaultBranch` остаются в `telegramChatId`; остальные ветки идут в `{slug}_TELEGRAM_CHAT_ID_OTHER_BRANCHES` (secret text, то же соглашение по slug, что у основного чата).
     * Для MAX требуется настройка российского корневого TLS-сертификата (Минцифры) на агенте, см. [docs/feat_max_notifications/how_to_add_russian_trusted_ca.md](docs/feat_max_notifications/how_to_add_russian_trusted_ca.md).
 
 ## Инициализация базы
