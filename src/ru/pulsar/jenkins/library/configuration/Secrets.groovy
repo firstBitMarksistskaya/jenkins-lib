@@ -24,12 +24,6 @@ class Secrets implements Serializable {
     @JsonPropertyDescription("Токен авторизации telegram-бота для отправки уведомлений")
     String telegramBotToken
 
-    @JsonPropertyDescription("Идентификатор MAX-чата для отправки уведомлений")
-    String maxChatId
-
-    @JsonPropertyDescription("Токен авторизации MAX-бота для отправки уведомлений")
-    String maxBotToken
-
     @JsonPropertyDescription("Discord webhook URL для отправки уведомлений")
     String discordWebhookUrl
 
@@ -48,8 +42,6 @@ class Secrets implements Serializable {
             ", telegramChatId='" + telegramChatId + '\'' +
             ", telegramChatIdOtherBranches='" + telegramChatIdOtherBranches + '\'' +
             ", telegramBotToken='" + telegramBotToken + '\'' +
-            ", maxChatId='" + maxChatId + '\'' +
-            ", maxBotToken='" + maxBotToken + '\'' +
             ", discordWebhookUrl='" + discordWebhookUrl + '\'' +
             ", discordBotToken='" + discordBotToken + '\'' +
             ", discordChatId='" + discordChatId + '\'' +

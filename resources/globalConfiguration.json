@@ -11,8 +11,6 @@
     "telegramBotToken": "UNKNOWN_ID",
     "telegramChatId": "UNKNOWN_ID",
     "telegramChatIdOtherBranches": "UNKNOWN_ID",
-    "maxBotToken": "UNKNOWN_ID",
-    "maxChatId": "UNKNOWN_ID",
     "discordWebhookUrl": "UNKNOWN_ID",
     "discordBotToken": "UNKNOWN_ID",
     "discordChatId": "UNKNOWN_ID"
@@ -27,7 +25,6 @@
     "yaxunit": false,
     "email": false,
     "telegram": false,
-    "max": false,
     "discordWebhook": false,
     "discordBot": false
   },
@@ -174,12 +171,6 @@
       "onSuccess": false,
       "useHttpProxy": false,
       "useOtherBranchesChat": false
-    },
-    "max": {
-      "onAlways": true,
-      "onFailure": false,
-      "onUnstable": false,
-      "onSuccess": false
     },
     "discordWebhook": {
       "onAlways": true,
