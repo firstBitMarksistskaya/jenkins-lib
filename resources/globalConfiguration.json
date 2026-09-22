@@ -10,8 +10,6 @@
     "storage": "UNKNOWN_ID",
     "telegramBotToken": "UNKNOWN_ID",
     "telegramChatId": "UNKNOWN_ID",
-    "maxBotToken": "UNKNOWN_ID",
-    "maxChatId": "UNKNOWN_ID",
     "discordWebhookUrl": "UNKNOWN_ID",
     "discordBotToken": "UNKNOWN_ID",
     "discordChatId": "UNKNOWN_ID"
@@ -26,7 +24,6 @@
     "yaxunit": false,
     "email": false,
     "telegram": false,
-    "max": false,
     "discordWebhook": false,
     "discordBot": false
   },
@@ -167,12 +164,6 @@
       }
     },
     "telegram": {
-      "onAlways": true,
-      "onFailure": false,
-      "onUnstable": false,
-      "onSuccess": false
-    },
-    "max": {
       "onAlways": true,
       "onFailure": false,
       "onUnstable": false,

@@ -88,8 +88,8 @@ class ConfigurationReaderTest {
     assertThat(jobConfiguration.getNotificationsOptions().getImNotificationOptions().get("telegram").getOnAlways()).isFalse();
     assertThat(jobConfiguration.getNotificationsOptions().getImNotificationOptions().get("telegram").getOnFailure()).isTrue();
 
-    assertThat(jobConfiguration.getNotificationsOptions().getImNotificationOptions().get("max").getOnAlways()).isFalse();
-    assertThat(jobConfiguration.getNotificationsOptions().getImNotificationOptions().get("max").getOnFailure()).isTrue();
+    assertThat(jobConfiguration.getNotificationsOptions().getImNotificationOptions())
+      .containsOnlyKeys("telegram", "discordWebhook", "discordBot");
   }
 
   @Test
