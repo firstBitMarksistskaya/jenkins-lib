@@ -232,6 +232,11 @@ class StepExecutor implements IStepExecutor {
     }
 
     @Override
+    ResponseContentSupplier httpRequest(String url, HttpMode httpMode, MimeType contentType, String requestBody, String validResponseCodes, boolean consoleLogResponseBody) {
+        return httpRequest(url, httpMode, contentType, requestBody, validResponseCodes, consoleLogResponseBody, null, null)
+    }
+
+    @Override
     ResponseContentSupplier httpRequest(String url, HttpMode httpMode, MimeType contentType, String requestBody, String validResponseCodes, boolean consoleLogResponseBody, String httpProxy, String proxyAuthentication) {
         def args = [
             url                    : url,
