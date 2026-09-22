@@ -116,7 +116,8 @@ class NotificationMessageBuilder implements Serializable {
                 isOuterParallelContainer(stage, parallelParentIds),
                 parent?.type?.name(),
                 parent?.status?.result?.name(),
-                parent != null && isOuterParallelContainer(parent, parallelParentIds)
+                parent != null && isOuterParallelContainer(parent, parallelParentIds),
+                isUnderParallelBranch(stage)
             )) {
                 continue
             }
@@ -145,8 +146,12 @@ class NotificationMessageBuilder implements Serializable {
         boolean isContainer,
         String parentType,
         String parentResult,
-        boolean parentIsContainer
+        boolean parentIsContainer,
+        boolean underParallelBranch
     ) {
+        if (underParallelBranch) {
+            return false
+        }
         if (type == null || type == 'STEP') {
             return false
         }
@@ -171,6 +176,19 @@ class NotificationMessageBuilder implements Serializable {
     @NonCPS
     private static boolean isOuterParallelContainer(FlowNodeWrapper node, Set parallelParentIds) {
         return node != null && parallelParentIds.contains(node.id)
+    }
+
+    @NonCPS
+    private static boolean isUnderParallelBranch(FlowNodeWrapper node) {
+        def seen = [] as Set
+        def parent = node?.firstParent
+        while (parent != null && seen.add(parent.id)) {
+            if (parent.type == FlowNodeWrapper.NodeType.PARALLEL) {
+                return true
+            }
+            parent = parent.firstParent
+        }
+        return false
     }
 
     @NonCPS

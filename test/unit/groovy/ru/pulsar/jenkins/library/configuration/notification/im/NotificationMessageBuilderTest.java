@@ -28,6 +28,12 @@ class NotificationMessageBuilderTest {
   }
 
   @Test
+  @DisplayName("Выполнение BDD: предыдущая стадия SUCCESS, но предок — ветка PARALLEL")
+  void nestedStageAfterSuccessfulSiblingIsDropped() {
+    assertThat(report("STAGE", "UNSTABLE", false, "STAGE", "SUCCESS", false, true)).isFalse();
+  }
+
+  @Test
   @DisplayName("контейнеры Подготовка / Проверка качества не репортим")
   void outerParallelContainersAreDropped() {
     assertThat(report("STAGE", "UNSTABLE", true, null, null, false)).isFalse();
@@ -62,13 +68,26 @@ class NotificationMessageBuilderTest {
       String parentResult,
       boolean parentIsContainer
   ) {
+    return report(type, result, isContainer, parentType, parentResult, parentIsContainer, false);
+  }
+
+  private static boolean report(
+      String type,
+      String result,
+      boolean isContainer,
+      String parentType,
+      String parentResult,
+      boolean parentIsContainer,
+      boolean underParallelBranch
+  ) {
     return NotificationMessageBuilder.shouldReportStage(
         type,
         result,
         isContainer,
         parentType,
         parentResult,
-        parentIsContainer
+        parentIsContainer,
+        underParallelBranch
     );
   }
 }
