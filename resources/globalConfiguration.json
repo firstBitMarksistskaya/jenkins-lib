@@ -9,7 +9,10 @@
     "storagePath": "UNKNOWN_ID",
     "storage": "UNKNOWN_ID",
     "telegramBotToken": "UNKNOWN_ID",
-    "telegramChatId": "UNKNOWN_ID"
+    "telegramChatId": "UNKNOWN_ID",
+    "discordWebhookUrl": "UNKNOWN_ID",
+    "discordBotToken": "UNKNOWN_ID",
+    "discordChatId": "UNKNOWN_ID"
   },
   "stages": {
     "initSteps": false,
@@ -20,7 +23,9 @@
     "smoke": false,
     "yaxunit": false,
     "email": false,
-    "telegram": false
+    "telegram": false,
+    "discordWebhook": false,
+    "discordBot": false
   },
   "timeout": {
     "smoke": 240,
@@ -54,9 +59,7 @@
     "extensions": []
   },
   "bdd": {
-    "vrunnerSteps": [
-      "vanessa --settings ./tools/vrunner.json"
-    ],
+    "vrunnerSettings": "./tools/vrunner.json",
     "archiveInfobase": {
       "onAlways": false,
       "onFailure": false,
@@ -161,6 +164,18 @@
       }
     },
     "telegram": {
+      "onAlways": true,
+      "onFailure": false,
+      "onUnstable": false,
+      "onSuccess": false
+    },
+    "discordWebhook": {
+      "onAlways": true,
+      "onFailure": false,
+      "onUnstable": false,
+      "onSuccess": false
+    },
+    "discordBot": {
       "onAlways": true,
       "onFailure": false,
       "onUnstable": false,

@@ -67,6 +67,8 @@ interface IStepExecutor {
 
     void createDir(String path)
 
+    void createDir(String path, boolean deleteDir)
+
     void deleteDir()
 
     void deleteDir(String path)
@@ -107,6 +109,9 @@ interface IStepExecutor {
     ResponseContentSupplier httpRequest(String url, String outputFile, String responseHandle, boolean wrapAsMultipart)
 
     ResponseContentSupplier httpRequest(String url, HttpMode httpMode, MimeType contentType, String requestBody, String validResponseCodes, boolean consoleLogResponseBody)
+
+    @SuppressWarnings('unused')
+    ResponseContentSupplier httpRequest(String url, HttpMode httpMode, MimeType contentType, String requestBody, String validResponseCodes, boolean consoleLogResponseBody, List<Map<String, String>> customHeaders)
 
     def error(String errorMessage)
 

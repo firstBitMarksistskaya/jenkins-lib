@@ -6,5 +6,11 @@ def call(JobConfiguration config) {
     ContextRegistry.registerDefaultContext(this)
 
     def initInfobase = new InitInfoBase(config)
-    initInfobase.run()
+    try {
+        initInfobase.run()
+        return true
+    } catch (Exception e) {
+        unstable("Инициализация ИБ не выполнена: ${e.getMessage()}")
+        return false
+    }
 }

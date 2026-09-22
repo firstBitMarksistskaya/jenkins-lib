@@ -56,12 +56,14 @@ class SyntaxCheck {
             }
 
             if (options.publishToJUnitReport) {
-                steps.createDir(junitReportDir)
+                boolean deleteDir = true
+                steps.createDir(junitReportDir, deleteDir)
                 command += " --junitpath $pathToJUnitReport"
             }
 
             if (options.publishToAllureReport) {
-                steps.createDir(allureReportDir)
+                boolean deleteDir = true
+                steps.createDir(allureReportDir, deleteDir)
                 command += " --allure-results2 $allureReportDir"
             }
 

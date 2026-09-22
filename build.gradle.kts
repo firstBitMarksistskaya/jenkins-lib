@@ -11,6 +11,9 @@ plugins {
 
 repositories {
     mavenCentral()
+    maven {
+        url = uri("https://repo.jenkins-ci.org/public/")
+    }
 }
 
 tasks {
@@ -84,6 +87,14 @@ tasks.test {
     }
 }
 
+tasks.named<Test>("integrationTest") {
+    testLogging {
+        events("passed", "skipped", "failed")
+        exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+        showStandardStreams = true
+    }
+}
+
 tasks.check {
     dependsOn(tasks.jacocoTestReport)
     dependsOn(tasks.integrationTest)
@@ -128,6 +139,5 @@ sharedLibrary {
         dependency("org.jenkinsci.plugins", "pipeline-model-api", declarativePluginsVersion)
         dependency("org.jenkinsci.plugins", "pipeline-model-definition", declarativePluginsVersion)
         dependency("org.jenkinsci.plugins", "pipeline-model-extensions", declarativePluginsVersion)
-        dependency("org.jenkinsci.plugins", "pipeline-model-declarative-agent", "1.1.1")
     }
 }

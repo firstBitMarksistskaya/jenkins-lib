@@ -137,6 +137,11 @@ class StepExecutor implements IStepExecutor {
     }
 
     @Override
+    void createDir(String path, boolean deleteDir) {
+        steps.createDir(path, deleteDir)
+    }
+
+    @Override
     def dir(String path, Closure body) {
         steps.dir(path) {
             body()
@@ -235,6 +240,19 @@ class StepExecutor implements IStepExecutor {
             requestBody: requestBody,
             validResponseCodes: validResponseCodes,
             consoleLogResponseBody: consoleLogResponseBody
+        )
+    }
+
+    @Override
+    ResponseContentSupplier httpRequest(String url, HttpMode httpMode, MimeType contentType, String requestBody, String validResponseCodes, boolean consoleLogResponseBody, List<Map<String, String>> customHeaders) {
+        steps.httpRequest(
+            url: url,
+            httpMode: httpMode,
+            contentType: contentType,
+            requestBody: requestBody,
+            validResponseCodes: validResponseCodes,
+            consoleLogResponseBody: consoleLogResponseBody,
+            customHeaders: customHeaders
         )
     }
 

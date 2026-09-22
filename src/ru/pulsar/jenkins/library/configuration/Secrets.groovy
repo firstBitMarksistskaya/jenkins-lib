@@ -21,6 +21,15 @@ class Secrets implements Serializable {
     @JsonPropertyDescription("Токен авторизации telegram-бота для отправки уведомлений")
     String telegramBotToken
 
+    @JsonPropertyDescription("Discord webhook URL для отправки уведомлений")
+    String discordWebhookUrl
+
+    @JsonPropertyDescription("Токен авторизации Discord-бота для отправки уведомлений")
+    String discordBotToken
+
+    @JsonPropertyDescription("Идентификатор Discord-канала для отправки уведомлений")
+    String discordChatId
+
     @Override
     @NonCPS
     String toString() {
@@ -29,6 +38,9 @@ class Secrets implements Serializable {
             ", storage='" + storage + '\'' +
             ", telegramChatId='" + telegramChatId + '\'' +
             ", telegramBotToken='" + telegramBotToken + '\'' +
+            ", discordWebhookUrl='" + discordWebhookUrl + '\'' +
+            ", discordBotToken='" + discordBotToken + '\'' +
+            ", discordChatId='" + discordChatId + '\'' +
             '}';
     }
 }
