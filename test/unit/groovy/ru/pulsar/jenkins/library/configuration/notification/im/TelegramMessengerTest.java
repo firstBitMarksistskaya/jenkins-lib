@@ -3,6 +3,8 @@ package ru.pulsar.jenkins.library.configuration.notification.im;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.pulsar.jenkins.library.configuration.Secrets;
+import ru.pulsar.jenkins.library.configuration.notification.IMNotificationOptions;
+import ru.pulsar.jenkins.library.configuration.notification.TelegramNotificationOptions;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static ru.pulsar.jenkins.library.configuration.Secrets.UNKNOWN_ID;
@@ -122,6 +124,44 @@ class TelegramMessengerTest {
         .isEqualTo("TELEGRAM_CHAT_ID");
     assertThat(TelegramMessenger.TELEGRAM_CHAT_ID_OTHER_BRANCHES)
         .isEqualTo("TELEGRAM_CHAT_ID_OTHER_BRANCHES");
+  }
+
+  @Test
+  @DisplayName("прокси выключен или опции не телеграмные — credential id нет")
+  void httpProxyCredentialIdIsAbsentUnlessTelegramProxyEnabled() {
+    TelegramMessenger messenger = new TelegramMessenger();
+
+    TelegramNotificationOptions disabled = new TelegramNotificationOptions();
+    disabled.setUseHttpProxy(false);
+    assertThat(messenger.getHttpProxyCredentialId(disabled)).isNull();
+    assertThat(messenger.getProxyAuthenticationCredentialId(disabled)).isNull();
+
+    assertThat(messenger.getHttpProxyCredentialId(new IMNotificationOptions())).isNull();
+    assertThat(messenger.getProxyAuthenticationCredentialId(new IMNotificationOptions())).isNull();
+  }
+
+  @Test
+  @DisplayName("useHttpProxy включает фиксированные credential id")
+  void httpProxyCredentialIdWhenEnabled() {
+    TelegramNotificationOptions enabled = new TelegramNotificationOptions();
+    enabled.setUseHttpProxy(true);
+    TelegramMessenger messenger = new TelegramMessenger();
+
+    assertThat(messenger.getHttpProxyCredentialId(enabled))
+        .isEqualTo(TelegramMessenger.TELEGRAM_HTTP_PROXY_CREDENTIAL_ID);
+    assertThat(messenger.getProxyAuthenticationCredentialId(enabled))
+        .isEqualTo(TelegramMessenger.TELEGRAM_HTTP_PROXY_AUTH_CREDENTIAL_ID);
+  }
+
+  @Test
+  @DisplayName("Discord не отдаёт proxy credential")
+  void discordMessengersDoNotUseHttpProxy() {
+    IMNotificationOptions options = new IMNotificationOptions();
+
+    assertThat(new DiscordBotMessenger().getHttpProxyCredentialId(options)).isNull();
+    assertThat(new DiscordBotMessenger().getProxyAuthenticationCredentialId(options)).isNull();
+    assertThat(new DiscordWebhookMessenger().getHttpProxyCredentialId(options)).isNull();
+    assertThat(new DiscordWebhookMessenger().getProxyAuthenticationCredentialId(options)).isNull();
   }
 
   private static String resolve(Secrets secrets, String branch, boolean useOtherBranchesChat) {

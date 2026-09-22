@@ -116,7 +116,7 @@ class NotificationMessageBuilder implements Serializable {
                 isOuterParallelContainer(stage, parallelParentIds),
                 parent?.type?.name(),
                 parent?.status?.result?.name(),
-                parent != null && isOuterParallelContainer(parent, parallelParentIds),
+                isOuterParallelContainer(parent, parallelParentIds),
                 isUnderParallelBranch(stage)
             )) {
                 continue

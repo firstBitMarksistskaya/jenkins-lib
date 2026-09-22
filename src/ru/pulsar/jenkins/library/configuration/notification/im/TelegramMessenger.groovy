@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.Secrets
 import ru.pulsar.jenkins.library.configuration.notification.IMNotificationOptions
+import ru.pulsar.jenkins.library.configuration.notification.TelegramNotificationOptions
 
 import static ru.pulsar.jenkins.library.configuration.Secrets.UNKNOWN_ID
 
@@ -30,7 +31,7 @@ class TelegramMessenger implements Messenger {
 
     @Override
     IMNotificationOptions getOptions(JobConfiguration config) {
-        return config.notificationsOptions.imNotificationOptions["telegram"]
+        return config.notificationsOptions.imNotificationOptions[TelegramNotificationOptions.OPTIONS_KEY]
     }
 
     @Override
@@ -42,7 +43,7 @@ class TelegramMessenger implements Messenger {
     @Override
     String getChatIdCredentialId(JobConfiguration config, String repoSlug, String branchName) {
         def options = getOptions(config)
-        boolean useOtherBranchesChat = options != null && options.useOtherBranchesChat == true
+        boolean useOtherBranchesChat = options instanceof TelegramNotificationOptions && options.useOtherBranchesChat == true
         return resolveChatIdCredentialId(
             config.secrets,
             branchName,
@@ -125,5 +126,20 @@ class TelegramMessenger implements Messenger {
     @NonCPS
     int getMaxMessageLength() {
         return 4096
+    }
+
+    @Override
+    String getHttpProxyCredentialId(IMNotificationOptions options) {
+        return isHttpProxyEnabled(options) ? TELEGRAM_HTTP_PROXY_CREDENTIAL_ID : null
+    }
+
+    @Override
+    String getProxyAuthenticationCredentialId(IMNotificationOptions options) {
+        return isHttpProxyEnabled(options) ? TELEGRAM_HTTP_PROXY_AUTH_CREDENTIAL_ID : null
+    }
+
+    @NonCPS
+    private static boolean isHttpProxyEnabled(IMNotificationOptions options) {
+        return options instanceof TelegramNotificationOptions && options.useHttpProxy == true
     }
 }

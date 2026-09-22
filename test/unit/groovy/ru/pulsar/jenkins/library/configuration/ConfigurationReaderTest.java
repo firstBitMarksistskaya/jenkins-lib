@@ -3,6 +3,7 @@ package ru.pulsar.jenkins.library.configuration;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.pulsar.jenkins.library.configuration.notification.TelegramNotificationOptions;
 import ru.pulsar.jenkins.library.configuration.sonarqube.GenericIssueFormat;
 import ru.pulsar.jenkins.library.utils.TestUtils;
 
@@ -87,10 +88,11 @@ class ConfigurationReaderTest {
     assertThat(jobConfiguration.getNotificationsOptions().getEmailNotificationOptions().getFailureEmailOptions().getDirectRecipients()).isEmpty();
     assertThat(jobConfiguration.getNotificationsOptions().getEmailNotificationOptions().getFailureEmailOptions().getRecipientProviders()).hasSize(1);
 
-    assertThat(jobConfiguration.getNotificationsOptions().getImNotificationOptions().get("telegram").getOnAlways()).isFalse();
-    assertThat(jobConfiguration.getNotificationsOptions().getImNotificationOptions().get("telegram").getOnFailure()).isTrue();
-    assertThat(jobConfiguration.getNotificationsOptions().getImNotificationOptions().get("telegram").getUseHttpProxy()).isTrue();
-    assertThat(jobConfiguration.getNotificationsOptions().getImNotificationOptions().get("telegram").getUseOtherBranchesChat()).isTrue();
+    TelegramNotificationOptions telegram = (TelegramNotificationOptions) jobConfiguration.getNotificationsOptions().getImNotificationOptions().get("telegram");
+    assertThat(telegram.getOnAlways()).isFalse();
+    assertThat(telegram.getOnFailure()).isTrue();
+    assertThat(telegram.getUseHttpProxy()).isTrue();
+    assertThat(telegram.getUseOtherBranchesChat()).isTrue();
 
     assertThat(jobConfiguration.getNotificationsOptions().getImNotificationOptions())
       .containsOnlyKeys("telegram", "discordWebhook", "discordBot");
@@ -100,8 +102,9 @@ class ConfigurationReaderTest {
   void telegramUseHttpProxyDefaultsToFalse() {
     JobConfiguration defaults = ConfigurationReader.create();
 
-    assertThat(defaults.getNotificationsOptions().getImNotificationOptions().get("telegram").getUseHttpProxy()).isFalse();
-    assertThat(defaults.getNotificationsOptions().getImNotificationOptions().get("telegram").getUseOtherBranchesChat()).isFalse();
+    TelegramNotificationOptions telegram = (TelegramNotificationOptions) defaults.getNotificationsOptions().getImNotificationOptions().get("telegram");
+    assertThat(telegram.getUseHttpProxy()).isFalse();
+    assertThat(telegram.getUseOtherBranchesChat()).isFalse();
   }
 
   @Test

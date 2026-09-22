@@ -5,10 +5,8 @@ import jenkins.plugins.http_request.HttpMode
 import jenkins.plugins.http_request.MimeType
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
-import ru.pulsar.jenkins.library.configuration.notification.IMNotificationOptions
 import ru.pulsar.jenkins.library.configuration.notification.im.Messenger
 import ru.pulsar.jenkins.library.configuration.notification.im.NotificationMessageBuilder
-import ru.pulsar.jenkins.library.configuration.notification.im.TelegramMessenger
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.RepoUtils
@@ -63,7 +61,7 @@ class IMNotification implements Serializable {
 
         String botTokenCred = messenger.getBotTokenCredentialId(config, repoSlug)
         String chatIdCred = messenger.getChatIdCredentialId(config, repoSlug, env.BRANCH_NAME as String)
-        boolean useHttpProxy = messenger instanceof TelegramMessenger && options?.useHttpProxy == true
+        String proxyCred = messenger.getHttpProxyCredentialId(options)
 
         def bindings = []
         if (botTokenCred != null) {
@@ -72,8 +70,8 @@ class IMNotification implements Serializable {
         if (chatIdCred != null) {
             bindings << steps.string(chatIdCred, 'CHAT_ID')
         }
-        if (useHttpProxy) {
-            bindings << steps.string(TelegramMessenger.TELEGRAM_HTTP_PROXY_CREDENTIAL_ID, 'TELEGRAM_HTTP_PROXY_URL')
+        if (proxyCred != null) {
+            bindings << steps.string(proxyCred, 'HTTP_PROXY')
         }
 
         steps.withCredentials(bindings) {
@@ -90,8 +88,8 @@ class IMNotification implements Serializable {
             steps.echo(fullMessage)
             steps.echo(bodyString)
 
-            String httpProxy = useHttpProxy ? env.TELEGRAM_HTTP_PROXY_URL : null
-            String proxyAuthentication = useHttpProxy ? TelegramMessenger.TELEGRAM_HTTP_PROXY_AUTH_CREDENTIAL_ID : null
+            String httpProxy = proxyCred == null ? null : env.HTTP_PROXY as String
+            String proxyAuthentication = messenger.getProxyAuthenticationCredentialId(options)
 
             if (customHeaders == null || customHeaders.isEmpty()) {
                 steps.httpRequest(

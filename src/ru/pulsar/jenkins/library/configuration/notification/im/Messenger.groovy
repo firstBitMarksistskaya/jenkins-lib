@@ -24,4 +24,8 @@ interface Messenger extends Serializable {
     MarkdownFlavor getFlavor()
 
     int getMaxMessageLength()
+
+    String getHttpProxyCredentialId(IMNotificationOptions options)
+
+    String getProxyAuthenticationCredentialId(IMNotificationOptions options)
 }

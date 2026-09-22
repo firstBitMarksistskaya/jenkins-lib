@@ -69,4 +69,14 @@ class DiscordWebhookMessenger implements Messenger {
     int getMaxMessageLength() {
         return 4096
     }
+
+    @Override
+    String getHttpProxyCredentialId(IMNotificationOptions options) {
+        return null
+    }
+
+    @Override
+    String getProxyAuthenticationCredentialId(IMNotificationOptions options) {
+        return null
+    }
 }
