@@ -46,8 +46,11 @@ class ZipInfobase implements Serializable {
         if (steps.fileExists(archiveName)) {
             steps.fileOperations([steps.fileDeleteOperation(archiveName)])
         }
-        steps.zip('build/ib', archiveName, '1Cv8.1CD', archiveInfobase)
-        steps.stash(archiveName, archiveName, false)
+        if (stage == 'initInfoBase'
+            || archiveInfobase) {
+            steps.zip('build/ib', archiveName, '1Cv8.1CD', archiveInfobase)
+            steps.stash(archiveName, archiveName, false)
+        }
     }
 
     private static ArchiveInfobaseOptions getArchiveInfobaseOptionsForStage(JobConfiguration config, String stageName) {
