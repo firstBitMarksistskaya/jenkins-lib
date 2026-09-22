@@ -2,6 +2,16 @@ package ru.pulsar.jenkins.library.configuration.notification.im
 
 import com.cloudbees.groovy.cps.NonCPS
 
+/**
+ * Разметка по спецификации CommonMark с расширениями GFM.
+ *
+ * Экранируются только символы, которые CommonMark или GFM могут трактовать как разметку:
+ * {@code \ ` * _ [ ] ( ) ! ~ | < > # + - = .}
+ *
+ * Символы {@code &#123;} и {@code &#125;} намеренно не экранируются: их требует экранировать
+ * MarkdownV2 у Telegram (см. {@link MarkdownV2Flavor}), но в CommonMark у них нет
+ * никакого значения.
+ */
 class StandardMarkdownFlavor implements MarkdownFlavor {
 
     @Override
