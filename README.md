@@ -117,6 +117,27 @@ pipeline1C()
 }
 ```
 
+Пример переопределения Telegram (прокси и чат прочих веток; поля опциональны):
+
+```json
+{
+    "secrets": {
+        "telegramChatId": "myjob_TELEGRAM_CHAT_ID",
+        "telegramChatIdOtherBranches": "myjob_TELEGRAM_CHAT_ID_OTHER_BRANCHES"
+    },
+    "stages": {
+        "telegram": true
+    },
+    "notifications": {
+        "telegram": {
+            "onAlways": true,
+            "useHttpProxy": true,
+            "useOtherBranchesChat": true
+        }
+    }
+}
+```
+
 ## Параметры по умолчанию
 
 В библиотеке применяется принцип "соглашения по конфигурации" (convention over configuration): конфигурационный файл
@@ -132,10 +153,13 @@ pipeline1C()
   * Имена большинства "секретов" (jenkins credentials, `secrets`) по умолчанию высчитываются из пути к git-репозиторию (без учета домена, с заменой `/` на `_`) с прибавлением ключа секрета. Например, для репозитория `https://github.com/firstBitSemenovskaya/jenkins-lib` секрет с адресом хранилища будет выглядеть как `firstBitSemenovskaya_jenkins-lib_STORAGE_PATH`. Ключи секретов:
     * `STORAGE_PATH` - путь к хранилищу конфигурации (для `secrets` -> `storagePath`);
     * `STORAGE_USER` - параметры авторизации в хранилище вида "username with password" (для `secrets` -> `storage`).
-    * `TELEGRAM_CHAT_ID` - идентификатор чата Telegram для рассылки уведомлений и результате сборки вида "secret text" (для `secrets` -> `telegramChatId`).
+    * `TELEGRAM_CHAT_ID` - идентификатор чата Telegram для рассылки уведомлений о результате сборки вида "secret text" (для `secrets` -> `telegramChatId`). Это исходный чат: все ветки, пока выключен `useOtherBranchesChat`; при включённом сплите — только `defaultBranch` и сборки без `BRANCH_NAME`. Если `UNKNOWN_ID`, имя считается из slug репозитория.
+    * `TELEGRAM_CHAT_ID_OTHER_BRANCHES` - идентификатор чата прочих веток (для `secrets` -> `telegramChatIdOtherBranches`). Если `UNKNOWN_ID`, имя считается так же из slug: `{slug}_TELEGRAM_CHAT_ID_OTHER_BRANCHES`.
     * `DISCORD_CHAT_ID` - идентификатор Discord-канала для рассылки уведомлений вида "secret text" (для `secrets` -> `discordChatId`).
     * `DISCORD_WEBHOOK_URL` - URL Discord-вебхука для рассылки уведомлений вида "secret text" (для `secrets` -> `discordWebhookUrl`). У webhook нет общего токена уровня "регистрация бота", сам URL и есть секрет, поэтому per-repo секрет только один.
-  * Секрет `TELEGRAM_BOT_TOKEN` задается глобально на весь сервер Jenkins, либо может быть переопределен (`secrets` -> `telegramBotToken`)
+  * Секрет `TELEGRAM_BOT_TOKEN` задается глобально на весь сервер Jenkins, либо может быть переопределен (`secrets` -> `telegramBotToken`).
+  * HTTP-прокси Telegram задаётся **только** глобальными credentials (имена фиксированы, в `jobConfiguration` не указываются): `TELEGRAM_HTTP_PROXY` — secret text с URL прокси; `TELEGRAM_HTTP_PROXY_AUTH` — Username with password для прокси. Включение — булево `notifications` -> `telegram` -> `useHttpProxy`.
+  * Чат прочих веток включается булевым `notifications` -> `telegram` -> `useOtherBranchesChat`. Если флаг `false`, сборки всех веток идут в исходный `telegramChatId` (как до доработки). При `true` исходный чат получает `defaultBranch`; остальные именованные ветки — `secrets` -> `telegramChatIdOtherBranches` (или `{slug}_TELEGRAM_CHAT_ID_OTHER_BRANCHES`, если `UNKNOWN_ID`). Сплит смотрит на `env.BRANCH_NAME` (multibranch Pipeline). У обычного Pipeline `BRANCH_NAME` часто пустой — тогда остаётся исходный чат.
   * Секрет `DISCORD_BOT_TOKEN` задается глобально на весь сервер Jenkins, либо может быть переопределен (`secrets` -> `discordBotToken`)
   * Все "шаги" по умолчанию выключены (`stages`).
   * Если в корне репозитория существует файл `packagedef`, то в шагах, работающих с информационной базой, будет выполнена попытка установки локальных зависимостей средствами `opm`.
@@ -204,6 +228,9 @@ pipeline1C()
     * Прямые получатели уведомлений не заполнены (`notifications` -> `email` -> `*options` -> `directRecipients`).
   * Telegram, Discord:
     * Уведомления о результатах сборки по умолчанию рассылаются всегда (`notifications` -> `telegram` / `discordWebhook` / `discordBot` -> `onAlways`, `onFailure`, `onUnstable`, `onSuccess`).
+    * HTTP-прокси до `api.telegram.org` включается булевым `notifications` -> `telegram` -> `useHttpProxy` (по умолчанию `false`). Адрес и логин/пароль **не** хранятся в git: при `true` библиотека берёт secret text `TELEGRAM_HTTP_PROXY` (URL) через `withCredentials` и передаёт id `TELEGRAM_HTTP_PROXY_AUTH` (Username with password) в шаг `http_request`. Имена credentials фиксированы, как у `TELEGRAM_BOT_TOKEN`.
+    * Разные чаты по ветке включаются булевым `notifications` -> `telegram` -> `useOtherBranchesChat` (по умолчанию `false`). Пока флаг выключен, все ветки используют исходный `telegramChatId`. При `true` сборки `defaultBranch` остаются в `telegramChatId`; остальные ветки — в `secrets` -> `telegramChatIdOtherBranches` (при `UNKNOWN_ID` — `{slug}_TELEGRAM_CHAT_ID_OTHER_BRANCHES`). Оба chat id резолвятся одинаково.
+    * В блок стадий попадают логические шаги — ноды веток `parallel` (`BDD сценарии`, `YAXUnit тесты`, `Дымовые тесты`, `Трансформация в формат EDT` и т.д.), без контейнеров `Подготовка` / `Проверка качества` и без вложенных sequential (`Выполнение …`, `Распаковка ИБ`).
 
 ## Инициализация базы
 

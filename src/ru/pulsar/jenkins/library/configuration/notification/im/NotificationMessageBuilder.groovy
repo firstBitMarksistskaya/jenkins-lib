@@ -5,7 +5,6 @@ import hudson.model.Result
 import hudson.scm.ChangeLogSet
 import io.jenkins.blueocean.rest.impl.pipeline.FlowNodeWrapper
 import io.jenkins.blueocean.rest.impl.pipeline.PipelineNodeGraphVisitor
-import io.jenkins.blueocean.rest.model.BlueRun
 import org.apache.commons.lang3.time.DurationFormatUtils
 import org.jenkinsci.plugins.workflow.actions.TimingAction
 import org.jenkinsci.plugins.workflow.graph.BlockStartNode
@@ -101,9 +100,25 @@ class NotificationMessageBuilder implements Serializable {
         def visitor = new PipelineNodeGraphVisitor(currentBuild.rawBuild as WorkflowRun)
         def stages = visitor.pipelineNodes.findAll { it.type != FlowNodeWrapper.NodeType.STEP }
 
+        def parallelParentIds = [] as Set
+        for (FlowNodeWrapper node in stages) {
+            if (node.type == FlowNodeWrapper.NodeType.PARALLEL && node.firstParent != null) {
+                parallelParentIds.add(node.firstParent.id)
+            }
+        }
+
         def stageResultMessage = ""
         for (FlowNodeWrapper stage in stages) {
-            if (stage.status.result == BlueRun.BlueRunResult.SUCCESS || stage.status.result == BlueRun.BlueRunResult.NOT_BUILT) {
+            def parent = stage.firstParent
+            if (!shouldReportStage(
+                stage.type?.name(),
+                stage.status?.result?.name(),
+                isOuterParallelContainer(stage, parallelParentIds),
+                parent?.type?.name(),
+                parent?.status?.result?.name(),
+                isOuterParallelContainer(parent, parallelParentIds),
+                isUnderParallelBranch(stage)
+            )) {
                 continue
             }
 
@@ -122,6 +137,58 @@ class NotificationMessageBuilder implements Serializable {
         }
 
         return stageResultMessage.trim()
+    }
+
+    @NonCPS
+    static boolean shouldReportStage(
+        String type,
+        String result,
+        boolean isContainer,
+        String parentType,
+        String parentResult,
+        boolean parentIsContainer,
+        boolean underParallelBranch
+    ) {
+        if (underParallelBranch) {
+            return false
+        }
+        if (type == null || type == 'STEP') {
+            return false
+        }
+        if (result == null || result == 'SUCCESS' || result == 'NOT_BUILT') {
+            return false
+        }
+        if (isContainer) {
+            return false
+        }
+        if (parentType == 'PARALLEL') {
+            return false
+        }
+        if (parentType == null || parentType == 'STEP') {
+            return true
+        }
+        if (parentIsContainer) {
+            return true
+        }
+        return parentResult == null || parentResult == 'SUCCESS' || parentResult == 'NOT_BUILT'
+    }
+
+    @NonCPS
+    private static boolean isOuterParallelContainer(FlowNodeWrapper node, Set parallelParentIds) {
+        return node != null && parallelParentIds.contains(node.id)
+    }
+
+    @NonCPS
+    private static boolean isUnderParallelBranch(FlowNodeWrapper node) {
+        def seen = [] as Set
+        def parent = node?.firstParent
+        while (parent != null && seen.add(parent.id)) {
+            if (parent.type == FlowNodeWrapper.NodeType.PARALLEL) {
+                return true
+            }
+            parent = parent.firstParent
+        }
+        return false
     }
 
     @NonCPS

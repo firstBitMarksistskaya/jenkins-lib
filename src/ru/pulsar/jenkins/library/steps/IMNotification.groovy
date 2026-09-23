@@ -5,7 +5,6 @@ import jenkins.plugins.http_request.HttpMode
 import jenkins.plugins.http_request.MimeType
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
-import ru.pulsar.jenkins.library.configuration.notification.IMNotificationOptions
 import ru.pulsar.jenkins.library.configuration.notification.im.Messenger
 import ru.pulsar.jenkins.library.configuration.notification.im.NotificationMessageBuilder
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
@@ -58,9 +57,11 @@ class IMNotification implements Serializable {
         def env = steps.env()
 
         String repoSlug = RepoUtils.getRepoSlug()
+        def options = messenger.getOptions(config)
 
         String botTokenCred = messenger.getBotTokenCredentialId(config, repoSlug)
-        String chatIdCred = messenger.getChatIdCredentialId(config, repoSlug)
+        String chatIdCred = messenger.getChatIdCredentialId(config, repoSlug, env.BRANCH_NAME as String)
+        String proxyCred = messenger.getHttpProxyCredentialId(options)
 
         def bindings = []
         if (botTokenCred != null) {
@@ -68,6 +69,9 @@ class IMNotification implements Serializable {
         }
         if (chatIdCred != null) {
             bindings << steps.string(chatIdCred, 'CHAT_ID')
+        }
+        if (proxyCred != null) {
+            bindings << steps.string(proxyCred, 'HTTP_PROXY')
         }
 
         steps.withCredentials(bindings) {
@@ -84,6 +88,9 @@ class IMNotification implements Serializable {
             steps.echo(fullMessage)
             steps.echo(bodyString)
 
+            String httpProxy = proxyCred == null ? null : env.HTTP_PROXY as String
+            String proxyAuthentication = messenger.getProxyAuthenticationCredentialId(options)
+
             if (customHeaders == null || customHeaders.isEmpty()) {
                 steps.httpRequest(
                     url,
@@ -91,7 +98,9 @@ class IMNotification implements Serializable {
                     MimeType.APPLICATION_JSON_UTF8,
                     bodyString,
                     '200:299',
-                    true
+                    true,
+                    httpProxy,
+                    proxyAuthentication
                 )
             } else {
                 steps.httpRequest(

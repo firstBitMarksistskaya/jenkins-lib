@@ -13,7 +13,7 @@ interface Messenger extends Serializable {
 
     String getBotTokenCredentialId(JobConfiguration config, String repoSlug)
 
-    String getChatIdCredentialId(JobConfiguration config, String repoSlug)
+    String getChatIdCredentialId(JobConfiguration config, String repoSlug, String branchName)
 
     String buildUrl(String token, String chatId)
 
@@ -24,4 +24,8 @@ interface Messenger extends Serializable {
     MarkdownFlavor getFlavor()
 
     int getMaxMessageLength()
+
+    String getHttpProxyCredentialId(IMNotificationOptions options)
+
+    String getProxyAuthenticationCredentialId(IMNotificationOptions options)
 }

@@ -5,10 +5,16 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.Secrets
 import ru.pulsar.jenkins.library.configuration.notification.IMNotificationOptions
+import ru.pulsar.jenkins.library.configuration.notification.TelegramNotificationOptions
 
 import static ru.pulsar.jenkins.library.configuration.Secrets.UNKNOWN_ID
 
 class TelegramMessenger implements Messenger {
+
+    public static final String TELEGRAM_HTTP_PROXY_CREDENTIAL_ID = "TELEGRAM_HTTP_PROXY"
+    public static final String TELEGRAM_HTTP_PROXY_AUTH_CREDENTIAL_ID = "TELEGRAM_HTTP_PROXY_AUTH"
+    public static final String TELEGRAM_CHAT_ID = "TELEGRAM_CHAT_ID"
+    public static final String TELEGRAM_CHAT_ID_OTHER_BRANCHES = "TELEGRAM_CHAT_ID_OTHER_BRANCHES"
 
     private static final MarkdownV2Flavor FLAVOR = new MarkdownV2Flavor()
 
@@ -25,7 +31,7 @@ class TelegramMessenger implements Messenger {
 
     @Override
     IMNotificationOptions getOptions(JobConfiguration config) {
-        return config.notificationsOptions.imNotificationOptions["telegram"]
+        return config.notificationsOptions.imNotificationOptions[TelegramNotificationOptions.OPTIONS_KEY]
     }
 
     @Override
@@ -35,9 +41,58 @@ class TelegramMessenger implements Messenger {
     }
 
     @Override
-    String getChatIdCredentialId(JobConfiguration config, String repoSlug) {
-        Secrets secrets = config.secrets
-        return secrets.telegramChatId == UNKNOWN_ID ? repoSlug + "_TELEGRAM_CHAT_ID" : secrets.telegramChatId
+    String getChatIdCredentialId(JobConfiguration config, String repoSlug, String branchName) {
+        def options = getOptions(config)
+        boolean useOtherBranchesChat = options instanceof TelegramNotificationOptions && options.useOtherBranchesChat == true
+        return resolveChatIdCredentialId(
+            config.secrets,
+            branchName,
+            config.defaultBranch,
+            repoSlug,
+            useOtherBranchesChat
+        )
+    }
+
+    @NonCPS
+    static String resolveChatIdCredentialId(
+        Secrets secrets,
+        String branch,
+        String defaultBranch,
+        String slug,
+        boolean useOtherBranchesChat
+    ) {
+        if (useOtherBranchesChat && isOtherBranch(branch, defaultBranch)) {
+            return configuredOrSlug(
+                secrets == null ? null : secrets.telegramChatIdOtherBranches,
+                slug,
+                TELEGRAM_CHAT_ID_OTHER_BRANCHES
+            )
+        }
+        return configuredOrSlug(
+            secrets == null ? null : secrets.telegramChatId,
+            slug,
+            TELEGRAM_CHAT_ID
+        )
+    }
+
+    @NonCPS
+    private static String configuredOrSlug(String configuredId, String slug, String key) {
+        if (configuredId == null || configuredId == UNKNOWN_ID || configuredId.trim().isEmpty()) {
+            return slug + "_" + key
+        }
+        return configuredId
+    }
+
+    @NonCPS
+    private static boolean isOtherBranch(String branch, String defaultBranch) {
+        if (branch == null) {
+            return false
+        }
+        String trimmed = branch.trim()
+        if (trimmed.isEmpty()) {
+            return false
+        }
+        return trimmed != defaultBranch
     }
 
     @Override
@@ -71,5 +126,20 @@ class TelegramMessenger implements Messenger {
     @NonCPS
     int getMaxMessageLength() {
         return 4096
+    }
+
+    @Override
+    String getHttpProxyCredentialId(IMNotificationOptions options) {
+        return isHttpProxyEnabled(options) ? TELEGRAM_HTTP_PROXY_CREDENTIAL_ID : null
+    }
+
+    @Override
+    String getProxyAuthenticationCredentialId(IMNotificationOptions options) {
+        return isHttpProxyEnabled(options) ? TELEGRAM_HTTP_PROXY_AUTH_CREDENTIAL_ID : null
+    }
+
+    @NonCPS
+    private static boolean isHttpProxyEnabled(IMNotificationOptions options) {
+        return options instanceof TelegramNotificationOptions && options.useHttpProxy == true
     }
 }

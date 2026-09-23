@@ -63,6 +63,23 @@
           "description" : "Отправлять при нестабильной сборке"
         }
       }
+    },
+    "TelegramNotificationOptions" : {
+      "allOf" : [ {
+        "$ref" : "#/definitions/IMNotificationOptions"
+      }, {
+        "type" : "object",
+        "properties" : {
+          "useHttpProxy" : {
+            "type" : "boolean",
+            "description" : "Отправлять через HTTP-прокси. Адрес и авторизация берутся из фиксированных Jenkins credentials TELEGRAM_HTTP_PROXY (secret text) и TELEGRAM_HTTP_PROXY_AUTH (username with password), в jobConfiguration не указываются"
+          },
+          "useOtherBranchesChat" : {
+            "type" : "boolean",
+            "description" : "Отправлять сборки прочих веток в отдельный чат. Chat id — secrets.telegramChatIdOtherBranches, при UNKNOWN_ID {slug}_TELEGRAM_CHAT_ID_OTHER_BRANCHES. Основная ветка (defaultBranch) и сборки без BRANCH_NAME всегда идут в telegramChatId"
+          }
+        }
+      } ]
     }
   },
   "type" : "object",
@@ -247,7 +264,7 @@
         },
         "telegram" : {
           "allOf" : [ {
-            "$ref" : "#/definitions/IMNotificationOptions"
+            "$ref" : "#/definitions/TelegramNotificationOptions"
           }, {
             "description" : "Настройки рассылки результатов сборки через telegram"
           } ]
@@ -311,6 +328,10 @@
         "telegramChatId" : {
           "type" : "string",
           "description" : "Идентификатор telegram-чата для отправки уведомлений"
+        },
+        "telegramChatIdOtherBranches" : {
+          "type" : "string",
+          "description" : "Идентификатор telegram-чата для уведомлений о сборках прочих веток (не defaultBranch). Если UNKNOWN_ID, используется {slug}_TELEGRAM_CHAT_ID_OTHER_BRANCHES"
         }
       },
       "description" : "Идентификаторы сохраненных секретов"
