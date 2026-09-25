@@ -9,6 +9,7 @@ class CoverageContext {
     GlobalCoverageOptions coverageOptions
     int port
     String dbgsPid
+    boolean coverageStarted
 
     CoverageContext(String lockableResource, String srcDir, GlobalCoverageOptions coverageOptions, int port) {
         this.lockableResource = lockableResource

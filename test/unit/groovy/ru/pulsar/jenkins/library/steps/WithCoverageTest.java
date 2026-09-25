@@ -245,6 +245,31 @@ class WithCoverageTest {
 
         verify(body, never()).call();
         verify(steps, never()).bat(anyString(), eq(true), eq(false), eq("UTF-8"));
+        verify(steps, never()).cmd("C:\\tools\\Coverage\\Coverage41C.bat stop -i DefAlias -u http://127.0.0.1:1550");
+    }
+
+    @Test
+    void bodyFailureStopsCoverageBeforeDbgs() {
+        assertThatThrownBy(() -> new WithCoverage(config, stage, options, failingBody("body failed")).run())
+                .hasMessage("body failed");
+
+        InOrder order = inOrder(steps);
+        order.verify(steps).cmd("C:\\tools\\Coverage\\Coverage41C.bat stop -i DefAlias -u http://127.0.0.1:1550");
+        order.verify(steps).bat(anyString(), eq(true), eq(false), eq("UTF-8"));
+    }
+
+    @Test
+    void failedCoverageStopStillCleansDbgsAndPreservesBodyFailure() {
+        String stop = "C:\\tools\\Coverage\\Coverage41C.bat stop -i DefAlias -u http://127.0.0.1:1550";
+        doThrow(new RuntimeException("coverage stop failed")).when(steps).cmd(stop);
+
+        Throwable failure = org.assertj.core.api.Assertions.catchThrowable(() ->
+                new WithCoverage(config, stage, options, failingBody("body failed")).run());
+
+        assertThat(failure).hasMessage("body failed");
+        InOrder order = inOrder(steps);
+        order.verify(steps).cmd(stop);
+        order.verify(steps).bat(anyString(), eq(true), eq(false), eq("UTF-8"));
     }
 
     @Test

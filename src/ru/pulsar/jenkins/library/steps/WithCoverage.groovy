@@ -111,6 +111,7 @@ class WithCoverage implements Serializable {
                 body()
 
                 stopCoverage(steps, config, context)
+                context.coverageStarted = false
 
                 steps.stash(stage.getCoverageStashName(), stage.getCoverageStashPath(), true)
 
@@ -119,6 +120,13 @@ class WithCoverage implements Serializable {
                 Logger.println("При выполнении блока произошла ошибка: ${e.message}")
                 throw e
             } finally {
+                if (primaryFailure != null && context.coverageStarted) {
+                    try {
+                        stopCoverage(steps, config, context)
+                    } catch (Exception cleanupFailure) {
+                        Logger.println("Ошибка завершения Coverage41C: ${cleanupFailure.message}")
+                    }
+                }
                 try {
                     cleanupOwnedDbgs(steps, context)
                 } catch (Exception cleanupFailure) {
@@ -164,6 +172,7 @@ class WithCoverage implements Serializable {
         steps.writeFile(stage.getCoveragePidsPath(), dbgsPid, 'UTF-8')
         Logger.println("PID процесса dbgs для ${stage.getStageSlug()}: ${dbgsPid}")
 
+        coverageContext.coverageStarted = true
         steps.start(coverageOpts.coverage41CPath, "start -i DefAlias -u http://127.0.0.1:${coverageContext.port} -P $workspaceDir -s $srcDir -o ${stage.getCoverageStashPath()}")
         sleep(1000)
         steps.cmd("${coverageOpts.coverage41CPath} check -i DefAlias -u http://127.0.0.1:${coverageContext.port}")
