@@ -262,6 +262,18 @@ class WithCoverageTest {
     }
 
     @Test
+    void bodyFailureRemainsPrimaryWhenCleanupReturnsNonzeroStatus() {
+        when(steps.bat(anyString(), eq(true), eq(false), eq("UTF-8")))
+                .thenReturn(128);
+
+        Throwable failure = org.assertj.core.api.Assertions.catchThrowable(() ->
+                new WithCoverage(config, stage, options, failingBody("body failed")).run());
+
+        assertThat(failure).hasMessage("body failed");
+        assertThat(failure.getSuppressed()).isEmpty();
+    }
+
+    @Test
     void cleanupFailurePropagatesWhenItIsOnlyFailure() {
         doThrow(new RuntimeException("cleanup failed"))
                 .when(steps).bat(anyString(), eq(true), eq(false), eq("UTF-8"));
