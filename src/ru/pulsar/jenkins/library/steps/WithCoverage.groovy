@@ -1,11 +1,15 @@
 package ru.pulsar.jenkins.library.steps
 
+import com.cloudbees.groovy.cps.NonCPS
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.StepCoverageOptions
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.FileUtils
 import ru.pulsar.jenkins.library.utils.Logger
+
+import java.nio.charset.StandardCharsets
+import java.util.Base64
 
 class WithCoverage implements Serializable {
 
@@ -19,6 +23,72 @@ class WithCoverage implements Serializable {
         this.stage = stage
         this.coverageOptions = coverageOptions
         this.body = body
+    }
+
+    static String startDbgs(IStepExecutor steps, String executable, int port,
+                            String stdoutLogPath, String stderrLogPath) {
+        if (steps.isUnix()) {
+            String command = quotePosix(executable) +
+                " --addr=127.0.0.1 --port=${port}" +
+                ' > ' + quotePosix(stdoutLogPath) +
+                ' 2>&1 & printf \'%s\\n\' "$!"'
+            String rawPid = steps.sh(command, false, true, 'UTF-8')
+            return requirePositivePid(rawPid)
+        }
+
+        String script = buildWindowsStartScript(
+            executable, port, stdoutLogPath, stderrLogPath)
+        String encodedScript = Base64.encoder.encodeToString(
+            script.getBytes(StandardCharsets.UTF_16LE))
+        String rawPid = steps.bat(
+            "@echo off\r\npowershell.exe -NoProfile -NonInteractive -EncodedCommand ${encodedScript}",
+            false, true, 'UTF-8')
+        return requirePositivePid(rawPid)
+    }
+
+    @NonCPS
+    private static String buildWindowsStartScript(String executable, int port,
+                                                   String stdoutLogPath,
+                                                   String stderrLogPath) {
+        return "\$p = Start-Process" +
+            " -FilePath '${quotePowerShell(executable)}'" +
+            " -ArgumentList '--addr=127.0.0.1','--port=${port}'" +
+            " -RedirectStandardOutput '${quotePowerShell(stdoutLogPath)}'" +
+            " -RedirectStandardError '${quotePowerShell(stderrLogPath)}'" +
+            ' -PassThru -WindowStyle Hidden' +
+            System.lineSeparator() +
+            '$p.Id'
+    }
+
+    @NonCPS
+    private static String quotePowerShell(String value) {
+        return value.replace("'", "''")
+    }
+
+    @NonCPS
+    private static String quotePosix(String value) {
+        return "'" + value.replace("'", "'\"'\"'") + "'"
+    }
+
+    @NonCPS
+    private static String requirePositivePid(Object rawPid) {
+        String pid = rawPid == null ? '' : rawPid.toString().trim()
+        if (!(pid ==~ /[1-9][0-9]*/)) {
+            throw new IllegalStateException("Не удалось получить PID dbgs: '${pid}'")
+        }
+        return pid
+    }
+
+    static int stopDbgs(IStepExecutor steps, String rawPid) {
+        String pid = requirePositivePid(rawPid)
+        if (steps.isUnix()) {
+            return steps.sh(
+                "kill ${pid} >/dev/null 2>&1",
+                true, false, 'UTF-8') as int
+        }
+        return steps.bat(
+            "@echo off\r\ntaskkill /PID ${pid} /F > nul 2>&1",
+            true, false, 'UTF-8') as int
     }
 
     def run() {
