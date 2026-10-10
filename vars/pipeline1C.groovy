@@ -67,7 +67,7 @@ void call() {
                                 }
                                 when {
                                     beforeAgent true
-                                    expression { config.stageFlags.needInfoBase() && config.infoBaseFromFiles() && config.sourceFormat == SourceFormat.EDT }
+                                    expression { config.stageFlags.needInfoBase() && (config.infoBaseFromFiles() || config.needLoadExtensions()) && config.sourceFormat == SourceFormat.EDT }
                                 }
                                 steps {
                                     timeout(time: config.timeoutOptions.edtToDesignerFormatTransformation, unit: TimeUnit.MINUTES) {
