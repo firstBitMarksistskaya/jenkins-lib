@@ -125,6 +125,23 @@ class JobConfiguration implements Serializable {
         }
     }
 
+    // При способе инициализации notInit конфигурация не загружается: она уже есть в базе из шаблона или в существующей базе
+    boolean needLoadConfiguration() {
+        return initInfoBaseOptions.initMethod != InitInfoBaseMethod.NOT_INIT
+    }
+
+    void validateInitMethod() {
+        if (needLoadConfiguration() || templateDBLoaded() || basePath) {
+            return
+        }
+
+        IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
+        steps.error("Способ инициализации notInit (initInfobase -> initMethod) не загружает конфигурацию в базу, " +
+            "а шаблон базы (initInfobase -> templateDBPath) и существующая база (basePath) не указаны. " +
+            "В пустой базе, созданной пайплайном, конфигурации нет. " +
+            "Укажите templateDBPath или basePath либо выберите другой способ инициализации.")
+    }
+
     boolean templateDBLoaded() {
         return initInfoBaseOptions.templateDBPath != null && !initInfoBaseOptions.templateDBPath.isEmpty()
     }

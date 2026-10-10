@@ -1,6 +1,5 @@
 /* groovylint-disable NestedBlockDepth */
 import groovy.transform.Field
-import ru.pulsar.jenkins.library.configuration.InitInfoBaseMethod
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.SourceFormat
 import ru.pulsar.jenkins.library.utils.RepoUtils
@@ -45,6 +44,7 @@ void call() {
                     script {
                         applyDebugOverridesIfNeeded()
                         config = jobConfiguration() as JobConfiguration
+                        config.validateInitMethod()
                         agent1C = config.v8AgentLabel()
                         agentEdt = config.edtAgentLabel()
                         RepoUtils.computeRepoSlug(env.GIT_URL)
@@ -57,7 +57,7 @@ void call() {
                     stage('Подготовка 1С базы') {
                         when {
                             beforeAgent true
-                            expression { config.stageFlags.needInfoBase() && config.initInfoBaseOptions.initMethod != InitInfoBaseMethod.NOT_INIT}
+                            expression { config.stageFlags.needInfoBase() }
                         }
 
                         stages {
@@ -105,6 +105,10 @@ void call() {
                                     }
 
                                     stage('Загрузка конфигурации') {
+                                        when {
+                                            beforeAgent true
+                                            expression { config.needLoadConfiguration() }
+                                        }
                                         steps {
                                             timeout(time: config.timeoutOptions.loadConfiguration, unit: TimeUnit.MINUTES) {
                                                 script {
