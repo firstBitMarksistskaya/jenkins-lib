@@ -85,6 +85,23 @@ class CreateInfobaseTest {
     }
 
     @Test
+    void runRestoresDtTemplateIntoServerBaseWithExclusiveAccess() {
+        // given
+        when(steps.fileExists("./tools/vrunner.json")).thenReturn(true);
+
+        // when
+        run(createConfiguration(SERVER_BASE, "template.dt"));
+
+        // then
+        assertThat(commands).hasSize(3);
+        assertThat(commands.get(0)).startsWith("vrunner session kill --db \"test_base\" --settings ./tools/vrunner.json --uccode ");
+        assertThat(commands.get(1)).startsWith(
+            "vrunner restore --ibconnection \"/Ssrv1c\\test_base\" build/tmp/dump.dt --settings ./tools/vrunner.json --uccode "
+        );
+        assertThat(commands.get(2)).isEqualTo("vrunner session unlock --db \"test_base\" --settings ./tools/vrunner.json");
+    }
+
+    @Test
     void runCopies1CDTemplateIntoLocalBase() {
         // when
         run(createConfiguration("", "template.1CD"));

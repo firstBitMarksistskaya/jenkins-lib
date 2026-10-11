@@ -4,6 +4,7 @@
   "edtVersion": "",
   "srcDir": "src/cf",
   "basePath": "",
+  "rasAddress": "",
   "sourceFormat": "designer",
   "defaultBranch": "main",
   "secrets": {
@@ -13,7 +14,8 @@
     "telegramChatId": "UNKNOWN_ID",
     "discordWebhookUrl": "UNKNOWN_ID",
     "discordBotToken": "UNKNOWN_ID",
-    "discordChatId": "UNKNOWN_ID"
+    "discordChatId": "UNKNOWN_ID",
+    "clusterAdmin": "UNKNOWN_ID"
   },
   "stages": {
     "initSteps": false,

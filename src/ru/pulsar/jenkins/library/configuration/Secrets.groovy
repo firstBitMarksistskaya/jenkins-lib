@@ -30,6 +30,9 @@ class Secrets implements Serializable {
     @JsonPropertyDescription("Идентификатор Discord-канала для отправки уведомлений")
     String discordChatId
 
+    @JsonPropertyDescription("Данные авторизации администратора кластера серверной базы. Нужны, если у кластера есть администраторы")
+    String clusterAdmin
+
     @Override
     @NonCPS
     String toString() {
@@ -41,6 +44,7 @@ class Secrets implements Serializable {
             ", discordWebhookUrl='" + discordWebhookUrl + '\'' +
             ", discordBotToken='" + discordBotToken + '\'' +
             ", discordChatId='" + discordChatId + '\'' +
+            ", clusterAdmin='" + clusterAdmin + '\'' +
             '}';
     }
 }

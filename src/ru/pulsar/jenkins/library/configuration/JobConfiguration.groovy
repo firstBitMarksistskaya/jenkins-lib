@@ -21,6 +21,12 @@ class JobConfiguration implements Serializable {
     @JsonPropertyDescription("Путь к базе для выполнения тестов")
     String basePath
 
+    @JsonPropertyDescription("""Адрес сервера администрирования RAS кластера серверной базы в формате хост:порт.
+    Через него на время операций, которым нужен монопольный доступ, завершаются сеансы базы и запрещается начало новых.
+    Если не указан, используется localhost:1545.
+    """)
+    String rasAddress
+
     @JsonPropertyDescription("Формат исходников конфигурации")
     @JsonProperty(defaultValue = "designer")
     SourceFormat sourceFormat
@@ -87,6 +93,7 @@ class JobConfiguration implements Serializable {
             ", edtVersion='" + edtVersion + '\'' +
             ", srcDir='" + srcDir + '\'' +
             ", basePath='" + basePath + '\'' +
+            ", rasAddress='" + rasAddress + '\'' +
             ", sourceFormat=" + sourceFormat +
             ", stageFlags=" + stageFlags +
             ", timeoutOptions=" + timeoutOptions +
