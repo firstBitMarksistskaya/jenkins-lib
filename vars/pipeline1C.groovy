@@ -119,6 +119,10 @@ void call() {
                                                         createDir('build/out/')
                                                             createInfobase config
                                                     }
+                                                    timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
+                                                        // Расширения отдельных стадий, оставшиеся во внешней базе от прошлых сборок
+                                                        normalizeExtensions config, 'initInfoBase'
+                                                    }
                                                 }
                                             }
 
@@ -256,6 +260,9 @@ void call() {
                                         steps {
                                             restoreDebugOverridesIfNeeded()
                                             unzipInfobase config
+                                            timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
+                                                normalizeExtensions config, 'bdd'
+                                            }
                                         }
                                     }
 
@@ -312,6 +319,9 @@ void call() {
                                         steps {
                                             restoreDebugOverridesIfNeeded()
                                             unzipInfobase config
+                                            timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
+                                                normalizeExtensions config, 'syntaxCheck'
+                                            }
                                         }
                                     }
 
@@ -342,6 +352,9 @@ void call() {
                                         steps {
                                             restoreDebugOverridesIfNeeded()
                                             unzipInfobase config
+                                            timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
+                                                normalizeExtensions config, 'smoke'
+                                            }
                                         }
                                     }
 
@@ -384,6 +397,9 @@ void call() {
                                         steps {
                                             restoreDebugOverridesIfNeeded()
                                             unzipInfobase config
+                                            timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
+                                                normalizeExtensions config, 'yaxunit'
+                                            }
                                         }
                                     }
 

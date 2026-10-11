@@ -414,6 +414,7 @@ contributor(closures) {
             method(name: 'saveResults', params: [config: 'ru.pulsar.jenkins.library.configuration.JobConfiguration'], doc: 'Archive and publish build results')
             method(name: 'sendNotifications', params: [config: 'ru.pulsar.jenkins.library.configuration.JobConfiguration'], doc: 'Send notifications about build results')
             method(name: 'loadExtensions', params: [config: 'ru.pulsar.jenkins.library.configuration.JobConfiguration', stageName: String], doc: 'Load extensions into infobase')
+            method(name: 'normalizeExtensions', params: [config: 'ru.pulsar.jenkins.library.configuration.JobConfiguration', stageName: String], doc: 'Remove extensions of other stages from external infobase')
         }
 
         // Post actions!

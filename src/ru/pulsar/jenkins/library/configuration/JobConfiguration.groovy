@@ -133,6 +133,15 @@ class JobConfiguration implements Serializable {
         }
     }
 
+    // Расширения отдельных стадий: подключаются только на своих стадиях, а не при инициализации базы.
+    // Тип элементов не указан: Jenkins компилирует JobConfiguration раньше InitInfoBaseOptions
+    // и не находит вложенный класс Extension
+    List stageExtensions() {
+        return initInfoBaseOptions.extensions.findAll { extension ->
+            extension.stages.length != 0 && !extension.stages.contains('initInfoBase')
+        } as List
+    }
+
     // При способе инициализации notInit конфигурация не загружается: она уже есть в базе из шаблона или в существующей базе
     boolean needLoadConfiguration() {
         return initInfoBaseOptions.initMethod != InitInfoBaseMethod.NOT_INIT

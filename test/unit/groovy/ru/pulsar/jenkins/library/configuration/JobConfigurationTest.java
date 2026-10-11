@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import ru.pulsar.jenkins.library.IStepExecutor;
 import ru.pulsar.jenkins.library.utils.TestUtils;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.contains;
@@ -88,6 +90,31 @@ class JobConfigurationTest {
 
         // then
         verify(steps, never()).error(anyString());
+    }
+
+    @Test
+    void stageExtensionsAreExtensionsWithStagesWithoutInitInfoBase() {
+        // given
+        JobConfiguration jobConfiguration = ConfigurationReader.create("""
+            {
+              "initInfobase": {
+                "extensions": [
+                  { "name": "byDefault" },
+                  { "name": "allStages", "stages": [] },
+                  { "name": "initAndBdd", "stages": ["initInfoBase", "bdd"] },
+                  { "name": "bdd", "stages": ["bdd"] },
+                  { "name": "smokeAndYaxunit", "stages": ["smoke", "yaxunit"] }
+                ]
+              }
+            }
+            """);
+
+        // then
+        // расширения без стадий и с initInfoBase загружаются при подготовке и остаются в базе
+        List<?> stageExtensions = jobConfiguration.stageExtensions();
+        assertThat(stageExtensions)
+            .extracting(extension -> ((InitInfoBaseOptions.Extension) extension).getName())
+            .containsExactly("bdd", "smokeAndYaxunit");
     }
 
     private static JobConfiguration createConfiguration(String initMethod, String templateDBPath, String basePath) {
