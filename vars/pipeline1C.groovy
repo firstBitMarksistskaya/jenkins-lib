@@ -230,13 +230,9 @@ void call() {
                         }
                         stages {
                             stage('Распаковка ИБ') {
-                                when {
-                                    beforeAgent true
-                                    expression { config.basePath == '' }
-                                }
                                 steps {
                                     restoreDebugOverridesIfNeeded()
-                                    unzipInfobase()
+                                    unzipInfobase config
                                 }
                             }
 
@@ -286,13 +282,9 @@ void call() {
                         }
                         stages {
                             stage('Распаковка ИБ') {
-                                when {
-                                    beforeAgent true
-                                    expression { config.basePath == '' }
-                                }
                                 steps {
                                     restoreDebugOverridesIfNeeded()
-                                    unzipInfobase()
+                                    unzipInfobase config
                                 }
                             }
 
@@ -316,13 +308,9 @@ void call() {
                         }
                         stages {
                             stage('Распаковка ИБ') {
-                                when {
-                                    beforeAgent true
-                                    expression { config.basePath == '' }
-                                }
                                 steps {
                                     restoreDebugOverridesIfNeeded()
-                                    unzipInfobase()
+                                    unzipInfobase config
                                 }
                             }
 
@@ -358,13 +346,9 @@ void call() {
                         }
                         stages {
                             stage('Распаковка ИБ') {
-                                when {
-                                    beforeAgent true
-                                    expression { config.basePath == '' }
-                                }
                                 steps {
                                     restoreDebugOverridesIfNeeded()
-                                    unzipInfobase()
+                                    unzipInfobase config
                                 }
                             }
 
