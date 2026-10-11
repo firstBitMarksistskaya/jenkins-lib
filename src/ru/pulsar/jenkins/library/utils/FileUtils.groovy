@@ -69,7 +69,7 @@ class FileUtils {
         }
     }
 
-    private static String getAbsolutePath(String path, def env) {
+    static String getAbsolutePath(String path, def env) {
         if (path.startsWith("/") || path.startsWith("\\") || path.matches("^[A-Za-z]:.*")) {
             return path
         } else {
