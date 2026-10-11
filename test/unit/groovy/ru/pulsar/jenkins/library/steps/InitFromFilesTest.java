@@ -76,6 +76,7 @@ class InitFromFilesTest {
         String config = """
             {
               "basePath": "%s",
+              "rasAddress": "srv1c:1545",
               "initInfobase": {
                 "initMethod": "fromSource",
                 "templateDBPath": "%s"

@@ -11,17 +11,23 @@ import static ru.pulsar.jenkins.library.configuration.Secrets.UNKNOWN_ID
 /**
  * Монопольный доступ к серверной базе на время операции: перед ней сеансы базы завершаются и начало новых
  * запрещается с кодом разрешения, сама операция получает тот же код, после нее запрет снимается, в том числе
- * при ошибке. Сеансами управляет кластер через RAS, поэтому для файловой базы обертка ничего не делает.
+ * при ошибке. Сеансами управляет кластер через RAS, поэтому для файловой базы и для серверной базы без адреса
+ * RAS обертка ничего не делает: операция пройдет, только если в базе нет других сеансов.
  */
 class ExclusiveAccess implements Serializable {
 
     /**
      * Выполняет тело с монопольным доступом к базе из конфигурации.
-     * Тело получает параметр кода разрешения для команд vrunner, для файловой базы - пустую строку.
+     * Тело получает параметр кода разрешения для команд vrunner, без управления сеансами - пустую строку.
      */
     static def run(JobConfiguration config, Closure body) {
         String connection = config.baseName()
         if (!InfobaseConnection.isServer(connection)) {
+            return body.call('')
+        }
+        if (!config.rasAddress) {
+            Logger.println("Адрес RAS (rasAddress) не указан, сеансы базы $connection не завершаются: " +
+                "операция пройдет, только если в базе нет других сеансов")
             return body.call('')
         }
 
@@ -56,10 +62,8 @@ class ExclusiveAccess implements Serializable {
     }
 
     private static String sessionCommand(String action, JobConfiguration config, String connection, IStepExecutor steps) {
-        String command = "${VRunner.getVRunnerPath()} session $action --db \"${InfobaseConnection.serverBaseName(connection)}\""
-        if (config.rasAddress) {
-            command += " --ras ${config.rasAddress}"
-        }
+        String command = "${VRunner.getVRunnerPath()} session $action --db \"${InfobaseConnection.serverBaseName(connection)}\"" +
+            " --ras ${config.rasAddress}"
 
         // Логин и пароль администратора базы, если в ней есть пользователи
         String vrunnerSettings = config.initInfoBaseOptions.vrunnerSettings

@@ -94,11 +94,15 @@ class CreateInfobaseTest {
 
         // then
         assertThat(commands).hasSize(3);
-        assertThat(commands.get(0)).startsWith("vrunner session kill --db \"test_base\" --settings ./tools/vrunner.json --uccode ");
+        assertThat(commands.get(0)).startsWith(
+            "vrunner session kill --db \"test_base\" --ras srv1c:1545 --settings ./tools/vrunner.json --uccode "
+        );
         assertThat(commands.get(1)).startsWith(
             "vrunner restore --ibconnection \"/Ssrv1c\\test_base\" build/tmp/dump.dt --settings ./tools/vrunner.json --uccode "
         );
-        assertThat(commands.get(2)).isEqualTo("vrunner session unlock --db \"test_base\" --settings ./tools/vrunner.json");
+        assertThat(commands.get(2)).isEqualTo(
+            "vrunner session unlock --db \"test_base\" --ras srv1c:1545 --settings ./tools/vrunner.json"
+        );
     }
 
     @Test
@@ -163,6 +167,7 @@ class CreateInfobaseTest {
         String config = """
             {
               "basePath": "%s",
+              "rasAddress": "srv1c:1545",
               "initInfobase": {
                 "templateDBPath": "%s"
               }

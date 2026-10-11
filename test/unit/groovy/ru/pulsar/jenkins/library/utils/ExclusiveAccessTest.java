@@ -57,6 +57,21 @@ class ExclusiveAccessTest {
     }
 
     @Test
+    void runDoesWithoutSessionManagementOnServerBaseWithoutRasAddress() {
+        // given
+        List<String> uccodes = new ArrayList<>();
+
+        // when
+        run(createConfiguration("/Ssrv1c\\\\test_base", "", "cluster-admin"), uccode -> uccodes.add(uccode));
+
+        // then
+        // без адреса RAS сеансы не завершаются: операция пройдет, только если в базе нет других сеансов
+        assertThat(uccodes).containsExactly("");
+        assertThat(commands).isEmpty();
+        verify(steps, never()).withCredentials(anyList(), any(Closure.class));
+    }
+
+    @Test
     void runKillsSessionsBeforeOperationAndUnlocksAfterItOnServerBase() {
         // given
         when(steps.fileExists("./tools/vrunner.json")).thenReturn(true);
@@ -80,7 +95,7 @@ class ExclusiveAccessTest {
         RuntimeException failure = new RuntimeException("restore failed");
 
         // when
-        Throwable thrown = catchThrowable(() -> run(createConfiguration("/Ssrv1c\\\\test_base", "", "UNKNOWN_ID"),
+        Throwable thrown = catchThrowable(() -> run(createConfiguration("/Ssrv1c\\\\test_base", "srv1c:1545", "UNKNOWN_ID"),
             uccode -> {
                 throw failure;
             }));
@@ -88,15 +103,15 @@ class ExclusiveAccessTest {
         // then
         assertThat(thrown).isSameAs(failure);
         assertThat(commands).containsExactly(
-            "vrunner session kill --db \"test_base\" --uccode " + UCCODE,
-            "vrunner session unlock --db \"test_base\""
+            "vrunner session kill --db \"test_base\" --ras srv1c:1545 --uccode " + UCCODE,
+            "vrunner session unlock --db \"test_base\" --ras srv1c:1545"
         );
     }
 
     @Test
     void runPassesClusterAdminCredentialsToSessionCommands() {
         // when
-        run(createConfiguration("/Ssrv1c\\\\test_base", "", "cluster-admin"), uccode -> null);
+        run(createConfiguration("/Ssrv1c\\\\test_base", "srv1c:1545", "cluster-admin"), uccode -> null);
 
         // then
         verify(steps).usernamePassword("cluster-admin", "RUNNER_CLUSTERADMIN_USER", "RUNNER_CLUSTERADMIN_PWD");

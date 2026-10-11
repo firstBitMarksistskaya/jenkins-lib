@@ -77,6 +77,7 @@ class InitFromStorageTest {
         String config = """
             {
               "basePath": "%s",
+              "rasAddress": "srv1c:1545",
               "initInfobase": {
                 "initMethod": "fromStorage",
                 "templateDBPath": "%s"

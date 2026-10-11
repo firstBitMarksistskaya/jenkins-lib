@@ -54,7 +54,7 @@ class exclusiveAccessTest {
 
         FilePath workspace = rule.jenkins.getWorkspaceFor(workflowJob)
         workspace.child('jobConfiguration.json').write(
-            '{"basePath": "/Ssrv1c\\\\test_base", "initInfobase": {"templateDBPath": "template.dt"}}', 'UTF-8')
+            '{"basePath": "/Ssrv1c\\\\test_base", "rasAddress": "srv1c:1545", "initInfobase": {"templateDBPath": "template.dt"}}', 'UTF-8')
         workspace.child('template.dt').write('dt', 'UTF-8')
 
         if (File.separatorChar == '\\' as char) {
