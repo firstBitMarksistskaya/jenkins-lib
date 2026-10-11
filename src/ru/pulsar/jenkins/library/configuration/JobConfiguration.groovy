@@ -18,7 +18,7 @@ class JobConfiguration implements Serializable {
     @JsonPropertyDescription("Путь к корневому каталогу с исходниками конфигурации, в случае хранения исходников в формате EDT, необходимо указать путь к проекту")
     String srcDir
 
-    @JsonPropertyDescription("Путь к базе для выполнения тестов")
+    @JsonPropertyDescription("Строка подключения к информационной базе в формате `--ibconnection` (например, `/Sсервер\\\\база`, `/Sсервер:порт\\\\база` или `/Fабсолютный_путь`). Если не указано, используется файловая база `./build/ib`, создаваемая на каждой сборке")
     String basePath
 
     @JsonPropertyDescription("""Адрес сервера администрирования RAS кластера серверной базы в формате хост:порт.
