@@ -18,8 +18,21 @@ class InfobaseConnection implements Serializable {
     // Имя базы в кластере из строки подключения /Sсервер\база или /Sсервер:порт\база
     static String serverBaseName(String connection) {
         String serverAndBase = unquote(connection.trim().substring(2))
-        int separator = Math.max(serverAndBase.lastIndexOf('\\'), serverAndBase.lastIndexOf('/'))
-        return unquote(serverAndBase.substring(separator + 1))
+        return unquote(serverAndBase.substring(baseSeparator(serverAndBase) + 1))
+    }
+
+    // Порт кластера из строки подключения /Sсервер:порт\база, пустая строка, если порт не указан
+    static String serverPort(String connection) {
+        String serverAndBase = unquote(connection.trim().substring(2))
+        int separator = baseSeparator(serverAndBase)
+        String servers = separator >= 0 ? serverAndBase.substring(0, separator) : serverAndBase
+        String server = servers.split(',')[0]
+        int portSeparator = server.lastIndexOf(':')
+        return portSeparator >= 0 ? server.substring(portSeparator + 1).trim() : ''
+    }
+
+    private static int baseSeparator(String serverAndBase) {
+        return Math.max(serverAndBase.lastIndexOf('\\'), serverAndBase.lastIndexOf('/'))
     }
 
     private static String unquote(String value) {

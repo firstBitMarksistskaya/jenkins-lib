@@ -28,6 +28,19 @@ class InfobaseConnectionTest {
     }
 
     @Test
+    void serverPortIsTakenFromServerPart() {
+        assertThat(InfobaseConnection.serverPort("/Ssrv1c:1641\\test_base")).isEqualTo("1641");
+        assertThat(InfobaseConnection.serverPort("/S\"srv1c:1641\\test_base\"")).isEqualTo("1641");
+        assertThat(InfobaseConnection.serverPort("/Ssrv1c:1641,srv2c:1641\\test_base")).isEqualTo("1641");
+    }
+
+    @Test
+    void serverPortIsEmptyWhenNotSpecified() {
+        assertThat(InfobaseConnection.serverPort("/Ssrv1c\\test_base")).isEmpty();
+        assertThat(InfobaseConnection.serverPort("/Ssrv1c,srv2c\\test_base")).isEmpty();
+    }
+
+    @Test
     void fileBaseDirIsTakenWithoutQuotes() {
         assertThat(InfobaseConnection.fileBaseDir("/FC:\\bases\\test")).isEqualTo("C:\\bases\\test");
         assertThat(InfobaseConnection.fileBaseDir("/F\"C:\\my bases\\test\"")).isEqualTo("C:\\my bases\\test");
