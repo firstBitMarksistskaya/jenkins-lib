@@ -5,6 +5,8 @@ import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.InitInfoBaseOptions
 import ru.pulsar.jenkins.library.configuration.InitInfoBaseOptions.Extension
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
+import ru.pulsar.jenkins.library.utils.ExclusiveAccess
+import ru.pulsar.jenkins.library.utils.InfobaseExtensions
 import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.VRunner
 import hudson.FilePath
@@ -48,18 +50,29 @@ class LoadExtensions implements Serializable {
             })
         }
 
+        if (this.extensionsFiltered.length == 0) {
+            Logger.println("Расширений для подключения нет")
+            return
+        }
+
         def env = steps.env()
         String cfeDir = "$env.WORKSPACE/$GetExtensions.EXTENSIONS_OUT_DIR"
 
         String vrunnerPath = VRunner.getVRunnerPath()
+        String settingsParameter = vrunnerSettingsParameter(this.config, this.stageName)
 
-        this.extensionsFiltered.each {
-            Logger.println("Установим расширение ${it.name}")
-            loadExtension(it, vrunnerPath, steps, cfeDir)
+        // Подключение расширения с собственными объектами меняет структуру базы и требует монопольного доступа
+        ExclusiveAccess.run(config) { String uccode ->
+            for (Extension extension : this.extensionsFiltered) {
+                Logger.println("Установим расширение ${extension.name}")
+                loadExtension(extension, vrunnerPath, steps, cfeDir, settingsParameter + uccode)
+            }
         }
+
+        checkLoaded(steps, settingsParameter)
     }
 
-    private void loadExtension (Extension extension, String vrunnerPath, IStepExecutor steps, String cfeDir) {
+    private void loadExtension (Extension extension, String vrunnerPath, IStepExecutor steps, String cfeDir, String parameters) {
 
         String pathToExt = "$cfeDir/${extension.name}.cfe"
         FilePath localPathToExt = FileUtils.getFilePath(pathToExt)
@@ -72,16 +85,41 @@ class LoadExtensions implements Serializable {
         }
         loadCommand += executeParameter
         loadCommand += " --ibconnection \"${config.baseName()}\""
-
-        String vrunnerSettings = getVrunnerSettingsForStage(this.config, this.stageName)
-        if (vrunnerSettings && steps.fileExists(vrunnerSettings)) {
-            loadCommand += " --settings $vrunnerSettings"
-        }
+        loadCommand += parameters
 
         List<String> logosConfig = ["LOGOS_CONFIG=$config.logosConfig"]
         steps.withEnv(logosConfig) {
             VRunner.exec(loadCommand)
         }
+    }
+
+    // Обработка подключения при неудачной установке завершается с кодом 0, и стадия пошла бы без своего
+    // расширения. Поэтому подключение проверяется по списку расширений базы.
+    private void checkLoaded(IStepExecutor steps, String settingsParameter) {
+        List<String> infobaseExtensions = InfobaseExtensions.list(config, settingsParameter)
+
+        List<String> missingExtensions = []
+        for (Extension extension : this.extensionsFiltered) {
+            if (!InfobaseExtensions.contains(infobaseExtensions, extension.name)) {
+                missingExtensions.add(extension.name)
+            }
+        }
+
+        if (!missingExtensions.isEmpty()) {
+            steps.error("Расширения не подключились к базе: ${missingExtensions.join(', ')}. " +
+                "Причину ищите в журнале регистрации базы.")
+        }
+    }
+
+    // Параметр --settings с файлом настроек vrunner стадии или пустая строка
+    static String vrunnerSettingsParameter(JobConfiguration config, String stageName) {
+        IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
+
+        String vrunnerSettings = getVrunnerSettingsForStage(config, stageName)
+        if (vrunnerSettings && steps.fileExists(vrunnerSettings)) {
+            return " --settings $vrunnerSettings"
+        }
+        return ''
     }
 
     private static String getVrunnerSettingsForStage(JobConfiguration config, String stageName) {
@@ -90,7 +128,8 @@ class LoadExtensions implements Serializable {
             return ""
         }
 
-        String optionsPropertyName = "${stageName}Options"
+        // Настройки дымовых тестов лежат в поле smokeTestOptions
+        String optionsPropertyName = stageName == 'smoke' ? 'smokeTestOptions' : "${stageName}Options"
         def optionsInstance = config."$optionsPropertyName"
 
         if (!optionsInstance) {
