@@ -78,8 +78,11 @@ class LoadExtensionsTest {
         List<String> commands = runLoadCommands("");
 
         // then
+        // в новую пустую базу файл настроек этапа инициализации не передается: пользователей в ней нет
         assertThat(commands).hasSize(1);
-        assertThat(commands.get(0)).contains("--ibconnection \"/F./build/ib\"");
+        assertThat(commands.get(0))
+                .contains("--ibconnection \"/F./build/ib\"")
+                .doesNotContain("--settings");
     }
 
     @Test
@@ -88,8 +91,11 @@ class LoadExtensionsTest {
         List<String> commands = runLoadCommands("/Ssrv1c\\\\test_base");
 
         // then
+        // в существующую базу файл настроек этапа инициализации передается
         assertThat(commands).hasSize(1);
-        assertThat(commands.get(0)).contains("--ibconnection \"/Ssrv1c\\test_base\"");
+        assertThat(commands.get(0))
+                .contains("--ibconnection \"/Ssrv1c\\test_base\"")
+                .endsWith(" --settings ./tools/vrunner.json");
     }
 
     private List<String> runLoadCommands(String basePath) {
@@ -98,6 +104,7 @@ class LoadExtensionsTest {
             Closure<?> body = invocation.getArgument(1);
             return body.call();
         });
+        when(steps.fileExists("./tools/vrunner.json")).thenReturn(true);
         TestUtils.setupMockedContext(steps);
 
         String config = """

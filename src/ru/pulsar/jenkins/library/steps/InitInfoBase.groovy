@@ -50,7 +50,7 @@ class InitInfoBase implements Serializable {
             def options = config.initInfoBaseOptions
             String settingsIncrement = ''
             String vrunnerSettings = options.vrunnerSettings
-            if (config.templateDBLoaded() && steps.fileExists(vrunnerSettings)) {
+            if ((config.templateDBLoaded() || config.basePath) && steps.fileExists(vrunnerSettings)) {
                 settingsIncrement = " --settings $vrunnerSettings"
             }
 
