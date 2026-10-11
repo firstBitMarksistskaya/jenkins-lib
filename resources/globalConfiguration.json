@@ -15,7 +15,8 @@
     "discordWebhookUrl": "UNKNOWN_ID",
     "discordBotToken": "UNKNOWN_ID",
     "discordChatId": "UNKNOWN_ID",
-    "clusterAdmin": "UNKNOWN_ID"
+    "clusterAdmin": "UNKNOWN_ID",
+    "clusterDebugServerPassword": "UNKNOWN_ID"
   },
   "stages": {
     "initSteps": false,
@@ -110,7 +111,8 @@
   },
   "coverage": {
     "dbgsPath": "",
-    "coverage41CPath": "Coverage41C"
+    "coverage41CPath": "Coverage41C",
+    "clusterDebugServer": ""
   },
   "yaxunit": {
     "vrunnerSettings": "./tools/vrunner.json",

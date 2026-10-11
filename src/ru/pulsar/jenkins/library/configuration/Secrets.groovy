@@ -33,6 +33,9 @@ class Secrets implements Serializable {
     @JsonPropertyDescription("Данные авторизации администратора кластера серверной базы. Нужны, если у кластера есть администраторы")
     String clusterAdmin
 
+    @JsonPropertyDescription("Пароль сервера отладки кластера (-debugServerPwd) для замеров покрытия на серверной базе, secret text. Нужен, если сервер отладки запущен с паролем")
+    String clusterDebugServerPassword
+
     @Override
     @NonCPS
     String toString() {
@@ -45,6 +48,7 @@ class Secrets implements Serializable {
             ", discordBotToken='" + discordBotToken + '\'' +
             ", discordChatId='" + discordChatId + '\'' +
             ", clusterAdmin='" + clusterAdmin + '\'' +
+            ", clusterDebugServerPassword='" + clusterDebugServerPassword + '\'' +
             '}';
     }
 }
