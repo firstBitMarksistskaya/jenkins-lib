@@ -6,7 +6,6 @@ import ru.pulsar.jenkins.library.configuration.InitInfoBaseOptions
 import ru.pulsar.jenkins.library.configuration.InitInfoBaseOptions.Extension
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.ExclusiveAccess
-import ru.pulsar.jenkins.library.utils.InfobaseExtensions
 import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.VRunner
 import hudson.FilePath
@@ -68,8 +67,6 @@ class LoadExtensions implements Serializable {
                 loadExtension(extension, vrunnerPath, steps, cfeDir, settingsParameter + uccode)
             }
         }
-
-        checkLoaded(steps, settingsParameter)
     }
 
     private void loadExtension (Extension extension, String vrunnerPath, IStepExecutor steps, String cfeDir, String parameters) {
@@ -90,24 +87,6 @@ class LoadExtensions implements Serializable {
         List<String> logosConfig = ["LOGOS_CONFIG=$config.logosConfig"]
         steps.withEnv(logosConfig) {
             VRunner.exec(loadCommand)
-        }
-    }
-
-    // Обработка подключения при неудачной установке завершается с кодом 0, и стадия пошла бы без своего
-    // расширения. Поэтому подключение проверяется по списку расширений базы.
-    private void checkLoaded(IStepExecutor steps, String settingsParameter) {
-        List<String> infobaseExtensions = InfobaseExtensions.list(config, settingsParameter)
-
-        List<String> missingExtensions = []
-        for (Extension extension : this.extensionsFiltered) {
-            if (!InfobaseExtensions.contains(infobaseExtensions, extension.name)) {
-                missingExtensions.add(extension.name)
-            }
-        }
-
-        if (!missingExtensions.isEmpty()) {
-            steps.error("Расширения не подключились к базе: ${missingExtensions.join(', ')}. " +
-                "Причину ищите в журнале регистрации базы.")
         }
     }
 

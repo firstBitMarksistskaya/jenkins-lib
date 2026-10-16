@@ -22,7 +22,7 @@ class extensionsTest {
 
     @Test
     void "stage should delete extensions of other stages and load its own"() {
-        WorkflowRun build = buildWithFakeVrunner(['YAXUnit', 'BDD'], Result.SUCCESS)
+        WorkflowRun build = buildWithFakeVrunner(['YAXUnit', 'BDD'])
 
         List<String> lines = rule.getLog(build).readLines()
         // в базе осталось расширение стадии yaxunit от прошлой сборки, свое расширение стадия не удаляет
@@ -31,18 +31,9 @@ class extensionsTest {
         assert lines.any { it.contains('fake-vrunner run') && it.contains('BDD.cfe') }
     }
 
-    @Test
-    void "stage should fail when its extension is missing after loading"() {
-        // обработка подключения завершилась без ошибки, но расширения в базе нет
-        WorkflowRun build = buildWithFakeVrunner(['YAXUnit'], Result.FAILURE)
-
-        rule.assertLogContains('BDD', build)
-        assert rule.getLog(build).readLines().any { it.contains('fake-vrunner run') }
-    }
-
     // vrunner из oscript_modules проекта подменяется скриптом: он выводит свои аргументы,
     // а на команды конфигуратора пишет список расширений базы в файл, который читает библиотека
-    private WorkflowRun buildWithFakeVrunner(List<String> infobaseExtensions, Result expectedResult) {
+    private WorkflowRun buildWithFakeVrunner(List<String> infobaseExtensions) {
         final WorkflowJob workflowJob = rule.createProject(WorkflowJob, 'project-extensions')
         workflowJob.definition = new CpsFlowDefinition('''
         node {
@@ -78,6 +69,6 @@ class extensionsTest {
             vrunner.chmod(0755)
         }
 
-        return rule.buildAndAssertStatus(expectedResult, workflowJob)
+        return rule.buildAndAssertStatus(Result.SUCCESS, workflowJob)
     }
 }

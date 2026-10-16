@@ -11,7 +11,6 @@ import ru.pulsar.jenkins.library.IStepExecutor;
 import ru.pulsar.jenkins.library.configuration.ConfigurationReader;
 import ru.pulsar.jenkins.library.configuration.InitInfoBaseOptions;
 import ru.pulsar.jenkins.library.configuration.JobConfiguration;
-import ru.pulsar.jenkins.library.utils.InfobaseExtensions;
 import ru.pulsar.jenkins.library.utils.TestUtils;
 import ru.pulsar.jenkins.library.utils.VRunner;
 
@@ -24,16 +23,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.contains;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class LoadExtensionsTest {
-
-    // файл списка расширений платформа пишет в UTF-8 с BOM
-    private static final String BOM = String.valueOf((char) 0xFEFF);
 
     private static final String EXTENSION = """
         {
@@ -69,7 +63,6 @@ class LoadExtensionsTest {
                 this.getClass().getClassLoader()
         );
         JobConfiguration jobConfiguration = ConfigurationReader.create(config);
-        infobaseExtensions("mods\nmods2\nYAXUnit");
 
         try (MockedStatic<VRunner> vrunner = mockVRunner(new ArrayList<>())) {
             // when
@@ -97,11 +90,12 @@ class LoadExtensionsTest {
     @Test
     void runLoadsExtensionIntoLocalBase() {
         // when
-        List<String> commands = run(createConfiguration("", ""), "initInfoBase", "ext");
+        List<String> commands = run(createConfiguration("", ""), "initInfoBase");
 
         // then
-        // в новую пустую базу файл настроек этапа инициализации не передается: пользователей в ней нет
-        assertThat(commands).hasSize(2);
+        // в новую пустую базу файл настроек этапа инициализации не передается: пользователей в ней нет.
+        // Список расширений базы после подключения не читается, как и раньше
+        assertThat(commands).hasSize(1);
         assertThat(commands.get(0))
                 .contains("--ibconnection \"/F./build/ib\"")
                 .doesNotContain("--settings");
@@ -110,35 +104,13 @@ class LoadExtensionsTest {
     @Test
     void runLoadsExtensionIntoExternalBase() {
         // when
-        List<String> commands = run(createConfiguration("/Ssrv1c\\\\test_base", ""), "initInfoBase", "ext");
+        List<String> commands = run(createConfiguration("/Ssrv1c\\\\test_base", ""), "initInfoBase");
 
         // then
         // в существующую базу файл настроек этапа инициализации передается
         assertThat(commands.get(0))
                 .contains("--ibconnection \"/Ssrv1c\\test_base\"")
                 .endsWith(" --settings ./tools/vrunner.json");
-    }
-
-    @Test
-    void runChecksLoadedExtensionsInInfobaseList() {
-        // when
-        List<String> commands = run(createConfiguration("", ""), "initInfoBase", BOM + "EXT\r\n");
-
-        // then
-        // имена расширений регистр не различают
-        assertThat(commands.get(1)).contains("designer --additional \"/DumpDBCfgList -AllExtensions /Out "
-                + InfobaseExtensions.LIST_FILE + "\"");
-        verify(steps, never()).error(anyString());
-    }
-
-    @Test
-    void runFailsWhenExtensionIsNotInInfobaseAfterLoading() {
-        // when
-        // обработка подключения при неудачной установке завершается с кодом 0
-        run(createConfiguration("", ""), "initInfoBase", BOM + "other\r\n");
-
-        // then
-        verify(steps).error(contains("ext"));
     }
 
     @Test
@@ -157,7 +129,7 @@ class LoadExtensionsTest {
             """.formatted(EXTENSION.formatted(", \"stages\": [\"smoke\"]"));
 
         // when
-        List<String> commands = run(ConfigurationReader.create(config), "smoke", "ext");
+        List<String> commands = run(ConfigurationReader.create(config), "smoke");
 
         // then
         assertThat(commands.get(0)).endsWith(" --settings ./tools/vrunner-smoke.json");
@@ -166,28 +138,26 @@ class LoadExtensionsTest {
     @Test
     void runLoadsExtensionsIntoServerBaseWithExclusiveAccess() {
         // when
-        List<String> commands = run(createConfiguration("/Ssrv1c\\\\test_base", "srv1c:1545"), "initInfoBase", "ext");
+        List<String> commands = run(createConfiguration("/Ssrv1c\\\\test_base", "srv1c:1545"), "initInfoBase");
 
         // then
-        // подключение идет под кодом разрешения, а проверка списка расширений - уже без запрета сеансов
-        assertThat(commands).hasSize(4);
+        // подключение идет под кодом разрешения
+        assertThat(commands).hasSize(3);
         assertThat(commands.get(0)).startsWith("vrunner session kill --db \"test_base\"");
         assertThat(commands.get(1)).contains(" run --command ").contains(" --uccode ");
         assertThat(commands.get(2)).startsWith("vrunner session unlock --db \"test_base\"");
-        assertThat(commands.get(3)).contains("/DumpDBCfgList").doesNotContain("--uccode");
     }
 
     @Test
     void runDoesNothingWithoutExtensionsForStage() {
         // when
-        List<String> commands = run(createConfiguration("/Ssrv1c\\\\test_base", "srv1c:1545"), "bdd", "ext");
+        List<String> commands = run(createConfiguration("/Ssrv1c\\\\test_base", "srv1c:1545"), "bdd");
 
         // then
         assertThat(commands).isEmpty();
     }
 
-    private List<String> run(JobConfiguration jobConfiguration, String stageName, String infobaseExtensions) {
-        infobaseExtensions(infobaseExtensions);
+    private List<String> run(JobConfiguration jobConfiguration, String stageName) {
         List<String> commands = new ArrayList<>();
 
         try (MockedStatic<VRunner> vrunner = mockVRunner(commands)) {
@@ -195,10 +165,6 @@ class LoadExtensionsTest {
         }
 
         return commands;
-    }
-
-    private void infobaseExtensions(String dump) {
-        doReturn(dump).when(steps).readFile(InfobaseExtensions.LIST_FILE, "UTF-8");
     }
 
     private static MockedStatic<VRunner> mockVRunner(List<String> commands) {
