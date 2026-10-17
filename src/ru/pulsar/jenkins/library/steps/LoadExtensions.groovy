@@ -6,6 +6,7 @@ import ru.pulsar.jenkins.library.configuration.InitInfoBaseOptions
 import ru.pulsar.jenkins.library.configuration.InitInfoBaseOptions.Extension
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.ExclusiveAccess
+import ru.pulsar.jenkins.library.utils.InfobaseExtensions
 import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.VRunner
 import hudson.FilePath
@@ -49,7 +50,13 @@ class LoadExtensions implements Serializable {
             })
         }
 
-        if (this.extensionsFiltered.length == 0) {
+        // При подготовке внешней базы нужно знать, какие расширения в ней уже есть: расширение пайплайна,
+        // оставшееся с прошлой сборки, обновляется, а не ставится заново, а служебные расширения сборки,
+        // которую прервали до удаления, удаляются. В новой локальной базе расширений нет
+        boolean externalPreparation = this.stageName == "initInfoBase" && config.basePath
+        List<Extension> stageExtensions = externalPreparation ? config.stageExtensions() : []
+
+        if (this.extensionsFiltered.length == 0 && stageExtensions.isEmpty()) {
             Logger.println("Расширений для подключения нет")
             return
         }
@@ -60,12 +67,67 @@ class LoadExtensions implements Serializable {
         String vrunnerPath = VRunner.getVRunnerPath()
         String settingsParameter = vrunnerSettingsParameter(this.config, this.stageName)
 
-        // Подключение расширения с собственными объектами меняет структуру базы и требует монопольного доступа
+        List<String> infobaseExtensions = []
+        List<String> leftovers = []
+        if (externalPreparation) {
+            infobaseExtensions = InfobaseExtensions.list(config, settingsParameter)
+            leftovers = leftoverStageExtensions(stageExtensions, infobaseExtensions)
+        }
+
+        if (this.extensionsFiltered.length == 0 && leftovers.isEmpty()) {
+            Logger.println("Расширений для подключения нет, служебных расширений прошлых сборок в базе нет")
+            return
+        }
+
+        // Подключение и удаление расширения с собственными объектами меняет структуру базы
+        // и требует монопольного доступа
         ExclusiveAccess.run(config) { String uccode ->
-            for (Extension extension : this.extensionsFiltered) {
-                Logger.println("Установим расширение ${extension.name}")
-                loadExtension(extension, vrunnerPath, steps, cfeDir, settingsParameter + uccode)
+            // Служебные расширения удаляет их стадия. В базе они остаются, только если сборку прервали так,
+            // что удаление после стадии не выполнилось
+            for (String name : leftovers) {
+                Logger.println("Удалим служебное расширение $name, оставшееся от прошлой сборки")
+                VRunner.exec(InfobaseExtensions.deleteCommand(config, name, settingsParameter) + uccode)
             }
+
+            for (Extension extension : this.extensionsFiltered) {
+                if (externalPreparation && InfobaseExtensions.contains(infobaseExtensions, extension.name)) {
+                    // Расширение пайплайна обновляется, как конфигурация: код заменяется, данные остаются
+                    Logger.println("Обновим расширение ${extension.name}")
+                    updateExtension(extension, vrunnerPath, steps, cfeDir, settingsParameter + uccode)
+                } else {
+                    Logger.println("Установим расширение ${extension.name}")
+                    loadExtension(extension, vrunnerPath, steps, cfeDir, settingsParameter + uccode)
+                }
+            }
+        }
+    }
+
+    // Имена служебных расширений из конфигурации, которые найдены в базе. Одно расширение может быть описано
+    // в конфигурации несколькими записями, например для разных стадий, а удалить его нужно один раз:
+    // повторный /DeleteCfg завершится ошибкой, расширения уже нет
+    private static List<String> leftoverStageExtensions(List<Extension> stageExtensions, List<String> infobaseExtensions) {
+        List<String> leftovers = []
+        for (Extension extension : stageExtensions) {
+            if (InfobaseExtensions.contains(infobaseExtensions, extension.name)
+                && !InfobaseExtensions.contains(leftovers, extension.name)) {
+                leftovers.add(extension.name)
+            }
+        }
+        return leftovers
+    }
+
+    // Загрузка cfe в существующее расширение через конфигуратор (/LoadCfg -Extension и /UpdateDBCfg).
+    // В отличие от обработки подключения, ошибку конфигуратор возвращает кодом завершения
+    private void updateExtension(Extension extension, String vrunnerPath, IStepExecutor steps, String cfeDir, String parameters) {
+        FilePath localPathToExt = FileUtils.getFilePath("$cfeDir/${extension.name}.cfe")
+
+        String updateCommand = "$vrunnerPath loadext --file \"$localPathToExt\" --extension \"${extension.name}\" --updatedb"
+        updateCommand += " --ibconnection \"${config.baseName()}\""
+        updateCommand += parameters
+
+        List<String> logosConfig = ["LOGOS_CONFIG=$config.logosConfig"]
+        steps.withEnv(logosConfig) {
+            VRunner.exec(updateCommand)
         }
     }
 

@@ -11,6 +11,7 @@ import ru.pulsar.jenkins.library.IStepExecutor;
 import ru.pulsar.jenkins.library.configuration.ConfigurationReader;
 import ru.pulsar.jenkins.library.configuration.InitInfoBaseOptions;
 import ru.pulsar.jenkins.library.configuration.JobConfiguration;
+import ru.pulsar.jenkins.library.utils.InfobaseExtensions;
 import ru.pulsar.jenkins.library.utils.TestUtils;
 import ru.pulsar.jenkins.library.utils.VRunner;
 
@@ -23,11 +24,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class LoadExtensionsTest {
+
+    // файл списка расширений платформа пишет в UTF-8 с BOM
+    private static final String BOM = String.valueOf((char) 0xFEFF);
 
     private static final String EXTENSION = """
         {
@@ -36,6 +41,15 @@ class LoadExtensionsTest {
           "path": "src/cfe/ext"%s
         }
         """;
+
+    // ext - расширение пайплайна, Smoke и BDD - служебные расширения стадий
+    private static final String EXTENSIONS_WITH_STAGE_ONES = """
+        { "name": "ext" },
+        { "name": "Smoke", "stages": ["yaxunit"] },
+        { "name": "BDD", "stages": ["bdd", "smoke"] }
+        """;
+
+    private static final String SERVER_BASE = "/Ssrv1c\\\\test_base";
 
     private final IStepExecutor steps = TestUtils.getMockedStepExecutor();
 
@@ -50,6 +64,8 @@ class LoadExtensionsTest {
             return body.call();
         });
         when(steps.fileExists("./tools/vrunner.json")).thenReturn(true);
+        // по умолчанию в базе нет расширений
+        infobaseExtensions(BOM);
         TestUtils.setupMockedContext(steps);
     }
 
@@ -90,27 +106,109 @@ class LoadExtensionsTest {
     @Test
     void runLoadsExtensionIntoLocalBase() {
         // when
-        List<String> commands = run(createConfiguration("", ""), "initInfoBase");
+        List<String> commands = run(createConfiguration("", "", EXTENSION.formatted("")), "initInfoBase");
 
         // then
         // в новую пустую базу файл настроек этапа инициализации не передается: пользователей в ней нет.
-        // Список расширений базы после подключения не читается, как и раньше
+        // Расширений в новой базе нет, поэтому список расширений базы не читается
         assertThat(commands).hasSize(1);
         assertThat(commands.get(0))
+                .contains(" run --command ")
                 .contains("--ibconnection \"/F./build/ib\"")
                 .doesNotContain("--settings");
     }
 
     @Test
-    void runLoadsExtensionIntoExternalBase() {
+    void runInstallsMissingExtensionIntoExternalBase() {
         // when
-        List<String> commands = run(createConfiguration("/Ssrv1c\\\\test_base", ""), "initInfoBase");
+        List<String> commands = run(createConfiguration(SERVER_BASE, "", EXTENSION.formatted("")), "initInfoBase");
 
         // then
-        // в существующую базу файл настроек этапа инициализации передается
-        assertThat(commands.get(0))
+        // расширения в базе еще нет: его ставит обработка подключения
+        assertThat(commands).hasSize(2);
+        assertThat(commands.get(0)).contains("/DumpDBCfgList -AllExtensions");
+        assertThat(commands.get(1))
+                .contains(" run --command ")
                 .contains("--ibconnection \"/Ssrv1c\\test_base\"")
                 .endsWith(" --settings ./tools/vrunner.json");
+    }
+
+    @Test
+    void runUpdatesExistingExtensionOfExternalBase() {
+        // given
+        // имена расширений регистр не различают
+        infobaseExtensions(BOM + "EXT\r\n");
+
+        // when
+        List<String> commands = run(createConfiguration(SERVER_BASE, "", EXTENSION.formatted("")), "initInfoBase");
+
+        // then
+        // расширение уже есть: обновляется конфигуратором, данные расширения остаются
+        assertThat(commands).hasSize(2);
+        assertThat(commands.get(1))
+                .startsWith("vrunner loadext --file \"")
+                .contains("ext.cfe\" --extension \"ext\" --updatedb --ibconnection \"/Ssrv1c\\test_base\"")
+                .endsWith(" --settings ./tools/vrunner.json");
+    }
+
+    @Test
+    void runDeletesLeftoverStageExtensionsInPreparation() {
+        // given
+        // Smoke остался от прерванной сборки, AdminExtension установлен администратором
+        infobaseExtensions(BOM + "ext\r\nsmoke\r\nAdminExtension\r\n");
+
+        // when
+        List<String> commands = run(createConfiguration(SERVER_BASE, "", EXTENSIONS_WITH_STAGE_ONES), "initInfoBase");
+
+        // then
+        // BDD в базе нет, а расширение администратора не из конфигурации: их не трогаем
+        assertThat(commands).hasSize(3);
+        assertThat(commands.get(0)).contains("/DumpDBCfgList -AllExtensions");
+        assertThat(commands.get(1)).contains("/DeleteCfg -Extension Smoke");
+        assertThat(commands.get(2)).startsWith("vrunner loadext").contains("--extension \"ext\"");
+    }
+
+    @Test
+    void runDeletesLeftoversWithoutPipelineExtensions() {
+        // given
+        infobaseExtensions(BOM + "Smoke\r\n");
+
+        // when
+        List<String> commands = run(
+            createConfiguration(SERVER_BASE, "", "{ \"name\": \"Smoke\", \"stages\": [\"yaxunit\"] }"),
+            "initInfoBase"
+        );
+
+        // then
+        assertThat(commands).hasSize(2);
+        assertThat(commands.get(1)).contains("/DeleteCfg -Extension Smoke");
+    }
+
+    @Test
+    void runOnlyReadsInfobaseWhenNothingLeftInPreparation() {
+        // when
+        List<String> commands = run(
+            createConfiguration(SERVER_BASE, "", "{ \"name\": \"Smoke\", \"stages\": [\"yaxunit\"] }"),
+            "initInfoBase"
+        );
+
+        // then
+        assertThat(commands).hasSize(1);
+        assertThat(commands.get(0)).contains("/DumpDBCfgList -AllExtensions");
+    }
+
+    @Test
+    void runInstallsStageExtensionWithoutReadingInfobase() {
+        // given
+        infobaseExtensions(BOM + "Smoke\r\n");
+
+        // when
+        List<String> commands = run(createConfiguration(SERVER_BASE, "", EXTENSIONS_WITH_STAGE_ONES), "yaxunit");
+
+        // then
+        // служебное расширение удалено после прошлой стадии или при подготовке, его ставит обработка подключения
+        assertThat(commands).hasSize(1);
+        assertThat(commands.get(0)).contains(" run --command ").contains("Smoke.cfe");
     }
 
     @Test
@@ -137,21 +235,26 @@ class LoadExtensionsTest {
 
     @Test
     void runLoadsExtensionsIntoServerBaseWithExclusiveAccess() {
+        // given
+        infobaseExtensions(BOM + "ext\r\nSmoke\r\n");
+
         // when
-        List<String> commands = run(createConfiguration("/Ssrv1c\\\\test_base", "srv1c:1545"), "initInfoBase");
+        List<String> commands = run(createConfiguration(SERVER_BASE, "srv1c:1545", EXTENSIONS_WITH_STAGE_ONES), "initInfoBase");
 
         // then
-        // подключение идет под кодом разрешения
-        assertThat(commands).hasSize(3);
-        assertThat(commands.get(0)).startsWith("vrunner session kill --db \"test_base\"");
-        assertThat(commands.get(1)).contains(" run --command ").contains(" --uccode ");
-        assertThat(commands.get(2)).startsWith("vrunner session unlock --db \"test_base\"");
+        // список расширений читается без запрета сеансов, удаление и обновление идут под кодом разрешения
+        assertThat(commands).hasSize(5);
+        assertThat(commands.get(0)).contains("/DumpDBCfgList").doesNotContain("--uccode");
+        assertThat(commands.get(1)).startsWith("vrunner session kill --db \"test_base\"");
+        assertThat(commands.get(2)).contains("/DeleteCfg -Extension Smoke").contains(" --uccode ");
+        assertThat(commands.get(3)).startsWith("vrunner loadext").contains(" --uccode ");
+        assertThat(commands.get(4)).startsWith("vrunner session unlock --db \"test_base\"");
     }
 
     @Test
     void runDoesNothingWithoutExtensionsForStage() {
         // when
-        List<String> commands = run(createConfiguration("/Ssrv1c\\\\test_base", "srv1c:1545"), "bdd");
+        List<String> commands = run(createConfiguration(SERVER_BASE, "srv1c:1545", EXTENSION.formatted("")), "bdd");
 
         // then
         assertThat(commands).isEmpty();
@@ -167,6 +270,10 @@ class LoadExtensionsTest {
         return commands;
     }
 
+    private void infobaseExtensions(String dump) {
+        doReturn(dump).when(steps).readFile(InfobaseExtensions.LIST_FILE, "UTF-8");
+    }
+
     private static MockedStatic<VRunner> mockVRunner(List<String> commands) {
         MockedStatic<VRunner> vrunner = Mockito.mockStatic(VRunner.class);
         vrunner.when(VRunner::getVRunnerPath).thenReturn("vrunner");
@@ -177,7 +284,7 @@ class LoadExtensionsTest {
         return vrunner;
     }
 
-    private static JobConfiguration createConfiguration(String basePath, String rasAddress) {
+    private static JobConfiguration createConfiguration(String basePath, String rasAddress, String extensions) {
         String config = """
             {
               "basePath": "%s",
@@ -186,7 +293,7 @@ class LoadExtensionsTest {
                 "extensions": [%s]
               }
             }
-            """.formatted(basePath, rasAddress, EXTENSION.formatted(""));
+            """.formatted(basePath, rasAddress, extensions);
         return ConfigurationReader.create(config);
     }
 }

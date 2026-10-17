@@ -119,10 +119,6 @@ void call() {
                                                         createDir('build/out/')
                                                             createInfobase config
                                                     }
-                                                    timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
-                                                        // Расширения отдельных стадий, оставшиеся во внешней базе от прошлых сборок
-                                                        normalizeExtensions config, 'initInfoBase'
-                                                    }
                                                 }
                                             }
 
@@ -260,9 +256,6 @@ void call() {
                                         steps {
                                             restoreDebugOverridesIfNeeded()
                                             unzipInfobase config
-                                            timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
-                                                normalizeExtensions config, 'bdd'
-                                            }
                                         }
                                     }
 
@@ -300,6 +293,15 @@ void call() {
                                         }
                                     }
                                 }
+                                // Служебные расширения стадии нужны только ей: удаляются и при падении стадии.
+                                // post выполняется на агенте стадии под ее блокировкой базы
+                                post {
+                                    always {
+                                        timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
+                                            removeStageExtensions config, 'bdd'
+                                        }
+                                    }
+                                }
                             }
 
                             stage('Синтаксический контроль') {
@@ -319,9 +321,6 @@ void call() {
                                         steps {
                                             restoreDebugOverridesIfNeeded()
                                             unzipInfobase config
-                                            timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
-                                                normalizeExtensions config, 'syntaxCheck'
-                                            }
                                         }
                                     }
 
@@ -352,9 +351,6 @@ void call() {
                                         steps {
                                             restoreDebugOverridesIfNeeded()
                                             unzipInfobase config
-                                            timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
-                                                normalizeExtensions config, 'smoke'
-                                            }
                                         }
                                     }
 
@@ -378,6 +374,13 @@ void call() {
                                         }
                                     }
                                 }
+                                post {
+                                    always {
+                                        timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
+                                            removeStageExtensions config, 'smoke'
+                                        }
+                                    }
+                                }
                             }
 
                             stage('YAXUnit тесты') {
@@ -397,9 +400,6 @@ void call() {
                                         steps {
                                             restoreDebugOverridesIfNeeded()
                                             unzipInfobase config
-                                            timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
-                                                normalizeExtensions config, 'yaxunit'
-                                            }
                                         }
                                     }
 
@@ -420,6 +420,13 @@ void call() {
                                             timeout(time: config.timeoutOptions.yaxunit, unit: TimeUnit.MINUTES) {
                                                 yaxunit config
                                             }
+                                        }
+                                    }
+                                }
+                                post {
+                                    always {
+                                        timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
+                                            removeStageExtensions config, 'yaxunit'
                                         }
                                     }
                                 }

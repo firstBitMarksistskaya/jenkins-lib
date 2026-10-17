@@ -12,6 +12,20 @@ class extensionsTest {
 
     private static final boolean WINDOWS = File.separatorChar == '\\' as char
 
+    // mods и Fresh - расширения пайплайна, BDD - служебное расширение стадии bdd
+    private static final String CONFIGURATION = '''
+        {
+          "basePath": "/Ssrv1c\\\\test_base",
+          "initInfobase": {
+            "extensions": [
+              { "name": "mods" },
+              { "name": "Fresh" },
+              { "name": "BDD", "stages": ["bdd"] }
+            ]
+          }
+        }
+        '''
+
     @Rule
     public JenkinsRule rule = new JenkinsRule()
 
@@ -21,40 +35,82 @@ class extensionsTest {
     }
 
     @Test
-    void "stage should delete extensions of other stages and load its own"() {
-        WorkflowRun build = buildWithFakeVrunner(['YAXUnit', 'BDD'])
+    void "preparation should remove leftover stage extensions and update existing extensions"() {
+        // в базе остались mods и служебное BDD прерванной сборки, Fresh еще не устанавливалось
+        WorkflowRun build = buildWithFakeVrunner('''
+            node {
+                def config = jobConfiguration()
+                loadExtensions config, 'initInfoBase'
+            }
+            ''', ['mods', 'BDD'], Result.SUCCESS)
 
         List<String> lines = rule.getLog(build).readLines()
-        // в базе осталось расширение стадии yaxunit от прошлой сборки, свое расширение стадия не удаляет
-        assert lines.any { it.contains('fake-vrunner designer') && it.contains('/DeleteCfg -Extension YAXUnit') }
-        assert !lines.any { it.contains('/DeleteCfg -Extension BDD') }
-        assert lines.any { it.contains('fake-vrunner run') && it.contains('BDD.cfe') }
+        assert lines.any { it.contains('fake-vrunner designer') && it.contains('/DeleteCfg -Extension BDD') }
+        // расширение пайплайна, которое уже есть в базе, обновляется конфигуратором, а не переустанавливается
+        assert lines.any { it.contains('fake-vrunner loadext') && it.contains('--extension "mods"') && it.contains('--updatedb') }
+        assert !lines.any { it.contains('fake-vrunner run') && it.contains('mods.cfe') }
+        assert lines.any { it.contains('fake-vrunner run') && it.contains('Fresh.cfe') }
+        assert !lines.any { it.contains('/DeleteCfg -Extension mods') }
+    }
+
+    @Test
+    void "stage should remove its extensions after it even when it fails"() {
+        WorkflowRun build = buildWithFakeVrunner('''
+            @groovy.transform.Field
+            def config
+
+            pipeline {
+                agent none
+                stages {
+                    stage('BDD') {
+                        agent any
+                        options {
+                            lock('test-base')
+                        }
+                        stages {
+                            stage('load') {
+                                steps {
+                                    script {
+                                        config = jobConfiguration()
+                                    }
+                                    loadExtensions config, 'bdd'
+                                }
+                            }
+                            stage('tests') {
+                                steps {
+                                    error 'tests failed'
+                                }
+                            }
+                        }
+                        post {
+                            always {
+                                removeStageExtensions config, 'bdd'
+                            }
+                        }
+                    }
+                }
+            }
+            ''', ['mods', 'BDD'], Result.FAILURE)
+
+        List<String> lines = rule.getLog(build).readLines()
+        int loaded = lines.findIndexOf { it.contains('fake-vrunner run') && it.contains('BDD.cfe') }
+        int removed = lines.findIndexOf { it.contains('fake-vrunner designer') && it.contains('/DeleteCfg -Extension BDD') }
+        int released = lines.findIndexOf { it.contains('Lock released') && it.contains('test-base') }
+        assert loaded >= 0 && removed > loaded: lines.join('\n')
+        // расширение удаляется, пока стадия держит блокировку базы: следующая стадия его уже не увидит
+        assert released > removed: lines.join('\n')
+        // расширения пайплайна стадия не удаляет
+        assert !lines.any { it.contains('/DeleteCfg -Extension mods') }
     }
 
     // vrunner из oscript_modules проекта подменяется скриптом: он выводит свои аргументы,
     // а на команды конфигуратора пишет список расширений базы в файл, который читает библиотека
-    private WorkflowRun buildWithFakeVrunner(List<String> infobaseExtensions) {
+    private WorkflowRun buildWithFakeVrunner(String script, List<String> infobaseExtensions, Result expectedResult) {
         final WorkflowJob workflowJob = rule.createProject(WorkflowJob, 'project-extensions')
-        workflowJob.definition = new CpsFlowDefinition('''
-        node {
-            def config = jobConfiguration()
-            normalizeExtensions config, 'bdd'
-            loadExtensions config, 'bdd'
-        }
-        '''.stripIndent(), true)
+        workflowJob.definition = new CpsFlowDefinition(script.stripIndent(), true)
 
         FilePath workspace = rule.jenkins.getWorkspaceFor(workflowJob)
-        workspace.child('jobConfiguration.json').write('''
-            {
-              "basePath": "/Ssrv1c\\\\test_base",
-              "initInfobase": {
-                "extensions": [
-                  { "name": "BDD", "stages": ["bdd"] },
-                  { "name": "YAXUnit", "stages": ["yaxunit"] }
-                ]
-              }
-            }
-            ''', 'UTF-8')
+        workspace.child('jobConfiguration.json').write(CONFIGURATION, 'UTF-8')
 
         if (WINDOWS) {
             String list = infobaseExtensions.collect { "echo $it>> build\\tmp\\infobase-extensions.txt" }.join('\r\n')
@@ -69,6 +125,6 @@ class extensionsTest {
             vrunner.chmod(0755)
         }
 
-        return rule.buildAndAssertStatus(Result.SUCCESS, workflowJob)
+        return rule.buildAndAssertStatus(expectedResult, workflowJob)
     }
 }
