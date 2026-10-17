@@ -65,7 +65,8 @@ class clusterCoverageTest {
 
     // vrunner из oscript_modules проекта и Coverage41C в PATH подменяются скриптами, которые только выводят свои аргументы.
     // При failTests подставной vrunner пишет код возврата 3, и стадия BDD падает внутри замеров.
-    private WorkflowJob createJob(String extraJson, boolean failTests, String clusterDebugServer = 'srv1c:1550') {
+    // Порт сервера отладки не указан: по умолчанию 1550
+    private WorkflowJob createJob(String extraJson, boolean failTests, String clusterDebugServer = 'srv1c') {
         final WorkflowJob workflowJob = rule.createProject(WorkflowJob, 'project-cluster-coverage')
         workflowJob.definition = new CpsFlowDefinition('''
         node {

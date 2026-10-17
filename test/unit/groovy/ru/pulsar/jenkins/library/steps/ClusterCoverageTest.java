@@ -139,6 +139,15 @@ class ClusterCoverageTest {
         assertThat(ClusterCoverage.debugServerUrl(" https://srv1c:1550 ")).isEqualTo("https://srv1c:1550");
     }
 
+    @Test
+    void debugServerUrlUsesDefaultPortWhenOmitted() {
+        // порт указывается, только если сервер отладки запущен не на стандартном 1550
+        assertThat(ClusterCoverage.debugServerUrl("srv1c")).isEqualTo("http://srv1c:1550");
+        assertThat(ClusterCoverage.debugServerUrl("srv1c:1551")).isEqualTo("http://srv1c:1551");
+        assertThat(ClusterCoverage.debugServerUrl("https://srv1c")).isEqualTo("https://srv1c:1550");
+        assertThat(ClusterCoverage.debugServerUrl("http://srv1c/")).isEqualTo("http://srv1c:1550/");
+    }
+
     private void run(JobConfiguration jobConfiguration, Runnable body) {
         StepCoverageOptions options = new StepCoverageOptions();
         options.setCoverage(true);

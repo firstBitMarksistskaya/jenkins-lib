@@ -1,5 +1,6 @@
 package ru.pulsar.jenkins.library.steps
 
+import com.cloudbees.groovy.cps.NonCPS
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
@@ -20,6 +21,9 @@ class ClusterCoverage implements Serializable {
 
     // Coverage41C читает пароль сервера отладки из переменной окружения с этим именем
     private static final String PASSWORD_VARIABLE = 'COVERAGE41C_DEBUG_SERVER_PASSWORD'
+
+    // Порт сервера отладки агента сервера 1С по умолчанию (-debugServerPort)
+    private static final String DEFAULT_DEBUG_SERVER_PORT = '1550'
 
     static def run(JobConfiguration config, Coverable stage, Closure body) {
         IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
@@ -78,9 +82,24 @@ class ClusterCoverage implements Serializable {
         steps.cmd("$coverage41CPath check$connection")
     }
 
-    // Адрес сервера отладки для Coverage41C: http://хост:порт
+    // Адрес сервера отладки для Coverage41C: http://хост:порт. Порт по умолчанию тот же, что у -debugServerPort
+    @NonCPS
     static String debugServerUrl(String debugServer) {
         String address = debugServer.trim()
-        return address.startsWith('http://') || address.startsWith('https://') ? address : "http://$address"
+        String scheme = 'http://'
+        for (String prefix : ['http://', 'https://']) {
+            if (address.startsWith(prefix)) {
+                scheme = prefix
+                address = address.substring(prefix.length())
+            }
+        }
+
+        int pathStart = address.indexOf('/')
+        String host = pathStart >= 0 ? address.substring(0, pathStart) : address
+        String path = pathStart >= 0 ? address.substring(pathStart) : ''
+        if (!host.contains(':')) {
+            host += ":$DEFAULT_DEBUG_SERVER_PORT"
+        }
+        return "$scheme$host$path".toString()
     }
 }
