@@ -46,8 +46,9 @@ class extensionsTest {
 
         List<String> lines = rule.getLog(build).readLines()
         assert lines.any { it.contains('fake-vrunner designer') && it.contains('/DeleteCfg -Extension BDD') }
-        // расширение пайплайна, которое уже есть в базе, обновляется конфигуратором, а не переустанавливается
-        assert lines.any { it.contains('fake-vrunner loadext') && it.contains('--extension "mods"') && it.contains('--updatedb') }
+        // расширение пайплайна, которое уже есть в базе, обновляется конфигуратором, а не переустанавливается.
+        // Подставной vrunner на Linux выводит аргументы без кавычек, на Windows - с кавычками
+        assert lines.any { it.contains('fake-vrunner loadext') && it =~ /--extension "?mods"? --updatedb/ }
         assert !lines.any { it.contains('fake-vrunner run') && it.contains('mods.cfe') }
         assert lines.any { it.contains('fake-vrunner run') && it.contains('Fresh.cfe') }
         assert !lines.any { it.contains('/DeleteCfg -Extension mods') }
