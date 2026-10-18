@@ -22,17 +22,43 @@ class InfobaseLocks implements Serializable {
      */
     static void fill(JobConfiguration config, String buildTag, List<Map<String, String>> buildResources,
                      Map<String, List<Map<String, String>>> stageResources) {
-        String resource = InfobaseConnection.lockResource(config.baseName())
+        // Все базы сборки берутся одним шагом lock: плагин захватывает набор целиком или ждет,
+        // поэтому сборки, которым нужны общие базы, не займут их друг у друга по частям
+        List<String> resources = buildBaseResources(config)
+        for (String resource : resources) {
+            buildResources.add([resource: resource])
+        }
+        if (resources.isEmpty()) {
+            buildResources.add([resource: buildTag])
+        }
 
-        buildResources.add([resource: resource ?: buildTag])
         for (String stageName : stageResources.keySet()) {
+            String resource = InfobaseConnection.lockResource(config.baseName(stageName))
             String stageResource = resource ? "${resource}_${buildTag}" : "${buildTag}_${stageName}"
             stageResources[stageName].add([resource: stageResource])
         }
 
-        if (resource) {
+        if (resources.size() == 1) {
             // Для запроса нескольких ресурсов плагин не пишет, какая сборка их держит
-            Logger.println("Подготовка и проверка качества займут базу $resource. Пока ее держит другая сборка, эта сборка будет ждать")
+            Logger.println("Подготовка и проверка качества займут базу ${resources[0]}. Пока ее держит другая сборка, эта сборка будет ждать")
+        } else if (resources.size() > 1) {
+            Logger.println("Подготовка и проверка качества займут базы ${resources.join(', ')}. " +
+                "Пока хотя бы одну из них держит другая сборка, эта сборка будет ждать")
         }
+    }
+
+    // Ресурсы внешних баз сборки: базы сборки, если на ней идут тесты, и своих баз стадий, без повторов
+    private static List<String> buildBaseResources(JobConfiguration config) {
+        List<String> bases = config.buildBaseNeeded() ? [config.baseName()] : []
+        bases.addAll(config.stageBases())
+
+        List<String> resources = []
+        for (String base : bases) {
+            String resource = InfobaseConnection.lockResource(base)
+            if (resource && !resources.contains(resource)) {
+                resources.add(resource)
+            }
+        }
+        return resources
     }
 }

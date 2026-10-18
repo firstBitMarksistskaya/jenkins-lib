@@ -17,9 +17,15 @@ class GetExtensions implements Serializable {
     public static final String EXTENSIONS_OUT_DIR = 'build/out/cfe'
 
     private final JobConfiguration config
+    private final boolean stashExtensions
 
-    GetExtensions(JobConfiguration config) {
+    /**
+     * @param stashExtensions сохранить собранные расширения в stash для тестовых стадий. Подготовка своей базы
+     * стадии собирает расширения на своем агенте для себя: stash уже сохранила подготовка базы сборки
+     */
+    GetExtensions(JobConfiguration config, boolean stashExtensions = true) {
         this.config = config
+        this.stashExtensions = stashExtensions
     }
 
     def run() {
@@ -61,7 +67,9 @@ class GetExtensions implements Serializable {
             }
         }
 
-        steps.stash(EXTENSIONS_STASH, "$EXTENSIONS_OUT_DIR/**", true)
+        if (stashExtensions) {
+            steps.stash(EXTENSIONS_STASH, "$EXTENSIONS_OUT_DIR/**", true)
+        }
 
     }
 

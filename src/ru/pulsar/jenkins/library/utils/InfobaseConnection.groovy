@@ -58,6 +58,12 @@ class InfobaseConnection implements Serializable {
         return "/F${path.replaceAll('/+$', '').toLowerCase()}".toString()
     }
 
+    // Одна база при разных записях адреса. Относительный путь файловой базы сравнивается как записан
+    @NonCPS
+    static String key(String connection) {
+        return lockResource(connection) ?: connection.trim()
+    }
+
     // Серверы кластера из строки подключения /Sсервер1,сервер2\база
     @NonCPS
     private static List<String> servers(String connection) {

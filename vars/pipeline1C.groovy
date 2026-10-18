@@ -2,6 +2,7 @@
 import groovy.transform.Field
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.SourceFormat
+import ru.pulsar.jenkins.library.utils.InfobaseConnection
 import ru.pulsar.jenkins.library.utils.InfobaseLocks
 import ru.pulsar.jenkins.library.utils.RepoUtils
 
@@ -17,8 +18,9 @@ String agent1C
 String agentEdt
 
 @Field
-// Флаг, указывающий на успешность инициализации информационной базы
-Boolean isInfobaseInitialized = true
+// Успешность инициализации баз сборки по InfobaseConnection.key. База без записи считается готовой:
+// шаги инициализации на ней не выполнялись
+Map<String, Boolean> infobasesInitialized = [:]
 
 @Field
 // Ресурсы внешней блокировки баз сборки. Аргументы шагов в options вычисляются в начале сборки,
@@ -28,6 +30,11 @@ List<Map<String, String>> infobaseLockResources = []
 @Field
 // Ресурсы внутренних блокировок тестовых стадий, заполняются в pre-stage
 Map<String, List<Map<String, String>>> stageLockResources = [bdd: [], syntaxCheck: [], smoke: [], yaxunit: []]
+
+// Успешна ли инициализация базы, на которой идет тестовая стадия
+boolean infobaseInitialized(String stageName) {
+    return infobasesInitialized[InfobaseConnection.key(config.baseName(stageName))] != false
+}
 
 void call() {
 
@@ -55,6 +62,7 @@ void call() {
                         applyDebugOverridesIfNeeded()
                         config = jobConfiguration() as JobConfiguration
                         config.validateInitMethod()
+                        config.validateStageBases()
                         agent1C = config.v8AgentLabel()
                         agentEdt = config.edtAgentLabel()
                         RepoUtils.computeRepoSlug(env.GIT_URL)
@@ -70,30 +78,33 @@ void call() {
                 }
 
                 stages {
+                    // Результат трансформации нужен подготовке всех баз сборки. С трансформацией в формат EDT
+                    // она не пересекается: они выполняются для разных форматов исходников
+                    stage('Трансформация из формата EDT') {
+                        agent {
+                            label agentEdt
+                        }
+                        when {
+                            beforeAgent true
+                            expression { config.stageFlags.needInfoBase() && (config.infoBaseFromFiles() || config.needLoadExtensions()) && config.sourceFormat == SourceFormat.EDT }
+                        }
+                        steps {
+                            timeout(time: config.timeoutOptions.edtToDesignerFormatTransformation, unit: TimeUnit.MINUTES) {
+                                edtToDesignerFormatTransformation config
+                            }
+                        }
+                    }
+
                     stage('Подготовка') {
                         parallel {
                             stage('Подготовка 1С базы') {
+                                // Если все тестовые стадии идут на своих базах, здесь только собираются расширения
                                 when {
                                     beforeAgent true
-                                    expression { config.stageFlags.needInfoBase() }
+                                    expression { config.stageFlags.needInfoBase() && (config.buildBaseNeeded() || config.needLoadExtensions()) }
                                 }
 
                                 stages {
-                                    stage('Трансформация из формата EDT') {
-                                        agent {
-                                            label agentEdt
-                                        }
-                                        when {
-                                            beforeAgent true
-                                            expression { config.stageFlags.needInfoBase() && (config.infoBaseFromFiles() || config.needLoadExtensions()) && config.sourceFormat == SourceFormat.EDT }
-                                        }
-                                        steps {
-                                            timeout(time: config.timeoutOptions.edtToDesignerFormatTransformation, unit: TimeUnit.MINUTES) {
-                                                edtToDesignerFormatTransformation config
-                                            }
-                                        }
-                                    }
-
                                     stage('Подготовка ИБ') {
                                         agent {
                                             label agent1C
@@ -114,6 +125,9 @@ void call() {
                                                 }
                                             }
                                             stage('Создание ИБ') {
+                                                when {
+                                                    expression { config.buildBaseNeeded() }
+                                                }
                                                 steps {
                                                     timeout(time: config.timeoutOptions.createInfoBase, unit: TimeUnit.MINUTES) {
                                                         createDir('build/out/')
@@ -125,7 +139,7 @@ void call() {
                                             stage('Загрузка конфигурации') {
                                                 when {
                                                     beforeAgent true
-                                                    expression { config.needLoadConfiguration() }
+                                                    expression { config.buildBaseNeeded() && config.needLoadConfiguration() }
                                                 }
                                                 steps {
                                                     timeout(time: config.timeoutOptions.loadConfiguration, unit: TimeUnit.MINUTES) {
@@ -145,7 +159,7 @@ void call() {
                                             stage('Загрузка расширений в конфигурацию') {
                                                 when {
                                                     beforeAgent true
-                                                    expression { config.needLoadExtensions() }
+                                                    expression { config.buildBaseNeeded() && config.needLoadExtensions() }
                                                 }
                                                 steps {
                                                     timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
@@ -157,13 +171,13 @@ void call() {
                                             stage('Инициализация ИБ') {
                                                 when {
                                                     beforeAgent true
-                                                    expression { config.stageFlags.initSteps }
+                                                    expression { config.buildBaseNeeded() && config.stageFlags.initSteps }
                                                 }
                                                 steps {
                                                     timeout(time: config.timeoutOptions.initInfoBase, unit: TimeUnit.MINUTES) {
                                                         // Инициализация и первичная миграция
                                                         script {
-                                                            isInfobaseInitialized = initInfobase config
+                                                            infobasesInitialized[InfobaseConnection.key(config.baseName())] = initInfobase config
                                                         }
                                                     }
                                                 }
@@ -173,7 +187,7 @@ void call() {
                                             stage('Архивация ИБ') {
                                                 when {
                                                     beforeAgent true
-                                                    expression { config.basePath == '' }
+                                                    expression { config.buildBaseNeeded() && config.basePath == '' }
                                                 }
                                                 steps {
                                                     timeout(time: config.timeoutOptions.zipInfoBase, unit: TimeUnit.MINUTES) {
@@ -187,6 +201,30 @@ void call() {
                                     }
                                 }
 
+                            }
+
+                            stage('Подготовка баз стадий') {
+                                when {
+                                    beforeAgent true
+                                    expression { !config.stageBases().isEmpty() }
+                                }
+                                steps {
+                                    script {
+                                        // Число баз известно только во время сборки, поэтому ветки создаются здесь,
+                                        // а не описываются в parallel. Каждая база готовится на своем агенте
+                                        Map<String, Closure> branches = [:]
+                                        for (String base : config.stageBases()) {
+                                            String stageBase = base
+                                            branches[stageBase] = {
+                                                node(agent1C) {
+                                                    infobasesInitialized[InfobaseConnection.key(stageBase)] =
+                                                        prepareInfobase(config.withBasePath(stageBase))
+                                                }
+                                            }
+                                        }
+                                        parallel branches
+                                    }
+                                }
                             }
 
                             stage('Трансформация в формат EDT') {
@@ -245,7 +283,7 @@ void call() {
                                 when {
                                     beforeAgent true
                                     beforeOptions true
-                                    expression { config.stageFlags.bdd && isInfobaseInitialized }
+                                    expression { config.stageFlags.bdd && infobaseInitialized('bdd') }
                                 }
                                 // Тестовые стадии на одной базе идут по очереди
                                 options {
@@ -255,7 +293,7 @@ void call() {
                                     stage('Распаковка ИБ') {
                                         steps {
                                             restoreDebugOverridesIfNeeded()
-                                            unzipInfobase config
+                                            unzipInfobase config.forStage('bdd')
                                         }
                                     }
 
@@ -266,7 +304,7 @@ void call() {
                                         }
                                         steps {
                                             timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
-                                                loadExtensions config, 'bdd'
+                                                loadExtensions config.forStage('bdd'), 'bdd'
                                             }
                                         }
                                     }
@@ -274,7 +312,7 @@ void call() {
                                     stage('Выполнение BDD сценариев') {
                                         steps {
                                             timeout(time: config.timeoutOptions.bdd, unit: TimeUnit.MINUTES) {
-                                                bdd config
+                                                bdd config.forStage('bdd')
                                             }
                                         }
                                     }
@@ -282,13 +320,13 @@ void call() {
                                     stage('Архивация ИБ') {
                                         when {
                                             beforeAgent true
-                                            expression { config.basePath == '' }
+                                            expression { config.forStage('bdd').basePath == '' }
                                         }
                                         steps {
                                             timeout(time: config.timeoutOptions.zipInfoBase, unit: TimeUnit.MINUTES) {
                                                 printLocation()
 
-                                                zipInfobase config, 'bdd'
+                                                zipInfobase config.forStage('bdd'), 'bdd'
                                             }
                                         }
                                     }
@@ -298,7 +336,7 @@ void call() {
                                 post {
                                     always {
                                         timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
-                                            removeStageExtensions config, 'bdd'
+                                            removeStageExtensions config.forStage('bdd'), 'bdd'
                                         }
                                     }
                                 }
@@ -320,14 +358,14 @@ void call() {
                                     stage('Распаковка ИБ') {
                                         steps {
                                             restoreDebugOverridesIfNeeded()
-                                            unzipInfobase config
+                                            unzipInfobase config.forStage('syntaxCheck')
                                         }
                                     }
 
                                     stage('Выполнение синтаксического контроля') {
                                         steps {
                                             timeout(time: config.timeoutOptions.syntaxCheck, unit: TimeUnit.MINUTES) {
-                                                syntaxCheck config
+                                                syntaxCheck config.forStage('syntaxCheck')
                                             }
                                         }
                                     }
@@ -341,7 +379,7 @@ void call() {
                                 when {
                                     beforeAgent true
                                     beforeOptions true
-                                    expression { config.stageFlags.smoke && isInfobaseInitialized }
+                                    expression { config.stageFlags.smoke && infobaseInitialized('smoke') }
                                 }
                                 options {
                                     lock(extra: stageLockResources.smoke)
@@ -350,7 +388,7 @@ void call() {
                                     stage('Распаковка ИБ') {
                                         steps {
                                             restoreDebugOverridesIfNeeded()
-                                            unzipInfobase config
+                                            unzipInfobase config.forStage('smoke')
                                         }
                                     }
 
@@ -361,7 +399,7 @@ void call() {
                                         }
                                         steps {
                                             timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
-                                                loadExtensions config, 'smoke'
+                                                loadExtensions config.forStage('smoke'), 'smoke'
                                             }
                                         }
                                     }
@@ -369,7 +407,7 @@ void call() {
                                     stage('Выполнение дымовых тестов') {
                                         steps {
                                             timeout(time: config.timeoutOptions.smoke, unit: TimeUnit.MINUTES) {
-                                                smoke config
+                                                smoke config.forStage('smoke')
                                             }
                                         }
                                     }
@@ -377,7 +415,7 @@ void call() {
                                 post {
                                     always {
                                         timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
-                                            removeStageExtensions config, 'smoke'
+                                            removeStageExtensions config.forStage('smoke'), 'smoke'
                                         }
                                     }
                                 }
@@ -390,7 +428,7 @@ void call() {
                                 when {
                                     beforeAgent true
                                     beforeOptions true
-                                    expression { config.stageFlags.yaxunit && isInfobaseInitialized }
+                                    expression { config.stageFlags.yaxunit && infobaseInitialized('yaxunit') }
                                 }
                                 options {
                                     lock(extra: stageLockResources.yaxunit)
@@ -399,7 +437,7 @@ void call() {
                                     stage('Распаковка ИБ') {
                                         steps {
                                             restoreDebugOverridesIfNeeded()
-                                            unzipInfobase config
+                                            unzipInfobase config.forStage('yaxunit')
                                         }
                                     }
 
@@ -410,7 +448,7 @@ void call() {
                                         }
                                         steps {
                                             timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
-                                                loadExtensions config, 'yaxunit'
+                                                loadExtensions config.forStage('yaxunit'), 'yaxunit'
                                             }
                                         }
                                     }
@@ -418,7 +456,7 @@ void call() {
                                     stage('Выполнение YAXUnit тестов') {
                                         steps {
                                             timeout(time: config.timeoutOptions.yaxunit, unit: TimeUnit.MINUTES) {
-                                                yaxunit config
+                                                yaxunit config.forStage('yaxunit')
                                             }
                                         }
                                     }
@@ -426,7 +464,7 @@ void call() {
                                 post {
                                     always {
                                         timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
-                                            removeStageExtensions config, 'yaxunit'
+                                            removeStageExtensions config.forStage('yaxunit'), 'yaxunit'
                                         }
                                     }
                                 }

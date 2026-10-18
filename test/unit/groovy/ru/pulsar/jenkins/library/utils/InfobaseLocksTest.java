@@ -68,12 +68,66 @@ class InfobaseLocksTest {
         assertThat(stageResources.get("bdd")).containsExactly(Map.of("resource", BUILD_TAG + "_bdd"));
     }
 
+    @Test
+    void fillLocksAllBasesOfBuildAtOnce() {
+        // given
+        stageResources.put("yaxunit", new ArrayList<>());
+
+        // when
+        fillWithStages("/Ssrv1c\\\\ssl", """
+            "stages": { "bdd": true, "yaxunit": true },
+            "yaxunit": { "basePath": "/Ssrv1c\\\\ssl2" }
+            """);
+
+        // then
+        // внешняя блокировка берет обе базы одним шагом, стадии на разных базах не ждут друг друга
+        assertThat(buildResources).containsExactly(
+            Map.of("resource", "/Ssrv1c:1541\\ssl"),
+            Map.of("resource", "/Ssrv1c:1541\\ssl2"));
+        assertThat(stageResources.get("bdd")).containsExactly(Map.of("resource", "/Ssrv1c:1541\\ssl_" + BUILD_TAG));
+        assertThat(stageResources.get("yaxunit")).containsExactly(Map.of("resource", "/Ssrv1c:1541\\ssl2_" + BUILD_TAG));
+    }
+
+    @Test
+    void fillDoesNotLockBuildBaseWithoutStagesOnIt() {
+        // when
+        fillWithStages("/Ssrv1c\\\\ssl", """
+            "stages": { "bdd": true },
+            "bdd": { "basePath": "/Ssrv1c\\\\ssl2" }
+            """);
+
+        // then
+        // базу сборки не используют тесты этой сборки, ее может занять другая сборка
+        assertThat(buildResources).containsExactly(Map.of("resource", "/Ssrv1c:1541\\ssl2"));
+        assertThat(stageResources.get("bdd")).containsExactly(Map.of("resource", "/Ssrv1c:1541\\ssl2_" + BUILD_TAG));
+    }
+
+    @Test
+    void fillQueuesStagesOnOwnBaseWhenBuildBaseIsLocal() {
+        // when
+        fillWithStages("", """
+            "stages": { "bdd": true, "syntaxCheck": true },
+            "bdd": { "basePath": "/Ssrv1c\\\\ssl2" }
+            """);
+
+        // then
+        // локальная база сборки не блокируется, своя база стадии - блокируется
+        assertThat(buildResources).containsExactly(Map.of("resource", "/Ssrv1c:1541\\ssl2"));
+        assertThat(stageResources.get("bdd")).containsExactly(Map.of("resource", "/Ssrv1c:1541\\ssl2_" + BUILD_TAG));
+        assertThat(stageResources.get("syntaxCheck")).containsExactly(Map.of("resource", BUILD_TAG + "_syntaxCheck"));
+    }
+
     private void fill(String basePath) {
+        fillWithStages(basePath, "");
+    }
+
+    private void fillWithStages(String basePath, String stageOptions) {
         String config = """
             {
+              %s
               "basePath": "%s"
             }
-            """.formatted(basePath);
+            """.formatted(stageOptions.isBlank() ? "" : stageOptions.strip() + ",", basePath);
         JobConfiguration jobConfiguration = ConfigurationReader.create(config);
 
         InfobaseLocks.fill(jobConfiguration, BUILD_TAG, buildResources, stageResources);

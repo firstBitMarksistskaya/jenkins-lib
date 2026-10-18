@@ -102,6 +102,45 @@ class pipeline1cTest {
     }
 
     @Test
+    void "pipeline1C should prepare own base of stage and run stage on it"() {
+        def agent = rule.createSlave('agent-1c-stage-base', 'agent 8.3', null)
+        rule.waitOnline(agent)
+        final WorkflowJob workflowJob = rule.createProject(WorkflowJob, 'project-stage-base')
+        workflowJob.definition = new CpsFlowDefinition('pipeline1C()', true)
+
+        FilePath workspace = agent.getWorkspaceFor(workflowJob)
+        workspace.child('jobConfiguration.json').write('''
+            {
+              "basePath": "/Ssrv1c\\\\ssl",
+              "stages": { "bdd": true, "syntaxCheck": true },
+              "initInfobase": { "initMethod": "notInit" },
+              "syntaxCheck": { "publishToJUnitReport": false, "basePath": "/Ssrv1c\\\\ssl2" }
+            }
+            ''', 'UTF-8')
+        writeFakeVrunner(workspace)
+
+        def build = rule.buildAndAssertSuccess(workflowJob)
+
+        List<String> lines = rule.getLog(build).readLines()
+        String buildTag = 'jenkins-project-stage-base-1'
+        List<String> acquired = lines.findAll { it.contains('acquired') }
+        // внешняя блокировка берет обе базы сборки одним шагом
+        assert acquired.any { !it.contains(buildTag) && it.contains(':1541\\ssl2') && it =~ /:1541\\ssl(?![2_])/ }: acquired.join('\n')
+        // каждая тестовая стадия встает в очередь своей базы
+        assert acquired.any { it.contains("/Ssrv1c:1541\\ssl_$buildTag") }: acquired.join('\n')
+        assert acquired.any { it.contains("/Ssrv1c:1541\\ssl2_$buildTag") }: acquired.join('\n')
+        // база стадии готовится в своей ветке отдельно от базы сборки, стадия работает с ней.
+        // Сообщения сверяются без кириллицы: журнал агента на Windows пишется не в UTF-8
+        assert lines.any { it.contains('(Branch: /Ssrv1c\\ssl2)') }: lines.join('\n')
+        assert lines.any { it.endsWith(' /Ssrv1c\\ssl2') && !it.contains('fake-vrunner') }: lines.join('\n')
+        assert lines.any { it.endsWith(' /Ssrv1c\\ssl') && !it.contains('fake-vrunner') }: lines.join('\n')
+        String syntaxCheck = lines.find { it.contains('fake-vrunner syntax-check') }
+        assert syntaxCheck != null && syntaxCheck.contains('/Ssrv1c\\ssl2'): lines.join('\n')
+        String bdd = lines.find { it.contains('fake-vrunner vanessa') }
+        assert bdd != null && bdd.contains('/Ssrv1c\\ssl') && !bdd.contains('ssl2'): lines.join('\n')
+    }
+
+    @Test
     void "pipeline1C should lock local base only under build tag"() {
         rule.createSlave(Label.get("agent"))
         final WorkflowJob workflowJob = rule.createProject(WorkflowJob, 'project-lock-local')
