@@ -16,6 +16,12 @@ class ArchiveInfobaseOptions implements Serializable {
     @JsonPropertyDescription("Сохранять при нестабильной сборке")
     Boolean onUnstable  = false
 
+    // Сохранение включено хотя бы для одного результата сборки
+    @NonCPS
+    boolean savingEnabled() {
+        return onAlways || onSuccess || onFailure || onUnstable
+    }
+
     @Override
     @NonCPS
     String toString() {

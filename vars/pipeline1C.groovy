@@ -184,10 +184,12 @@ void call() {
                                             }
 
 
+                                            // Локальную базу тестовые стадии получают из архива, внешнюю - по адресу:
+                                            // ее архив нужен, только если включено сохранение базы
                                             stage('Архивация ИБ') {
                                                 when {
                                                     beforeAgent true
-                                                    expression { config.buildBaseNeeded() && config.basePath == '' }
+                                                    expression { config.buildBaseNeeded() && (config.basePath == '' || config.initInfoBaseOptions.archiveInfobase?.savingEnabled()) }
                                                 }
                                                 steps {
                                                     timeout(time: config.timeoutOptions.zipInfoBase, unit: TimeUnit.MINUTES) {
@@ -320,7 +322,7 @@ void call() {
                                     stage('Архивация ИБ') {
                                         when {
                                             beforeAgent true
-                                            expression { config.forStage('bdd').basePath == '' }
+                                            expression { config.forStage('bdd').basePath == '' || config.bddOptions.archiveInfobase?.savingEnabled() }
                                         }
                                         steps {
                                             timeout(time: config.timeoutOptions.zipInfoBase, unit: TimeUnit.MINUTES) {

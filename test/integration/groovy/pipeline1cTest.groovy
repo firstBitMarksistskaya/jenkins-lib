@@ -141,6 +141,41 @@ class pipeline1cTest {
     }
 
     @Test
+    void "pipeline1C should dump external server base when saving is enabled"() {
+        def agent = rule.createSlave('agent-1c-dump', 'agent 8.3', null)
+        rule.waitOnline(agent)
+        final WorkflowJob workflowJob = rule.createProject(WorkflowJob, 'project-dump')
+        workflowJob.definition = new CpsFlowDefinition('pipeline1C()', true)
+
+        FilePath workspace = agent.getWorkspaceFor(workflowJob)
+        workspace.child('jobConfiguration.json').write('''
+            {
+              "basePath": "/Ssrv1c\\\\ssl",
+              "stages": { "syntaxCheck": true },
+              "initInfobase": { "initMethod": "notInit", "archiveInfobase": { "onAlways": true } },
+              "syntaxCheck": { "publishToJUnitReport": false }
+            }
+            ''', 'UTF-8')
+        // подставной vrunner создает файл выгрузки, как настоящий dump
+        if (File.separatorChar == '\\' as char) {
+            workspace.child('oscript_modules/bin/vrunner.bat').write(
+                '@echo off\r\necho fake-vrunner %*\r\nif "%1"=="dump" echo dt> %2\r\nexit /b 0\r\n', 'UTF-8')
+        } else {
+            FilePath vrunner = workspace.child('oscript_modules/bin/vrunner')
+            vrunner.write('#!/bin/sh\necho "fake-vrunner $*"\n[ "$1" = "dump" ] && echo dt > "$2"\nexit 0\n', 'UTF-8')
+            vrunner.chmod(0755)
+        }
+
+        def build = rule.buildAndAssertSuccess(workflowJob)
+
+        List<String> lines = rule.getLog(build).readLines()
+        assert lines.any { it.contains('fake-vrunner dump 1Cv8.dt --ibconnection') && it.contains('/Ssrv1c\\ssl') }: lines.join('\n')
+        // внешняя база сохраняется только как артефакт, архив файла базы для тестовых стадий не нужен
+        assert build.artifacts*.fileName.contains('1Cv8.dt')
+        assert !lines.any { it.contains('1Cv8.1CD.zip') }: lines.join('\n')
+    }
+
+    @Test
     void "pipeline1C should lock local base only under build tag"() {
         rule.createSlave(Label.get("agent"))
         final WorkflowJob workflowJob = rule.createProject(WorkflowJob, 'project-lock-local')
