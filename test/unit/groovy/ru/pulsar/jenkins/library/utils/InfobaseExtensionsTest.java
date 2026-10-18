@@ -12,9 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.verify;
 
 class InfobaseExtensionsTest {
 
@@ -52,7 +55,7 @@ class InfobaseExtensionsTest {
         List<String> names;
         try (MockedStatic<VRunner> vrunner = Mockito.mockStatic(VRunner.class)) {
             vrunner.when(VRunner::getVRunnerPath).thenReturn("vrunner");
-            vrunner.when(() -> VRunner.exec(anyString())).thenAnswer(invocation -> {
+            vrunner.when(() -> VRunner.exec(anyString(), anyBoolean())).thenAnswer(invocation -> {
                 commands.add(invocation.getArgument(0));
                 return 0;
             });
@@ -67,6 +70,26 @@ class InfobaseExtensionsTest {
         var order = inOrder(steps);
         order.verify(steps).writeFile(InfobaseExtensions.LIST_FILE, "", "UTF-8");
         order.verify(steps).readFile(InfobaseExtensions.LIST_FILE, "UTF-8");
+    }
+
+    @Test
+    void listReportsConfiguratorOutputOnError() {
+        // given
+        // сообщение конфигуратора попадает в файл списка, vanessa-runner его не выводит
+        JobConfiguration jobConfiguration = ConfigurationReader.create("{ \"basePath\": \"/F/var/1c/test_base\" }");
+        doReturn(BOM + "Infobase user is not identified\r\n").when(steps).readFile(InfobaseExtensions.LIST_FILE, "UTF-8");
+
+        // when
+        try (MockedStatic<VRunner> vrunner = Mockito.mockStatic(VRunner.class)) {
+            vrunner.when(VRunner::getVRunnerPath).thenReturn("vrunner");
+            vrunner.when(() -> VRunner.exec(anyString(), anyBoolean())).thenReturn(1);
+            InfobaseExtensions.list(jobConfiguration, "");
+        }
+
+        // then
+        // текст сверяется латиницей: Java-тесты на Windows компилируются не в UTF-8
+        verify(steps).error(contains(" 1. "));
+        verify(steps).error(contains(": Infobase user is not identified"));
     }
 
     @Test

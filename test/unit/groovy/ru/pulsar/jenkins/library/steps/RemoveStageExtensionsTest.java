@@ -17,6 +17,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
@@ -119,9 +120,10 @@ class RemoveStageExtensionsTest {
         List<String> commands = run("/Ssrv1c\\\\test_base", "srv1c:1545", EXTENSIONS, "bdd");
 
         // then
+        // сеансы завершаются до первого обращения конфигуратора к базе
         assertThat(commands).hasSize(4);
-        assertThat(commands.get(0)).contains("/DumpDBCfgList").doesNotContain("--uccode");
-        assertThat(commands.get(1)).startsWith("vrunner session kill --db \"test_base\"");
+        assertThat(commands.get(0)).startsWith("vrunner session kill --db \"test_base\"");
+        assertThat(commands.get(1)).contains("/DumpDBCfgList").contains(" --uccode ");
         assertThat(commands.get(2)).contains("/DeleteCfg -Extension BDD").contains(" --uccode ");
         assertThat(commands.get(3)).startsWith("vrunner session unlock --db \"test_base\"");
     }
@@ -142,6 +144,11 @@ class RemoveStageExtensionsTest {
         try (MockedStatic<VRunner> vrunner = Mockito.mockStatic(VRunner.class)) {
             vrunner.when(VRunner::getVRunnerPath).thenReturn("vrunner");
             vrunner.when(() -> VRunner.exec(anyString())).thenAnswer(invocation -> {
+                commands.add(invocation.getArgument(0));
+                return 0;
+            });
+            // список расширений базы читается с кодом возврата
+            vrunner.when(() -> VRunner.exec(anyString(), anyBoolean())).thenAnswer(invocation -> {
                 commands.add(invocation.getArgument(0));
                 return 0;
             });

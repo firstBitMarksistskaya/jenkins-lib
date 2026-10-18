@@ -22,6 +22,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
@@ -242,13 +243,30 @@ class LoadExtensionsTest {
         List<String> commands = run(createConfiguration(SERVER_BASE, "srv1c:1545", EXTENSIONS_WITH_STAGE_ONES), "initInfoBase");
 
         // then
-        // список расширений читается без запрета сеансов, удаление и обновление идут под кодом разрешения
+        // сеансы завершаются до первого обращения конфигуратора к базе: список расширений,
+        // удаление и обновление идут под кодом разрешения
         assertThat(commands).hasSize(5);
-        assertThat(commands.get(0)).contains("/DumpDBCfgList").doesNotContain("--uccode");
-        assertThat(commands.get(1)).startsWith("vrunner session kill --db \"test_base\"");
+        assertThat(commands.get(0)).startsWith("vrunner session kill --db \"test_base\"");
+        assertThat(commands.get(1)).contains("/DumpDBCfgList").contains(" --uccode ");
         assertThat(commands.get(2)).contains("/DeleteCfg -Extension Smoke").contains(" --uccode ");
         assertThat(commands.get(3)).startsWith("vrunner loadext").contains(" --uccode ");
         assertThat(commands.get(4)).startsWith("vrunner session unlock --db \"test_base\"");
+    }
+
+    @Test
+    void runReadsServerBaseUnderExclusiveAccessWhenNothingLeft() {
+        // when
+        List<String> commands = run(
+            createConfiguration(SERVER_BASE, "srv1c:1545", "{ \"name\": \"Smoke\", \"stages\": [\"yaxunit\"] }"),
+            "initInfoBase"
+        );
+
+        // then
+        // удалять нечего, но список уже прочитан под запретом сеансов: запрет снимается
+        assertThat(commands).hasSize(3);
+        assertThat(commands.get(0)).startsWith("vrunner session kill");
+        assertThat(commands.get(1)).contains("/DumpDBCfgList").contains(" --uccode ");
+        assertThat(commands.get(2)).startsWith("vrunner session unlock");
     }
 
     @Test
@@ -278,6 +296,11 @@ class LoadExtensionsTest {
         MockedStatic<VRunner> vrunner = Mockito.mockStatic(VRunner.class);
         vrunner.when(VRunner::getVRunnerPath).thenReturn("vrunner");
         vrunner.when(() -> VRunner.exec(anyString())).thenAnswer(invocation -> {
+            commands.add(invocation.getArgument(0));
+            return 0;
+        });
+        // список расширений базы читается с кодом возврата
+        vrunner.when(() -> VRunner.exec(anyString(), anyBoolean())).thenAnswer(invocation -> {
             commands.add(invocation.getArgument(0));
             return 0;
         });

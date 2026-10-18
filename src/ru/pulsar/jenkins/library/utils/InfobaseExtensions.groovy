@@ -19,9 +19,9 @@ class InfobaseExtensions implements Serializable {
 
     /**
      * Имена расширений базы из конфигурации.
-     * @param settingsParameter параметр --settings для vrunner или пустая строка
+     * @param parameters параметры --settings и --uccode для vrunner или пустая строка
      */
-    static List<String> list(JobConfiguration config, String settingsParameter) {
+    static List<String> list(JobConfiguration config, String parameters) {
         IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
 
         steps.createDir('build/tmp')
@@ -29,10 +29,19 @@ class InfobaseExtensions implements Serializable {
 
         String command = "${VRunner.getVRunnerPath()} designer" +
             " --additional \"/DumpDBCfgList -AllExtensions /Out $LIST_FILE\"" +
-            " --ibconnection \"${config.baseName()}\"$settingsParameter"
-        VRunner.exec(command)
+            " --ibconnection \"${config.baseName()}\"$parameters"
+        int status = VRunner.exec(command, true)
 
-        return names(steps.readFile(LIST_FILE, 'UTF-8'))
+        String dump = steps.readFile(LIST_FILE, 'UTF-8')
+        if (status != 0) {
+            // Сообщения конфигуратора попадают в файл списка, а не в файл вывода vanessa-runner:
+            // сам vanessa-runner при ошибке пишет "Информации об ошибке нет"
+            String output = dump.replace(BOM, '').trim()
+            steps.error("Не удалось прочитать список расширений базы ${config.baseName()}, код возврата $status. " +
+                "Вывод конфигуратора: ${output ?: 'пусто'}")
+        }
+
+        return names(dump)
     }
 
     /**

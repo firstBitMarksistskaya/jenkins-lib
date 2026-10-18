@@ -49,26 +49,29 @@ class RemoveStageExtensions implements Serializable {
         }
 
         String settingsParameter = LoadExtensions.vrunnerSettingsParameter(config, stageName)
-        List<String> infobaseExtensions = InfobaseExtensions.list(config, settingsParameter)
 
-        // Удаляются только расширения из списка базы, каждое один раз: для отсутствующего расширения
-        // конфигуратор завершается с ошибкой. Расширения нет в базе, если стадия упала до подключения,
-        // а одно расширение может быть описано в конфигурации несколькими записями
-        List<String> extensionsToDelete = []
-        for (Extension extension : ownExtensions) {
-            if (InfobaseExtensions.contains(infobaseExtensions, extension.name)
-                && !InfobaseExtensions.contains(extensionsToDelete, extension.name)) {
-                extensionsToDelete.add(extension.name)
-            }
-        }
-
-        if (extensionsToDelete.isEmpty()) {
-            Logger.println("Служебных расширений стадии в базе нет")
-            return
-        }
-
-        // Удаление расширения с собственными объектами меняет структуру базы и требует монопольного доступа
+        // Удаление расширения с собственными объектами меняет структуру базы и требует монопольного доступа.
+        // Список расширений базы читается под ним же: иначе конфигуратор сборки обращается к базе раньше,
+        // чем завершены чужие сеансы
         ExclusiveAccess.run(config) { String uccode ->
+            List<String> infobaseExtensions = InfobaseExtensions.list(config, settingsParameter + uccode)
+
+            // Удаляются только расширения из списка базы, каждое один раз: для отсутствующего расширения
+            // конфигуратор завершается с ошибкой. Расширения нет в базе, если стадия упала до подключения,
+            // а одно расширение может быть описано в конфигурации несколькими записями
+            List<String> extensionsToDelete = []
+            for (Extension extension : ownExtensions) {
+                if (InfobaseExtensions.contains(infobaseExtensions, extension.name)
+                    && !InfobaseExtensions.contains(extensionsToDelete, extension.name)) {
+                    extensionsToDelete.add(extension.name)
+                }
+            }
+
+            if (extensionsToDelete.isEmpty()) {
+                Logger.println("Служебных расширений стадии в базе нет")
+                return
+            }
+
             for (String name : extensionsToDelete) {
                 Logger.println("Удалим служебное расширение $name")
                 VRunner.exec(InfobaseExtensions.deleteCommand(config, name, settingsParameter) + uccode)

@@ -67,21 +67,22 @@ class LoadExtensions implements Serializable {
         String vrunnerPath = VRunner.getVRunnerPath()
         String settingsParameter = vrunnerSettingsParameter(this.config, this.stageName)
 
-        List<String> infobaseExtensions = []
-        List<String> leftovers = []
-        if (externalPreparation) {
-            infobaseExtensions = InfobaseExtensions.list(config, settingsParameter)
-            leftovers = leftoverStageExtensions(stageExtensions, infobaseExtensions)
-        }
-
-        if (this.extensionsFiltered.length == 0 && leftovers.isEmpty()) {
-            Logger.println("Расширений для подключения нет, служебных расширений прошлых сборок в базе нет")
-            return
-        }
-
         // Подключение и удаление расширения с собственными объектами меняет структуру базы
-        // и требует монопольного доступа
+        // и требует монопольного доступа. Список расширений базы читается под ним же: иначе конфигуратор
+        // сборки обращается к базе раньше, чем завершены чужие сеансы
         ExclusiveAccess.run(config) { String uccode ->
+            List<String> infobaseExtensions = []
+            List<String> leftovers = []
+            if (externalPreparation) {
+                infobaseExtensions = InfobaseExtensions.list(config, settingsParameter + uccode)
+                leftovers = leftoverStageExtensions(stageExtensions, infobaseExtensions)
+            }
+
+            if (this.extensionsFiltered.length == 0 && leftovers.isEmpty()) {
+                Logger.println("Расширений для подключения нет, служебных расширений прошлых сборок в базе нет")
+                return
+            }
+
             // Служебные расширения удаляет их стадия. В базе они остаются, только если сборку прервали так,
             // что удаление после стадии не выполнилось
             for (String name : leftovers) {
