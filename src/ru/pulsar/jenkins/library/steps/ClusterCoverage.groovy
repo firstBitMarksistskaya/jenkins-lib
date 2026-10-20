@@ -4,11 +4,10 @@ import com.cloudbees.groovy.cps.NonCPS
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
+import ru.pulsar.jenkins.library.utils.CredentialSelection
 import ru.pulsar.jenkins.library.utils.FileUtils
 import ru.pulsar.jenkins.library.utils.InfobaseConnection
 import ru.pulsar.jenkins.library.utils.Logger
-
-import static ru.pulsar.jenkins.library.configuration.Secrets.UNKNOWN_ID
 
 /**
  * Замеры покрытия на серверной базе. Серверный код выполняется в кластере, и dbgs на агенте его не видит.
@@ -69,8 +68,8 @@ class ClusterCoverage implements Serializable {
         Logger.println("Замеры покрытия ${stage.getStageSlug()} на сервере отладки кластера:$connection")
 
         // Пароль принимает только start, check и stop этот ключ не принимают
-        String passwordCredentials = config.secrets.clusterDebugServerPassword
-        if (passwordCredentials && passwordCredentials != UNKNOWN_ID) {
+        String passwordCredentials = CredentialSelection.resolve(steps, config.secrets.debugServerPassword, 'DEBUG_SERVER_PASSWORD')
+        if (passwordCredentials) {
             steps.withCredentials([steps.string(passwordCredentials, PASSWORD_VARIABLE)]) {
                 steps.start(coverage41CPath, "$startParameters -p:env $PASSWORD_VARIABLE")
             }

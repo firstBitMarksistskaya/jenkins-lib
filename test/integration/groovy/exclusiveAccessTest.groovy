@@ -1,3 +1,8 @@
+import com.cloudbees.plugins.credentials.CredentialsScope
+import com.cloudbees.plugins.credentials.SystemCredentialsProvider
+import com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl
+import org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl
+import hudson.util.Secret
 import hudson.FilePath
 import hudson.model.Result
 import org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition
@@ -61,9 +66,61 @@ class exclusiveAccessTest {
         assert unlock.contains('--cluster 9a8b7c6d-2222-4e1f-b2c3-d4e5f6a7b8c9')
     }
 
+    @Test
+    void "standard cluster admin is found and bound in current build"() {
+        addCredential(new UsernamePasswordCredentialsImpl(CredentialsScope.GLOBAL,
+            'CLUSTER_ADMIN', 'test administrator', 'fixture-user', 'fixture-password'))
+        WorkflowRun build = buildWithFakeVrunner('/Ssrv1c\\\\test_base', false, Result.SUCCESS)
+        rule.assertLogContains('Credentials: standard ID CLUSTER_ADMIN', build)
+        rule.assertLogContains('Masking supported pattern matches', build)
+        rule.assertLogNotContains('fixture-password', build)
+    }
+
+    @Test
+    void "absent standard cluster admin runs without credentials"() {
+        WorkflowRun build = buildWithFakeVrunner('/Ssrv1c\\\\test_base', false, Result.SUCCESS)
+        rule.assertLogContains('Credentials: without credentials (CLUSTER_ADMIN not available)', build)
+    }
+
+    @Test
+    void "missing explicit cluster admin does not fall back to standard"() {
+        addCredential(new UsernamePasswordCredentialsImpl(CredentialsScope.GLOBAL,
+            'CLUSTER_ADMIN', '', 'fixture-user', 'fixture-password'))
+        WorkflowRun build = buildWithFakeVrunner('/Ssrv1c\\\\test_base', false, Result.FAILURE,
+            ', "secrets": {"clusterAdmin": "missing-admin"}')
+        rule.assertLogNotContains('fake-vrunner session kill', build)
+        rule.assertLogNotContains('Credentials: standard ID', build)
+    }
+
+    @Test
+    void "wrong type cluster admin fails before session kill"() {
+        addCredential(new StringCredentialsImpl(CredentialsScope.GLOBAL,
+            'CLUSTER_ADMIN', '', Secret.fromString('fixture-password')))
+        WorkflowRun build = buildWithFakeVrunner('/Ssrv1c\\\\test_base', false, Result.FAILURE)
+        rule.assertLogContains('Credentials: standard ID CLUSTER_ADMIN', build)
+        rule.assertLogNotContains('fake-vrunner session kill', build)
+    }
+
+    @Test
+    void "wrong type explicit cluster admin does not fall back to standard"() {
+        addCredential(new UsernamePasswordCredentialsImpl(CredentialsScope.GLOBAL,
+            'CLUSTER_ADMIN', '', 'fixture-user', 'fixture-password'))
+        addCredential(new StringCredentialsImpl(CredentialsScope.GLOBAL,
+            'wrong-admin', '', Secret.fromString('fixture-password')))
+        WorkflowRun build = buildWithFakeVrunner('/Ssrv1c\\\\test_base', false, Result.FAILURE,
+            ', "secrets": {"clusterAdmin": "wrong-admin"}')
+        rule.assertLogNotContains('fake-vrunner session kill', build)
+        rule.assertLogNotContains('Credentials: standard ID', build)
+    }
+
+    private static void addCredential(credential) {
+        SystemCredentialsProvider.getInstance().getCredentials().add(credential)
+        SystemCredentialsProvider.getInstance().save()
+    }
+
     // vrunner из oscript_modules проекта подменяется скриптом, который только выводит свои аргументы.
     // oscript и rac в PATH подменяются скриптами: oscript отдает путь к поддельному rac, а тот выводит два кластера.
-    private WorkflowRun buildWithFakeVrunner(String basePathJson, boolean failRestore, Result expectedResult) {
+    private WorkflowRun buildWithFakeVrunner(String basePathJson, boolean failRestore, Result expectedResult, String secretsJson = '') {
         final WorkflowJob workflowJob = rule.createProject(WorkflowJob, 'project-exclusive-access')
         workflowJob.definition = new CpsFlowDefinition('''
         node {
@@ -75,7 +132,7 @@ class exclusiveAccessTest {
 
         FilePath workspace = rule.jenkins.getWorkspaceFor(workflowJob)
         workspace.child('jobConfiguration.json').write(
-            '{"basePath": "' + basePathJson + '", "rasAddress": "srv1c:1545", "initInfobase": {"templateDBPath": "template.dt"}}', 'UTF-8')
+            '{"basePath": "' + basePathJson + '", "rasAddress": "srv1c:1545", "initInfobase": {"templateDBPath": "template.dt"}' + secretsJson + '}', 'UTF-8')
         workspace.child('template.dt').write('dt', 'UTF-8')
 
         String clusters = 'cluster : 0ee2d8a2-1111-4b6f-a0a8-7f1e2c3d4e5f|host : srv1c|port : 1541||' +

@@ -53,6 +53,8 @@ interface IStepExecutor {
 
     void tool(String toolName)
 
+    boolean credentialExists(String credentialsId)
+
     def withCredentials(List bindings, Closure body)
 
     def string(String credentialsId, String variable)

@@ -193,6 +193,28 @@ class ExclusiveAccessTest {
         assertThat(commands).hasSize(2);
     }
 
+
+    @Test
+    void unsetIdUsesAvailableStandardCredential() {
+        JobConfiguration config = createConfiguration("/Ssrv1c\\\\test_base", "srv1c:1545", "");
+        when(steps.credentialExists("CLUSTER_ADMIN")).thenReturn(true);
+        run(config, uccode -> null);
+        verify(steps).usernamePassword("CLUSTER_ADMIN", "RUNNER_CLUSTERADMIN_USER", "RUNNER_CLUSTERADMIN_PWD");
+    }
+
+    @Test
+    void bindingFailureNeverExecutesProtectedCommandOrBody() {
+        for (String id : new String[]{"explicit-missing", "explicit-wrong-type", ""}) {
+            JobConfiguration config = createConfiguration("/Ssrv1c\\\\test_base", "srv1c:1545", "");
+            config.getSecrets().setClusterAdmin(id);
+            when(steps.credentialExists("CLUSTER_ADMIN")).thenReturn(true);
+            RuntimeException failure = new RuntimeException("binding failed");
+            doThrow(failure).when(steps).withCredentials(anyList(), any(Closure.class));
+            assertThat(catchThrowable(() -> run(config, uccode -> null))).isSameAs(failure);
+            assertThat(commands).isEmpty();
+        }
+    }
+
     private void run(JobConfiguration jobConfiguration, Function<String, Object> operation) {
         try (MockedStatic<VRunner> vrunner = Mockito.mockStatic(VRunner.class)) {
             vrunner.when(VRunner::getVRunnerPath).thenReturn("vrunner");

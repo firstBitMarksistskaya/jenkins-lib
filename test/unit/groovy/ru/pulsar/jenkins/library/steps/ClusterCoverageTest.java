@@ -148,6 +148,28 @@ class ClusterCoverageTest {
         assertThat(ClusterCoverage.debugServerUrl("http://srv1c/")).isEqualTo("http://srv1c:1550/");
     }
 
+
+    @Test
+    void unsetIdUsesAvailableStandardCredential() {
+        JobConfiguration config = createConfiguration("srv1c", "");
+        when(steps.credentialExists("DEBUG_SERVER_PASSWORD")).thenReturn(true);
+        run(config, () -> events.add("body"));
+        verify(steps).string("DEBUG_SERVER_PASSWORD", "COVERAGE41C_DEBUG_SERVER_PASSWORD");
+    }
+
+    @Test
+    void bindingFailureNeverExecutesProtectedCommandOrBody() {
+        for (String id : new String[]{"explicit-missing", "explicit-wrong-type", ""}) {
+            JobConfiguration config = createConfiguration("srv1c", "");
+            config.getSecrets().setDebugServerPassword(id);
+            when(steps.credentialExists("DEBUG_SERVER_PASSWORD")).thenReturn(true);
+            RuntimeException failure = new RuntimeException("binding failed");
+            doThrow(failure).when(steps).withCredentials(anyList(), any(Closure.class));
+            assertThat(catchThrowable(() -> run(config, () -> events.add("body")))).isSameAs(failure);
+            assertThat(events).isEmpty();
+        }
+    }
+
     private void run(JobConfiguration jobConfiguration, Runnable body) {
         StepCoverageOptions options = new StepCoverageOptions();
         options.setCoverage(true);
@@ -169,7 +191,7 @@ class ClusterCoverageTest {
                 "clusterDebugServer": "%s"
               },
               "secrets": {
-                "clusterDebugServerPassword": "%s"
+                "debugServerPassword": "%s"
               }
             }
             """.formatted(clusterDebugServer, password);

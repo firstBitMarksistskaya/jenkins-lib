@@ -30,11 +30,11 @@ class Secrets implements Serializable {
     @JsonPropertyDescription("Идентификатор Discord-канала для отправки уведомлений")
     String discordChatId
 
-    @JsonPropertyDescription("Данные авторизации администратора кластера серверной базы. Нужны, если у кластера есть администраторы")
+    @JsonPropertyDescription("Идентификатор учетных данных Jenkins с именем пользователя и паролем администратора кластера. Если идентификатор не задан, используется CLUSTER_ADMIN. Если таких учетных данных нет, команда выполняется без них")
     String clusterAdmin
 
-    @JsonPropertyDescription("Пароль сервера отладки кластера (-debugServerPwd) для замеров покрытия на серверной базе, secret text. Нужен, если сервер отладки запущен с паролем")
-    String clusterDebugServerPassword
+    @JsonPropertyDescription("Идентификатор секретного текста Jenkins с паролем сервера отладки кластера (-debugServerPwd). Если идентификатор не задан, используется DEBUG_SERVER_PASSWORD. Если таких учетных данных нет, команда выполняется без них")
+    String debugServerPassword
 
     @Override
     @NonCPS
@@ -48,7 +48,7 @@ class Secrets implements Serializable {
             ", discordBotToken='" + discordBotToken + '\'' +
             ", discordChatId='" + discordChatId + '\'' +
             ", clusterAdmin='" + clusterAdmin + '\'' +
-            ", clusterDebugServerPassword='" + clusterDebugServerPassword + '\'' +
+            ", debugServerPassword='" + debugServerPassword + '\'' +
             '}';
     }
 }

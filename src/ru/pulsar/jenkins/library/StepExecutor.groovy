@@ -1,5 +1,8 @@
 package ru.pulsar.jenkins.library
 
+import com.cloudbees.groovy.cps.NonCPS
+import com.cloudbees.plugins.credentials.CredentialsProvider
+import com.cloudbees.plugins.credentials.common.IdCredentials
 import hudson.FilePath
 import jenkins.plugins.http_request.HttpMode
 import jenkins.plugins.http_request.MimeType
@@ -107,6 +110,13 @@ class StepExecutor implements IStepExecutor {
         steps.withSonarQubeEnv(installationName) {
             body()
         }
+    }
+
+    @Override
+    @NonCPS
+    boolean credentialExists(String credentialsId) {
+        // Поиск как в credentials-binding: в контексте текущей сборки, с проверкой типа при привязке.
+        return CredentialsProvider.findCredentialById(credentialsId, IdCredentials, steps.currentBuild.rawBuild) != null
     }
 
     @Override

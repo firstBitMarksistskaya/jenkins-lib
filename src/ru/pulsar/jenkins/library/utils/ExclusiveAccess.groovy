@@ -7,8 +7,6 @@ import ru.pulsar.jenkins.library.ioc.ContextRegistry
 
 import java.nio.charset.StandardCharsets
 
-import static ru.pulsar.jenkins.library.configuration.Secrets.UNKNOWN_ID
-
 /**
  * Монопольный доступ к серверной базе на время операции: перед ней сеансы базы завершаются и начало новых
  * запрещается с кодом разрешения, сама операция получает тот же код, после нее запрет снимается, в том числе
@@ -133,8 +131,8 @@ class ExclusiveAccess implements Serializable {
     }
 
     private static def withClusterAdmin(JobConfiguration config, IStepExecutor steps, Closure body) {
-        String credentialsId = config.secrets.clusterAdmin
-        if (!credentialsId || credentialsId == UNKNOWN_ID) {
+        String credentialsId = CredentialSelection.resolve(steps, config.secrets.clusterAdmin, 'CLUSTER_ADMIN')
+        if (!credentialsId) {
             return body.call()
         }
 
