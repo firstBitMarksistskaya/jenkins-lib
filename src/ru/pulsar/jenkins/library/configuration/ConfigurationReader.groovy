@@ -133,7 +133,7 @@ class ConfigurationReader implements Serializable {
         if (objectToMerge.additionalInitializationSteps == null) {
             return
         }
-        baseObject.additionalInitializationSteps = objectToMerge.additionalInitializationSteps.clone()
+        baseObject.additionalInitializationSteps = Arrays.copyOf(objectToMerge.additionalInitializationSteps, objectToMerge.additionalInitializationSteps.length)
     }
 
 
@@ -142,7 +142,7 @@ class ConfigurationReader implements Serializable {
         if (objectToMerge.extensions == null) {
             return
         }
-        baseObject.extensions = objectToMerge.extensions.clone()
+        baseObject.extensions = Arrays.copyOf(objectToMerge.extensions, objectToMerge.extensions.length)
     }
 
     @NonCPS
@@ -150,7 +150,7 @@ class ConfigurationReader implements Serializable {
         if (objectToMerge == null || objectToMerge.vrunnerSteps == null) {
             return
         }
-        baseObject.vrunnerSteps = objectToMerge.vrunnerSteps.clone()
+        baseObject.vrunnerSteps = Arrays.copyOf(objectToMerge.vrunnerSteps, objectToMerge.vrunnerSteps.length)
     }
 
     @NonCPS
@@ -158,7 +158,7 @@ class ConfigurationReader implements Serializable {
         if (objectToMerge == null || objectToMerge.checkModes == null) {
             return
         }
-        baseObject.checkModes = objectToMerge.checkModes.clone()
+        baseObject.checkModes = Arrays.copyOf(objectToMerge.checkModes, objectToMerge.checkModes.length)
     }
 
     private static void mergeNotificationsOptions(NotificationsOptions baseObject, NotificationsOptions objectToMerge) {
@@ -212,11 +212,11 @@ class ConfigurationReader implements Serializable {
     @NonCPS
     private static void mergeEmailExtConfiguration(EmailExtConfiguration baseObject, EmailExtConfiguration objectToMerge) {
         if (objectToMerge != null && objectToMerge.recipientProviders != null) {
-            baseObject.recipientProviders = objectToMerge.recipientProviders.clone()
+            baseObject.recipientProviders = Arrays.copyOf(objectToMerge.recipientProviders, objectToMerge.recipientProviders.length)
         }
 
         if (objectToMerge != null && objectToMerge.directRecipients != null) {
-            baseObject.directRecipients = objectToMerge.directRecipients.clone()
+            baseObject.directRecipients = Arrays.copyOf(objectToMerge.directRecipients, objectToMerge.directRecipients.length)
         }
     }
 }

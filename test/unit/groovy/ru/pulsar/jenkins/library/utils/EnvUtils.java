@@ -10,6 +10,7 @@ public class EnvUtils implements EnvironmentAction {
     public String NODE_NAME = "built-in";
     public String WORKSPACE = "ws";
     public String BRANCH_NAME = "master";
+    public String STAGE_NAME = "test stage";
 
     @Override
     public EnvVars getEnvironment() throws IOException, InterruptedException {
