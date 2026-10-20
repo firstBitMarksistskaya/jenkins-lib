@@ -3,6 +3,7 @@ package ru.pulsar.jenkins.library.configuration;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.pulsar.jenkins.library.configuration.notification.TelegramNotificationOptions;
 import ru.pulsar.jenkins.library.configuration.sonarqube.GenericIssueFormat;
 import ru.pulsar.jenkins.library.utils.TestUtils;
 
@@ -46,6 +47,8 @@ class ConfigurationReaderTest {
     assertThat(jobConfiguration.getSecrets())
       .hasFieldOrPropertyWithValue("storage", "1234")
       .hasFieldOrPropertyWithValue("storagePath", "UNKNOWN_ID")
+      .hasFieldOrPropertyWithValue("telegramChatId", "UNKNOWN_ID")
+      .hasFieldOrPropertyWithValue("telegramChatIdOtherBranches", "custom-other-telegram-chat")
     ;
 
     assertThat(jobConfiguration.getSyntaxCheckOptions().getCheckModes()).hasSize(4);
@@ -68,7 +71,7 @@ class ConfigurationReaderTest {
     assertThat(jobConfiguration.getInitInfoBaseOptions().getArchiveInfobase().getOnAlways()).isTrue();
     assertThat(jobConfiguration.getInitInfoBaseOptions().getAdditionalInitializationSteps()).contains("vanessa --settings ./tools/vrunner.first.json");
 
-    assertThat(jobConfiguration.getBddOptions().getVrunnerSteps()).contains("vanessa --settings ./tools/vrunner.json");
+    assertThat(jobConfiguration.getBddOptions().getEffectiveVrunnerSteps()).contains("vanessa --settings ./tools/vrunner.json");
     assertThat(jobConfiguration.getBddOptions().getCoverage()).isFalse();
 
     assertThat(jobConfiguration.getLogosConfig()).isEqualTo("logger.rootLogger=DEBUG");
@@ -85,8 +88,23 @@ class ConfigurationReaderTest {
     assertThat(jobConfiguration.getNotificationsOptions().getEmailNotificationOptions().getFailureEmailOptions().getDirectRecipients()).isEmpty();
     assertThat(jobConfiguration.getNotificationsOptions().getEmailNotificationOptions().getFailureEmailOptions().getRecipientProviders()).hasSize(1);
 
-    assertThat(jobConfiguration.getNotificationsOptions().getTelegramNotificationOptions().getOnAlways()).isFalse();
-    assertThat(jobConfiguration.getNotificationsOptions().getTelegramNotificationOptions().getOnFailure()).isTrue();
+    TelegramNotificationOptions telegram = (TelegramNotificationOptions) jobConfiguration.getNotificationsOptions().getImNotificationOptions().get("telegram");
+    assertThat(telegram.getOnAlways()).isFalse();
+    assertThat(telegram.getOnFailure()).isTrue();
+    assertThat(telegram.getUseHttpProxy()).isTrue();
+    assertThat(telegram.getUseOtherBranchesChat()).isTrue();
+
+    assertThat(jobConfiguration.getNotificationsOptions().getImNotificationOptions())
+      .containsOnlyKeys("telegram", "discordWebhook", "discordBot");
+  }
+
+  @Test
+  void telegramUseHttpProxyDefaultsToFalse() {
+    JobConfiguration defaults = ConfigurationReader.create();
+
+    TelegramNotificationOptions telegram = (TelegramNotificationOptions) defaults.getNotificationsOptions().getImNotificationOptions().get("telegram");
+    assertThat(telegram.getUseHttpProxy()).isFalse();
+    assertThat(telegram.getUseOtherBranchesChat()).isFalse();
   }
 
   @Test
@@ -137,4 +155,48 @@ class ConfigurationReaderTest {
     assertThat(jobConfiguration.infoBaseFromFiles()).isFalse();
   }
 
+  @Test
+  void testBddVrunnerStepsUsesVrunnerSettingsByDefault() {
+    // given - конфигурация без явного указания vrunnerSteps, но с кастомным vrunnerSettings
+    String config =
+            """
+            { 
+              "bdd": {
+                "vrunnerSettings": "./custom/vrunner.json" 
+              } 
+            }
+            """;
+
+    // when
+    JobConfiguration jobConfiguration = ConfigurationReader.create(config);
+
+    // then - vrunnerSteps должен быть null (не задан явно)
+    assertThat(jobConfiguration.getBddOptions().getVrunnerSteps()).isNull();
+
+    // effectiveVrunnerSteps должен использовать значение из vrunnerSettings
+    String[] steps = jobConfiguration.getBddOptions().getEffectiveVrunnerSteps();
+    String vrunnerSettings = jobConfiguration.getBddOptions().getVrunnerSettings();
+
+    assertThat(vrunnerSettings).isEqualTo("./custom/vrunner.json");
+    assertThat(steps).hasSize(1);
+    assertThat(steps[0]).isEqualTo("vanessa --settings ./custom/vrunner.json");
+  }
+
+  @Test
+  void testBddVrunnerStepsExplicitValueOverridesDefault() throws IOException {
+    // given - конфигурация с явным указанием vrunnerSteps
+    String config = "{ \"bdd\": { \"vrunnerSettings\": \"./custom/vrunner.json\", \"vrunnerSteps\": [\"vanessa --settings ./explicit.json\"] } }";
+
+    // when
+    JobConfiguration jobConfiguration = ConfigurationReader.create(config);
+
+    // then - явно заданный vrunnerSteps не должен использовать vrunnerSettings
+    assertThat(jobConfiguration.getBddOptions().getVrunnerSteps()).hasSize(1);
+    assertThat(jobConfiguration.getBddOptions().getVrunnerSteps()[0])
+        .isEqualTo("vanessa --settings ./explicit.json");
+  }
+
 }
+
+
+

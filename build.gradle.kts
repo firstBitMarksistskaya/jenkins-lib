@@ -11,6 +11,9 @@ plugins {
 
 repositories {
     mavenCentral()
+    maven {
+        url = uri("https://repo.jenkins-ci.org/public/")
+    }
 }
 
 tasks {
@@ -72,6 +75,14 @@ dependencies {
 
 }
 
+tasks.register<JavaExec>("generateJobConfigurationSchema") {
+    group = "build"
+    description = "Regenerate resources/schema.json from JobConfiguration"
+    classpath = sourceSets["main"].runtimeClasspath
+    mainClass.set("JobConfigurationSchemaGenerator")
+    workingDir = project.projectDir
+}
+
 tasks.test {
     useJUnitPlatform()
 
@@ -81,6 +92,14 @@ tasks.test {
 
     reports {
         html.required.set(true)
+    }
+}
+
+tasks.named<Test>("integrationTest") {
+    testLogging {
+        events("passed", "skipped", "failed")
+        exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+        showStandardStreams = true
     }
 }
 
@@ -128,6 +147,5 @@ sharedLibrary {
         dependency("org.jenkinsci.plugins", "pipeline-model-api", declarativePluginsVersion)
         dependency("org.jenkinsci.plugins", "pipeline-model-definition", declarativePluginsVersion)
         dependency("org.jenkinsci.plugins", "pipeline-model-extensions", declarativePluginsVersion)
-        dependency("org.jenkinsci.plugins", "pipeline-model-declarative-agent", "1.1.1")
     }
 }
