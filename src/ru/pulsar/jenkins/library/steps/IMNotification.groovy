@@ -143,11 +143,25 @@ class IMNotification implements Serializable {
     @NonCPS
     private static int cutBeforeUnclosedLink(String prefix) {
         int separator = lastUnescapedLinkSeparator(prefix)
-        if (separator < 0 || hasUnescapedCloseParen(prefix, separator + 2)) {
-            return codePointSafeEnd(prefix)
+        if (separator >= 0 && !hasUnescapedCloseParen(prefix, separator + 2)) {
+            int bracket = unescapedOpenBracket(prefix, separator)
+            return bracket >= 0 ? bracket : separator
         }
-        int bracket = unescapedOpenBracket(prefix, separator)
-        return bracket >= 0 ? bracket : separator
+        int open = unescapedOpenBracket(prefix, prefix.length())
+        if (open >= 0 && !hasLinkDelimiterAfter(prefix, open)) {
+            return open
+        }
+        return codePointSafeEnd(prefix)
+    }
+
+    @NonCPS
+    private static boolean hasLinkDelimiterAfter(String text, int openBracket) {
+        for (int i = openBracket + 1; i < text.length(); i++) {
+            if (charEquals(text, i, ']') && !isEscaped(text, i)) {
+                return i + 1 < text.length() && charEquals(text, i + 1, '(')
+            }
+        }
+        return false
     }
 
     @NonCPS
