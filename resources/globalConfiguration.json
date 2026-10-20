@@ -10,6 +10,7 @@
     "storage": "UNKNOWN_ID",
     "telegramBotToken": "UNKNOWN_ID",
     "telegramChatId": "UNKNOWN_ID",
+    "telegramChatIdOtherBranches": "UNKNOWN_ID",
     "discordWebhookUrl": "UNKNOWN_ID",
     "discordBotToken": "UNKNOWN_ID",
     "discordChatId": "UNKNOWN_ID"
@@ -167,7 +168,9 @@
       "onAlways": true,
       "onFailure": false,
       "onUnstable": false,
-      "onSuccess": false
+      "onSuccess": false,
+      "useHttpProxy": false,
+      "useOtherBranchesChat": false
     },
     "discordWebhook": {
       "onAlways": true,
