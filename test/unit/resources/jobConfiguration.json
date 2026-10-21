@@ -3,7 +3,8 @@
   "edtVersion": "2021.3.4:x86_64",
   "basePath": "/sserver\\base",
   "secrets": {
-    "storage": "1234"
+    "storage": "1234",
+    "telegramChatIdOtherBranches": "custom-other-telegram-chat"
   },
   "coverage": {
     "dbgsPath": "/opt/1cv8/current/dbgs"
@@ -96,7 +97,9 @@
     },
     "telegram": {
       "onAlways": false,
-      "onFailure": true
+      "onFailure": true,
+      "useHttpProxy": true,
+      "useOtherBranchesChat": true
     }
   },
   "logosConfig": "logger.rootLogger=DEBUG"

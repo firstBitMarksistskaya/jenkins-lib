@@ -34,7 +34,7 @@ class DiscordWebhookMessenger implements Messenger {
     }
 
     @Override
-    String getChatIdCredentialId(JobConfiguration config, String repoSlug) {
+    String getChatIdCredentialId(JobConfiguration config, String repoSlug, String branchName) {
         Secrets secrets = config.secrets
         return secrets.discordWebhookUrl == UNKNOWN_ID ? repoSlug + "_DISCORD_WEBHOOK_URL" : secrets.discordWebhookUrl
     }
@@ -68,5 +68,15 @@ class DiscordWebhookMessenger implements Messenger {
     @NonCPS
     int getMaxMessageLength() {
         return 4096
+    }
+
+    @Override
+    String getHttpProxyCredentialId(IMNotificationOptions options) {
+        return null
+    }
+
+    @Override
+    String getProxyAuthenticationCredentialId(IMNotificationOptions options) {
+        return null
     }
 }
