@@ -58,8 +58,16 @@ class VRunner {
 
         Logger.println("Читаем статус возврата из файла ${path}")
 
+        IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
+        // Отсутствие файла проверяется до чтения: внутри withCredentials ошибка readFile приходит без исходного
+        // NoSuchFileException и с замаскированным сообщением
+        if (!steps.fileExists(path)) {
+            Logger.println("Файл со статусом возврата ${path} не найден. Будет использован переданный статус ${valueIfNoSuchFile}")
+            return valueIfNoSuchFile
+        }
+
         try {
-            String content = ContextRegistry.getContext().getStepExecutor()
+            String content = steps
                     .readFile(path)
                     .trim()
                     .replaceAll(/^\uFEFF/, '') // платформа генерирует файл с BOM

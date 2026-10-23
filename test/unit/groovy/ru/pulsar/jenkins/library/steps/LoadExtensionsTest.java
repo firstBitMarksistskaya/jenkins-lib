@@ -12,6 +12,7 @@ import ru.pulsar.jenkins.library.configuration.ConfigurationReader;
 import ru.pulsar.jenkins.library.configuration.InitInfoBaseOptions;
 import ru.pulsar.jenkins.library.configuration.JobConfiguration;
 import ru.pulsar.jenkins.library.utils.InfobaseExtensions;
+import ru.pulsar.jenkins.library.utils.InfobaseCredentialsStub;
 import ru.pulsar.jenkins.library.utils.TestUtils;
 import ru.pulsar.jenkins.library.utils.VRunner;
 
@@ -25,6 +26,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.endsWith;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -276,6 +279,32 @@ class LoadExtensionsTest {
 
         // then
         assertThat(commands).isEmpty();
+    }
+
+    @Test
+    void runLoadsExtensionIntoNewLocalBaseWithoutInfobaseCredentials() {
+        // given
+        InfobaseCredentialsStub.bind(steps);
+
+        // when
+        List<String> commands = run(createConfiguration("", "", EXTENSION.formatted("")), "initInfoBase");
+
+        // then
+        verify(steps, never()).credentialExists(anyString());
+        assertThat(commands).hasSize(1);
+    }
+
+    @Test
+    void runLoadsStageExtensionUnderInfobaseCredentials() {
+        // given
+        InfobaseCredentialsStub.bind(steps);
+
+        // when
+        List<String> commands = run(createConfiguration("", "", EXTENSION.formatted(", \"stages\": [\"bdd\"]")), "bdd");
+
+        // then
+        verify(steps).usernamePassword(endsWith("_INFOBASE_USER"), eq("RUNNER_DBUSER"), eq("RUNNER_DBPWD"));
+        assertThat(commands).hasSize(1);
     }
 
     private List<String> run(JobConfiguration jobConfiguration, String stageName) {

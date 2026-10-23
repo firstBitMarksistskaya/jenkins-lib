@@ -17,7 +17,8 @@
     "discordBotToken": "UNKNOWN_ID",
     "discordChatId": "UNKNOWN_ID",
     "clusterAdmin": "UNKNOWN_ID",
-    "debugServerPassword": "UNKNOWN_ID"
+    "debugServerPassword": "UNKNOWN_ID",
+    "infobaseUser": "UNKNOWN_ID"
   },
   "stages": {
     "initSteps": false,

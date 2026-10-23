@@ -5,8 +5,10 @@ import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.BspDetector
+import ru.pulsar.jenkins.library.utils.InfobaseCredentials
 import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.VRunner
+import ru.pulsar.jenkins.library.utils.VanessaTestClient
 import ru.pulsar.jenkins.library.utils.FileUtils
 
 class InitInfoBase implements Serializable {
@@ -56,52 +58,58 @@ class InitInfoBase implements Serializable {
 
             Map<String, Integer> exitStatuses = new LinkedHashMap<>()
 
-            if (options.runMigration) {
-                Logger.println("Запуск миграции ИБ")
+            InfobaseCredentials.withCredentials(config, InfobaseCredentials.preparedBaseHasUsers(config)) { boolean credentialsBound ->
+                if (options.runMigration) {
+                    Logger.println("Запуск миграции ИБ")
 
-                String command = vrunnerPath + ' run --command "ЗапуститьОбновлениеИнформационнойБазы;ЗавершитьРаботуСистемы;" --execute '
-                String executeParameter = '$runnerRoot/epf/ЗакрытьПредприятие.epf'
-                if (steps.isUnix()) {
-                    executeParameter = '\\' + executeParameter
-                }
-                command += executeParameter
-                command += " --ibconnection \"$base\""
+                    String command = vrunnerPath + ' run --command "ЗапуститьОбновлениеИнформационнойБазы;ЗавершитьРаботуСистемы;" --execute '
+                    String executeParameter = '$runnerRoot/epf/ЗакрытьПредприятие.epf'
+                    if (steps.isUnix()) {
+                        executeParameter = '\\' + executeParameter
+                    }
+                    command += executeParameter
+                    command += " --ibconnection \"$base\""
 
-                command += settingsIncrement
-                def migrationStatusFile = "build/migration-exit-status.log"
-                boolean useExitCodeFile = BspDetector.isBspConfiguration(config)
-                if (useExitCodeFile) {
-                    command += " --exitCodePath \"${migrationStatusFile}\""
+                    command += settingsIncrement
+                    def migrationStatusFile = "build/migration-exit-status.log"
+                    boolean useExitCodeFile = BspDetector.isBspConfiguration(config)
+                    if (useExitCodeFile) {
+                        command += " --exitCodePath \"${migrationStatusFile}\""
+                    } else {
+                        Logger.println("Конфигурация не на БСП, запуск миграции ИБ без контроля ${migrationStatusFile}")
+                    }
+                    // Запуск миграции
+                    steps.catchError {
+                        Integer exitStatus = VRunner.exec(command, true)
+                        Integer effectiveExitStatus = useExitCodeFile
+                                ? VRunner.readExitStatusFromFile(migrationStatusFile, exitStatus)
+                                : exitStatus
+                        exitStatuses.put(command, effectiveExitStatus)
+                    }
                 } else {
-                    Logger.println("Конфигурация не на БСП, запуск миграции ИБ без контроля ${migrationStatusFile}")
+                    Logger.println("Шаг миграции ИБ выключен")
                 }
-                // Запуск миграции
-                steps.catchError {
-                    Integer exitStatus = VRunner.exec(command, true)
-                    Integer effectiveExitStatus = useExitCodeFile
-                            ? VRunner.readExitStatusFromFile(migrationStatusFile, exitStatus)
-                            : exitStatus
-                    exitStatuses.put(command, effectiveExitStatus)
-                }
-            } else {
-                Logger.println("Шаг миграции ИБ выключен")
-            }
 
-            if (options.additionalInitializationSteps.length == 0) {
-                FileWrapper[] files = steps.findFiles("tools/vrunner.init*.json")
-                files = files.sort new OrderBy({ it.name })
-                files.each {
-                    Logger.println("Первичная инициализация файлом ${it.path}")
-                    def command = "$vrunnerPath vanessa --settings ${it.path} --ibconnection \"$base\""
-                    Integer exitStatus = VRunner.exec(command, true)
-                    exitStatuses.put(command, exitStatus)
-                }
-            } else {
-                options.additionalInitializationSteps.each {
-                    Logger.println("Первичная инициализация командой ${it}")
-                    def command = "$vrunnerPath ${it} --ibconnection \"$base\"${settingsIncrement}"
-                    Integer exitStatus = VRunner.exec(command, true)
-                    exitStatuses.put(command, exitStatus)
+                if (options.additionalInitializationSteps.length == 0) {
+                    FileWrapper[] files = steps.findFiles("tools/vrunner.init*.json")
+                    files = files.sort new OrderBy({ it.name })
+                    files.each {
+                        Logger.println("Первичная инициализация файлом ${it.path}")
+                        def command = "$vrunnerPath vanessa --settings ${it.path} --ibconnection \"$base\""
+                        Integer exitStatus = VanessaTestClient.withPassword(config, command, credentialsBound) { String effectiveCommand ->
+                            VRunner.exec(effectiveCommand, true)
+                        }
+                        exitStatuses.put(command, exitStatus)
+                    }
+                } else {
+                    options.additionalInitializationSteps.each {
+                        Logger.println("Первичная инициализация командой ${it}")
+                        def command = "$vrunnerPath ${it} --ibconnection \"$base\"${settingsIncrement}"
+                        Integer exitStatus = VanessaTestClient.withPassword(config, command, credentialsBound) { String effectiveCommand ->
+                            VRunner.exec(effectiveCommand, true)
+                        }
+                        exitStatuses.put(command, exitStatus)
+                    }
                 }
             }
 

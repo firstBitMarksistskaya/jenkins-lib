@@ -5,6 +5,7 @@ import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.SourceFormat
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.ExclusiveAccess
+import ru.pulsar.jenkins.library.utils.InfobaseCredentials
 import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.VRunner
 
@@ -53,8 +54,10 @@ class InitFromFiles implements Serializable {
             command += " --settings $vrunnerSettings"
         }
 
-        ExclusiveAccess.run(config) { String uccode ->
-            VRunner.exec(command + uccode)
+        InfobaseCredentials.withCredentials(config, InfobaseCredentials.preparedBaseHasUsers(config)) {
+            ExclusiveAccess.run(config) { String uccode ->
+                VRunner.exec(command + uccode)
+            }
         }
     }
 }

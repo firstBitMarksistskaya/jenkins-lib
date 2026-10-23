@@ -7,6 +7,7 @@ import org.mockito.Mockito;
 import ru.pulsar.jenkins.library.IStepExecutor;
 import ru.pulsar.jenkins.library.configuration.ConfigurationReader;
 import ru.pulsar.jenkins.library.configuration.JobConfiguration;
+import ru.pulsar.jenkins.library.utils.InfobaseCredentialsStub;
 import ru.pulsar.jenkins.library.utils.TestUtils;
 import ru.pulsar.jenkins.library.utils.VRunner;
 
@@ -15,6 +16,10 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.endsWith;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class InitFromFilesTest {
@@ -69,6 +74,32 @@ class InitFromFilesTest {
         List<String> commands = runCommands("", "");
 
         // then
+        assertThat(commands).containsExactly("vrunner update-dev --src src/cf --ibconnection \"/F./build/ib\"");
+    }
+
+    @Test
+    void runLoadsConfigurationIntoTemplateBaseUnderInfobaseCredentials() {
+        // given
+        InfobaseCredentialsStub.bind(steps);
+
+        // when
+        List<String> commands = runCommands("", "template.dt");
+
+        // then
+        verify(steps).usernamePassword(endsWith("_INFOBASE_USER"), eq("RUNNER_DBUSER"), eq("RUNNER_DBPWD"));
+        assertThat(commands).hasSize(1);
+    }
+
+    @Test
+    void runLoadsConfigurationIntoNewLocalBaseWithoutInfobaseCredentials() {
+        // given
+        InfobaseCredentialsStub.bind(steps);
+
+        // when
+        List<String> commands = runCommands("", "");
+
+        // then
+        verify(steps, never()).credentialExists(anyString());
         assertThat(commands).containsExactly("vrunner update-dev --src src/cf --ibconnection \"/F./build/ib\"");
     }
 

@@ -1,11 +1,14 @@
 package ru.pulsar.jenkins.library.steps
 
+import com.cloudbees.groovy.cps.NonCPS
 import hudson.FilePath
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.FileUtils
+import ru.pulsar.jenkins.library.utils.InfobaseCredentials
 import ru.pulsar.jenkins.library.utils.Logger
+import ru.pulsar.jenkins.library.utils.RunnerSettings
 import ru.pulsar.jenkins.library.utils.StringJoiner
 import ru.pulsar.jenkins.library.utils.VRunner
 
@@ -109,7 +112,16 @@ class SmokeTest implements Serializable, Coverable {
         steps.withEnv(logosConfig) {
 
             steps.withCoverage(config, this, options) {
-                VRunner.exec(command, true)
+                InfobaseCredentials.withCredentials(config) { boolean credentialsBound ->
+                    boolean testClient = credentialsBound && checkTestClient(steps, vrunnerSettings)
+                    try {
+                        VRunner.exec(command, true)
+                    } finally {
+                        if (testClient) {
+                            InfobaseCredentials.clearTestClientEventLog(config)
+                        }
+                    }
+                }
             }
 
             if (options.publishToAllureReport) {
@@ -126,6 +138,47 @@ class SmokeTest implements Serializable, Coverable {
                 steps.archiveArtifacts("$junitReportDir/**")
             }
         }
+    }
+
+    /**
+     * Проверяет тест-клиент xunit под учетными данными ИБ из Jenkins и возвращает, запускается ли он.
+     * Тест-клиент получает пользователя и пароль менеджера тестирования, только если в --testclient они
+     * не указаны (::порт). Иначе тест-клиент вошел бы в базу с паролем из файла настроек
+     */
+    static boolean checkTestClient(IStepExecutor steps, String vrunnerSettings) {
+        if (!steps.fileExists(vrunnerSettings)) {
+            return false
+        }
+
+        String settingsPath = FileUtils.getAbsolutePath(vrunnerSettings, steps.env())
+        String testClient = RunnerSettings.value(settingsPath, 'xunit', '--testclient')
+        if (!testClient) {
+            return false
+        }
+        if (!testClient.startsWith('::')) {
+            steps.error("В настройках vanessa-runner $vrunnerSettings в --testclient указаны пользователь или пароль " +
+                "тест-клиента. С учетными данными ИБ из Jenkins укажите --testclient в виде ::порт: " +
+                "тест-клиент получит пользователя и пароль менеджера тестирования")
+        }
+
+        String problem = InfobaseCredentials.testClientPasswordProblem(steps.env(), steps.isUnix()) ?:
+            addTestClientProblem(steps.env())
+        if (problem) {
+            steps.error("Тест-клиент дымовых тестов: $problem")
+        }
+        return true
+    }
+
+    // ADD разбирает строку /C по ";", а параметры тест-клиента "пользователь:пароль:порт" по ":"
+    @NonCPS
+    private static String addTestClientProblem(def env) {
+        String user = InfobaseCredentials.envValue(env, InfobaseCredentials.USER_VARIABLE) ?: ''
+        String password = InfobaseCredentials.envValue(env, InfobaseCredentials.PASSWORD_VARIABLE) ?: ''
+        if ((user + password) =~ /[:;]/) {
+            return 'имя пользователя и пароль ИБ не должны содержать символы : и ;: Vanessa ADD получает ' +
+                'тест-клиент в строке /C в виде пользователь:пароль:порт'
+        }
+        return null
     }
 
     @Override

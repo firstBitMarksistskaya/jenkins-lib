@@ -3,8 +3,10 @@ package ru.pulsar.jenkins.library.steps
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
+import ru.pulsar.jenkins.library.utils.InfobaseCredentials
 import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.VRunner
+import ru.pulsar.jenkins.library.utils.VanessaTestClient
 
 class Bdd implements Serializable, Coverable {
 
@@ -39,18 +41,24 @@ class Bdd implements Serializable, Coverable {
 
             steps.withCoverage(config, this, options) {
 
-                config.bddOptions.effectiveVrunnerSteps.each {
-                    Logger.println("Шаг запуска сценариев командой ${it}")
+                InfobaseCredentials.withCredentials(config) { boolean credentialsBound ->
+                    config.bddOptions.effectiveVrunnerSteps.each {
+                        Logger.println("Шаг запуска сценариев командой ${it}")
 
-                    String vrunnerPath = VRunner.getVRunnerPath()
-                    String base = config.baseName()
-                    def bddStepExitCodeFile = "build/out/bdd-exit-code.log"
-                    def command = "$vrunnerPath ${it}"
-                    command += " --ibconnection \"$base\""
-                    VRunner.exec(command, true)
+                        String vrunnerPath = VRunner.getVRunnerPath()
+                        String base = config.baseName()
+                        def bddStepExitCodeFile = "build/out/bdd-exit-code.log"
+                        def command = "$vrunnerPath ${it}"
+                        command += " --ibconnection \"$base\""
+                        Integer exitStatus = VanessaTestClient.withPassword(config, command, credentialsBound) { String effectiveCommand ->
+                            VRunner.exec(effectiveCommand, true)
+                        }
 
-                    def bddStepExitCode = VRunner.readExitStatusFromFile(bddStepExitCodeFile, 0)
-                    returnStatuses.add(bddStepExitCode)
+                        // Файл статуса пишет VA. Если файла нет, сценарии не выполнялись, например 1С не запустилась
+                        // под указанным пользователем, и результат шага определяет код возврата vanessa-runner
+                        def bddStepExitCode = VRunner.readExitStatusFromFile(bddStepExitCodeFile, exitStatus)
+                        returnStatuses.add(bddStepExitCode)
+                    }
                 }
 
                 if (Collections.max(returnStatuses) > 2) {

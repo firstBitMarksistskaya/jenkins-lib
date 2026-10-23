@@ -8,6 +8,7 @@ import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.ExclusiveAccess
 import ru.pulsar.jenkins.library.utils.FileUtils
 import ru.pulsar.jenkins.library.utils.InfobaseConnection
+import ru.pulsar.jenkins.library.utils.InfobaseCredentials
 import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.VRunner
 
@@ -83,8 +84,10 @@ class ZipInfobase implements Serializable {
         Logger.println("Выгрузка базы ${config.baseName()} в $dtPath")
         // Соединение фонового задания, которое остается после старта клиента, около минуты не дает завершить
         // сеансы или выгрузить базу, поэтому выгрузка повторяется до таймаута этапа
-        ExclusiveAccess.run(config, true) { String uccode ->
-            VRunner.exec(command + uccode)
+        InfobaseCredentials.withCredentials(config) {
+            ExclusiveAccess.run(config, true) { String uccode ->
+                VRunner.exec(command + uccode)
+            }
         }
         steps.archiveArtifacts(dtPath)
     }

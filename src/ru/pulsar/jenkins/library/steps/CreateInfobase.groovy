@@ -5,6 +5,7 @@ import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.ExclusiveAccess
 import ru.pulsar.jenkins.library.utils.InfobaseConnection
+import ru.pulsar.jenkins.library.utils.InfobaseCredentials
 import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.VRunner
 import ru.pulsar.jenkins.library.utils.FileUtils
@@ -79,8 +80,12 @@ class CreateInfobase implements Serializable {
             loadDtCommand += " --settings $vrunnerSettings"
         }
 
-        ExclusiveAccess.run(config) { String uccode ->
-            VRunner.exec(loadDtCommand + uccode)
+        // В новую пустую базу .dt загружается без пользователя, учетные данные пользователя ИБ действуют
+        // после загрузки, а в существующей базе нужны уже для загрузки
+        InfobaseCredentials.withCredentials(config, config.basePath as boolean) {
+            ExclusiveAccess.run(config) { String uccode ->
+                VRunner.exec(loadDtCommand + uccode)
+            }
         }
     }
 

@@ -6,6 +6,7 @@ import ru.pulsar.jenkins.library.configuration.InitInfoBaseOptions
 import ru.pulsar.jenkins.library.configuration.InitInfoBaseOptions.Extension
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.ExclusiveAccess
+import ru.pulsar.jenkins.library.utils.InfobaseCredentials
 import ru.pulsar.jenkins.library.utils.InfobaseExtensions
 import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.VRunner
@@ -70,34 +71,36 @@ class LoadExtensions implements Serializable {
         // Подключение и удаление расширения с собственными объектами меняет структуру базы
         // и требует монопольного доступа. Список расширений базы читается под ним же: иначе конфигуратор
         // сборки обращается к базе раньше, чем завершены чужие сеансы
-        ExclusiveAccess.run(config) { String uccode ->
-            List<String> infobaseExtensions = []
-            List<String> leftovers = []
-            if (externalPreparation) {
-                infobaseExtensions = InfobaseExtensions.list(config, settingsParameter + uccode)
-                leftovers = leftoverStageExtensions(stageExtensions, infobaseExtensions)
-            }
+        InfobaseCredentials.withCredentials(config, InfobaseCredentials.stageBaseHasUsers(config, this.stageName)) {
+            ExclusiveAccess.run(config) { String uccode ->
+                List<String> infobaseExtensions = []
+                List<String> leftovers = []
+                if (externalPreparation) {
+                    infobaseExtensions = InfobaseExtensions.list(config, settingsParameter + uccode)
+                    leftovers = leftoverStageExtensions(stageExtensions, infobaseExtensions)
+                }
 
-            if (this.extensionsFiltered.length == 0 && leftovers.isEmpty()) {
-                Logger.println("Расширений для подключения нет, служебных расширений прошлых сборок в базе нет")
-                return
-            }
+                if (this.extensionsFiltered.length == 0 && leftovers.isEmpty()) {
+                    Logger.println("Расширений для подключения нет, служебных расширений прошлых сборок в базе нет")
+                    return
+                }
 
-            // Служебные расширения удаляет их стадия. В базе они остаются, только если сборку прервали так,
-            // что удаление после стадии не выполнилось
-            for (String name : leftovers) {
-                Logger.println("Удалим служебное расширение $name, оставшееся от прошлой сборки")
-                VRunner.exec(InfobaseExtensions.deleteCommand(config, name, settingsParameter) + uccode)
-            }
+                // Служебные расширения удаляет их стадия. В базе они остаются, только если сборку прервали так,
+                // что удаление после стадии не выполнилось
+                for (String name : leftovers) {
+                    Logger.println("Удалим служебное расширение $name, оставшееся от прошлой сборки")
+                    VRunner.exec(InfobaseExtensions.deleteCommand(config, name, settingsParameter) + uccode)
+                }
 
-            for (Extension extension : this.extensionsFiltered) {
-                if (externalPreparation && InfobaseExtensions.contains(infobaseExtensions, extension.name)) {
-                    // Расширение пайплайна обновляется, как конфигурация: код заменяется, данные остаются
-                    Logger.println("Обновим расширение ${extension.name}")
-                    updateExtension(extension, vrunnerPath, steps, cfeDir, settingsParameter + uccode)
-                } else {
-                    Logger.println("Установим расширение ${extension.name}")
-                    loadExtension(extension, vrunnerPath, steps, cfeDir, settingsParameter + uccode)
+                for (Extension extension : this.extensionsFiltered) {
+                    if (externalPreparation && InfobaseExtensions.contains(infobaseExtensions, extension.name)) {
+                        // Расширение пайплайна обновляется, как конфигурация: код заменяется, данные остаются
+                        Logger.println("Обновим расширение ${extension.name}")
+                        updateExtension(extension, vrunnerPath, steps, cfeDir, settingsParameter + uccode)
+                    } else {
+                        Logger.println("Установим расширение ${extension.name}")
+                        loadExtension(extension, vrunnerPath, steps, cfeDir, settingsParameter + uccode)
+                    }
                 }
             }
         }

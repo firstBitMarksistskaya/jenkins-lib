@@ -5,6 +5,7 @@ import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.FileUtils
+import ru.pulsar.jenkins.library.utils.InfobaseCredentials
 import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.VRunner
 
@@ -72,7 +73,9 @@ class Yaxunit implements Serializable, Coverable {
             steps.deleteDir(workspaceYaxunit)        
 
             steps.withCoverage(config, this, options) {
-                VRunner.exec(runTestsCommand, true)
+                InfobaseCredentials.withCredentials(config) {
+                    VRunner.exec(runTestsCommand, true)
+                }
             }
 
             // Сохраняем результаты

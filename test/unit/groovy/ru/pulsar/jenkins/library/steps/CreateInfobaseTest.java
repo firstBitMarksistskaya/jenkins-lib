@@ -8,6 +8,7 @@ import ru.pulsar.jenkins.library.IStepExecutor;
 import ru.pulsar.jenkins.library.configuration.ConfigurationReader;
 import ru.pulsar.jenkins.library.configuration.JobConfiguration;
 import ru.pulsar.jenkins.library.utils.FileUtils;
+import ru.pulsar.jenkins.library.utils.InfobaseCredentialsStub;
 import ru.pulsar.jenkins.library.utils.TestUtils;
 import ru.pulsar.jenkins.library.utils.VRunner;
 
@@ -18,6 +19,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.contains;
+import static org.mockito.ArgumentMatchers.endsWith;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -143,6 +147,38 @@ class CreateInfobaseTest {
         verify(steps).error(contains(".dt"));
         assertThat(loadedFiles).isEmpty();
         assertThat(commands).isEmpty();
+    }
+
+    @Test
+    void runRestoresDtIntoNewLocalBaseWithoutInfobaseCredentials() {
+        // given
+        InfobaseCredentialsStub.bind(steps);
+
+        // when
+        run(createConfiguration("", "template.dt"));
+
+        // then
+        // в новой пустой базе пользователей нет, учетные данные действуют после загрузки шаблона
+        verify(steps, never()).credentialExists(anyString());
+        assertThat(commands).containsExactly(
+            "vrunner init-dev  --ibconnection \"/F./build/ib\"",
+            "vrunner restore --ibconnection \"/F./build/ib\" build/tmp/dump.dt"
+        );
+    }
+
+    @Test
+    void runRestoresDtIntoExternalBaseUnderInfobaseCredentials() {
+        // given
+        InfobaseCredentialsStub.bind(steps);
+
+        // when
+        run(createConfiguration(FILE_BASE, "template.dt"));
+
+        // then
+        verify(steps).usernamePassword(endsWith("_INFOBASE_USER"), eq("RUNNER_DBUSER"), eq("RUNNER_DBPWD"));
+        assertThat(commands).containsExactly(
+            "vrunner restore --ibconnection \"/F/var/1c/test_base\" build/tmp/dump.dt"
+        );
     }
 
     private void run(JobConfiguration jobConfiguration) {

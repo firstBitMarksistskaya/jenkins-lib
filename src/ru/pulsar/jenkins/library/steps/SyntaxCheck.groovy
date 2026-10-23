@@ -5,6 +5,7 @@ import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.FileUtils
+import ru.pulsar.jenkins.library.utils.InfobaseCredentials
 import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.VRunner
 
@@ -83,7 +84,9 @@ class SyntaxCheck {
             }
 
             // Запуск синтакс-проверки
-            VRunner.exec(command, true)
+            InfobaseCredentials.withCredentials(config) {
+                VRunner.exec(command, true)
+            }
 
             if (options.publishToAllureReport) {
                 steps.stash(ALLURE_STASH, "$allureReportDir/**", true)

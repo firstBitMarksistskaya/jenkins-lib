@@ -10,6 +10,7 @@ import org.mockito.Mockito;
 import ru.pulsar.jenkins.library.IStepExecutor;
 import ru.pulsar.jenkins.library.configuration.ConfigurationReader;
 import ru.pulsar.jenkins.library.configuration.JobConfiguration;
+import ru.pulsar.jenkins.library.utils.InfobaseCredentialsStub;
 import ru.pulsar.jenkins.library.utils.TestUtils;
 import ru.pulsar.jenkins.library.utils.VRunner;
 
@@ -21,6 +22,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.endsWith;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -109,6 +112,20 @@ class ZipInfobaseTest {
         assertThat(commands.get(4)).startsWith("vrunner session unlock");
         verify(steps).sleep(60);
         verify(steps).archiveArtifacts("1Cv8.bdd.dt");
+    }
+
+    @Test
+    void runDumpsServerBaseUnderInfobaseCredentials() {
+        // given
+        InfobaseCredentialsStub.bind(steps);
+
+        // when
+        List<String> commands = run("/Ssrv1c\\\\ssl", "srv1c:1545", SAVE_ALWAYS, "bdd");
+
+        // then
+        verify(steps).usernamePassword(endsWith("_INFOBASE_USER"), eq("RUNNER_DBUSER"), eq("RUNNER_DBPWD"));
+        assertThat(commands).hasSize(3);
+        assertThat(commands.get(1)).startsWith("vrunner dump").doesNotContain("--db-pwd");
     }
 
     @Test

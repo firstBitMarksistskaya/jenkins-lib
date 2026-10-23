@@ -317,6 +317,10 @@
           "type" : "string",
           "description" : "Идентификатор секретного текста Jenkins с паролем сервера отладки кластера (-debugServerPwd). Если идентификатор не задан, используется DEBUG_SERVER_PASSWORD. Если таких учетных данных нет, команда выполняется без них"
         },
+        "infobaseUser" : {
+          "type" : "string",
+          "description" : "Идентификатор учетных данных Jenkins с именем пользователя и паролем пользователя информационной базы для vanessa-runner и клиентов тестирования Vanessa Automation и Vanessa ADD. Если идентификатор не задан, используется {slug}_INFOBASE_USER. Если таких учетных данных нет, пользователь и пароль берутся из файлов настроек vanessa-runner"
+        },
         "discordWebhookUrl" : {
           "type" : "string",
           "description" : "Discord webhook URL для отправки уведомлений"
