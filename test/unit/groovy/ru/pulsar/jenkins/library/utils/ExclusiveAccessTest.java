@@ -1,6 +1,7 @@
 package ru.pulsar.jenkins.library.utils;
 
 import groovy.lang.Closure;
+import hudson.AbortException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
@@ -20,6 +21,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.assertj.core.api.Assertions.entry;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.contains;
@@ -28,6 +30,7 @@ import static org.mockito.ArgumentMatchers.startsWith;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -58,6 +61,7 @@ class ExclusiveAccessTest {
 
     private final IStepExecutor steps = TestUtils.getMockedStepExecutor();
     private final List<String> commands = new ArrayList<>();
+    private int failingKills;
 
     @BeforeEach
     void setUp() {
@@ -183,6 +187,64 @@ class ExclusiveAccessTest {
     }
 
     @Test
+    void runRepeatsKillAndOperationEveryMinuteWhenRepeatIsOn() {
+        // given
+        failingKills = 1;
+        int[] failingOperations = {1};
+
+        // when
+        run(createConfiguration("/Ssrv1c\\\\test_base", "srv1c:1545", "UNKNOWN_ID"), true, uccode -> {
+            commands.add("operation" + uccode);
+            if (failingOperations[0]-- > 0) {
+                sneakyThrow(new AbortException("dump failed"));
+            }
+            return null;
+        });
+
+        // then
+        // запрет снимается один раз, после успешной попытки
+        String kill = "vrunner session kill --db \"test_base\" --ras srv1c:1545 --uccode " + UCCODE;
+        String operation = "operation --uccode " + UCCODE;
+        assertThat(commands).containsExactly(kill, kill, operation, kill, operation,
+            "vrunner session unlock --db \"test_base\" --ras srv1c:1545");
+        verify(steps, times(2)).sleep(60);
+    }
+
+    @Test
+    void runDoesNotRepeatCommandFailureByDefault() {
+        // given
+        failingKills = 1;
+
+        // when
+        Throwable thrown = catchThrowable(() ->
+            run(createConfiguration("/Ssrv1c\\\\test_base", "srv1c:1545", "UNKNOWN_ID"), uccode -> null));
+
+        // then
+        assertThat(thrown).isInstanceOf(AbortException.class);
+        assertThat(commands).containsExactly(
+            "vrunner session kill --db \"test_base\" --ras srv1c:1545 --uccode " + UCCODE,
+            "vrunner session unlock --db \"test_base\" --ras srv1c:1545"
+        );
+        verify(steps, never()).sleep(anyInt());
+    }
+
+    @Test
+    void runDoesNotRepeatOtherErrors() {
+        // given
+        RuntimeException failure = new RuntimeException("restore failed");
+
+        // when
+        Throwable thrown = catchThrowable(() ->
+            run(createConfiguration("/Ssrv1c\\\\test_base", "srv1c:1545", "UNKNOWN_ID"), true, uccode -> {
+                throw failure;
+            }));
+
+        // then
+        assertThat(thrown).isSameAs(failure);
+        verify(steps, never()).sleep(anyInt());
+    }
+
+    @Test
     void runPassesClusterAdminCredentialsToSessionCommands() {
         // when
         run(createConfiguration("/Ssrv1c\\\\test_base", "srv1c:1545", "cluster-admin"), uccode -> null);
@@ -216,14 +278,28 @@ class ExclusiveAccessTest {
     }
 
     private void run(JobConfiguration jobConfiguration, Function<String, Object> operation) {
+        run(jobConfiguration, false, operation);
+    }
+
+    // AbortException проверяемое, а операция в тестах - Function
+    @SuppressWarnings("unchecked")
+    private static <T extends Throwable> void sneakyThrow(Throwable exception) throws T {
+        throw (T) exception;
+    }
+
+    private void run(JobConfiguration jobConfiguration, boolean repeatOnFailure, Function<String, Object> operation) {
         try (MockedStatic<VRunner> vrunner = Mockito.mockStatic(VRunner.class)) {
             vrunner.when(VRunner::getVRunnerPath).thenReturn("vrunner");
             vrunner.when(() -> VRunner.exec(anyString())).thenAnswer(invocation -> {
-                commands.add(invocation.getArgument(0));
+                String command = invocation.getArgument(0);
+                commands.add(command);
+                if (command.contains(" session kill ") && failingKills-- > 0) {
+                    throw new AbortException("kill failed");
+                }
                 return 0;
             });
 
-            ExclusiveAccess.run(jobConfiguration, new Closure<Object>(null) {
+            ExclusiveAccess.run(jobConfiguration, repeatOnFailure, new Closure<Object>(null) {
                 @SuppressWarnings("unused")
                 public Object doCall(Object uccode) {
                     return operation.apply((String) uccode);

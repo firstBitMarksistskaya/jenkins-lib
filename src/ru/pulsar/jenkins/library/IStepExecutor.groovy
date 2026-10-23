@@ -41,6 +41,8 @@ interface IStepExecutor {
 
     void echo(message)
 
+    void sleep(int seconds)
+
     def cmd(String script, boolean returnStatus, boolean returnStdout)
 
     def cmd(String script, boolean returnStatus)

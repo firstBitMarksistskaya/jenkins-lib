@@ -81,7 +81,9 @@ class ZipInfobase implements Serializable {
             steps.fileOperations([steps.fileDeleteOperation(dtPath)])
         }
         Logger.println("Выгрузка базы ${config.baseName()} в $dtPath")
-        ExclusiveAccess.run(config) { String uccode ->
+        // Соединение фонового задания, которое остается после старта клиента, около минуты не дает завершить
+        // сеансы или выгрузить базу, поэтому выгрузка повторяется до таймаута этапа
+        ExclusiveAccess.run(config, true) { String uccode ->
             VRunner.exec(command + uccode)
         }
         steps.archiveArtifacts(dtPath)

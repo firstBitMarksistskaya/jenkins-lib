@@ -79,6 +79,11 @@ class StepExecutor implements IStepExecutor {
     }
 
     @Override
+    void sleep(int seconds) {
+        steps.sleep time: seconds, unit: 'SECONDS'
+    }
+
+    @Override
     def cmd(String script, boolean returnStatus = false, boolean returnStdout = false) {
         return steps.cmd(script, returnStatus, returnStdout)
     }

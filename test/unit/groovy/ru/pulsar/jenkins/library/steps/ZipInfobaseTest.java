@@ -1,6 +1,7 @@
 package ru.pulsar.jenkins.library.steps;
 
 import groovy.lang.Closure;
+import hudson.AbortException;
 import org.jenkinsci.plugins.workflow.support.steps.build.RunWrapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,6 +34,7 @@ class ZipInfobaseTest {
         """;
 
     private final IStepExecutor steps = TestUtils.getMockedStepExecutor();
+    private int failingDumps;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -90,6 +92,26 @@ class ZipInfobaseTest {
     }
 
     @Test
+    void runRepeatsServerBaseDumpAfterFailure() {
+        // given
+        failingDumps = 1;
+
+        // when
+        List<String> commands = run("/Ssrv1c\\\\ssl", "srv1c:1545", SAVE_ALWAYS, "bdd");
+
+        // then
+        // повисшее фоновое соединение уходит само, поэтому kill и выгрузка повторяются через минуту
+        assertThat(commands).hasSize(5);
+        assertThat(commands.get(0)).startsWith("vrunner session kill");
+        assertThat(commands.get(1)).startsWith("vrunner dump");
+        assertThat(commands.get(2)).startsWith("vrunner session kill");
+        assertThat(commands.get(3)).startsWith("vrunner dump");
+        assertThat(commands.get(4)).startsWith("vrunner session unlock");
+        verify(steps).sleep(60);
+        verify(steps).archiveArtifacts("1Cv8.bdd.dt");
+    }
+
+    @Test
     void runArchivesExternalFileBaseFromItsDirectory() {
         // when
         List<String> commands = run("/F/var/1c/ssl", "", SAVE_ALWAYS, "initInfoBase");
@@ -114,7 +136,11 @@ class ZipInfobaseTest {
         try (MockedStatic<VRunner> vrunner = Mockito.mockStatic(VRunner.class)) {
             vrunner.when(VRunner::getVRunnerPath).thenReturn("vrunner");
             vrunner.when(() -> VRunner.exec(anyString())).thenAnswer(invocation -> {
-                commands.add(invocation.getArgument(0));
+                String command = invocation.getArgument(0);
+                commands.add(command);
+                if (command.startsWith("vrunner dump ") && failingDumps-- > 0) {
+                    throw new AbortException("dump failed");
+                }
                 return 0;
             });
 

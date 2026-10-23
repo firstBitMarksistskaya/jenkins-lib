@@ -1,6 +1,7 @@
 package ru.pulsar.jenkins.library.utils
 
 import com.cloudbees.groovy.cps.NonCPS
+import hudson.AbortException
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
@@ -20,6 +21,14 @@ class ExclusiveAccess implements Serializable {
      * Тело получает параметр кода разрешения для команд vrunner, без управления сеансами - пустую строку.
      */
     static def run(JobConfiguration config, Closure body) {
+        return run(config, false, body)
+    }
+
+    /**
+     * То же, но при ошибке команды завершение сеансов и тело повторяются раз в минуту, пока не сработает таймаут
+     * этапа. Запрет начала сеансов между попытками не снимается.
+     */
+    static def run(JobConfiguration config, boolean repeatOnFailure, Closure body) {
         String connection = config.baseName()
         if (!InfobaseConnection.isServer(connection)) {
             return body.call('')
@@ -40,8 +49,20 @@ class ExclusiveAccess implements Serializable {
         return withClusterAdmin(config, steps) {
             def result
             try {
-                VRunner.exec(killCommand)
-                result = body.call(uccodeParameter)
+                while (true) {
+                    try {
+                        VRunner.exec(killCommand)
+                        result = body.call(uccodeParameter)
+                        break
+                    } catch (AbortException e) {
+                        // Повторяется только ненулевой код возврата команды, прерывание по таймауту проходит дальше
+                        if (!repeatOnFailure) {
+                            throw e
+                        }
+                        Logger.println("Монопольная операция с базой $connection не удалась, повтор через минуту")
+                        steps.sleep(60)
+                    }
+                }
             } catch (Exception e) {
                 // Запрет снимается и при ошибке, но сборка получает исходную ошибку операции
                 try {
