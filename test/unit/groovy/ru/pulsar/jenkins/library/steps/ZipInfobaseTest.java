@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -26,6 +27,7 @@ import static org.mockito.ArgumentMatchers.endsWith;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -37,6 +39,7 @@ class ZipInfobaseTest {
         """;
 
     private final IStepExecutor steps = TestUtils.getMockedStepExecutor();
+    private final List<String> commands = new ArrayList<>();
     private int failingDumps;
 
     @BeforeEach
@@ -115,6 +118,24 @@ class ZipInfobaseTest {
     }
 
     @Test
+    void runFailsServerBaseDumpAfterFiveAttempts() {
+        // given
+        failingDumps = 5;
+
+        // when
+        Throwable thrown = catchThrowable(() -> run("/Ssrv1c\\\\ssl", "srv1c:1545", SAVE_ALWAYS, "bdd"));
+
+        // then
+        // постоянная ошибка не ждет таймаута этапа: после пятой попытки сборка получает ошибку выгрузки
+        assertThat(thrown).isInstanceOf(AbortException.class);
+        assertThat(commands).hasSize(11);
+        assertThat(commands).filteredOn(command -> command.startsWith("vrunner dump")).hasSize(5);
+        assertThat(commands.get(10)).startsWith("vrunner session unlock");
+        verify(steps, times(4)).sleep(60);
+        verify(steps, never()).archiveArtifacts(anyString());
+    }
+
+    @Test
     void runDumpsServerBaseUnderInfobaseCredentials() {
         // given
         InfobaseCredentialsStub.bind(steps);
@@ -148,7 +169,6 @@ class ZipInfobaseTest {
             }
             """.formatted(options.isBlank() ? "" : options.strip() + ",", basePath, rasAddress);
         JobConfiguration jobConfiguration = ConfigurationReader.create(config);
-        List<String> commands = new ArrayList<>();
 
         try (MockedStatic<VRunner> vrunner = Mockito.mockStatic(VRunner.class)) {
             vrunner.when(VRunner::getVRunnerPath).thenReturn("vrunner");

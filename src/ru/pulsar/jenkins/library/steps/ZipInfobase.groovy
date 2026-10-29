@@ -14,6 +14,8 @@ import ru.pulsar.jenkins.library.utils.VRunner
 
 class ZipInfobase implements Serializable {
 
+    private static final int DUMP_ATTEMPTS = 5
+
     private final JobConfiguration config
     private final String stage
 
@@ -83,9 +85,10 @@ class ZipInfobase implements Serializable {
         }
         Logger.println("Выгрузка базы ${config.baseName()} в $dtPath")
         // Соединение фонового задания, которое остается после старта клиента, около минуты не дает завершить
-        // сеансы или выгрузить базу, поэтому выгрузка повторяется до таймаута этапа
+        // сеансы или выгрузить базу, поэтому выгрузка повторяется раз в минуту. Число попыток ограничено,
+        // чтобы постоянная ошибка (неверный пароль, недоступный RAS) не ждала таймаута этапа
         InfobaseCredentials.withCredentials(config) {
-            ExclusiveAccess.run(config, true) { String uccode ->
+            ExclusiveAccess.run(config, DUMP_ATTEMPTS) { String uccode ->
                 VRunner.exec(command + uccode)
             }
         }

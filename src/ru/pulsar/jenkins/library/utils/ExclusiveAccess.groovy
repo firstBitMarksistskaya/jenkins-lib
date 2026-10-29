@@ -21,14 +21,14 @@ class ExclusiveAccess implements Serializable {
      * Тело получает параметр кода разрешения для команд vrunner, без управления сеансами - пустую строку.
      */
     static def run(JobConfiguration config, Closure body) {
-        return run(config, false, body)
+        return run(config, 1, body)
     }
 
     /**
-     * То же, но при ошибке команды завершение сеансов и тело повторяются раз в минуту, пока не сработает таймаут
-     * этапа. Запрет начала сеансов между попытками не снимается.
+     * То же, но при ошибке команды завершение сеансов и тело повторяются раз в минуту, всего не больше attempts
+     * попыток. Запрет начала сеансов между попытками не снимается, сборка получает ошибку последней попытки.
      */
-    static def run(JobConfiguration config, boolean repeatOnFailure, Closure body) {
+    static def run(JobConfiguration config, int attempts, Closure body) {
         String connection = config.baseName()
         if (!InfobaseConnection.isServer(connection)) {
             return body.call('')
@@ -48,6 +48,7 @@ class ExclusiveAccess implements Serializable {
 
         return withClusterAdmin(config, steps) {
             def result
+            int attempt = 1
             try {
                 while (true) {
                     try {
@@ -56,11 +57,13 @@ class ExclusiveAccess implements Serializable {
                         break
                     } catch (AbortException e) {
                         // Повторяется только ненулевой код возврата команды, прерывание по таймауту проходит дальше
-                        if (!repeatOnFailure) {
+                        if (attempt >= attempts) {
                             throw e
                         }
-                        Logger.println("Монопольная операция с базой $connection не удалась, повтор через минуту")
+                        Logger.println("Монопольная операция с базой $connection не удалась " +
+                            "(попытка $attempt из $attempts), повтор через минуту")
                         steps.sleep(60)
+                        attempt++
                     }
                 }
             } catch (Exception e) {

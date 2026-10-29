@@ -187,13 +187,13 @@ class ExclusiveAccessTest {
     }
 
     @Test
-    void runRepeatsKillAndOperationEveryMinuteWhenRepeatIsOn() {
+    void runRepeatsKillAndOperationEveryMinuteWithinAttempts() {
         // given
         failingKills = 1;
         int[] failingOperations = {1};
 
         // when
-        run(createConfiguration("/Ssrv1c\\\\test_base", "srv1c:1545", "UNKNOWN_ID"), true, uccode -> {
+        run(createConfiguration("/Ssrv1c\\\\test_base", "srv1c:1545", "UNKNOWN_ID"), 5, uccode -> {
             commands.add("operation" + uccode);
             if (failingOperations[0]-- > 0) {
                 sneakyThrow(new AbortException("dump failed"));
@@ -206,6 +206,27 @@ class ExclusiveAccessTest {
         String kill = "vrunner session kill --db \"test_base\" --ras srv1c:1545 --uccode " + UCCODE;
         String operation = "operation --uccode " + UCCODE;
         assertThat(commands).containsExactly(kill, kill, operation, kill, operation,
+            "vrunner session unlock --db \"test_base\" --ras srv1c:1545");
+        verify(steps, times(2)).sleep(60);
+    }
+
+    @Test
+    void runFailsAfterLastAttempt() {
+        // given
+        failingKills = 3;
+
+        // when
+        Throwable thrown = catchThrowable(() ->
+            run(createConfiguration("/Ssrv1c\\\\test_base", "srv1c:1545", "UNKNOWN_ID"), 3, uccode -> {
+                commands.add("operation" + uccode);
+                return null;
+            }));
+
+        // then
+        // после последней попытки сборка получает ее ошибку, запрет снимается один раз
+        String kill = "vrunner session kill --db \"test_base\" --ras srv1c:1545 --uccode " + UCCODE;
+        assertThat(thrown).isInstanceOf(AbortException.class);
+        assertThat(commands).containsExactly(kill, kill, kill,
             "vrunner session unlock --db \"test_base\" --ras srv1c:1545");
         verify(steps, times(2)).sleep(60);
     }
@@ -235,7 +256,7 @@ class ExclusiveAccessTest {
 
         // when
         Throwable thrown = catchThrowable(() ->
-            run(createConfiguration("/Ssrv1c\\\\test_base", "srv1c:1545", "UNKNOWN_ID"), true, uccode -> {
+            run(createConfiguration("/Ssrv1c\\\\test_base", "srv1c:1545", "UNKNOWN_ID"), 5, uccode -> {
                 throw failure;
             }));
 
@@ -278,7 +299,7 @@ class ExclusiveAccessTest {
     }
 
     private void run(JobConfiguration jobConfiguration, Function<String, Object> operation) {
-        run(jobConfiguration, false, operation);
+        run(jobConfiguration, 1, operation);
     }
 
     // AbortException проверяемое, а операция в тестах - Function
@@ -287,7 +308,7 @@ class ExclusiveAccessTest {
         throw (T) exception;
     }
 
-    private void run(JobConfiguration jobConfiguration, boolean repeatOnFailure, Function<String, Object> operation) {
+    private void run(JobConfiguration jobConfiguration, int attempts, Function<String, Object> operation) {
         try (MockedStatic<VRunner> vrunner = Mockito.mockStatic(VRunner.class)) {
             vrunner.when(VRunner::getVRunnerPath).thenReturn("vrunner");
             vrunner.when(() -> VRunner.exec(anyString())).thenAnswer(invocation -> {
@@ -299,7 +320,7 @@ class ExclusiveAccessTest {
                 return 0;
             });
 
-            ExclusiveAccess.run(jobConfiguration, repeatOnFailure, new Closure<Object>(null) {
+            ExclusiveAccess.run(jobConfiguration, attempts, new Closure<Object>(null) {
                 @SuppressWarnings("unused")
                 public Object doCall(Object uccode) {
                     return operation.apply((String) uccode);
