@@ -5,9 +5,10 @@ import java.util.concurrent.TimeUnit
 /**
  * Подготовка своей базы тестовой стадии на текущем агенте теми же шагами, что и база сборки в стадии
  * "Подготовка ИБ". Конфигурация передается копией, в которой basePath - база стадии.
+ * stashSuffix - окончание имен stash с отчетами шагов инициализации этой базы.
  * Возвращает признак успешной инициализации базы.
  */
-def call(JobConfiguration config) {
+def call(JobConfiguration config, String stashSuffix) {
     // Исходники на агенте стадии получает Declarative, а этот агент выделен шагом node
     if (hasScm()) {
         checkout scm
@@ -55,8 +56,7 @@ def call(JobConfiguration config) {
     if (config.stageFlags.initSteps) {
         stage('Инициализация ИБ') {
             timeout(time: config.timeoutOptions.initInfoBase, unit: TimeUnit.MINUTES) {
-                // stash отчетов инициализации сохраняет подготовка базы сборки
-                initialized = initInfobase config, false
+                initialized = initInfobase config, stashSuffix
             }
         }
     }

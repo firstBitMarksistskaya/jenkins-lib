@@ -118,7 +118,7 @@ class InitInfoBaseTest {
     }
 
     @Test
-    void runDoesNotStashResultsWhenDisabled() throws IOException {
+    void runStashesResultsOfStageBaseUnderOwnNames() throws IOException {
 
         // given
         String config = IOUtils.resourceToString(
@@ -135,10 +135,12 @@ class InitInfoBaseTest {
 
             // when
             // своя база стадии готовится параллельно с базой сборки, stash с тем же именем заменил бы ее отчеты
-            new InitInfoBase(jobConfiguration, false).run();
+            new InitInfoBase(jobConfiguration, InitInfoBase.stageBaseStashSuffix(0)).run();
 
             // then
-            verify(steps, never()).stash(anyString(), anyString(), anyBoolean());
+            verify(steps).stash("init-allure-1", "build/out/allure/**", true);
+            verify(steps).stash("init-cucumber-1", "build/out/cucumber/**", true);
+            verify(steps, never()).stash(eq("init-allure"), anyString(), anyBoolean());
             verify(steps, never()).error(anyString());
         }
     }

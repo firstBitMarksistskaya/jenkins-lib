@@ -2,6 +2,7 @@
 import groovy.transform.Field
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.SourceFormat
+import ru.pulsar.jenkins.library.steps.InitInfoBase
 import ru.pulsar.jenkins.library.utils.InfobaseConnection
 import ru.pulsar.jenkins.library.utils.InfobaseLocks
 import ru.pulsar.jenkins.library.utils.RepoUtils
@@ -215,12 +216,14 @@ void call() {
                                         // Число баз известно только во время сборки, поэтому ветки создаются здесь,
                                         // а не описываются в parallel. Каждая база готовится на своем агенте
                                         Map<String, Closure> branches = [:]
-                                        for (String base : config.stageBases()) {
-                                            String stageBase = base
+                                        List<String> stageBases = config.stageBases()
+                                        for (int i = 0; i < stageBases.size(); i++) {
+                                            String stageBase = stageBases[i]
+                                            String stashSuffix = InitInfoBase.stageBaseStashSuffix(i)
                                             branches[stageBase] = {
                                                 node(agent1C) {
                                                     infobasesInitialized[InfobaseConnection.key(stageBase)] =
-                                                        prepareInfobase(config.withBasePath(stageBase))
+                                                        prepareInfobase(config.withBasePath(stageBase), stashSuffix)
                                                 }
                                             }
                                         }

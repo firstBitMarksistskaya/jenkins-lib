@@ -415,7 +415,7 @@ contributor(closures) {
             method(name: 'sendNotifications', params: [config: 'ru.pulsar.jenkins.library.configuration.JobConfiguration'], doc: 'Send notifications about build results')
             method(name: 'loadExtensions', params: [config: 'ru.pulsar.jenkins.library.configuration.JobConfiguration', stageName: String], doc: 'Load extensions into infobase')
             method(name: 'removeStageExtensions', params: [config: 'ru.pulsar.jenkins.library.configuration.JobConfiguration', stageName: String], doc: 'Remove service extensions of the stage from external infobase')
-            method(name: 'prepareInfobase', params: [config: 'ru.pulsar.jenkins.library.configuration.JobConfiguration'], doc: 'Prepare own infobase of test stage')
+            method(name: 'prepareInfobase', params: [config: 'ru.pulsar.jenkins.library.configuration.JobConfiguration', stashSuffix: String], doc: 'Prepare own infobase of test stage')
         }
 
         // Post actions!

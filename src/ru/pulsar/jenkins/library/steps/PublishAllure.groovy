@@ -28,7 +28,12 @@ class PublishAllure implements Serializable {
         steps = ContextRegistry.getContext().getStepExecutor()
 
         if (config.stageFlags.initSteps) {
-            safeUnstash('init-allure')
+            safeUnstash(InitInfoBase.ALLURE_STASH)
+            // Свои базы стадий сохраняют отчеты инициализации под своими именами
+            int stageBasesCount = config.stageBases().size()
+            for (int i = 0; i < stageBasesCount; i++) {
+                safeUnstash(InitInfoBase.ALLURE_STASH + InitInfoBase.stageBaseStashSuffix(i))
+            }
         }
         if (config.stageFlags.bdd) {
             safeUnstash(Bdd.ALLURE_STASH)

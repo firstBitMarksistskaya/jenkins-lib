@@ -13,16 +13,25 @@ import ru.pulsar.jenkins.library.utils.FileUtils
 
 class InitInfoBase implements Serializable {
 
+    public static final String ALLURE_STASH = 'init-allure'
+    public static final String CUCUMBER_STASH = 'init-cucumber'
+
     private final JobConfiguration config
-    private final boolean stashResults
+    private final String stashSuffix
 
     /**
-     * @param stashResults сохранить отчеты шагов инициализации в stash для публикации. Своя база стадии готовится
-     * параллельно с базой сборки, и ее stash с тем же именем заменил бы отчеты базы сборки
+     * @param stashSuffix окончание имен stash с отчетами шагов инициализации. Своя база стадии готовится
+     * параллельно с базой сборки, и stash с тем же именем заменил бы отчеты базы сборки, поэтому каждая база стадии
+     * сохраняет отчеты под своими именами (stageBaseStashSuffix)
      */
-    InitInfoBase(JobConfiguration config, boolean stashResults = true) {
+    InitInfoBase(JobConfiguration config, String stashSuffix = '') {
         this.config = config
-        this.stashResults = stashResults
+        this.stashSuffix = stashSuffix
+    }
+
+    /** Окончание имен stash своей базы стадии по ее номеру в JobConfiguration.stageBases(), начиная с нуля */
+    static String stageBaseStashSuffix(int index) {
+        return "-${index + 1}".toString()
     }
 
     def run() {
@@ -136,10 +145,9 @@ class InitInfoBase implements Serializable {
             Logger.println(exitStatusesMessage)
         }
 
-        if (stashResults) {
-            steps.stash('init-allure', 'build/out/allure/**', true)
-            steps.stash('init-cucumber', 'build/out/cucumber/**', true)
-        }
+        // Отчеты сохраняются и при ошибках шагов: по ним видно, что пошло не так
+        steps.stash(ALLURE_STASH + stashSuffix, 'build/out/allure/**', true)
+        steps.stash(CUCUMBER_STASH + stashSuffix, 'build/out/cucumber/**', true)
 
         if (!isInfobaseInitialized) {
             // Throws exception
