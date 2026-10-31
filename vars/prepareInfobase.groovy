@@ -55,7 +55,8 @@ def call(JobConfiguration config) {
     if (config.stageFlags.initSteps) {
         stage('Инициализация ИБ') {
             timeout(time: config.timeoutOptions.initInfoBase, unit: TimeUnit.MINUTES) {
-                initialized = initInfobase config
+                // stash отчетов инициализации сохраняет подготовка базы сборки
+                initialized = initInfobase config, false
             }
         }
     }

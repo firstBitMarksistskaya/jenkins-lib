@@ -20,6 +20,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -110,6 +111,34 @@ class InitInfoBaseTest {
             // then
             assertThat(commands.get(0)).doesNotContain("--exitCodePath");
             vrunner.verify(() -> VRunner.readExitStatusFromFile(anyString(), any(Integer.class)), never());
+            verify(steps, never()).error(anyString());
+            verify(steps).stash("init-allure", "build/out/allure/**", true);
+            verify(steps).stash("init-cucumber", "build/out/cucumber/**", true);
+        }
+    }
+
+    @Test
+    void runDoesNotStashResultsWhenDisabled() throws IOException {
+
+        // given
+        String config = IOUtils.resourceToString(
+                "initInfoBaseRunMigration.json",
+                StandardCharsets.UTF_8,
+                this.getClass().getClassLoader()
+        );
+        JobConfiguration jobConfiguration = ConfigurationReader.create(config);
+        when(steps.fileExists(anyString())).thenReturn(false);
+
+        try (MockedStatic<VRunner> vrunner = Mockito.mockStatic(VRunner.class)) {
+            vrunner.when(VRunner::getVRunnerPath).thenReturn("vrunner");
+            vrunner.when(() -> VRunner.exec(anyString(), eq(true))).thenReturn(0);
+
+            // when
+            // своя база стадии готовится параллельно с базой сборки, stash с тем же именем заменил бы ее отчеты
+            new InitInfoBase(jobConfiguration, false).run();
+
+            // then
+            verify(steps, never()).stash(anyString(), anyString(), anyBoolean());
             verify(steps, never()).error(anyString());
         }
     }

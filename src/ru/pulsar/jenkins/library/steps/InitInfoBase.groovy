@@ -14,9 +14,15 @@ import ru.pulsar.jenkins.library.utils.FileUtils
 class InitInfoBase implements Serializable {
 
     private final JobConfiguration config
+    private final boolean stashResults
 
-    InitInfoBase(JobConfiguration config) {
+    /**
+     * @param stashResults сохранить отчеты шагов инициализации в stash для публикации. Своя база стадии готовится
+     * параллельно с базой сборки, и ее stash с тем же именем заменил бы отчеты базы сборки
+     */
+    InitInfoBase(JobConfiguration config, boolean stashResults = true) {
         this.config = config
+        this.stashResults = stashResults
     }
 
     def run() {
@@ -130,8 +136,10 @@ class InitInfoBase implements Serializable {
             Logger.println(exitStatusesMessage)
         }
 
-        steps.stash('init-allure', 'build/out/allure/**', true)
-        steps.stash('init-cucumber', 'build/out/cucumber/**', true)
+        if (stashResults) {
+            steps.stash('init-allure', 'build/out/allure/**', true)
+            steps.stash('init-cucumber', 'build/out/cucumber/**', true)
+        }
 
         if (!isInfobaseInitialized) {
             // Throws exception
