@@ -1,5 +1,6 @@
 package ru.pulsar.jenkins.library.steps
 
+import com.cloudbees.groovy.cps.NonCPS
 import hudson.model.Result
 import jenkins.plugins.http_request.HttpMode
 import jenkins.plugins.http_request.MimeType
@@ -116,10 +117,56 @@ class IMNotification implements Serializable {
         }
     }
 
-    private static String truncate(String text, int maxLength) {
+    @NonCPS
+    static String truncate(String text, int maxLength) {
         if (text == null || text.length() <= maxLength) {
             return text
         }
-        return text.substring(0, maxLength - 3) + '...'
+        String suffix = '\n\u2026'
+        int budget = maxLength - suffix.length()
+        if (budget < 0) {
+            return text.substring(0, safeEnd(text, maxLength))
+        }
+        int newline = text.lastIndexOf('\n', budget)
+        while (newline > 0 && text.startsWith('\n', newline - 1)) {
+            newline--
+        }
+        if (newline > 0) {
+            return text.substring(0, newline) + suffix
+        }
+        String prefix = text.substring(0, budget)
+        int cut = safeEnd(prefix, cutBeforeUnclosedLink(prefix))
+        String kept = prefix.substring(0, cut).stripTrailing()
+        return kept.isEmpty() ? '\u2026' : kept + suffix
+    }
+
+    @NonCPS
+    private static int cutBeforeUnclosedLink(String prefix) {
+        int open = lastUnescaped(prefix, '[')
+        boolean unclosed = open >= 0 && lastUnescaped(prefix, ')') < open
+        return unclosed ? open : prefix.length()
+    }
+
+    @NonCPS
+    private static int lastUnescaped(String text, String symbol) {
+        int index = text.lastIndexOf(symbol)
+        while (index >= 0 && isEscaped(text, index)) {
+            index = text.lastIndexOf(symbol, index - 1)
+        }
+        return index
+    }
+
+    @NonCPS
+    private static boolean isEscaped(String text, int index) {
+        int start = index
+        while (start > 0 && text.startsWith('\\', start - 1)) {
+            start--
+        }
+        return (index - start) % 2 == 1
+    }
+
+    @NonCPS
+    private static int safeEnd(String text, int end) {
+        return end > 0 && Character.isHighSurrogate(text.charAt(end - 1)) ? end - 1 : end
     }
 }
