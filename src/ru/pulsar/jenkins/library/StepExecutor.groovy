@@ -137,6 +137,11 @@ class StepExecutor implements IStepExecutor {
     }
 
     @Override
+    void createDir(String path, boolean deleteDir) {
+        steps.createDir(path, deleteDir)
+    }
+
+    @Override
     def dir(String path, Closure body) {
         steps.dir(path) {
             body()
@@ -228,13 +233,38 @@ class StepExecutor implements IStepExecutor {
 
     @Override
     ResponseContentSupplier httpRequest(String url, HttpMode httpMode, MimeType contentType, String requestBody, String validResponseCodes, boolean consoleLogResponseBody) {
+        return httpRequest(url, httpMode, contentType, requestBody, validResponseCodes, consoleLogResponseBody, null, null)
+    }
+
+    @Override
+    ResponseContentSupplier httpRequest(String url, HttpMode httpMode, MimeType contentType, String requestBody, String validResponseCodes, boolean consoleLogResponseBody, String httpProxy, String proxyAuthentication) {
+        def args = [
+            url                    : url,
+            httpMode               : httpMode,
+            contentType            : contentType,
+            requestBody            : requestBody,
+            validResponseCodes     : validResponseCodes,
+            consoleLogResponseBody : consoleLogResponseBody
+        ]
+        if (httpProxy) {
+            args.httpProxy = httpProxy
+            if (proxyAuthentication) {
+                args.proxyAuthentication = proxyAuthentication
+            }
+        }
+        steps.httpRequest(args)
+    }
+
+    @Override
+    ResponseContentSupplier httpRequest(String url, HttpMode httpMode, MimeType contentType, String requestBody, String validResponseCodes, boolean consoleLogResponseBody, List<Map<String, String>> customHeaders) {
         steps.httpRequest(
             url: url,
             httpMode: httpMode,
             contentType: contentType,
             requestBody: requestBody,
             validResponseCodes: validResponseCodes,
-            consoleLogResponseBody: consoleLogResponseBody
+            consoleLogResponseBody: consoleLogResponseBody,
+            customHeaders: customHeaders
         )
     }
 

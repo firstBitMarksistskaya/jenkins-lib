@@ -1,0 +1,12 @@
+{
+  "srcDir": "src/cf",
+  "stages": {
+    "initSteps": true
+  },
+  "initInfobase": {
+    "runMigration": true,
+    "additionalInitializationSteps": [
+      "vanessa --settings ./tools/vrunner.first.json"
+    ]
+  }
+}

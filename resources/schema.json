@@ -42,6 +42,44 @@
           }
         }
       }
+    },
+    "IMNotificationOptions" : {
+      "type" : "object",
+      "properties" : {
+        "onAlways" : {
+          "type" : "boolean",
+          "description" : "Отправлять всегда"
+        },
+        "onFailure" : {
+          "type" : "boolean",
+          "description" : "Отправлять при падении сборки"
+        },
+        "onSuccess" : {
+          "type" : "boolean",
+          "description" : "Отправлять при успешной сборке"
+        },
+        "onUnstable" : {
+          "type" : "boolean",
+          "description" : "Отправлять при нестабильной сборке"
+        }
+      }
+    },
+    "TelegramNotificationOptions" : {
+      "allOf" : [ {
+        "$ref" : "#/definitions/IMNotificationOptions"
+      }, {
+        "type" : "object",
+        "properties" : {
+          "useHttpProxy" : {
+            "type" : "boolean",
+            "description" : "Отправлять через HTTP-прокси. Адрес и авторизация берутся из фиксированных Jenkins credentials TELEGRAM_HTTP_PROXY (secret text) и TELEGRAM_HTTP_PROXY_AUTH (username with password), в jobConfiguration не указываются"
+          },
+          "useOtherBranchesChat" : {
+            "type" : "boolean",
+            "description" : "Отправлять сборки прочих веток в отдельный чат. Chat id — secrets.telegramChatIdOtherBranches, при UNKNOWN_ID {slug}_TELEGRAM_CHAT_ID_OTHER_BRANCHES. Основная ветка (defaultBranch) и сборки без BRANCH_NAME всегда идут в telegramChatId"
+          }
+        }
+      } ]
     }
   },
   "type" : "object",
@@ -72,6 +110,10 @@
           "items" : {
             "type" : "string"
           }
+        },
+        "vrunnerSettings" : {
+          "type" : "string",
+          "description" : "Путь к конфигурационному файлу vanessa-runner.\n    По умолчанию содержит значение \"./tools/vrunner.json\".\n    "
         }
       },
       "description" : "Настройки шага запуска BDD сценариев"
@@ -206,27 +248,26 @@
           },
           "description" : "Настройки рассылки результатов сборки через email"
         },
+        "discordWebhook" : {
+          "allOf" : [ {
+            "$ref" : "#/definitions/IMNotificationOptions"
+          }, {
+            "description" : "Настройки рассылки результатов сборки в Discord через webhook"
+          } ]
+        },
+        "discordBot" : {
+          "allOf" : [ {
+            "$ref" : "#/definitions/IMNotificationOptions"
+          }, {
+            "description" : "Настройки рассылки результатов сборки в Discord через бота"
+          } ]
+        },
         "telegram" : {
-          "type" : "object",
-          "properties" : {
-            "onAlways" : {
-              "type" : "boolean",
-              "description" : "Отправлять всегда"
-            },
-            "onFailure" : {
-              "type" : "boolean",
-              "description" : "Отправлять при падении сборки"
-            },
-            "onSuccess" : {
-              "type" : "boolean",
-              "description" : "Отправлять при успешной сборке"
-            },
-            "onUnstable" : {
-              "type" : "boolean",
-              "description" : "Отправлять при нестабильной сборке"
-            }
-          },
-          "description" : "Настройки рассылки результатов сборки через telegram"
+          "allOf" : [ {
+            "$ref" : "#/definitions/TelegramNotificationOptions"
+          }, {
+            "description" : "Настройки рассылки результатов сборки через telegram"
+          } ]
         }
       },
       "description" : "Настройки рассылки результатов сборки"
@@ -260,6 +301,18 @@
     "secrets" : {
       "type" : "object",
       "properties" : {
+        "discordWebhookUrl" : {
+          "type" : "string",
+          "description" : "Discord webhook URL для отправки уведомлений"
+        },
+        "discordBotToken" : {
+          "type" : "string",
+          "description" : "Токен авторизации Discord-бота для отправки уведомлений"
+        },
+        "discordChatId" : {
+          "type" : "string",
+          "description" : "Идентификатор Discord-канала для отправки уведомлений"
+        },
         "storage" : {
           "type" : "string",
           "description" : "Данные авторизации в хранилище конфигурации"
@@ -275,6 +328,10 @@
         "telegramChatId" : {
           "type" : "string",
           "description" : "Идентификатор telegram-чата для отправки уведомлений"
+        },
+        "telegramChatIdOtherBranches" : {
+          "type" : "string",
+          "description" : "Идентификатор telegram-чата для уведомлений о сборках прочих веток (не defaultBranch). Если UNKNOWN_ID, используется {slug}_TELEGRAM_CHAT_ID_OTHER_BRANCHES"
         }
       },
       "description" : "Идентификаторы сохраненных секретов"
@@ -371,6 +428,14 @@
         "initSteps" : {
           "type" : "boolean",
           "description" : "Предварительные шаги инициализации включены"
+        },
+        "discordWebhook" : {
+          "type" : "boolean",
+          "description" : "Выполнять рассылку результатов сборки в Discord через webhook"
+        },
+        "discordBot" : {
+          "type" : "boolean",
+          "description" : "Выполнять рассылку результатов сборки в Discord через бота"
         },
         "smoke" : {
           "type" : "boolean",
