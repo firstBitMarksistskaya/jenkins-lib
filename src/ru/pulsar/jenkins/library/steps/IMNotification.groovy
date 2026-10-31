@@ -123,115 +123,50 @@ class IMNotification implements Serializable {
             return text
         }
         String suffix = '\n\u2026'
-        if (maxLength < suffix.length()) {
-            return text.substring(0, maxLength)
-        }
         int budget = maxLength - suffix.length()
+        if (budget < 0) {
+            return text.substring(0, safeEnd(text, maxLength))
+        }
         int newline = text.lastIndexOf('\n', budget)
+        while (newline > 0 && text.startsWith('\n', newline - 1)) {
+            newline--
+        }
         if (newline > 0) {
             return text.substring(0, newline) + suffix
         }
         String prefix = text.substring(0, budget)
-        int cut = cutBeforeUnclosedLink(prefix)
-        String kept = rtrim(prefix.substring(0, cut))
-        if (kept.isEmpty()) {
-            return '\u2026'
-        }
-        return kept + suffix
+        int cut = safeEnd(prefix, cutBeforeUnclosedLink(prefix))
+        String kept = prefix.substring(0, cut).stripTrailing()
+        return kept.isEmpty() ? '\u2026' : kept + suffix
     }
 
     @NonCPS
     private static int cutBeforeUnclosedLink(String prefix) {
-        int separator = lastUnescapedLinkSeparator(prefix)
-        if (separator >= 0 && !hasUnescapedCloseParen(prefix, separator + 2)) {
-            int bracket = unescapedOpenBracket(prefix, separator)
-            return bracket >= 0 ? bracket : separator
-        }
-        int open = unescapedOpenBracket(prefix, prefix.length())
-        if (open >= 0 && !hasLinkDelimiterAfter(prefix, open)) {
-            return open
-        }
-        return codePointSafeEnd(prefix)
+        int open = lastUnescaped(prefix, '[')
+        boolean unclosed = open >= 0 && lastUnescaped(prefix, ')') < open
+        return unclosed ? open : prefix.length()
     }
 
     @NonCPS
-    private static boolean hasLinkDelimiterAfter(String text, int openBracket) {
-        for (int i = openBracket + 1; i < text.length(); i++) {
-            if (charEquals(text, i, ']') && !isEscaped(text, i)) {
-                return i + 1 < text.length() && charEquals(text, i + 1, '(')
-            }
+    private static int lastUnescaped(String text, String symbol) {
+        int index = text.lastIndexOf(symbol)
+        while (index >= 0 && isEscaped(text, index)) {
+            index = text.lastIndexOf(symbol, index - 1)
         }
-        return false
-    }
-
-    @NonCPS
-    private static int lastUnescapedLinkSeparator(String prefix) {
-        int from = prefix.length()
-        while (from > 0) {
-            int separator = prefix.lastIndexOf('](', from - 1)
-            if (separator < 0) {
-                return -1
-            }
-            if (!isEscaped(prefix, separator)) {
-                return separator
-            }
-            from = separator
-        }
-        return -1
-    }
-
-    @NonCPS
-    private static boolean hasUnescapedCloseParen(String text, int from) {
-        for (int i = from; i < text.length(); i++) {
-            if (charEquals(text, i, ')') && !isEscaped(text, i)) {
-                return true
-            }
-        }
-        return false
-    }
-
-    @NonCPS
-    private static int unescapedOpenBracket(String text, int before) {
-        for (int i = before - 1; i >= 0; i--) {
-            if (charEquals(text, i, '[') && !isEscaped(text, i)) {
-                return i
-            }
-        }
-        return -1
-    }
-
-    @NonCPS
-    private static boolean charEquals(String text, int index, String symbol) {
-        return text.substring(index, index + 1) == symbol
+        return index
     }
 
     @NonCPS
     private static boolean isEscaped(String text, int index) {
-        int slashes = 0
-        for (int i = index - 1; i >= 0 && charEquals(text, i, '\\'); i--) {
-            slashes++
+        int start = index
+        while (start > 0 && text.startsWith('\\', start - 1)) {
+            start--
         }
-        return slashes % 2 == 1
+        return (index - start) % 2 == 1
     }
 
     @NonCPS
-    private static int codePointSafeEnd(String text) {
-        if (text.isEmpty()) {
-            return 0
-        }
-        int end = text.length()
-        if (Character.isHighSurrogate(text.charAt(end - 1))) {
-            return end - 1
-        }
-        return end
-    }
-
-    @NonCPS
-    private static String rtrim(String text) {
-        int end = text.length()
-        while (end > 0 && Character.isWhitespace(text.charAt(end - 1))) {
-            end--
-        }
-        return text.substring(0, end)
+    private static int safeEnd(String text, int end) {
+        return end > 0 && Character.isHighSurrogate(text.charAt(end - 1)) ? end - 1 : end
     }
 }

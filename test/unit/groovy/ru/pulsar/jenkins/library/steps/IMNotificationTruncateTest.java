@@ -15,10 +15,12 @@ class IMNotificationTruncateTest {
   }
 
   @Test
-  @DisplayName("лимит короче суффикса обрезает сырой префикс")
-  void tinyLimitReturnsRawPrefix() {
-    assertThat(IMNotification.truncate("abcdef", 1)).isEqualTo("a");
+  @DisplayName("лимит короче суффикса не разрезает суррогатную пару")
+  void tinyLimitKeepsCodePointWhole() {
     assertThat(IMNotification.truncate("abcdef", 0)).isEmpty();
+    assertThat(IMNotification.truncate("abcdef", 1)).isEqualTo("a");
+    assertThat(IMNotification.truncate("\uD83D\uDE00abc", 1)).isEmpty();
+    assertThat(IMNotification.truncate("a\uD83D\uDE00bc", 1)).isEqualTo("a");
   }
 
   @Test
@@ -29,6 +31,15 @@ class IMNotificationTruncateTest {
 
     assertThat(result).isEqualTo("line-one\nline-two\n\u2026");
     assertThat(result).doesNotContain("...");
+  }
+
+  @Test
+  @DisplayName("пустая строка перед многоточием не остаётся")
+  void collapsesBlankLineBeforeEllipsis() {
+    String result = IMNotification.truncate("aaaa\n\nbbbbbbbbbb", 10);
+
+    assertThat(result).isEqualTo("aaaa\n\u2026");
+    assertThat(result).doesNotContain("\n\n");
   }
 
   @Test
@@ -70,6 +81,23 @@ class IMNotificationTruncateTest {
   }
 
   @Test
+  @DisplayName("закрытая ссылка на строке остаётся")
+  void keepsClosedLinkOnTheSameLine() {
+    String text = "[a](http://x) tail tail tail";
+
+    String result = IMNotification.truncate(text, 20);
+
+    assertThat(result).isEqualTo("[a](http://x) tail\n\u2026");
+    assertThat(result.length()).isLessThanOrEqualTo(20);
+  }
+
+  @Test
+  @DisplayName("если ссылка начинается в начале, остаётся только многоточие")
+  void dropsWholePrefixWhenLinkStartsEarly() {
+    assertThat(IMNotification.truncate("[a](http://very/long/url)", 10)).isEqualTo("\u2026");
+  }
+
+  @Test
   @DisplayName("экранированный ]( не считается началом ссылки")
   void escapedSeparatorIsNotALink() {
     String text = "keep \\](http://localhost/very/long/url/continues";
@@ -83,11 +111,9 @@ class IMNotificationTruncateTest {
   }
 
   @Test
-  @DisplayName("суффикс не разрезает суррогатную пару")
+  @DisplayName("обрезка не разрезает суррогатную пару")
   void doesNotSplitSurrogatePair() {
-    String text = "hello\uD83D\uDE00XXXX";
-
-    String result = IMNotification.truncate(text, 8);
+    String result = IMNotification.truncate("hello\uD83D\uDE00XXXX", 8);
 
     assertThat(result).isEqualTo("hello\n\u2026");
     assertThat(result).doesNotContain("\uD83D");
@@ -104,7 +130,6 @@ class IMNotificationTruncateTest {
     String result = IMNotification.truncate(text, limit);
 
     assertThat(result).isEqualTo(line.substring(0, line.length() - 1) + "\n\u2026");
-    assertThat(result).doesNotContain("kropac");
     assertThat(result).contains("](http://localhost/user/name)");
   }
 }
