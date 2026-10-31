@@ -23,7 +23,7 @@ class RunnerSettings implements Serializable {
 
     @NonCPS
     private static String parseValue(FilePath file, String command, String key) {
-        def settings = new JsonSlurper().parseText(read(file))
+        def settings = parse(file)
         if (!(settings instanceof Map)) {
             return null
         }
@@ -34,6 +34,20 @@ class RunnerSettings implements Serializable {
             }
         }
         return null
+    }
+
+    /**
+     * Содержимое JSON-файла на агенте. Сообщение JsonSlurper об ошибке содержит фрагмент файла рядом с ней,
+     * а в файле может быть пароль, поэтому ошибка разбора сообщается без него
+     */
+    @NonCPS
+    static def parse(FilePath file) {
+        String text = read(file)
+        try {
+            return new JsonSlurper().parseText(text)
+        } catch (Exception ignored) {
+            throw new IllegalArgumentException("Файл настроек ${file.remote} не является корректным JSON")
+        }
     }
 
     /**

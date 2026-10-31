@@ -147,6 +147,39 @@ class VanessaTestClientTest {
     }
 
     @Test
+    void invalidVanessaSettingsFailWithoutPrintingFileContent() {
+        // given
+        // сообщение JsonSlurper об ошибке содержит фрагмент файла рядом с ней
+        write('tools/vrunner.json', '{ "vanessa": { "--vanessasettings": "./tools/VBParams.json" } }')
+        write('tools/VBParams.json', '{ "ДополнительныеПараметрыЗапускаКлиентаТестирования": "/P from-file" "x": 1 }')
+        JobConfiguration config = configuration('')
+
+        // when
+        Throwable thrown = catchThrowable { run(config, COMMAND, true) }
+
+        // then
+        assertThat(thrown).hasMessageContaining('не является корректным JSON').hasMessageNotContaining('from-file')
+        assertThat(commands).isEmpty()
+    }
+
+    @Test
+    void invalidRunnerSettingsFailWithoutPrintingFileContent() {
+        // given
+        write('tools/vrunner.json', '{ "default": { "--db-pwd": "from-file" "--vanessasettings": "./tools/VBParams.json" } }')
+        JobConfiguration config = configuration('')
+
+        // when
+        Throwable thrown = catchThrowable { run(config, COMMAND, true) }
+
+        // then
+        assertThat(thrown).isInstanceOf(IllegalArgumentException)
+            .hasMessageContaining('не является корректным JSON')
+            .hasMessageNotContaining('from-file')
+            .hasNoCause()
+        assertThat(commands).isEmpty()
+    }
+
+    @Test
     void proxyKeyIsNotPassword() {
         // given
         write('tools/vrunner.json', '{ "vanessa": { "--vanessasettings": "./tools/VBParams.json" } }')

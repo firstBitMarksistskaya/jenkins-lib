@@ -2,7 +2,6 @@ package ru.pulsar.jenkins.library.utils
 
 import com.cloudbees.groovy.cps.NonCPS
 import groovy.json.JsonOutput
-import groovy.json.JsonSlurper
 import hudson.FilePath
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
@@ -109,7 +108,9 @@ class VanessaTestClient implements Serializable {
 
         def settings
         try {
-            settings = new JsonSlurper().parseText(RunnerSettings.read(source))
+            settings = RunnerSettings.parse(source)
+        } catch (IllegalArgumentException ignored) {
+            return 'файл не является корректным JSON'
         } catch (Exception e) {
             return "не удалось прочитать файл: ${e.message}"
         }
