@@ -134,6 +134,33 @@ class ClusterCoverageTest {
     }
 
     @Test
+    void runStopsCoverage41CWhenCheckFails() {
+        // given
+        RuntimeException failure = new RuntimeException("check failed");
+        doAnswer(invocation -> {
+            String command = invocation.getArgument(0);
+            events.add("cmd " + command);
+            if (command.contains(" check ")) {
+                throw failure;
+            }
+            return 0;
+        }).when(steps).cmd(anyString());
+
+        // when
+        Throwable thrown = catchThrowable(() -> run(createConfiguration("srv1c:1550", "UNKNOWN_ID"), () -> events.add("body")));
+
+        // then
+        // процесс start уже запущен, без stop он остался бы подключенным к серверу отладки
+        assertThat(thrown).isSameAs(failure);
+        assertThat(events).containsExactly(
+            "start start" + CONNECTION + " -P ws -s src/cf -o build/out/bdd-coverage.xml",
+            "cmd Coverage41C check" + CONNECTION,
+            "cmd Coverage41C stop" + CONNECTION
+        );
+        verify(steps, never()).stash(anyString(), anyString(), anyBoolean());
+    }
+
+    @Test
     void debugServerUrlKeepsExplicitScheme() {
         assertThat(ClusterCoverage.debugServerUrl("srv1c:1550")).isEqualTo("http://srv1c:1550");
         assertThat(ClusterCoverage.debugServerUrl(" https://srv1c:1550 ")).isEqualTo("https://srv1c:1550");

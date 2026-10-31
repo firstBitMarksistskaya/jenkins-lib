@@ -42,6 +42,8 @@ class ClusterCoverage implements Serializable {
 
         def result
         try {
+            // check внутри try: если процесс запущен, но не подключился, его тоже нужно остановить
+            steps.cmd("$coverage41CPath check$connection")
             result = body()
         } catch (Exception e) {
             // Coverage41C, оставшийся подключенным к серверу отладки, не даст подключиться следующему замеру
@@ -78,7 +80,6 @@ class ClusterCoverage implements Serializable {
         }
 
         sleep(1000)
-        steps.cmd("$coverage41CPath check$connection")
     }
 
     // Адрес сервера отладки для Coverage41C: http://хост:порт. Порт по умолчанию тот же, что у -debugServerPort
