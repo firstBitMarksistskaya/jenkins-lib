@@ -8,5 +8,4 @@ def call(JobConfiguration config) {
 
     def syntaxCheck = new SyntaxCheck(config)
     syntaxCheck.run()
-
 }

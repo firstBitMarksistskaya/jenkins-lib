@@ -33,6 +33,15 @@ class Secrets implements Serializable {
     @JsonPropertyDescription("Идентификатор Discord-канала для отправки уведомлений")
     String discordChatId
 
+    @JsonPropertyDescription("Идентификатор учетных данных Jenkins с именем пользователя и паролем администратора кластера. Если идентификатор не задан, используется CLUSTER_ADMIN. Если таких учетных данных нет, команда выполняется без них")
+    String clusterAdmin
+
+    @JsonPropertyDescription("Идентификатор секретного текста Jenkins с паролем сервера отладки кластера (-debugServerPwd). Если идентификатор не задан, используется DEBUG_SERVER_PASSWORD. Если таких учетных данных нет, команда выполняется без них")
+    String debugServerPassword
+
+    @JsonPropertyDescription("Идентификатор учетных данных Jenkins с именем пользователя и паролем пользователя информационной базы для vanessa-runner и клиентов тестирования Vanessa Automation и Vanessa ADD. Если идентификатор не задан, используется {slug}_INFOBASE_USER. Если таких учетных данных нет, пользователь и пароль берутся из файлов настроек vanessa-runner")
+    String infobaseUser
+
     @Override
     @NonCPS
     String toString() {
@@ -45,6 +54,9 @@ class Secrets implements Serializable {
             ", discordWebhookUrl='" + discordWebhookUrl + '\'' +
             ", discordBotToken='" + discordBotToken + '\'' +
             ", discordChatId='" + discordChatId + '\'' +
+            ", clusterAdmin='" + clusterAdmin + '\'' +
+            ", debugServerPassword='" + debugServerPassword + '\'' +
+            ", infobaseUser='" + infobaseUser + '\'' +
             '}';
     }
 }

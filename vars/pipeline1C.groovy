@@ -2,6 +2,9 @@
 import groovy.transform.Field
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.SourceFormat
+import ru.pulsar.jenkins.library.steps.InitInfoBase
+import ru.pulsar.jenkins.library.utils.InfobaseConnection
+import ru.pulsar.jenkins.library.utils.InfobaseLocks
 import ru.pulsar.jenkins.library.utils.RepoUtils
 
 import java.util.concurrent.TimeUnit
@@ -16,8 +19,23 @@ String agent1C
 String agentEdt
 
 @Field
-// Флаг, указывающий на успешность инициализации информационной базы
-Boolean isInfobaseInitialized = true
+// Успешность инициализации баз сборки по InfobaseConnection.key. База без записи считается готовой:
+// шаги инициализации на ней не выполнялись
+Map<String, Boolean> infobasesInitialized = [:]
+
+@Field
+// Ресурсы внешней блокировки баз сборки. Аргументы шагов в options вычисляются в начале сборки,
+// поэтому список создается заранее, а заполняется в pre-stage
+List<Map<String, String>> infobaseLockResources = []
+
+@Field
+// Ресурсы внутренних блокировок тестовых стадий, заполняются в pre-stage
+Map<String, List<Map<String, String>>> stageLockResources = [bdd: [], syntaxCheck: [], smoke: [], yaxunit: []]
+
+// Успешна ли инициализация базы, на которой идет тестовая стадия
+boolean infobaseInitialized(String stageName) {
+    return infobasesInitialized[InfobaseConnection.key(config.baseName(stageName))] != false
+}
 
 void call() {
 
@@ -44,317 +62,415 @@ void call() {
                     script {
                         applyDebugOverridesIfNeeded()
                         config = jobConfiguration() as JobConfiguration
+                        config.validateInitMethod()
+                        config.validateStageBases()
                         agent1C = config.v8AgentLabel()
                         agentEdt = config.edtAgentLabel()
                         RepoUtils.computeRepoSlug(env.GIT_URL)
+                        InfobaseLocks.fill(config, env.BUILD_TAG, infobaseLockResources, stageLockResources)
                     }
                 }
             }
 
-            stage('Подготовка') {
-                parallel {
-                    stage('Подготовка 1С базы') {
+            stage('Подготовка и проверка качества') {
+                // Базы сборки заняты от начала подготовки до окончания последнего теста
+                options {
+                    lock(extra: infobaseLockResources)
+                }
+
+                stages {
+                    // Результат трансформации нужен подготовке всех баз сборки. С трансформацией в формат EDT
+                    // она не пересекается: они выполняются для разных форматов исходников
+                    stage('Трансформация из формата EDT') {
+                        agent {
+                            label agentEdt
+                        }
                         when {
                             beforeAgent true
-                            expression { config.stageFlags.needInfoBase() }
+                            expression { config.stageFlags.needInfoBase() && (config.infoBaseFromFiles() || config.needLoadExtensions()) && config.sourceFormat == SourceFormat.EDT }
                         }
+                        steps {
+                            timeout(time: config.timeoutOptions.edtToDesignerFormatTransformation, unit: TimeUnit.MINUTES) {
+                                edtToDesignerFormatTransformation config
+                            }
+                        }
+                    }
 
-                        stages {
-                            stage('Трансформация из формата EDT') {
+                    stage('Подготовка') {
+                        parallel {
+                            stage('Подготовка 1С базы') {
+                                // Если все тестовые стадии идут на своих базах, здесь только собираются расширения
+                                when {
+                                    beforeAgent true
+                                    expression { config.stageFlags.needInfoBase() && (config.buildBaseNeeded() || config.needLoadExtensions()) }
+                                }
+
+                                stages {
+                                    stage('Подготовка ИБ') {
+                                        agent {
+                                            label agent1C
+                                        }
+
+                                        stages {
+                                            stage('Сборка расширений из исходников') {
+                                                when {
+                                                    expression { config.needLoadExtensions() }
+                                                }
+                                                steps {
+                                                    restoreDebugOverridesIfNeeded()
+                                                    timeout(time: config.timeoutOptions.getBinaries, unit: TimeUnit.MINUTES) {
+                                                        createDir('build/out/cfe')
+                                                        // Соберем или загрузим cfe из исходников и положим их в папку build/out/cfe
+                                                        getExtensions config
+                                                    }
+                                                }
+                                            }
+                                            stage('Создание ИБ') {
+                                                when {
+                                                    expression { config.buildBaseNeeded() }
+                                                }
+                                                steps {
+                                                    timeout(time: config.timeoutOptions.createInfoBase, unit: TimeUnit.MINUTES) {
+                                                        createDir('build/out/')
+                                                            createInfobase config
+                                                    }
+                                                }
+                                            }
+
+                                            stage('Загрузка конфигурации') {
+                                                when {
+                                                    beforeAgent true
+                                                    expression { config.buildBaseNeeded() && config.needLoadConfiguration() }
+                                                }
+                                                steps {
+                                                    timeout(time: config.timeoutOptions.loadConfiguration, unit: TimeUnit.MINUTES) {
+                                                        script {
+                                                            if (config.infoBaseFromFiles()) {
+                                                                // Создание базы загрузкой из файлов
+                                                                initFromFiles config
+                                                            } else {
+                                                                // Создание базы загрузкой конфигурации из хранилища
+                                                                initFromStorage config
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+
+                                            stage('Загрузка расширений в конфигурацию') {
+                                                when {
+                                                    beforeAgent true
+                                                    expression { config.buildBaseNeeded() && config.needLoadExtensions() }
+                                                }
+                                                steps {
+                                                    timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
+                                                        loadExtensions config, 'initInfoBase'
+                                                    }
+                                                }
+                                            }
+
+                                            stage('Инициализация ИБ') {
+                                                when {
+                                                    beforeAgent true
+                                                    expression { config.buildBaseNeeded() && config.stageFlags.initSteps }
+                                                }
+                                                steps {
+                                                    timeout(time: config.timeoutOptions.initInfoBase, unit: TimeUnit.MINUTES) {
+                                                        // Инициализация и первичная миграция
+                                                        script {
+                                                            infobasesInitialized[InfobaseConnection.key(config.baseName())] = initInfobase config
+                                                        }
+                                                    }
+                                                }
+                                            }
+
+
+                                            // Локальную базу тестовые стадии получают из архива, внешнюю - по адресу:
+                                            // ее архив нужен, только если включено сохранение базы
+                                            stage('Архивация ИБ') {
+                                                when {
+                                                    beforeAgent true
+                                                    expression { config.buildBaseNeeded() && (config.basePath == '' || config.initInfoBaseOptions.archiveInfobase?.savingEnabled()) }
+                                                }
+                                                steps {
+                                                    timeout(time: config.timeoutOptions.zipInfoBase, unit: TimeUnit.MINUTES) {
+                                                        printLocation()
+
+                                                        zipInfobase config, 'initInfoBase'
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                            }
+
+                            stage('Подготовка баз стадий') {
+                                when {
+                                    beforeAgent true
+                                    expression { !config.stageBases().isEmpty() }
+                                }
+                                steps {
+                                    script {
+                                        // Число баз известно только во время сборки, поэтому ветки создаются здесь,
+                                        // а не описываются в parallel. Каждая база готовится на своем агенте
+                                        Map<String, Closure> branches = [:]
+                                        List<String> stageBases = config.stageBases()
+                                        for (int i = 0; i < stageBases.size(); i++) {
+                                            String stageBase = stageBases[i]
+                                            String stashSuffix = InitInfoBase.stageBaseStashSuffix(i)
+                                            branches[stageBase] = {
+                                                node(agent1C) {
+                                                    infobasesInitialized[InfobaseConnection.key(stageBase)] =
+                                                        prepareInfobase(config.withBasePath(stageBase), stashSuffix)
+                                                }
+                                            }
+                                        }
+                                        parallel branches
+                                    }
+                                }
+                            }
+
+                            stage('Трансформация в формат EDT') {
                                 agent {
                                     label agentEdt
                                 }
                                 when {
                                     beforeAgent true
-                                    expression { config.stageFlags.needInfoBase() && config.infoBaseFromFiles() && config.sourceFormat == SourceFormat.EDT }
+                                    expression { config.sourceFormat == SourceFormat.DESIGNER && config.stageFlags.edtValidate }
                                 }
                                 steps {
-                                    timeout(time: config.timeoutOptions.edtToDesignerFormatTransformation, unit: TimeUnit.MINUTES) {
-                                        edtToDesignerFormatTransformation config
+                                    timeout(time: config.timeoutOptions.designerToEdtFormatTransformation, unit: TimeUnit.MINUTES) {
+                                        designerToEdtFormatTransformation config
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    stage('Проверка качества') {
+                        parallel {
+                            stage('EDT контроль') {
+                                when {
+                                    beforeAgent true
+                                    expression { config.stageFlags.edtValidate }
+                                }
+                                stages {
+                                    stage('Валидация EDT') {
+                                        agent {
+                                            label agentEdt
+                                        }
+                                        steps {
+                                            timeout(time: config.timeoutOptions.edtValidate, unit: TimeUnit.MINUTES) {
+                                                edtValidate config
+                                            }
+                                        }
+                                    }
+
+                                    stage('Трансформация результатов') {
+                                        agent {
+                                            label 'oscript'
+                                        }
+                                        steps {
+                                            timeout(time: config.timeoutOptions.resultTransformation, unit: TimeUnit.MINUTES) {
+                                                transform config
+                                            }
+                                        }
                                     }
                                 }
                             }
 
-                            stage('Подготовка ИБ') {
+                            stage('BDD сценарии') {
                                 agent {
                                     label agent1C
                                 }
-
+                                when {
+                                    beforeAgent true
+                                    beforeOptions true
+                                    expression { config.stageFlags.bdd && infobaseInitialized('bdd') }
+                                }
+                                // Тестовые стадии на одной базе идут по очереди
+                                options {
+                                    lock(extra: stageLockResources.bdd)
+                                }
                                 stages {
-                                    stage('Сборка расширений из исходников') {
-                                        when {
-                                            expression { config.needLoadExtensions() }
-                                        }
+                                    stage('Распаковка ИБ') {
                                         steps {
                                             restoreDebugOverridesIfNeeded()
-                                            timeout(time: config.timeoutOptions.getBinaries, unit: TimeUnit.MINUTES) {
-                                                createDir('build/out/cfe')
-                                                // Соберем или загрузим cfe из исходников и положим их в папку build/out/cfe
-                                                getExtensions config
-                                            }
-                                        }
-                                    }
-                                    stage('Создание ИБ') {
-                                        steps {
-                                            timeout(time: config.timeoutOptions.createInfoBase, unit: TimeUnit.MINUTES) {
-                                                createDir('build/out/')
-                                                    createInfobase config
-                                            }
-                                        }
-                                    }
-
-                                    stage('Загрузка конфигурации') {
-                                        steps {
-                                            timeout(time: config.timeoutOptions.loadConfiguration, unit: TimeUnit.MINUTES) {
-                                                script {
-                                                    if (config.infoBaseFromFiles()) {
-                                                        // Создание базы загрузкой из файлов
-                                                        initFromFiles config
-                                                    } else {
-                                                        // Создание базы загрузкой конфигурации из хранилища
-                                                        initFromStorage config
-                                                    }
-                                                }
-                                            }
+                                            unzipInfobase config.forStage('bdd')
                                         }
                                     }
 
                                     stage('Загрузка расширений в конфигурацию') {
                                         when {
                                             beforeAgent true
-                                            expression { config.needLoadExtensions() }
+                                            expression { config.needLoadExtensions('bdd') }
                                         }
                                         steps {
                                             timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
-                                                loadExtensions config, 'initInfoBase'
+                                                loadExtensions config.forStage('bdd'), 'bdd'
                                             }
                                         }
                                     }
 
-                                    stage('Инициализация ИБ') {
-                                        when {
-                                            beforeAgent true
-                                            expression { config.stageFlags.initSteps }
-                                        }
+                                    stage('Выполнение BDD сценариев') {
                                         steps {
-                                            timeout(time: config.timeoutOptions.initInfoBase, unit: TimeUnit.MINUTES) {
-                                                // Инициализация и первичная миграция
-                                                script {
-                                                    isInfobaseInitialized = initInfobase config
-                                                }
+                                            timeout(time: config.timeoutOptions.bdd, unit: TimeUnit.MINUTES) {
+                                                bdd config.forStage('bdd')
                                             }
                                         }
                                     }
-
 
                                     stage('Архивация ИБ') {
+                                        when {
+                                            beforeAgent true
+                                            expression { config.forStage('bdd').basePath == '' || config.bddOptions.archiveInfobase?.savingEnabled() }
+                                        }
                                         steps {
                                             timeout(time: config.timeoutOptions.zipInfoBase, unit: TimeUnit.MINUTES) {
                                                 printLocation()
 
-                                                zipInfobase config, 'initInfoBase'
+                                                zipInfobase config.forStage('bdd'), 'bdd'
+                                            }
+                                        }
+                                    }
+                                }
+                                // Служебные расширения стадии нужны только ей: удаляются и при падении стадии.
+                                // post выполняется на агенте стадии под ее блокировкой базы
+                                post {
+                                    always {
+                                        timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
+                                            removeStageExtensions config.forStage('bdd'), 'bdd'
+                                        }
+                                    }
+                                }
+                            }
+
+                            stage('Синтаксический контроль') {
+                                agent {
+                                    label agent1C
+                                }
+                                when {
+                                    beforeAgent true
+                                    beforeOptions true
+                                    expression { config.stageFlags.syntaxCheck }
+                                }
+                                options {
+                                    lock(extra: stageLockResources.syntaxCheck)
+                                }
+                                stages {
+                                    stage('Распаковка ИБ') {
+                                        steps {
+                                            restoreDebugOverridesIfNeeded()
+                                            unzipInfobase config.forStage('syntaxCheck')
+                                        }
+                                    }
+
+                                    stage('Выполнение синтаксического контроля') {
+                                        steps {
+                                            timeout(time: config.timeoutOptions.syntaxCheck, unit: TimeUnit.MINUTES) {
+                                                syntaxCheck config.forStage('syntaxCheck')
                                             }
                                         }
                                     }
                                 }
                             }
-                        }
 
-                    }
-
-                    stage('Трансформация в формат EDT') {
-                        agent {
-                            label agentEdt
-                        }
-                        when {
-                            beforeAgent true
-                            expression { config.sourceFormat == SourceFormat.DESIGNER && config.stageFlags.edtValidate }
-                        }
-                        steps {
-                            timeout(time: config.timeoutOptions.designerToEdtFormatTransformation, unit: TimeUnit.MINUTES) {
-                                designerToEdtFormatTransformation config
-                            }
-                        }
-                    }
-                }
-            }
-
-            stage('Проверка качества') {
-                parallel {
-                    stage('EDT контроль') {
-                        when {
-                            beforeAgent true
-                            expression { config.stageFlags.edtValidate }
-                        }
-                        stages {
-                            stage('Валидация EDT') {
+                            stage('Дымовые тесты') {
                                 agent {
-                                    label agentEdt
+                                    label agent1C
                                 }
-                                steps {
-                                    timeout(time: config.timeoutOptions.edtValidate, unit: TimeUnit.MINUTES) {
-                                        edtValidate config
+                                when {
+                                    beforeAgent true
+                                    beforeOptions true
+                                    expression { config.stageFlags.smoke && infobaseInitialized('smoke') }
+                                }
+                                options {
+                                    lock(extra: stageLockResources.smoke)
+                                }
+                                stages {
+                                    stage('Распаковка ИБ') {
+                                        steps {
+                                            restoreDebugOverridesIfNeeded()
+                                            unzipInfobase config.forStage('smoke')
+                                        }
+                                    }
+
+                                    stage('Загрузка расширений в конфигурацию') {
+                                        when {
+                                            beforeAgent true
+                                            expression { config.needLoadExtensions('smoke') }
+                                        }
+                                        steps {
+                                            timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
+                                                loadExtensions config.forStage('smoke'), 'smoke'
+                                            }
+                                        }
+                                    }
+
+                                    stage('Выполнение дымовых тестов') {
+                                        steps {
+                                            timeout(time: config.timeoutOptions.smoke, unit: TimeUnit.MINUTES) {
+                                                smoke config.forStage('smoke')
+                                            }
+                                        }
+                                    }
+                                }
+                                post {
+                                    always {
+                                        timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
+                                            removeStageExtensions config.forStage('smoke'), 'smoke'
+                                        }
                                     }
                                 }
                             }
 
-                            stage('Трансформация результатов') {
+                            stage('YAXUnit тесты') {
                                 agent {
-                                    label 'oscript'
+                                    label agent1C
                                 }
-                                steps {
-                                    timeout(time: config.timeoutOptions.resultTransformation, unit: TimeUnit.MINUTES) {
-                                        transform config
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    stage('BDD сценарии') {
-                        agent {
-                            label agent1C
-                        }
-                        when {
-                            beforeAgent true
-                            expression { config.stageFlags.bdd && isInfobaseInitialized }
-                        }
-                        stages {
-                            stage('Распаковка ИБ') {
-                                steps {
-                                    restoreDebugOverridesIfNeeded()
-                                    unzipInfobase()
-                                }
-                            }
-
-                            stage('Загрузка расширений в конфигурацию') {
                                 when {
                                     beforeAgent true
-                                    expression { config.needLoadExtensions('bdd') }
+                                    beforeOptions true
+                                    expression { config.stageFlags.yaxunit && infobaseInitialized('yaxunit') }
                                 }
-                                steps {
-                                    timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
-                                        loadExtensions config, 'bdd'
+                                options {
+                                    lock(extra: stageLockResources.yaxunit)
+                                }
+                                stages {
+                                    stage('Распаковка ИБ') {
+                                        steps {
+                                            restoreDebugOverridesIfNeeded()
+                                            unzipInfobase config.forStage('yaxunit')
+                                        }
+                                    }
+
+                                    stage('Загрузка расширений в конфигурацию') {
+                                        when {
+                                            beforeAgent true
+                                            expression { config.needLoadExtensions('yaxunit') }
+                                        }
+                                        steps {
+                                            timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
+                                                loadExtensions config.forStage('yaxunit'), 'yaxunit'
+                                            }
+                                        }
+                                    }
+
+                                    stage('Выполнение YAXUnit тестов') {
+                                        steps {
+                                            timeout(time: config.timeoutOptions.yaxunit, unit: TimeUnit.MINUTES) {
+                                                yaxunit config.forStage('yaxunit')
+                                            }
+                                        }
                                     }
                                 }
-                            }
-
-                            stage('Выполнение BDD сценариев') {
-                                steps {
-                                    timeout(time: config.timeoutOptions.bdd, unit: TimeUnit.MINUTES) {
-                                        bdd config
-                                    }
-                                }
-                            }
-
-                            stage('Архивация ИБ') {
-                                steps {
-                                    timeout(time: config.timeoutOptions.zipInfoBase, unit: TimeUnit.MINUTES) {
-                                        printLocation()
-
-                                        zipInfobase config, 'bdd'
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    stage('Синтаксический контроль') {
-                        agent {
-                            label agent1C
-                        }
-                        when {
-                            beforeAgent true
-                            expression { config.stageFlags.syntaxCheck }
-                        }
-                        stages {
-                            stage('Распаковка ИБ') {
-                                steps {
-                                    restoreDebugOverridesIfNeeded()
-                                    unzipInfobase()
-                                }
-                            }
-
-                            stage('Выполнение синтаксического контроля') {
-                                steps {
-                                    timeout(time: config.timeoutOptions.syntaxCheck, unit: TimeUnit.MINUTES) {
-                                        syntaxCheck config
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    stage('Дымовые тесты') {
-                        agent {
-                            label agent1C
-                        }
-                        when {
-                            beforeAgent true
-                            expression { config.stageFlags.smoke && isInfobaseInitialized }
-                        }
-                        stages {
-                            stage('Распаковка ИБ') {
-                                steps {
-                                    restoreDebugOverridesIfNeeded()
-                                    unzipInfobase()
-                                }
-                            }
-
-                            stage('Загрузка расширений в конфигурацию') {
-                                when {
-                                    beforeAgent true
-                                    expression { config.needLoadExtensions('smoke') }
-                                }
-                                steps {
-                                    timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
-                                        loadExtensions config, 'smoke'
-                                    }
-                                }
-                            }
-
-                            stage('Выполнение дымовых тестов') {
-                                steps {
-                                    timeout(time: config.timeoutOptions.smoke, unit: TimeUnit.MINUTES) {
-                                        smoke config
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    stage('YAXUnit тесты') {
-                        agent {
-                            label agent1C
-                        }
-                        when {
-                            beforeAgent true
-                            expression { config.stageFlags.yaxunit && isInfobaseInitialized }
-                        }
-                        stages {
-                            stage('Распаковка ИБ') {
-                                steps {
-                                    restoreDebugOverridesIfNeeded()
-                                    unzipInfobase()
-                                }
-                            }
-
-                            stage('Загрузка расширений в конфигурацию') {
-                                when {
-                                    beforeAgent true
-                                    expression { config.needLoadExtensions('yaxunit') }
-                                }
-                                steps {
-                                    timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
-                                        loadExtensions config, 'yaxunit'
-                                    }
-                                }
-                            }
-
-                            stage('Выполнение YAXUnit тестов') {
-                                steps {
-                                    timeout(time: config.timeoutOptions.yaxunit, unit: TimeUnit.MINUTES) {
-                                        yaxunit config
+                                post {
+                                    always {
+                                        timeout(time: config.timeoutOptions.loadExtensions, unit: TimeUnit.MINUTES) {
+                                            removeStageExtensions config.forStage('yaxunit'), 'yaxunit'
+                                        }
                                     }
                                 }
                             }

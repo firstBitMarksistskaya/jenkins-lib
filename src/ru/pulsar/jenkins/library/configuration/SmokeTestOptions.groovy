@@ -12,6 +12,13 @@ class SmokeTestOptions extends StepCoverageOptions implements Serializable {
     """)
     String vrunnerSettings
 
+    @JsonPropertyDescription("""Строка подключения к своей базе стадии в формате `--ibconnection`: серверная база
+    или абсолютный путь к файловой базе. Если не указана, стадия идет на базе сборки (basePath).
+    Свою базу стадии пайплайн готовит так же, как базу сборки, и параллельно с ней, а стадии на разных базах
+    идут параллельно.
+    """)
+    String basePath
+
     @JsonPropertyDescription("""Путь к конфигурационному файлу для xddTestRunner.
     По умолчанию содержит значение "./tools/xUnitParams.json".
     """)
@@ -32,6 +39,7 @@ class SmokeTestOptions extends StepCoverageOptions implements Serializable {
     String toString() {
         return "SmokeTestOptions{" +
             "vrunnerSettings='" + vrunnerSettings + '\'' +
+            ", basePath='" + basePath + '\'' +
             ", xddConfigPath='" + xddConfigPath + '\'' +
             ", publishToAllureReport=" + publishToAllureReport +
             ", publishToJUnitReport=" + publishToJUnitReport +

@@ -5,6 +5,7 @@ import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.StepCoverageOptions
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.FileUtils
+import ru.pulsar.jenkins.library.utils.InfobaseConnection
 import ru.pulsar.jenkins.library.utils.Logger
 
 class WithCoverage implements Serializable {
@@ -25,6 +26,12 @@ class WithCoverage implements Serializable {
 
         if (!coverageOptions.coverage) {
             body()
+            return
+        }
+
+        // Серверный код серверной базы видит только сервер отладки кластера, dbgs на агенте не нужен
+        if (InfobaseConnection.isServer(config.baseName())) {
+            ClusterCoverage.run(config, stage, body)
             return
         }
 

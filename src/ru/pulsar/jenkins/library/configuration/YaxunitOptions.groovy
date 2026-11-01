@@ -12,6 +12,13 @@ class YaxunitOptions extends StepCoverageOptions implements Serializable {
     """)
     String vrunnerSettings = "./tools/vrunner.json"
 
+    @JsonPropertyDescription("""Строка подключения к своей базе стадии в формате `--ibconnection`: серверная база
+    или абсолютный путь к файловой базе. Если не указана, стадия идет на базе сборки (basePath).
+    Свою базу стадии пайплайн готовит так же, как базу сборки, и параллельно с ней, а стадии на разных базах
+    идут параллельно.
+    """)
+    String basePath
+
     @JsonPropertyDescription("""Путь к конфигурационному файлу YAXUnit.
     По умолчанию содержит значение "./tools/yaxunit.json".
     """)
@@ -32,6 +39,7 @@ class YaxunitOptions extends StepCoverageOptions implements Serializable {
     String toString() {
         return "YaxunitOptions{" +
             "vrunnerSettings='" + vrunnerSettings + '\'' +
+            ", basePath='" + basePath + '\'' +
             ", configPath='" + configPath +
             ", publishToAllureReport='" + publishToAllureReport +
             ", publishToJUnitReport='" + publishToJUnitReport +

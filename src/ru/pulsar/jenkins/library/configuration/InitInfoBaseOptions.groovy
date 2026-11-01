@@ -10,10 +10,14 @@ class InitInfoBaseOptions implements Serializable {
 
     @JsonPropertyDescription("""
     Способ инициализации информационной базы.
-    Поддерживается три варианта:
+    Поддерживается четыре варианта:
         * fromStorage - инициализация информационной базы из хранилища конфигурации;
         * fromSource - инициализация информационной базы из исходников конфигурации;
-        * defaultBranchFromStorage - инициализация основной ветки из хранилища конфигурации, остальных - из исходников конфигурации.
+        * defaultBranchFromStorage - инициализация основной ветки из хранилища конфигурации, остальных - из исходников конфигурации;
+        * notInit - конфигурация не загружается, используется конфигурация базы из шаблона (templateDBPath) или существующей базы (basePath).
+          Способ инициализации выбирает только источник конфигурации, расширения задаются отдельно в extensions:
+          они собираются и загружаются, а миграция выполняется как обычно.
+          Без templateDBPath и basePath сборка завершается ошибкой конфигурации.
     По умолчанию содержит значение "fromStorage".""")
     @JsonProperty(defaultValue = "fromStorage")
     InitInfoBaseMethod initMethod = InitInfoBaseMethod.FROM_STORAGE
@@ -29,7 +33,7 @@ class InitInfoBaseOptions implements Serializable {
 
     @JsonPropertyDescription("""Путь к конфигурационному файлу vanessa-runner.
     По умолчанию содержит значение "./tools/vrunner.json"
-    Используется, если на этапе подготовки база загружается из эталона. 
+    Используется, если на этапе подготовки база загружается из эталона или используется существующая база (basePath).
     """)
     String vrunnerSettings
 

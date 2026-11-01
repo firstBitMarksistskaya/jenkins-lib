@@ -12,6 +12,13 @@ class BddOptions extends StepCoverageOptions implements Serializable {
     """)
     String vrunnerSettings = "./tools/vrunner.json"
 
+    @JsonPropertyDescription("""Строка подключения к своей базе стадии в формате `--ibconnection`: серверная база
+    или абсолютный путь к файловой базе. Если не указана, стадия идет на базе сборки (basePath).
+    Свою базу стадии пайплайн готовит так же, как базу сборки, и параллельно с ней, а стадии на разных базах
+    идут параллельно.
+    """)
+    String basePath
+
     @JsonPropertyDescription("""Шаги, запускаемые через vrunner.
     В каждой строке передается отдельная команда 
     vrunner и ее аргументы (например, "vanessa --settings ./tools/vrunner.json").
@@ -46,6 +53,7 @@ class BddOptions extends StepCoverageOptions implements Serializable {
     String toString() {
         return "BddOptions{" +
             "vrunnerSettings='" + vrunnerSettings + '\'' +
+            ", basePath='" + basePath + '\'' +
             ", effectiveVrunnerSteps=" + effectiveVrunnerSteps +
             ", archiveInfobase=" + archiveInfobase +
             ", coverage=" + coverage +

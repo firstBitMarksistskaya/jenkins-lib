@@ -17,12 +17,21 @@ class GlobalCoverageOptions implements Serializable {
     ''')
     String coverage41CPath
 
+    @JsonPropertyDescription('''Адрес сервера отладки кластера для замеров покрытия на серверной базе: имя или адрес сервера 1С.
+    Серверный код серверной базы выполняется в кластере, его видит только сервер отладки, который поднимает
+    агент сервера 1С, запущенный с ключами -debug -http. Порт задает -debugServerPort, по умолчанию 1550;
+    если он другой, укажите его через двоеточие: хост:порт.
+    Для серверной базы с включенными замерами обязателен.
+    ''')
+    String clusterDebugServer
+
     @Override
     @NonCPS
     String toString() {
         return "coverageOptions{" +
                 "dbgsPath=" + dbgsPath +
                 ", coverage41CPath=" + coverage41CPath +
+                ", clusterDebugServer=" + clusterDebugServer +
                 '}'
     }
 

@@ -3,6 +3,8 @@
   "v8version": "8.3",
   "edtVersion": "",
   "srcDir": "src/cf",
+  "basePath": "",
+  "rasAddress": "",
   "sourceFormat": "designer",
   "defaultBranch": "main",
   "secrets": {
@@ -13,7 +15,10 @@
     "telegramChatIdOtherBranches": "UNKNOWN_ID",
     "discordWebhookUrl": "UNKNOWN_ID",
     "discordBotToken": "UNKNOWN_ID",
-    "discordChatId": "UNKNOWN_ID"
+    "discordChatId": "UNKNOWN_ID",
+    "clusterAdmin": "UNKNOWN_ID",
+    "debugServerPassword": "UNKNOWN_ID",
+    "infobaseUser": "UNKNOWN_ID"
   },
   "stages": {
     "initSteps": false,
@@ -108,7 +113,8 @@
   },
   "coverage": {
     "dbgsPath": "",
-    "coverage41CPath": "Coverage41C"
+    "coverage41CPath": "Coverage41C",
+    "clusterDebugServer": ""
   },
   "yaxunit": {
     "vrunnerSettings": "./tools/vrunner.json",

@@ -5,16 +5,33 @@ import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.BspDetector
+import ru.pulsar.jenkins.library.utils.InfobaseCredentials
 import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.VRunner
+import ru.pulsar.jenkins.library.utils.VanessaTestClient
 import ru.pulsar.jenkins.library.utils.FileUtils
 
 class InitInfoBase implements Serializable {
 
-    private final JobConfiguration config
+    public static final String ALLURE_STASH = 'init-allure'
+    public static final String CUCUMBER_STASH = 'init-cucumber'
 
-    InitInfoBase(JobConfiguration config) {
+    private final JobConfiguration config
+    private final String stashSuffix
+
+    /**
+     * @param stashSuffix окончание имен stash с отчетами шагов инициализации. Своя база стадии готовится
+     * параллельно с базой сборки, и stash с тем же именем заменил бы отчеты базы сборки, поэтому каждая база стадии
+     * сохраняет отчеты под своими именами (stageBaseStashSuffix)
+     */
+    InitInfoBase(JobConfiguration config, String stashSuffix = '') {
         this.config = config
+        this.stashSuffix = stashSuffix
+    }
+
+    /** Окончание имен stash своей базы стадии по ее номеру в JobConfiguration.stageBases(), начиная с нуля */
+    static String stageBaseStashSuffix(int index) {
+        return "-${index + 1}".toString()
     }
 
     def run() {
@@ -44,63 +61,70 @@ class InitInfoBase implements Serializable {
         steps.withEnv(logosConfig) {
 
             String vrunnerPath = VRunner.getVRunnerPath()
+            String base = config.baseName()
 
             // Нужны ли настройки vrunner
             def options = config.initInfoBaseOptions
             String settingsIncrement = ''
             String vrunnerSettings = options.vrunnerSettings
-            if (config.templateDBLoaded() && steps.fileExists(vrunnerSettings)) {
+            if ((config.templateDBLoaded() || config.basePath) && steps.fileExists(vrunnerSettings)) {
                 settingsIncrement = " --settings $vrunnerSettings"
             }
 
             Map<String, Integer> exitStatuses = new LinkedHashMap<>()
 
-            if (options.runMigration) {
-                Logger.println("Запуск миграции ИБ")
+            InfobaseCredentials.withCredentials(config, InfobaseCredentials.preparedBaseHasUsers(config)) { boolean credentialsBound ->
+                if (options.runMigration) {
+                    Logger.println("Запуск миграции ИБ")
 
-                String command = vrunnerPath + ' run --command "ЗапуститьОбновлениеИнформационнойБазы;ЗавершитьРаботуСистемы;" --execute '
-                String executeParameter = '$runnerRoot/epf/ЗакрытьПредприятие.epf'
-                if (steps.isUnix()) {
-                    executeParameter = '\\' + executeParameter
-                }
-                command += executeParameter
-                command += ' --ibconnection "/F./build/ib"'
+                    String command = vrunnerPath + ' run --command "ЗапуститьОбновлениеИнформационнойБазы;ЗавершитьРаботуСистемы;" --execute '
+                    String executeParameter = '$runnerRoot/epf/ЗакрытьПредприятие.epf'
+                    if (steps.isUnix()) {
+                        executeParameter = '\\' + executeParameter
+                    }
+                    command += executeParameter
+                    command += " --ibconnection \"$base\""
 
-                command += settingsIncrement
-                def migrationStatusFile = "build/migration-exit-status.log"
-                boolean useExitCodeFile = BspDetector.isBspConfiguration(config)
-                if (useExitCodeFile) {
-                    command += " --exitCodePath \"${migrationStatusFile}\""
+                    command += settingsIncrement
+                    def migrationStatusFile = "build/migration-exit-status.log"
+                    boolean useExitCodeFile = BspDetector.isBspConfiguration(config)
+                    if (useExitCodeFile) {
+                        command += " --exitCodePath \"${migrationStatusFile}\""
+                    } else {
+                        Logger.println("Конфигурация не на БСП, запуск миграции ИБ без контроля ${migrationStatusFile}")
+                    }
+                    // Запуск миграции
+                    steps.catchError {
+                        Integer exitStatus = VRunner.exec(command, true)
+                        Integer effectiveExitStatus = useExitCodeFile
+                                ? VRunner.readExitStatusFromFile(migrationStatusFile, exitStatus)
+                                : exitStatus
+                        exitStatuses.put(command, effectiveExitStatus)
+                    }
                 } else {
-                    Logger.println("Конфигурация не на БСП, запуск миграции ИБ без контроля ${migrationStatusFile}")
+                    Logger.println("Шаг миграции ИБ выключен")
                 }
-                // Запуск миграции
-                steps.catchError {
-                    Integer exitStatus = VRunner.exec(command, true)
-                    Integer effectiveExitStatus = useExitCodeFile
-                            ? VRunner.readExitStatusFromFile(migrationStatusFile, exitStatus)
-                            : exitStatus
-                    exitStatuses.put(command, effectiveExitStatus)
-                }
-            } else {
-                Logger.println("Шаг миграции ИБ выключен")
-            }
 
-            if (options.additionalInitializationSteps.length == 0) {
-                FileWrapper[] files = steps.findFiles("tools/vrunner.init*.json")
-                files = files.sort new OrderBy({ it.name })
-                files.each {
-                    Logger.println("Первичная инициализация файлом ${it.path}")
-                    def command = "$vrunnerPath vanessa --settings ${it.path} --ibconnection \"/F./build/ib\""
-                    Integer exitStatus = VRunner.exec(command, true)
-                    exitStatuses.put(command, exitStatus)
-                }
-            } else {
-                options.additionalInitializationSteps.each {
-                    Logger.println("Первичная инициализация командой ${it}")
-                    def command = "$vrunnerPath ${it} --ibconnection \"/F./build/ib\"${settingsIncrement}"
-                    Integer exitStatus = VRunner.exec(command, true)
-                    exitStatuses.put(command, exitStatus)
+                if (options.additionalInitializationSteps.length == 0) {
+                    FileWrapper[] files = steps.findFiles("tools/vrunner.init*.json")
+                    files = files.sort new OrderBy({ it.name })
+                    files.each {
+                        Logger.println("Первичная инициализация файлом ${it.path}")
+                        def command = "$vrunnerPath vanessa --settings ${it.path} --ibconnection \"$base\""
+                        Integer exitStatus = VanessaTestClient.withPassword(config, command, credentialsBound) { String effectiveCommand ->
+                            VRunner.exec(effectiveCommand, true)
+                        }
+                        exitStatuses.put(command, exitStatus)
+                    }
+                } else {
+                    options.additionalInitializationSteps.each {
+                        Logger.println("Первичная инициализация командой ${it}")
+                        def command = "$vrunnerPath ${it} --ibconnection \"$base\"${settingsIncrement}"
+                        Integer exitStatus = VanessaTestClient.withPassword(config, command, credentialsBound) { String effectiveCommand ->
+                            VRunner.exec(effectiveCommand, true)
+                        }
+                        exitStatuses.put(command, exitStatus)
+                    }
                 }
             }
 
@@ -121,8 +145,9 @@ class InitInfoBase implements Serializable {
             Logger.println(exitStatusesMessage)
         }
 
-        steps.stash('init-allure', 'build/out/allure/**', true)
-        steps.stash('init-cucumber', 'build/out/cucumber/**', true)
+        // Отчеты сохраняются и при ошибках шагов: по ним видно, что пошло не так
+        steps.stash(ALLURE_STASH + stashSuffix, 'build/out/allure/**', true)
+        steps.stash(CUCUMBER_STASH + stashSuffix, 'build/out/cucumber/**', true)
 
         if (!isInfobaseInitialized) {
             // Throws exception

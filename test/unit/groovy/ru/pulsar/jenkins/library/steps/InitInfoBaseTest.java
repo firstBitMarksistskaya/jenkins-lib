@@ -20,6 +20,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -111,6 +112,101 @@ class InitInfoBaseTest {
             assertThat(commands.get(0)).doesNotContain("--exitCodePath");
             vrunner.verify(() -> VRunner.readExitStatusFromFile(anyString(), any(Integer.class)), never());
             verify(steps, never()).error(anyString());
+            verify(steps).stash("init-allure", "build/out/allure/**", true);
+            verify(steps).stash("init-cucumber", "build/out/cucumber/**", true);
         }
+    }
+
+    @Test
+    void runStashesResultsOfStageBaseUnderOwnNames() throws IOException {
+
+        // given
+        String config = IOUtils.resourceToString(
+                "initInfoBaseRunMigration.json",
+                StandardCharsets.UTF_8,
+                this.getClass().getClassLoader()
+        );
+        JobConfiguration jobConfiguration = ConfigurationReader.create(config);
+        when(steps.fileExists(anyString())).thenReturn(false);
+
+        try (MockedStatic<VRunner> vrunner = Mockito.mockStatic(VRunner.class)) {
+            vrunner.when(VRunner::getVRunnerPath).thenReturn("vrunner");
+            vrunner.when(() -> VRunner.exec(anyString(), eq(true))).thenReturn(0);
+
+            // when
+            // своя база стадии готовится параллельно с базой сборки, stash с тем же именем заменил бы ее отчеты
+            new InitInfoBase(jobConfiguration, InitInfoBase.stageBaseStashSuffix(0)).run();
+
+            // then
+            verify(steps).stash("init-allure-1", "build/out/allure/**", true);
+            verify(steps).stash("init-cucumber-1", "build/out/cucumber/**", true);
+            verify(steps, never()).stash(eq("init-allure"), anyString(), anyBoolean());
+            verify(steps, never()).error(anyString());
+        }
+    }
+
+    @Test
+    void runPassesInitSettingsForExistingBase() {
+
+        // given
+        // в существующей базе есть пользователи, логин и пароль берутся из файла настроек этапа инициализации
+        when(steps.fileExists(anyString())).thenReturn(false);
+        when(steps.fileExists("./tools/vrunner.json")).thenReturn(true);
+
+        // when
+        List<String> commands = runCommands("/Ssrv1c\\\\test_base");
+
+        // then
+        assertThat(commands).hasSize(2);
+        assertThat(commands).allSatisfy(command -> assertThat(command)
+                .contains("--ibconnection \"/Ssrv1c\\test_base\"")
+                .contains("--settings ./tools/vrunner.json"));
+    }
+
+    @Test
+    void runDoesNotPassInitSettingsForNewLocalBase() {
+
+        // given
+        when(steps.fileExists(anyString())).thenReturn(false);
+        when(steps.fileExists("./tools/vrunner.json")).thenReturn(true);
+
+        // when
+        List<String> commands = runCommands("");
+
+        // then
+        assertThat(commands).hasSize(2);
+        assertThat(commands).allSatisfy(command -> assertThat(command).doesNotContain("--settings ./tools/vrunner.json"));
+    }
+
+    private List<String> runCommands(String basePath) {
+        String config = """
+            {
+              "basePath": "%s",
+              "srcDir": "src/cf",
+              "stages": {
+                "initSteps": true
+              },
+              "initInfobase": {
+                "runMigration": true,
+                "additionalInitializationSteps": [
+                  "vanessa --settings ./tools/vrunner.first.json"
+                ]
+              }
+            }
+            """.formatted(basePath);
+        JobConfiguration jobConfiguration = ConfigurationReader.create(config);
+        List<String> commands = new ArrayList<>();
+
+        try (MockedStatic<VRunner> vrunner = Mockito.mockStatic(VRunner.class)) {
+            vrunner.when(VRunner::getVRunnerPath).thenReturn("vrunner");
+            vrunner.when(() -> VRunner.exec(anyString(), eq(true))).thenAnswer(invocation -> {
+                commands.add(invocation.getArgument(0));
+                return 0;
+            });
+
+            new InitInfoBase(jobConfiguration).run();
+        }
+
+        return commands;
     }
 }

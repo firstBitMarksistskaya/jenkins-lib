@@ -28,6 +28,13 @@ class SyntaxCheckOptions implements Serializable {
     """)
     String vrunnerSettings = "./tools/vrunner.json"
 
+    @JsonPropertyDescription("""Строка подключения к своей базе стадии в формате `--ibconnection`: серверная база
+    или абсолютный путь к файловой базе. Если не указана, стадия идет на базе сборки (basePath).
+    Свою базу стадии пайплайн готовит так же, как базу сборки, и параллельно с ней, а стадии на разных базах
+    идут параллельно.
+    """)
+    String basePath
+
     @JsonPropertyDescription("""Выполнять публикацию результатов в отчет Allure.
     По умолчанию выключено.
     """)
@@ -47,6 +54,7 @@ class SyntaxCheckOptions implements Serializable {
             ", groupErrorsByMetadata=" + groupErrorsByMetadata +
             ", checkModes=" + checkModes +
             ", vrunnerSettings=" + vrunnerSettings +
+            ", basePath=" + basePath +
             ", publishToAllureReport=" + publishToAllureReport +
             ", publishToJUnitReport=" + publishToJUnitReport +
             '}'

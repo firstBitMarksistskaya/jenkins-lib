@@ -2,10 +2,10 @@ import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.steps.InitInfoBase
 
-def call(JobConfiguration config) {
+def call(JobConfiguration config, String stashSuffix = '') {
     ContextRegistry.registerDefaultContext(this)
 
-    def initInfobase = new InitInfoBase(config)
+    def initInfobase = new InitInfoBase(config, stashSuffix)
     try {
         initInfobase.run()
         return true

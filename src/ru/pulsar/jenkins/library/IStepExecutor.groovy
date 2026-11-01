@@ -41,6 +41,8 @@ interface IStepExecutor {
 
     void echo(message)
 
+    void sleep(int seconds)
+
     def cmd(String script, boolean returnStatus, boolean returnStdout)
 
     def cmd(String script, boolean returnStatus)
@@ -52,6 +54,8 @@ interface IStepExecutor {
     void start(String executable, String params)
 
     void tool(String toolName)
+
+    boolean credentialExists(String credentialsId)
 
     def withCredentials(List bindings, Closure body)
 

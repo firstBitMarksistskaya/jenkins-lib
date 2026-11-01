@@ -1,0 +1,189 @@
+package ru.pulsar.jenkins.library.steps;
+
+import groovy.lang.Closure;
+import hudson.AbortException;
+import org.jenkinsci.plugins.workflow.support.steps.build.RunWrapper;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import ru.pulsar.jenkins.library.IStepExecutor;
+import ru.pulsar.jenkins.library.configuration.ConfigurationReader;
+import ru.pulsar.jenkins.library.configuration.JobConfiguration;
+import ru.pulsar.jenkins.library.utils.InfobaseCredentialsStub;
+import ru.pulsar.jenkins.library.utils.TestUtils;
+import ru.pulsar.jenkins.library.utils.VRunner;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.endsWith;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+class ZipInfobaseTest {
+
+    private static final String SAVE_ALWAYS = """
+        "initInfobase": { "archiveInfobase": { "onAlways": true } },
+        "bdd": { "archiveInfobase": { "onAlways": true } }
+        """;
+
+    private final IStepExecutor steps = TestUtils.getMockedStepExecutor();
+    private final List<String> commands = new ArrayList<>();
+    private int failingDumps;
+
+    @BeforeEach
+    void setUp() throws Exception {
+        RunWrapper currentBuild = mock(RunWrapper.class);
+        when(currentBuild.getCurrentResult()).thenReturn("SUCCESS");
+        when(steps.currentBuild()).thenReturn(currentBuild);
+        when(steps.withCredentials(anyList(), any(Closure.class))).thenAnswer(invocation -> {
+            Closure<?> body = invocation.getArgument(1);
+            return body.call();
+        });
+        when(steps.fileExists("./tools/vrunner.json")).thenReturn(true);
+        TestUtils.setupMockedContext(steps);
+    }
+
+    @Test
+    void runArchivesLocalBaseForTestStages() {
+        // when
+        List<String> commands = run("", "", "", "initInfoBase");
+
+        // then
+        // тестовые стадии получают локальную базу из stash, артефакт сохраняется только по настройке
+        verify(steps).zip("build/ib", "1Cv8.1CD.zip", "1Cv8.1CD", false);
+        verify(steps).stash("1Cv8.1CD.zip", "1Cv8.1CD.zip", false);
+        assertThat(commands).isEmpty();
+    }
+
+    @Test
+    void runDoesNothingForExternalBaseWithoutSaving() {
+        // when
+        List<String> commands = run("/Ssrv1c\\\\ssl", "srv1c:1545", "", "initInfoBase");
+
+        // then
+        assertThat(commands).isEmpty();
+        verify(steps, never()).zip(anyString(), anyString(), anyString(), anyBoolean());
+        verify(steps, never()).stash(anyString(), anyString(), anyBoolean());
+        verify(steps, never()).archiveArtifacts(anyString());
+    }
+
+    @Test
+    void runDumpsServerBaseWithExclusiveAccess() {
+        // when
+        List<String> commands = run("/Ssrv1c\\\\ssl", "srv1c:1545", SAVE_ALWAYS, "bdd");
+
+        // then
+        // выгрузка идет под пользователем этапа инициализации между завершением сеансов и снятием запрета
+        assertThat(commands).hasSize(3);
+        assertThat(commands.get(0)).startsWith("vrunner session kill --db \"ssl\"");
+        assertThat(commands.get(1))
+            .startsWith("vrunner dump 1Cv8.bdd.dt --ibconnection \"/Ssrv1c\\ssl\" --settings ./tools/vrunner.json")
+            .contains(" --uccode ");
+        assertThat(commands.get(2)).startsWith("vrunner session unlock --db \"ssl\"");
+        verify(steps).archiveArtifacts("1Cv8.bdd.dt");
+        // тестовые стадии работают с базой по адресу, stash не нужен
+        verify(steps, never()).stash(anyString(), anyString(), anyBoolean());
+    }
+
+    @Test
+    void runRepeatsServerBaseDumpAfterFailure() {
+        // given
+        failingDumps = 1;
+
+        // when
+        List<String> commands = run("/Ssrv1c\\\\ssl", "srv1c:1545", SAVE_ALWAYS, "bdd");
+
+        // then
+        // повисшее фоновое соединение уходит само, поэтому kill и выгрузка повторяются через минуту
+        assertThat(commands).hasSize(5);
+        assertThat(commands.get(0)).startsWith("vrunner session kill");
+        assertThat(commands.get(1)).startsWith("vrunner dump");
+        assertThat(commands.get(2)).startsWith("vrunner session kill");
+        assertThat(commands.get(3)).startsWith("vrunner dump");
+        assertThat(commands.get(4)).startsWith("vrunner session unlock");
+        verify(steps).sleep(60);
+        verify(steps).archiveArtifacts("1Cv8.bdd.dt");
+    }
+
+    @Test
+    void runFailsServerBaseDumpAfterFiveAttempts() {
+        // given
+        failingDumps = 5;
+
+        // when
+        Throwable thrown = catchThrowable(() -> run("/Ssrv1c\\\\ssl", "srv1c:1545", SAVE_ALWAYS, "bdd"));
+
+        // then
+        // постоянная ошибка не ждет таймаута этапа: после пятой попытки сборка получает ошибку выгрузки
+        assertThat(thrown).isInstanceOf(AbortException.class);
+        assertThat(commands).hasSize(11);
+        assertThat(commands).filteredOn(command -> command.startsWith("vrunner dump")).hasSize(5);
+        assertThat(commands.get(10)).startsWith("vrunner session unlock");
+        verify(steps, times(4)).sleep(60);
+        verify(steps, never()).archiveArtifacts(anyString());
+    }
+
+    @Test
+    void runDumpsServerBaseUnderInfobaseCredentials() {
+        // given
+        InfobaseCredentialsStub.bind(steps);
+
+        // when
+        List<String> commands = run("/Ssrv1c\\\\ssl", "srv1c:1545", SAVE_ALWAYS, "bdd");
+
+        // then
+        verify(steps).usernamePassword(endsWith("_INFOBASE_USER"), eq("RUNNER_DBUSER"), eq("RUNNER_DBPWD"));
+        assertThat(commands).hasSize(3);
+        assertThat(commands.get(1)).startsWith("vrunner dump").doesNotContain("--db-pwd");
+    }
+
+    @Test
+    void runArchivesExternalFileBaseFromItsDirectory() {
+        // when
+        List<String> commands = run("/F/var/1c/ssl", "", SAVE_ALWAYS, "initInfoBase");
+
+        // then
+        assertThat(commands).isEmpty();
+        verify(steps).zip("/var/1c/ssl", "1Cv8.1CD.zip", "1Cv8.1CD", true);
+        verify(steps, never()).stash(anyString(), anyString(), anyBoolean());
+    }
+
+    private List<String> run(String basePath, String rasAddress, String options, String stage) {
+        String config = """
+            {
+              %s
+              "basePath": "%s",
+              "rasAddress": "%s"
+            }
+            """.formatted(options.isBlank() ? "" : options.strip() + ",", basePath, rasAddress);
+        JobConfiguration jobConfiguration = ConfigurationReader.create(config);
+
+        try (MockedStatic<VRunner> vrunner = Mockito.mockStatic(VRunner.class)) {
+            vrunner.when(VRunner::getVRunnerPath).thenReturn("vrunner");
+            vrunner.when(() -> VRunner.exec(anyString())).thenAnswer(invocation -> {
+                String command = invocation.getArgument(0);
+                commands.add(command);
+                if (command.startsWith("vrunner dump ") && failingDumps-- > 0) {
+                    throw new AbortException("dump failed");
+                }
+                return 0;
+            });
+
+            new ZipInfobase(jobConfiguration, stage).run();
+        }
+
+        return commands;
+    }
+}

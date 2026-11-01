@@ -6,6 +6,8 @@ import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.Secrets
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
+import ru.pulsar.jenkins.library.utils.ExclusiveAccess
+import ru.pulsar.jenkins.library.utils.InfobaseCredentials
 import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.RepoUtils
 import ru.pulsar.jenkins.library.utils.VRunner
@@ -55,16 +57,21 @@ class InitFromStorage implements Serializable {
         ]) {
             Logger.println("Выполнение загрузки конфигурации из хранилища")
             String vrunnerPath = VRunner.getVRunnerPath()
-            def command = "$vrunnerPath update-dev --storage $storageVersionParameter --ibconnection \"/F./build/ib\""
+            String base = config.baseName()
+            def command = "$vrunnerPath update-dev --storage $storageVersionParameter --ibconnection \"$base\""
 
             def options = config.initInfoBaseOptions
 
             String vrunnerSettings = options.vrunnerSettings
-            if (config.templateDBLoaded() && steps.fileExists(vrunnerSettings)) {
+            if ((config.templateDBLoaded() || config.basePath) && steps.fileExists(vrunnerSettings)) {
                 command += " --settings $vrunnerSettings"
             }
 
-            VRunner.exec(command)
+            InfobaseCredentials.withCredentials(config, InfobaseCredentials.preparedBaseHasUsers(config)) {
+                ExclusiveAccess.run(config) { String uccode ->
+                    VRunner.exec(command + uccode)
+                }
+            }
         }
     }
 

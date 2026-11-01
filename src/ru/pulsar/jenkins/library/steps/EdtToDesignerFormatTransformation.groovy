@@ -41,11 +41,16 @@ class EdtToDesignerFormatTransformation implements Serializable {
 
         def engine = EdtCliEngineFactory.getEngine(config.edtVersion)
 
-        engine.edtToDesignerTransformConfiguration(steps, config)
-        steps.zip(CONFIGURATION_DIR, CONFIGURATION_ZIP)
-        steps.stash(CONFIGURATION_ZIP_STASH, CONFIGURATION_ZIP)
+        if (config.infoBaseFromFiles()) {
+            engine.edtToDesignerTransformConfiguration(steps, config)
+            steps.zip(CONFIGURATION_DIR, CONFIGURATION_ZIP)
+            steps.stash(CONFIGURATION_ZIP_STASH, CONFIGURATION_ZIP)
+        }
 
         if (config.needLoadExtensions()) {
+            // Расширения из cfe-файлов не конвертируются. Каталог создается заранее, чтобы архив был и без расширений
+            // из исходников: GetExtensions распаковывает его всегда. Заодно удаляются исходники прошлых сборок.
+            steps.createDir(EXTENSION_DIR, true)
             engine.edtToDesignerTransformExtensions(steps, config)
             steps.zip(EXTENSION_DIR, EXTENSION_ZIP)
             steps.stash(EXTENSION_ZIP_STASH, EXTENSION_ZIP)
