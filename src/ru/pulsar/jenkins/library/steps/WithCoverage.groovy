@@ -1,11 +1,15 @@
 package ru.pulsar.jenkins.library.steps
 
+import com.cloudbees.groovy.cps.NonCPS
 import ru.pulsar.jenkins.library.IStepExecutor
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.StepCoverageOptions
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.FileUtils
 import ru.pulsar.jenkins.library.utils.Logger
+
+import java.nio.charset.StandardCharsets
+import java.util.Base64
 
 class WithCoverage implements Serializable {
 
@@ -21,6 +25,72 @@ class WithCoverage implements Serializable {
         this.body = body
     }
 
+    static String startDbgs(IStepExecutor steps, String executable, int port,
+                            String stdoutLogPath, String stderrLogPath) {
+        if (steps.isUnix()) {
+            String command = quotePosix(executable) +
+                " --addr=127.0.0.1 --port=${port}" +
+                ' > ' + quotePosix(stdoutLogPath) +
+                ' 2>&1 & printf \'%s\\n\' "$!"'
+            String rawPid = steps.sh(command, false, true, 'UTF-8')
+            return requirePositivePid(rawPid)
+        }
+
+        String script = buildWindowsStartScript(
+            executable, port, stdoutLogPath, stderrLogPath)
+        String encodedScript = Base64.encoder.encodeToString(
+            script.getBytes(StandardCharsets.UTF_16LE))
+        String rawPid = steps.bat(
+            "@echo off\r\npowershell.exe -NoProfile -NonInteractive -EncodedCommand ${encodedScript}",
+            false, true, 'UTF-8')
+        return requirePositivePid(rawPid)
+    }
+
+    @NonCPS
+    private static String buildWindowsStartScript(String executable, int port,
+                                                   String stdoutLogPath,
+                                                   String stderrLogPath) {
+        return "\$p = Start-Process" +
+            " -FilePath '${quotePowerShell(executable)}'" +
+            " -ArgumentList '--addr=127.0.0.1','--port=${port}'" +
+            " -RedirectStandardOutput '${quotePowerShell(stdoutLogPath)}'" +
+            " -RedirectStandardError '${quotePowerShell(stderrLogPath)}'" +
+            ' -PassThru -WindowStyle Hidden' +
+            System.lineSeparator() +
+            '$p.Id'
+    }
+
+    @NonCPS
+    private static String quotePowerShell(String value) {
+        return value.replace("'", "''")
+    }
+
+    @NonCPS
+    private static String quotePosix(String value) {
+        return "'" + value.replace("'", "'\"'\"'") + "'"
+    }
+
+    @NonCPS
+    private static String requirePositivePid(Object rawPid) {
+        String pid = rawPid == null ? '' : rawPid.toString().trim()
+        if (!(pid ==~ /[1-9][0-9]*/)) {
+            throw new IllegalStateException("Не удалось получить PID dbgs: '${pid}'")
+        }
+        return pid
+    }
+
+    static int stopDbgs(IStepExecutor steps, String rawPid) {
+        String pid = requirePositivePid(rawPid)
+        if (steps.isUnix()) {
+            return steps.sh(
+                "kill ${pid} >/dev/null 2>&1",
+                true, false, 'UTF-8') as int
+        }
+        return steps.bat(
+            "@echo off\r\ntaskkill /PID ${pid} /F > nul 2>&1",
+            true, false, 'UTF-8') as int
+    }
+
     def run() {
 
         if (!coverageOptions.coverage) {
@@ -32,76 +102,43 @@ class WithCoverage implements Serializable {
         IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
 
         steps.lock(context.lockableResource) {
+            Exception primaryFailure = null
             try {
+                steps.writeFile(stage.getCoveragePidsPath(), '', 'UTF-8')
 
                 startCoverage(steps, config, context, stage)
 
                 body()
 
                 stopCoverage(steps, config, context)
+                context.coverageStarted = false
 
                 steps.stash(stage.getCoverageStashName(), stage.getCoverageStashPath(), true)
 
             } catch (Exception e) {
+                primaryFailure = e
                 Logger.println("При выполнении блока произошла ошибка: ${e.message}")
                 throw e
             } finally {
-
-                String pidsFilePath = "build/${stage.getStageSlug()}-pids"
-
-                def pids = ""
-                if (steps.fileExists(pidsFilePath)) {
-                    pids = steps.readFile(pidsFilePath)
-                }
-
-                if (pids.isEmpty()) {
-                    Logger.println("Нет запущенных процессов dbgs и Coverage41C")
-                    return
-                }
-
-                Logger.println("Завершение процессов dbgs и Coverage41C с pid: $pids")
-                def command
-                if (steps.isUnix()) {
-                    command = "kill $pids || true"
-                } else {
-                    def pidsForCmd = ''
-                    def pidsArray = pids.split(" ")
-
-                    pidsArray.each {
-                        pidsForCmd += " /PID $it"
+                if (primaryFailure != null && context.coverageStarted) {
+                    try {
+                        stopCoverage(steps, config, context)
+                    } catch (Exception cleanupFailure) {
+                        Logger.println("Ошибка завершения Coverage41C: ${cleanupFailure.message}")
                     }
-                    pidsForCmd = pidsForCmd.trim()
-
-                    command = "taskkill $pidsForCmd /F > nul"
-
                 }
-                steps.cmd(command, false, false)
+                try {
+                    cleanupOwnedDbgs(steps, context)
+                } catch (Exception cleanupFailure) {
+                    if (primaryFailure != null) {
+                        primaryFailure.addSuppressed(cleanupFailure)
+                        Logger.println("Ошибка завершения dbgs: ${cleanupFailure.message}")
+                    } else {
+                        throw cleanupFailure
+                    }
+                }
             }
         }
-    }
-
-    static List<String> getPIDs(String name) {
-
-        IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
-
-        String pids
-        def script
-
-        if (steps.isUnix()) {
-            script = "ps -C '$name' -o pid= || true"
-            pids = steps.sh(script, false, true, 'UTF-8')
-        } else {
-            script = """@echo off
-                chcp 65001 > nul
-                tasklist | findstr "${name}" > nul
-                if errorlevel 1 (
-                    exit /b 0
-                ) else (
-                    for /f "tokens=2" %%a in ('tasklist ^| findstr "${name}"') do (@echo %%a)
-                )"""
-            pids = steps.bat(script, false, true, 'UTF-8')
-        }
-        return pids.split('\r?\n').toList()
     }
 
     static CoverageContext prepareContext(JobConfiguration config, StepCoverageOptions options) {
@@ -111,11 +148,9 @@ class WithCoverage implements Serializable {
 
         def coverageOpts = config.coverageOptions
         def port = options.dbgsPort
-        def currentDbgsPids = getPIDs("dbgs")
-        def currentCoverage41CPids = getPIDs("Coverage41C")
         def lockableResource = "${env.NODE_NAME}_$port"
 
-        return new CoverageContext(lockableResource, config.srcDir, coverageOpts, port, currentDbgsPids, currentCoverage41CPids)
+        return new CoverageContext(lockableResource, config.srcDir, coverageOpts, port)
 
     }
 
@@ -129,23 +164,31 @@ class WithCoverage implements Serializable {
 
         String dbgsPath = findDbgs(steps, config)
 
-        steps.start(dbgsPath, "--addr=127.0.0.1 --port=${coverageContext.port}")
+        String logPrefix = "./build/${env.STAGE_NAME}-start-dbgs"
+        String dbgsPid = startDbgs(
+            steps, dbgsPath, coverageContext.port,
+            "${logPrefix}.log", "${logPrefix}-error.log")
+        coverageContext.dbgsPid = dbgsPid
+        steps.writeFile(stage.getCoveragePidsPath(), dbgsPid, 'UTF-8')
+        Logger.println("PID процесса dbgs для ${stage.getStageSlug()}: ${dbgsPid}")
+
+        coverageContext.coverageStarted = true
         steps.start(coverageOpts.coverage41CPath, "start -i DefAlias -u http://127.0.0.1:${coverageContext.port} -P $workspaceDir -s $srcDir -o ${stage.getCoverageStashPath()}")
         sleep(1000)
         steps.cmd("${coverageOpts.coverage41CPath} check -i DefAlias -u http://127.0.0.1:${coverageContext.port}")
+    }
 
-        def newDbgsPids = getPIDs("dbgs")
-        def newCoverage41CPids = getPIDs("Coverage41C")
-
-        newDbgsPids.removeAll(coverageContext.dbgsPids)
-        newCoverage41CPids.removeAll(coverageContext.coverage41CPids)
-
-        newDbgsPids.addAll(newCoverage41CPids)
-        def pids = newDbgsPids.join(" ")
-
-        steps.writeFile(stage.getCoveragePidsPath(), pids, 'UTF-8')
-
-        Logger.println("PID процессов dbgs и Coverage41C для ${stage.getStageSlug()}: $pids")
+    static void cleanupOwnedDbgs(IStepExecutor steps, CoverageContext coverageContext) {
+        String ownedPid = coverageContext.dbgsPid
+        if (ownedPid) {
+            int status = stopDbgs(steps, ownedPid)
+            if (status != 0) {
+                Logger.println(
+                    "Процесс dbgs с pid ${ownedPid} уже завершён или недоступен, код: ${status}")
+            }
+        } else {
+            Logger.println('PID процесса dbgs для текущего запуска не назначен')
+        }
     }
 
     static void stopCoverage(IStepExecutor steps, JobConfiguration config, CoverageContext coverageContext) {

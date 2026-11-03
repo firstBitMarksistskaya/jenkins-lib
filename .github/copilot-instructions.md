@@ -10,7 +10,7 @@ Always reference these instructions first and fallback to search or bash command
 
 ### Environment Requirements
 - Java 17 (as specified in GitHub Actions workflow)
-- Gradle 7.6.1 (via wrapper)
+- Gradle 8.5 (via wrapper)
 - Network access to Jenkins and Maven repositories
 - Git for version control
 
@@ -172,7 +172,7 @@ The main `pipeline1C()` function in `vars/pipeline1C.groovy` orchestrates a comp
   ├── yaxunit.groovy          # Unit test execution
   └── *.groovy                # Other pipeline steps
 
-/src/                   # Java support classes
+/src/                   # Groovy and Java support classes
   └── ru/pulsar/jenkins/library/
     ├── configuration/        # Configuration handling
     ├── steps/               # Step implementations
@@ -223,7 +223,7 @@ The main `pipeline1C()` function in `vars/pipeline1C.groovy` orchestrates a comp
    - Review integration test logs for Jenkins-specific issues
 
 ### Development Workflow
-1. Make changes to Groovy files in `/vars/` or Java files in `/src/`
+1. Make changes to pipeline steps in `/vars/` and Groovy or Java support classes in `/src/`
 2. Run `./gradlew compileGroovy` for quick syntax validation
 3. Run `./gradlew test` for unit tests (~25s)
 4. Run `./gradlew integrationTest` for full pipeline testing
@@ -254,7 +254,7 @@ All timings are consistent and reliable with excellent network access to depende
 ### Modifying Configuration Schema
 1. Edit `resources/globalConfiguration.json` for default values
 2. Update `resources/schema.json` for validation rules
-3. Modify Java configuration classes in `src/ru/pulsar/jenkins/library/configuration/`
+3. Modify configuration classes in `src/ru/pulsar/jenkins/library/configuration/`
 4. Test with sample configurations in test directories
 5. Validate JSON syntax: `python3 -m json.tool resources/globalConfiguration.json`
 
